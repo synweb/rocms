@@ -1,0 +1,61 @@
+﻿@using RoCMS.Base.ForWeb.Models
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ViewBag.Title = ViewBag.PageTitle = "Разработка";
+}
+
+<div class="super-warning" style="">
+    <h2>Вход в режим разработки</h2>
+    <p>Если вы нажмёте на красную кнопку, вам откроется режим разработки. Он открывает доступ к дополнительным разделам настройки сайта.</p>
+    <p>Если вы не знакомы с вёрсткой и программированием, мы не советуем вам его открывать вообще.</p>
+    <p>Все изменения вы вносите на свой страх и риск. Любые необдуманные действия могут сделать сайт недоступным и подлежащим восстановлению только из резервной копии.</p>
+</div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="checkbox" style="margin: 0 20px 0 0;display: inline-block;">
+                <input type="checkbox" name="ok" id="confirmed" class="form-control" />
+                <label for="confirmed"></label>
+            </div>
+            <label for="confirmed" class="control-label">Я ознакомлен с последствями и знаю, что делаю.</label>
+        </div>
+    </div>
+</div>
+<button type="button" class="btn btn-lg btn-danger button-enter" disabled="disabled"><i class="fa fa-magic"></i>&nbsp;Вход</button>
+
+@JsInline(@<script>
+    $(function () {
+        $("#confirmed").change(function () {
+            if (this.checked) {
+                $(".button-enter").removeAttr("disabled");
+            } else {
+                $(".button-enter").prop('disabled', 'disabled');
+            }
+        });
+        $(".button-enter").click(function() {
+            var confirmed = $("#confirmed").is(':checked');
+            if (!confirmed) {
+                return false;
+            }
+            blockUI();
+            postJSON("/api/dev/enter",
+                    null,
+                    function(res) {
+                        if (res.succeed) {
+                            window.location.href = "/Developer/CodeEditor";
+                        } else {
+                            smartAlert("Произошла ошибка. Обратитесь к настоящим разработчикам.");
+                        }
+                    })
+                .fail(function() {
+                    smartAlert("Произошла ошибка. Обратитесь к настоящим разработчикам.");
+                })
+                .always(function() {
+                    unblockUI();
+                });
+        });
+
+    });
+    </script>)
+

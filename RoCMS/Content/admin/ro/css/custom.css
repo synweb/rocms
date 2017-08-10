@@ -1019,3 +1019,17 @@ header.head .rocms-logo {
     min-height: 600px;
     border: 0;
 }
+
+.super-warning {
+    border: 1px solid #eee;
+    border-left-color: #ce4844;
+    border-left-width: 5px;
+    padding: 20px;
+    margin: 20px 0;
+    background: #fcfcfd;
+    display: table;
+}
+
+.super-warning h2{
+    color: #ce4844; margin: 0 0 10px;
+}

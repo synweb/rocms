@@ -189,5 +189,11 @@ namespace RoCMS.Controllers
                                         .Select(x => x.FullName.Substring(dirPatchLenght));
             return View("ViewLogs", files);
         }
+
+        [AuthorizeResources(RoCmsResources.Dev_MagicButton)]
+        public ActionResult MagicButton()
+        {
+            return View();
+        }
     }
 }

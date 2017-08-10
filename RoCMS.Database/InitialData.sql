@@ -51,6 +51,8 @@ BEGIN
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (63, N'Dev_InterfaceStrings', N'Разработка: Строки интерфейса')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (64, N'Dev_Database', N'Разработка: База данных')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (65, N'RedirectToPageRoutes', N'Редиректы')
+	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (70, N'Dev_MagicButton', N'Разработка: Кнопка входа')
+
 	SET IDENTITY_INSERT [dbo].[CmsResource] OFF
 	
 END

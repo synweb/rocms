@@ -123,6 +123,7 @@ namespace RoCMS.App_Start
             WebApiConfigHelper.ApiRoute(config.Routes, "dev/widgets/get", "DeveloperApi", "GetWidgets");
             WebApiConfigHelper.ApiRoute(config.Routes, "dev/widgets/save", "DeveloperApi", "SaveWidgets");
             WebApiConfigHelper.ApiRoute(config.Routes, "dev/robots/save", "DeveloperApi", "SaveRobots");
+            WebApiConfigHelper.ApiRoute(config.Routes, "dev/enter", "DeveloperApi", "EnterDevMode");
 
             WebApiConfigHelper.ApiRoute(config.Routes, "admin/redirect/get", "RedirectToPageRoutesApi", "GetRedirectToPageRouters");
             WebApiConfigHelper.ApiRoute(config.Routes, "admin/redirect/save", "RedirectToPageRoutesApi", "SaveRedirectToPageRouters");

@@ -157,6 +157,9 @@ namespace RoCMS.Web.Services
 
         public void GrantResource(int userId, string resourceName)
         {
+            bool authorized = _userCMSResourceGateway.CheckIfAuthorizedForResource(userId, resourceName);
+            if (authorized)
+                return; // права и так есть. не нужно ничего делать.
             var resource = _cmsResourceGateway.SelectByName(resourceName);
             _userCMSResourceGateway.Insert(userId, resource.CmsResourceId);
         }

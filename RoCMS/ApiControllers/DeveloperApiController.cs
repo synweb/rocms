@@ -7,29 +7,34 @@ using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
+using System.Web.Mvc;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
+using RoCMS.Helpers;
 using RoCMS.Web.Contract;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [AuthorizeResourcesApi(RoCmsResources.Development)]
     public class DeveloperApiController : ApiController
     {
         private readonly IDevelopmentService _developmentService;
+        private readonly ISecurityService _securityService;
+        private readonly ILogService _logService;
 
-        public DeveloperApiController(IDevelopmentService developmentService)
+        public DeveloperApiController(IDevelopmentService developmentService, ISecurityService securityService, ILogService logService)
         {
             _developmentService = developmentService;
+            _securityService = securityService;
+            _logService = logService;
         }
 
         private const string CONNECTION_STRING_TEMPLATE = "data source={0};initial catalog={1};persist security info=True;user id={2};password={3};multipleactiveresultsets=True;application name=EntityFramework";
 
-        [AuthorizeResourcesApi(RoCmsResources.Dev_Database)]
+        [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Database)]
         [System.Web.Mvc.HttpPost]
         public ResultModel CheckDB(DatabaseSettings data)
         {
@@ -38,7 +43,7 @@ namespace RoCMS.ApiControllers
             return new ResultModel(succeed);
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Dev_Database)]
+        [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Database)]
         [System.Web.Mvc.HttpPost]
         public ResultModel UpdateDBConnections(DatabaseSettings data)
         {
@@ -68,12 +73,13 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Dev_Widgets)]
-        [HttpGet]
+        [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Widgets)]
+        [System.Web.Http.HttpGet]
         public ICollection<Widget> GetWidgets()
         {
             var widgets = new List<Widget>();
@@ -87,7 +93,7 @@ namespace RoCMS.ApiControllers
             return widgets;
         }
         
-        [AuthorizeResourcesApi(RoCmsResources.Dev_Widgets)]
+        [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Widgets)]
         public ResultModel SaveWidgets(ICollection<Widget> widgets)
         {
             try
@@ -110,11 +116,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Dev_CodeEditor)]
+        [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_CodeEditor)]
         public ResultModel SaveRobots(SaveRobotsData data)
         {
             try
@@ -128,6 +135,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -135,6 +143,27 @@ namespace RoCMS.ApiControllers
         public class SaveRobotsData
         {
             public string Text { get; set; }
+        }
+
+        [AuthorizeResourcesApi(RoCmsResources.Dev_MagicButton)]
+        public ResultModel EnterDevMode()
+        {
+            try
+            {
+                var userId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
+                _securityService.ForbidResource(userId, RoCmsResources.Dev_MagicButton);
+                _securityService.GrantResource(userId, RoCmsResources.Development);
+                _securityService.GrantResource(userId, RoCmsResources.Dev_CodeEditor);
+                _securityService.GrantResource(userId, RoCmsResources.Dev_Database);
+                _securityService.GrantResource(userId, RoCmsResources.Dev_InterfaceStrings);
+                _securityService.GrantResource(userId, RoCmsResources.Dev_Widgets);
+                return ResultModel.Success;
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
     }
 }

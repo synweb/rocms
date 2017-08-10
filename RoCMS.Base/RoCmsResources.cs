@@ -21,6 +21,7 @@ namespace RoCMS.Base
         public const string Emails = "Emails";
         public const string Requests = "Requests";
         public const string Development = "Development";
+        public const string Dev_MagicButton = "Dev_MagicButton";
         public const string Dev_CodeEditor = "Dev_CodeEditor";
         public const string Dev_Widgets = "Dev_Widgets";
         public const string Dev_InterfaceStrings = "Dev_InterfaceStrings";

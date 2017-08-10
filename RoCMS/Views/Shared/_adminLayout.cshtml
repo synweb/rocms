@@ -153,7 +153,11 @@
         {
             <li><a href="@Url.Action("Requests", "Admin")"><i class="fa fa-file"></i><span>@Strings.AdminMenu_Requests</span></a></li>
         }
-        @if (User.IsAuthorizedForResource(RoCmsResources.Development))
+        @if (User.IsAuthorizedForResource(RoCmsResources.Dev_MagicButton))
+        {
+            <li><a href="@Url.Action("MagicButton", "Developer")"><i class="fa fa-magic"></i><span>Разработка</span></a></li>
+        }
+        else if (User.IsAuthorizedForResource(RoCmsResources.Development))
         {
             <li>
                 <a href="javascript:void(0)" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#dev-nav">

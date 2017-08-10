@@ -246,4 +246,4 @@ ModelManifest.xml
 *.jfm
 RoCMS/Images
 RoCMS/Thumbnails
-
+Connections.config

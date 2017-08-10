@@ -25,6 +25,10 @@ function widgetListLoaded() {
         removeItem: function (item) {
             vm.widgets.remove(item);
         },
+        editItem: function (item) {
+            var path = item.viewPath().replace("~/", "").replace(/[/]/g, "\\");
+            window.location.href = "/Developer/CodeEditor#" + path;
+        },
         addItem: function () {
             vm.widgets.push(new App.Admin.Widget());
         },

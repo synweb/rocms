@@ -1,0 +1,125 @@
+﻿@using System.Globalization
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Shop.Contract.Services
+@model string
+@{
+    var shopService = DependencyResolver.Current.GetService<IShopService>();
+
+    var goodsItem = shopService.GetGoods(Model);
+    int goodsId = goodsItem.GoodsId;
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+
+    NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalDigits = 0 };
+
+    ViewBag.Title = goodsItem.Name;
+    var compatibles = goodsItem.CompatibleGoods.SelectMany(x => x.CompatibleGoods);
+}
+
+
+@*@if (breadCrumbs.Any())
+{
+    Html.RenderPartial("_BreadCrumbs", breadCrumbs);
+}*@
+
+
+<div class="breadcrumbs">
+    <ul>
+        <li><a href="#"><em class="fa fa-home"></em></a></li>
+        <li><a href="#">Каталог</a></li>
+    </ul>
+</div>
+<h1>@goodsItem.Name</h1>
+<div class="goods">
+    <div class="row">
+        <div class="col-md-6">
+            <figure>
+                <img src="@Url.Action("Image", "Gallery", new {id = goodsItem.MainImageId})" alt="@goodsItem.Description" class="img-responsive">
+                @if (goodsItem.Actions.Any())
+                {
+                    <div class="goods-tag"><em class="glyphicon glyphicon-fire"></em></div>
+                }
+            </figure>
+        </div>
+        <div class="col-md-6">
+
+            @if (goodsItem.Actions.Any())
+            {
+                <div class="goods-price action">@goodsItem.DiscountedPrice.ToString("# ###.##", nfi) руб. <span class="old-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</span></div>
+            }
+            else
+            {
+                <div class="goods-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</div>
+            }
+            <p>
+                @goodsItem.Description
+            </p>
+            <div class="buttons">
+                <a href="#" class="btn btn-lg btn-light">Купить в один клик</a>
+                <a href="#" class="btn btn-lg btn-dark"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+            </div>
+        </div>
+    </div>
+    <div class="pd-lg">
+
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Описание</a></li>
+            <li role="presentation"><a href="#specs" aria-controls="specs" role="tab" data-toggle="tab">Характеристики</a></li>
+            <li role="presentation"><a href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab">Отзывы</a></li>
+            <li role="presentation"><a href="#compatibles" aria-controls="compatibles" role="tab" data-toggle="tab">Аксессуары</a></li>
+            <li role="presentation"><a href="#delivery" aria-controls="delivery" role="tab" data-toggle="tab">Доставка и оплата</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="description">
+                @Ro(goodsItem.HtmlDescription)
+            </div>
+            <div role="tabpanel" class="tab-pane" id="specs">
+                <div class="specs-list">
+                    @foreach (var spec in goodsItem.GoodsSpecs)
+                    {
+                        <div class="spec">
+                            <div class="row">
+                                <div class="col-sm-8">@spec.Spec.Name</div>
+                                <div class="col-sm-4">@(!string.IsNullOrEmpty(spec.Spec.Prefix)? spec.Spec.Prefix+" ":"")@spec.Value @spec.Spec.Postfix</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="reviews">...</div>
+            <div role="tabpanel" class="tab-pane" id="compatibles">
+                <ul>
+                    @foreach (var item in compatibles)
+                    {
+                        <li>@item.Name</li>
+                    }
+                </ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="delivery">...</div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+@Js("/bin/Content/client/shop")
+
+@JsInline(@<script type="text/javascript">
+    $(function () {
+        $("select.pack").change(function () {
+            $("span[data-pack-id]").hide();
+            $("span[data-pack-id=" + $("select.pack").val() + "]").show();
+        });
+        $("select.pack").change();
+    });
+</script>)

@@ -1,0 +1,45 @@
+﻿@using Resources
+@model RoCMS.Web.Contract.Models.Slide
+@{
+    string imgSrc;
+    if (!String.IsNullOrEmpty(Model.ImageId))
+    {
+        imgSrc = Url.Action("Thumbnail", "Gallery", new {id = Model.ImageId});
+    }
+    else
+    {
+        imgSrc = Url.Content("~/Content/admin/ro/img/no-image.png");
+    }
+}
+
+<div class="slide-creation" data-slider-id="@Model.SliderId" data-slide-id=@(Model.SlideId==0?"-1":Model.SlideId.ToString())>
+    <ul>
+        <li>
+            @Html.LabelFor(m => m.Title, Strings.CreateSlide_Title)
+        </li>
+        <li>
+            @Html.TextBoxFor(m => m.Title, new {@class="slide-title form-control"})
+        </li>
+        <li>
+            @Html.LabelFor(m => m.Description, Strings.CreateSlide_Description)
+        </li>
+        <li>
+            @*@Html.TextBoxFor(m => m.Description, new { @class = "slide-description form-control" })*@
+            <textarea class="slide-description form-control" name="Description" cols="3">@Model.Description</textarea>
+        </li>
+        <li>
+            @Html.LabelFor(m => m.Link, Strings.CreateSlide_Link)
+        </li>
+        <li>
+            @Html.TextBoxFor(m => m.Link, new { @class = "slide-link form-control" })
+        </li>
+        <li>
+            @Html.Label(Strings.CreateSlide_Image)
+        </li>
+        <li>
+            <img class="slide-img pointer" src="@imgSrc" data-id="@Model.ImageId"/>
+        </li>
+    </ul>
+
+</div>
+

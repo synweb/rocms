@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2FFEE8F9-9E87-4347-8D5D-649BCD044301}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RoCMS.Shop.Data</RootNamespace>
+    <AssemblyName>RoCMS.Shop.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Gateways\ActionCategoryGateway.cs" />
+    <Compile Include="Gateways\ActionGateway.cs" />
+    <Compile Include="Gateways\ActionGoodsGateway.cs" />
+    <Compile Include="Gateways\ActionManufacturerGateway.cs" />
+    <Compile Include="Gateways\CartGateway.cs" />
+    <Compile Include="Gateways\CartItemGateway.cs" />
+    <Compile Include="Gateways\CategoryGateway.cs" />
+    <Compile Include="Gateways\ClientGateway.cs" />
+    <Compile Include="Gateways\CompatibleSetGateway.cs" />
+    <Compile Include="Gateways\CompatibleSetGoodsGateway.cs" />
+    <Compile Include="Gateways\CurrencyGateway.cs" />
+    <Compile Include="Gateways\DimensionGateway.cs" />
+    <Compile Include="Gateways\GoodsPackGateway.cs" />
+    <Compile Include="Gateways\GoodsReviewGateway.cs" />
+    <Compile Include="Gateways\GoodsSpecGateway.cs" />
+    <Compile Include="Gateways\ManufacturerGateway.cs" />
+    <Compile Include="Gateways\SpecCategoryGateway.cs" />
+    <Compile Include="Gateways\GoodsAwaitingGateway.cs" />
+    <Compile Include="Gateways\GoodsCategoryGateway.cs" />
+    <Compile Include="Gateways\GoodsImageGateway.cs" />
+    <Compile Include="Gateways\GoodsInOrderGateway.cs" />
+    <Compile Include="Gateways\GoodsItemGateway.cs" />
+    <Compile Include="Gateways\OrderGateway.cs" />
+    <Compile Include="Gateways\PackGateway.cs" />
+    <Compile Include="Gateways\PickUpPointGateway.cs" />
+    <Compile Include="Gateways\RegularCustomerDiscountGateway.cs" />
+    <Compile Include="Gateways\ShopBaseGateway.cs" />
+    <Compile Include="Gateways\ShopBasicGateway.cs" />
+    <Compile Include="Gateways\ShopDbExportTaskGateway.cs" />
+    <Compile Include="Gateways\SpecGateway.cs" />
+    <Compile Include="Models\Action.cs" />
+    <Compile Include="Models\ActionManufacturer.cs" />
+    <Compile Include="Models\ActionCategory.cs" />
+    <Compile Include="Models\ActionGoods.cs" />
+    <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\CartItem.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\CompatibleSet.cs" />
+    <Compile Include="Models\CompatibleSetGoods.cs" />
+    <Compile Include="Models\Currency.cs" />
+    <Compile Include="Models\Dimension.cs" />
+    <Compile Include="Models\GoodsAwaiting.cs" />
+    <Compile Include="Models\GoodsCategory.cs" />
+    <Compile Include="Models\GoodsFilter.cs" />
+    <Compile Include="Models\GoodsImage.cs" />
+    <Compile Include="Models\GoodsInOrder.cs" />
+    <Compile Include="Models\GoodsItem.cs" />
+    <Compile Include="Models\GoodsPack.cs" />
+    <Compile Include="Models\GoodsReview.cs" />
+    <Compile Include="Models\GoodsSpec.cs" />
+    <Compile Include="Models\GoodsWithActualDiscounts.cs" />
+    <Compile Include="Models\Manufacturer.cs" />
+    <Compile Include="Models\MassPriceChangeTask.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderState.cs" />
+    <Compile Include="Models\Pack.cs" />
+    <Compile Include="Models\PickUpPoint.cs" />
+    <Compile Include="Models\RegularCustomerDiscount.cs" />
+    <Compile Include="Models\ShipmentType.cs" />
+    <Compile Include="Models\ShopDbExportTask.cs" />
+    <Compile Include="Models\SortCriterion.cs" />
+    <Compile Include="Models\Spec.cs" />
+    <Compile Include="Models\SpecCategory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoCMS.Base\RoCMS.Base.csproj">
+      <Project>{83422666-7277-47C6-8CD1-D2B9721596DA}</Project>
+      <Name>RoCMS.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RoCMS.Data\RoCMS.Data.csproj">
+      <Project>{AE493D69-0FF4-4153-B7AF-23513D8D914F}</Project>
+      <Name>RoCMS.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

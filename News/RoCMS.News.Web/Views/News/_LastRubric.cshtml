@@ -1,0 +1,63 @@
+﻿@using System.Globalization
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.Helpers
+@using RoCMS.Base.Models
+@using RoCMS.Helpers
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Services
+@using RoCMS.Web.Contract.Services
+@model int
+@{
+    var newsService = DependencyResolver.Current.GetService<INewsItemService>();
+    int total;
+    int count = 3;
+    var news = newsService.GetNewsPage(new NewsFilter() {CategoryQuery = Model.ToString()}, 1, int.MaxValue, out total);
+
+    var newsCatService = DependencyResolver.Current.GetService<INewsCategoryService>();
+    var category = newsCatService.GetCategory(Model);
+
+    var userService = DependencyResolver.Current.GetService<ISecurityService>();
+}
+
+
+
+@if (news.Any())
+{
+    <section class="pd-lg">
+        <div class="section_heading">
+            <h2>@category.Name</h2>
+        </div>
+
+        <div class="row">
+            @foreach (var item in news)
+            {
+
+                var author = userService.GetUser(item.AuthorId).Username;
+
+                <div class="col-md-4">
+                    <div class="blog-item">
+                        @if (!string.IsNullOrEmpty(item.ImageId))
+                        {
+                            <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})">
+                                <img src="@Url.Action("Image", "Gallery", new {id = item.ImageId})" class="img-responsive" alt="@item.Title">
+                            </a>
+                        }
+                        <div class="date-post">@item.PostingDate.ToString("d MMM yyyy HH:mm", CultureInfo.CurrentUICulture)</div>
+                        <div class="post-meta">Автор: @author </div>
+                        <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
+                        <p>@item.Description</p>
+
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="more-link-container">
+            <a class="more-link" href="@Url.RouteUrl("BlogModuleSEF", new {relativeUrl = category.CanonicalUrl})">
+                Еще из рубрики "@category.Name" →
+            </a>
+        </div>
+
+
+    </section>
+}

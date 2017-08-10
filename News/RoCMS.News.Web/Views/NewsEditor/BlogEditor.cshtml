@@ -1,0 +1,98 @@
+﻿@using System.Web.Optimization
+@using Newtonsoft.Json.Converters
+@using RoCMS.Base.Helpers
+@using RoCMS.Base.Models
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Services
+@using RoCMS.News.Contract.Resources
+@using RoCMS.Web.Contract.Extensions
+@using RoCMS.Web.Contract.Services
+@model RoCMS.News.Contract.Models.Blog
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+    var rootUrl = settingsService.GetSettings().RootUrl;
+
+}
+<div>
+    <form class="personal-blog-editor form-horizontal comment_form">
+        <input type="hidden" name="blogId" value="@Model.BlogId" />
+        <input type="hidden" name="ownerId" value="@Model.OwnerId" />
+        <div class="form-group">
+            <label class="col-sm-3 control-label text-right">Адрес *</label>
+            <div class="col-sm-5">
+                <div class="row">
+                    <div class="col-xs-7 nopadding-right">
+                        <p class="form-control-static blog-address-pre">@(rootUrl)/blogs/</p>
+                    </div>
+                    <div class="col-xs-5 nopadding-left">
+                        <input type="text" name="relativeUrl" value="@Model.RelativeUrl"
+                               class="form-control"
+                               data-val="true" data-val-required="Поле обязательно для заполнения"
+                               data-val-regex="Используйте строчные латинские буквы a-z, цифры 0-9 и знак подчёркивания _ (не в начале и не в конце)." data-val-regex-pattern="^[a-z0-9]([a-z0-9_-]*[a-z0-9])?$"
+                               data-val-urlexists="Блог с таким адресом уже существует. Выберите другой адрес."
+                               data-toggle="tooltip" data-placement="top" title="Используйте строчные латинские буквы a-z, цифры 0-9 и знак подчёркивания _ (не в начале и не в конце)." />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <span class="field-validation-valid" data-valmsg-for="relativeUrl" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label text-right">Заголовок *</label>
+            <div class="col-sm-5">
+                <input type="text" name="title" value="@Model.Title" class="form-control"
+                       data-val="true" data-val-required="*" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label text-right">Подзаголовок</label>
+            <div class="col-sm-5">
+                <input type="text" name="subtitle" value="@Model.Subtitle" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-4">
+                <input type="submit" value="Сохранить" class="update-blog btn btn-success" />
+                <a href="@Url.RouteUrl("UserBlog", new {blogUrl = Model.RelativeUrl})">Перейти к блогу</a>
+            </div>
+            <div class="float-right return-link">
+                <a class="text-right" href="/NewsEditor/Blogs">@Strings.EditBlog_ReturnToBlogs</a>
+            </div>
+            <div class="clear-both" />
+        </div>
+
+
+    </form>
+</div>
+
+@Js("/bin/Content/admin/news")
+
+@JsInline(
+    @<script>
+        $.validator.addMethod("urlexists", function (value, element) {
+            var isSuccess = false;
+
+            $.ajax({
+                url: "/api/news/blog/client/free/" + value,
+                data: {},
+                async: false,
+                success:
+                    function (msg) { isSuccess = msg === "true" ? true : false }
+            });
+            return isSuccess;
+        });
+        $.validator.unobtrusive.adapters.addBool("urlexists");
+        $(function () {
+
+
+            blogEditorLoaded();
+        });
+
+
+    </script>)

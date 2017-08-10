@@ -1,0 +1,280 @@
+﻿
+@using RoCMS.Shop.Contract.Models
+@model RoCMS.Shop.Contract.Models.Client
+
+@{
+    Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    ViewBag.Title = "Личный кабинет";
+
+    IEnumerable<Order> orders = ViewBag.Orders ?? new List<Order>();
+
+
+    int clientId = Model != null ? Model.ClientId : 0;
+}
+
+<div class="personal">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="breadcrumb">
+                <a href="/">Главная</a>
+                <span class="delimiter"></span> <a class="last" href="#" title="Личный кабинет">Личный кабинет</a>
+            </div>
+            <h1>Личный кабинет</h1>
+        </div>
+    </div>
+
+    @if (Model == null)
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <span style="display: block; text-align:center;">Вы еще не совершали заказы в нашем магазине</span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <form class="form-horizontal profile">
+                <div class="col-xs-6">
+                    <h2>Контакты</h2>
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Фамилия:</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control last-name" value="@Model.LastName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Имя:</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control first-name" value="@Model.Name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Телефон:</label>
+                        <div class="col-xs-8">
+                            <input type="text" value="@Model.Phone" class="form-control phone" placeholder="+7 (903) 555-1212" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Email:</label>
+                        <div class="col-xs-8">
+                            <input type="text" value="@Model.Email" class="email form-control" disabled="disabled" />
+                        </div>
+                    </div>
+                    @*<div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Пароль:</label>
+                                <div class="col-xs-6">
+                                    <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().password">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Подтвердите пароль:</label>
+                                <div class="col-xs-6">
+                                    <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().confirmPassword">
+                                </div>
+                            </div>
+                        </div>*@
+
+                </div>
+                <div class="col-xs-6">
+                    <h2>Базовый адрес доставки</h2>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Город:</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control city" value="@Model.Address.City" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Индекс:</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control post-code" value="@Model.Address.PostCode" />
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label class="control-label col-xs-4">Метро:</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control metro" value="@Model.Address.Metro" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-4">Улица:</label>
+                        <div class="col-xs-8">
+                            <input type="text" class="form-control street" value="@Model.Address.Street" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-1">Дом:</label>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control house" value="@Model.Address.House" />
+                        </div>
+                        <label class="control-label float-left">Под.:</label>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control front-number" value="@Model.Address.FrontNumber" />
+                        </div>
+                        <label class="control-label float-left">Кв.:</label>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control appartment" value="@Model.Address.Appartment" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <button class="green-btn save-profile">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    }
+
+    @if (orders.Any())
+    {
+        <div class="row cart">
+            <div class="col-xs-12">
+                <h2>История заказов</h2>
+                @foreach (var order in orders)
+                {
+                    <h4><a onclick="true" class="show-order-details">@order.CreationDate.ToShortDateString()</a></h4>
+                    <div style="display: none;">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Наименование</th>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
+                                    <th>Сумма</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var goodsItem in order.GoodsInOrder)
+                                {
+
+                                <tr>
+                                    <td class="thumb">
+                                        <a href="/Shop/Goods/@goodsItem.GoodsId">
+                                            <img src="/Gallery/Thumbnail/@goodsItem.Goods.MainImageId" alt="@goodsItem.Goods.Name" />
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="/Shop/Goods/@goodsItem.GoodsId">
+                                            @(goodsItem.PackId.HasValue && goodsItem.Goods.Packs.Any(x => x.PackInfo.PackId == goodsItem.PackId) ?
+                                                      String.Format("{0} {1}", goodsItem.Goods.Name, goodsItem.Goods.Packs.First(x => x.PackInfo.PackId == goodsItem.PackId).PackInfo.Name) : goodsItem.Goods.Name)
+                                        </a>
+                                    </td>
+                                    <td class="price">
+                                        <span>@goodsItem.Price</span>&nbsp;<em class="fa fa-rub"></em>
+                                    </td>
+                                    <td class="quantity">
+                                        <span>@goodsItem.Quantity</span>
+                                    </td>
+                                    <td class="summary">@(Math.Round(goodsItem.Price * goodsItem.Quantity, 2))<span></span>&nbsp;<em class="fa fa-rub"></em></td>
+                                </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                        @if (order.DeliveryPrice.HasValue)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    Стоимость доставки: @order.DeliveryPrice <em class="fa fa-rub"></em>
+                                </div>
+                            </div>
+                        }
+                        @if (order.TotalDiscount > 0)
+                        {
+                            <div class="row">
+
+                                <div class="col-xs-12">
+
+                                    Скидка постоянному покупателю: <strong>@order.TotalDiscount </strong> %
+
+                                </div>
+                            </div>
+                        }
+                        <div class="row">
+                            <div class="col-xs-12 total">
+                                @if (order.TotalDiscount > 0)
+                                {
+                                    <text>Всего учетом скидки и доставки:</text>
+                                }
+                                else if (order.DeliveryPrice.HasValue)
+                                {
+                                    <text>Всего с учетом доставки</text>
+                                }
+                                else
+                                {
+                                    <text>Всего без учета доставки</text>
+                                }
+                                <span>@order.Summary</span>&nbsp;<em class="fa fa-rub"></em>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+
+
+                }
+            </div>
+        </div>
+    }
+</div>
+
+
+
+@JsInline(@<script>
+    $(function () {
+        $(".show-order-details").click(function () {
+            var table = $(this).parent("h4").next("div");
+            table.animate({ height: ["toggle", "swing"] }, 300);
+            return false;
+        });
+
+        $("input.phone").mask('+7 (000) 000-00-00');
+
+        $("button.save-profile").click(function () {
+            var $form = $('form.profile');
+            jQuery.validator.unobtrusive.parse($form);
+            if ($form.valid()) {
+                var lastName = $("input.last-name").val();
+                var name = $("input.first-name").val();
+                var phone = $("input.phone").val();
+                var city = $("input.city").val();
+                var metro = $("input.metro").val();
+                var postCode = $("input.post-code").val();
+                var street = $("input.street").val();
+                var house = $("input.house").val();
+                var frontNumber = $("input.front-number").val();
+                var appartment = $("input.appartment").val();
+
+                blockUI();
+
+                postJSON("/api/shop/client/update", {
+                    lastName: lastName,
+                    name: name,
+                    phone: phone,
+                    address: {
+                        city: city,
+                        metro: metro,
+                        street: street,
+                        house: house,
+                        frontNumber: frontNumber,
+                        appartment: appartment,
+                        postCode: postCode
+
+                    },
+                    clientId: '@clientId'
+                }, function () {
+
+                }).always(function () { unblockUI(); });
+            }
+            else {
+                $form.validate().focusInvalid();
+            }
+            return false;
+        });
+    });
+</script>)

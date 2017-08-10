@@ -1,0 +1,9 @@
+﻿@{
+    
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_userLayout.cshtml";
+    }
+}
+
+@Html.Partial("_ImageList")

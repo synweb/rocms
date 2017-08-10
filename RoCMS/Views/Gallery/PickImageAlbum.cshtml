@@ -1,0 +1,66 @@
+﻿@using RoCMS.Web.Contract.Extensions
+@model ICollection<RoCMS.Web.Contract.Models.Album>
+
+@{
+    var albums = Model.OrderBy(x => x.Name);
+}
+
+
+
+<div class="picking-buttons">
+    <button type="button" class="btn btn-success album-create-indialog">
+        <i class="fa fa-plus"></i>
+        <span>Добавить альбом</span>
+    </button>
+</div>
+
+@*<ul>
+    @foreach (var album in albums)
+    {
+        <li class="image-pick-element">
+            <a class="album-pick" onclick="true" data-id="@album.AlbumId"><i class="fa fa-folder-open"></i>&nbsp;@album.Name</a>
+        </li>
+    }
+</ul>*@
+
+
+<table class="pick-table album-pick-table table table-bordered table-condensed table-hover table-striped" data-album-id="@ViewBag.AlbumId">
+    <thead>
+    <tr>
+        <th>Альбом</th>
+        <th>Изображений</th>
+        <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var album in albums)
+    {
+        <tr class="album-pick" data-id="@album.AlbumId">
+            <td class="thumb-td">
+                <span>@album.Name</span>
+            </td>
+            <td>
+                @album.ImageCount
+            </td>
+            <td>
+                @album.CreationDate.ApplySiteTimezone().ToString("dd.MM.yyyy HH:mm")
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<script id="album-pick-template" type="text/x-jquery-tmpl">
+    <tr class="album-pick" data-id="${albumId}">
+        <td class="thumb-td">
+            <span>${name}</span>
+        </td>
+        <td>
+            0
+        </td>
+        <td>
+            Создан только что
+        </td>
+    </tr>
+
+</script>

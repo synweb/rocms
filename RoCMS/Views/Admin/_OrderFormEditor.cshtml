@@ -1,0 +1,182 @@
+﻿@using RoCMS.Web.Contract.Models
+@model RoCMS.Web.Contract.Models.OrderForm
+
+@{
+
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+
+    if (((string)ViewBag.Action) == "Create")
+    {
+        ViewBag.PageTitle = "Новая форма обратной связи";
+    }
+    else
+    {
+        ViewBag.PageTitle = "Форма обратной связи" + " '" + Model.Title + "'";
+    }
+
+    ViewBag.Title = ViewBag.PageTitle;
+
+    string orderFormId = Model != null ? Model.OrderFormId.ToString() : "";
+}
+
+<form class="form-horizontal" data-bind="with: orderForm">
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Заголовок формы (для служебного использования, обязательно)</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: title" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Тема письма</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: emailSubject" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Дата и время в теме письма</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" type="checkbox" data-bind="checked: dateInEmailSubject" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Email</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: email" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>BccEmail</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: bccEmail" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>URL страницы "Спасибо"</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: redirectUrl" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Текст всплывающего сообщения</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: successMessage" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Код события метрики</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: metricsCode" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Загрузка файлов</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" type="checkbox" data-bind="checked: fileAttachmentEnabled" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-sm-3">
+            <label>Максимальное количество файлов</label>
+        </div>
+        <div class="col-sm-9">
+            <input class="form-control" data-bind="value: maxFileAttachmentsCount" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="form-control-static col-xs-3">
+            <label>Поля формы</label>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-success" data-bind="click: addField"><em class="fa fa-plus"></em></button>
+        </div>
+    </div>
+    <div class="fields" data-bind="foreach: fields">
+        <div class="form-group">
+            <div class="col-sm-3">
+                <input type="text" placeholder="Заголовок поля" class="form-control" data-bind="value: labelText"/>
+            </div>
+            <div class="col-sm-3">
+                <select class="form-control" data-bind="value: valueType">
+                    <option value="@OrderFormFieldType.Text">Текст</option>
+                    <option value="@OrderFormFieldType.Email">Email</option>
+                    <option value="@OrderFormFieldType.Name">Имя</option>
+                    <option value="@OrderFormFieldType.Phone">Телефон</option>
+                    <option value="@OrderFormFieldType.Number">Число</option>
+                    <option value="@OrderFormFieldType.TextArea">Широкое текстовое поле</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <input class="form-control" title="Обязательно" type="checkbox" data-bind="checked: required"/>
+
+            </div>
+            <div class="col-sm-3">
+                <input class="form-control" title="Сортировка" type="number" data-bind="value: sortOrder"/>
+            </div>
+            <div class="col-sm-1"><button class="btn btn-danger" data-bind="click: function() {$parent.removeField($data, $parent);}"><em class="fa fa-trash-o"></em></button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-xs-3">
+            <label>Шаблон формы</label>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-success" data-bind="click: generateTemplate">Сгенерировать</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-9 col-sm-offset-3">
+            <textarea rows="5" class="form-control" data-bind="value: htmlTemplate"></textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-control-static col-xs-3">
+            <label>Шаблон письма</label>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-success" data-bind="click: generateEmailTemplate">Сгенерировать</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-9 col-sm-offset-3">
+            <textarea rows="5" class="form-control" data-bind="value: emailTemplate"></textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-xs-12">
+            <button class="btn btn-success" data-bind="click: $root.save">Сохранить</button>
+        </div>
+        
+    </div>
+
+</form>
+
+
+@Js("Content/admin/ro/js/rocms.orderForm.edit.js")
+@JsInline(@<script type="text/javascript">
+
+    $(function () {
+        onOrderFormEditorLoad(@orderFormId);
+    });
+
+    </script>)

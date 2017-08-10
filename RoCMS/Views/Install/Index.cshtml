@@ -1,0 +1,104 @@
+﻿@{
+    Layout = "_installLayout.cshtml";
+    ViewBag.Title = "Установка RoCMS";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <form class="settings form-horizontal" autocomplete="off">
+            <h3>База данных</h3>
+            <div class="form-group">
+                <label class="control-label col-md-6">Сервер</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="DbDataSource" autocomplete="off" data-val="true" data-val-required="*" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">База</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="DbDatabase" autocomplete="off" data-val="true" data-val-required="*" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">Пользователь</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="DbLogin" autocomplete="off" data-val="true" data-val-required="*" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">Пароль</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control password" name="DbPassword" autocomplete="off" data-val="true" data-val-required="*" />
+                </div>
+            </div>
+            <p class="db-ok" style="display:none">Настройки базы указаны верно</p>
+            <p class="db-err" style="display: none">Не удалось подключиться к базе, перепроверьте настройки</p>
+
+
+            <h3>Управление сайтом</h3>
+
+            <div class="form-group">
+                <input type="hidden" name="AdminLogin" value="admin" />
+                <label class="control-label col-md-6">Пароль администратора</label>
+                <div class="col-md-6">
+                    <input type="text" class="form-control password" name="AdminPassword" autocomplete="off" data-val="true" data-val-required="*" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-6">URL сайта</label>
+                <div class="col-md-6">
+                    @{
+                        var url = Request.Url;
+                        string rootUrl = url == null ? null : url.Authority;
+                    }
+                    <input type="text" class="form-control root-url" name="RootUrl" autocomplete="off" data-val="true" data-val-required="*" value="http://@rootUrl" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-6 col-md-6">
+                    <button type="button" class="btn btn-success install" style="border:0; background-color:#bc2424">Установить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@JsInline(@<script>
+    $(function () {
+        $("form.settings input").on("change", function() {
+            $('.db-err').hide();
+            $('.db-ok').hide();
+        });
+
+        $("button.install").click(function () {
+            var $form = $("form.settings");
+            $.validator.unobtrusive.parse($form, true);
+            if ($form.valid()) {
+                $(".install").attr("disabled", "disabled");
+                var data = {
+                    DbDataSource: $("input[name=DbDataSource]").val(),
+                    DbDatabase: $("input[name=DbDatabase]").val(),
+                    DbLogin: $("input[name=DbLogin]").val(),
+                    DbPassword: $("input[name=DbPassword]").val(),
+                    AdminLogin: $("input[name=AdminLogin]").val(),
+                    AdminPassword: $("input[name=AdminPassword]").val(),
+                    RootUrl: $("input[name=RootUrl]").val(),
+                }
+                blockUI();
+                postJSON("/Install/Install", data, function(res) {
+                        window.location.href = "/";
+                    }).fail(function() {
+                        $('.db-err').show();
+                        $(".install").removeAttr("disabled");
+                    })
+                    .always(function() {
+                        unblockUI();
+                    });
+            } else {
+                $form.validate().focusInvalid();
+            }
+        });
+    })
+
+    </script>)

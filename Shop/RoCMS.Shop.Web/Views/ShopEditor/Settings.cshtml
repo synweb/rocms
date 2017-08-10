@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.PageTitle = "Настройки магазина";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+@Js("/bin/Content/admin/shop")
+
+<div>
+
+    <h1>Настройки магазина</h1>
+
+    <form class="form-horizontal" data-bind="with: settings">
+        <div class="form-group">
+            <label class="control-label col-lg-4">Стоимость доставки курьером, руб</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: deliveryCost">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Стоимость самовывоза, руб</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: selfPickupCost">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Города с курьерской доставкой (через запятую)</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: courierCities">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Url каталога</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: shopUrl">
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
+        </div>
+    </form>
+    
+    @JsInline(@<script>
+        $(function () {
+            shopSettingsLoaded();
+        });
+    </script>)
+</div>

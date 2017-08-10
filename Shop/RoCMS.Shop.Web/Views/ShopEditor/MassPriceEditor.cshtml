@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "Редактор цен";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+@Js("/bin/Content/admin/shop")
+
+<script type="text/x-jquery-tmpl" id="category-item-template">
+    <span class="category-item">
+        <span data-bind="text: name"></span>
+        <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeCategory($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+    </span>
+</script>
+
+<script type="text/x-jquery-tmpl" id="manufacturer-list-item-template">
+    <span class="manufacturer-item">
+        <span data-bind="text: name"></span>
+        <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeManufacturer($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+    </span>
+</script>
+
+<div class="mass-change">
+    <h1>Массовое изменение цен</h1>
+    <form class="form-horizontal">
+        <div class="alert alert-warning" style="font-size: 16px; font-weight: bold;">
+            <span>
+                Обратите внимание: <br/>
+                1. Элементы фильтра одного типа объединяются между собой по логическому ИЛИ. Элементы разных типов объединяются по И.<br/>
+                Это означает, что если вы зададите, например, изменение цен для категорий Чай, Кофе производителя А, то будут изменены все товары производителя А в категориях Чай и Кофе.<br/>
+                2. Если выбрана категория, содержащая подкатегории, цены на товары в подкатегориях также будут изменены
+
+            </span>
+        </div>
+
+        <div class="form-group" data-bind="with: massChange">
+            <label class="control-label col-xs-2" for="price">Категории</label>
+            <div class="col-xs-9">
+                <div class="row categories-row" data-bind="template: { name: 'category-item-template', foreach: filter().categoryIds }">
+                </div>
+            </div>
+            <div class="col-xs-1">
+                <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
+            </div>
+        </div>
+        <div class="form-group" data-bind="with: massChange">
+            <label class="control-label col-xs-2" for="price">Производители</label>
+            <div class="col-xs-9">
+                <div class="row manufacturers-row" data-bind="template: { name: 'manufacturer-list-item-template', foreach: filter().manufacturerIds }">
+                </div>
+            </div>
+            <div class="col-xs-1">
+                <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addManufacturer"><em class="fa fa-plus"></em></a>
+            </div>
+        </div>
+        <div class="form-group" data-bind="with: massChange">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-10">
+                <label>Увеличить</label><input type="radio" name="Increase" value="true" data-bind="checked: increase" />
+                <label>Уменьшить</label><input type="radio" name="Increase" value="false" data-bind="checked: increase" />
+                на
+                <input type="number" data-bind="value: value">
+                процентов
+            </div>
+        </div>
+        <div class="form-group" data-bind="with: massChange">
+            <label class="control-label col-xs-2" for="price">Комметарий</label>
+            <div class="col-xs-10"><textarea class="form-control" data-bind="value: comment"></textarea></div>
+        </div>
+
+        <div class="form-group text-center">
+            <button class="btn btn-success" data-bind="click: send">Запустить изменение цен</button>
+            <button class="btn btn-success" data-bind="click: function(){ massChange().clear(); }">Очистить</button>
+        </div>
+        <div class="alert alert-warning" style="font-size: 16px; font-weight: bold; text-align:center;">
+            <span>
+                Процесс изменения цен может занимать некоторое время. Для того, чтобы узнать текущий статус, обновите страницу.
+                Пожалуйста, не запускайте сразу много задач на изменение цен.
+            </span>
+        </div>
+    </form>
+</div>
+
+<div>
+    <h3>История массовых изменений цен</h3>
+    <table class="table">
+        <tr>
+            <th>Дата</th>
+            <th>Описание</th>
+            <th>Комментарий</th>
+            <th>Статус</th>
+        </tr>
+        <tbody data-bind="template: { name: 'mass-price-change-task-item', foreach: massChangeTasks }"></tbody>
+    </table>
+
+    <script type="text/html" id="mass-price-change-task-item">
+        <tr>
+            <td data-bind="text: creationDate"></td>
+            <td data-bind="text: description"></td>
+            <td data-bind="text: comment"></td>
+            <td data-bind="text: state"></td>
+        </tr>
+    </script>
+</div>
+
+@JsInline(@<script>
+    $(function () {
+        massPriceEditorLoaded();
+    });
+</script>)

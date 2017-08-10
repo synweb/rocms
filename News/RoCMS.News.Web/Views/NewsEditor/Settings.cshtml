@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+@Js("/bin/Content/admin/news")
+
+<div>
+
+    <h1>Настройки модуля новостей</h1>
+
+    <form class="form-horizontal" data-bind="with: settings">
+        <div class="form-group">
+            <label class="control-label col-lg-4">Url каталога новостей</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: blogUrl">
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
+        </div>
+    </form>
+    <div class="alert-warning text-center">Для вступления изменений в силу необходимо перезагрузить сайт.</div>
+    @JsInline(@<script>
+        $(function () {
+            newsSettingsLoaded();
+        });
+    </script>)
+</div>

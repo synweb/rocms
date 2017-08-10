@@ -1,0 +1,105 @@
+﻿@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@{
+    ViewBag.Title = ViewBag.PageTitle = "Рубрики";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    string emptyImg = Url.Content("~/Content/admin/ro/img/no-image.png");
+}
+
+
+<div>
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createCategory"><i class="fa fa-plus"></i>&nbsp;Создать рубрику</a>
+        <a class="button-edit-order btn btn-success" data-bind="click: enableEditOrder"><i class="fa fa-pencil"></i>&nbsp;Изменить порядок рубрик</a>
+        <a class="button-save-order btn btn-success" data-bind="click: saveOrder, style: {display: orderEditingEnabled() === true ? 'inline-block': 'none'}"><i class="fa fa-save"></i>&nbsp;Сохранить порядок рубрик</a>
+    </div>
+    <div class="shop-categories-list">
+        <ul data-bind="template: { name: 'category-list-item-template', foreach: childrenCategories }"></ul>
+    </div>
+
+    <script type="text/html" id="category-list-item-template">
+        <li class="category">
+            <div class="category-name" data-bind="click: $root.selectCategory">
+                <div style="float: right">
+                    <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    {
+                        <a data-bind="click: function (e) { if(!confirmRemoval()) { return false;} remove($data, $parent);}, clickBubble: false" class="remove button-delete btn btn-danger btn-xs" title="Удалить"><i class="fa fa-times"></i></a>
+                    }
+
+                    <div data-bind="style: {display: $root.orderEditingEnabled() === true ? 'inline-block': 'none'}">
+                        <a data-bind="click: function () { moveUp($data, $parent); }, clickBubble: false" class="moveUp button-up btn btn-warning btn-xs" title="Вверх"><i class="fa fa-chevron-up"></i></a>
+                        <a data-bind="click: function () { moveDown($data, $parent); }, clickBubble: false" class="moveDown button-down btn btn-warning btn-xs" title="Вниз"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+
+
+                </div>
+                <label data-bind="text: name"></label>
+                <a href="#" data-bind="click: addChild, clickBubble: false" title="Добавить подрубрику"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div style="clear: both; padding-left: 30px;" class="child-categories">
+                <div>
+                    <ul data-bind="template: { name: 'category-list-item-template', foreach: childrenCategories }"></ul>
+                </div>
+            </div>
+        </li>
+    </script>
+
+
+    <script type="text/html" id="categoryTemplate">
+        <div class="shop-category">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Название</label>
+                    <div class="col-xs-10">
+                        <input type="text" class="form-control" data-bind="value: name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Относительный путь</label>
+                    <div class="col-xs-10">
+                        <input type="text" class="form-control" data-bind="value: relativeUrl">
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="control-label col-xs-2">Относительный URL</label>
+                        <div class="col-xs-10">
+                            <input type="text" class="form-control" data-bind="value: relativeUrl">
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Родительская рубрика</label>
+                    <div class="col-xs-10" style="margin-top: 15px;">
+                        <span data-bind="text: parentCategory().name"></span>
+                        <a data-bind="click: editParentCategory, clickBubble: false" class="btn btn-warning btn-xs" title="Изменить"><i class="fa fa-pencil"></i></a>
+                        <a data-bind="click: clearParentCategory, clickBubble: false" class="remove button-delete btn btn-danger btn-xs" title="Сделать корневой"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Скрывать в каталоге</label>
+                    <div class="col-xs-10">
+                        <input type="checkbox" data-bind="checked: hidden">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </script>
+    @Js("/bin/Content/admin/news")
+
+    @if (!Request.IsAjaxRequest())
+    {
+
+
+        @JsInline(@<script>
+
+            $(function () {
+                newsCategoriesEditorLoaded();
+            });
+        </script>)
+    }
+</div>

@@ -1,0 +1,13 @@
+﻿@using RoCMS.Shop.Contract.Services
+@model int
+           
+@{
+    IShopService shopService = DependencyResolver.Current.GetService<IShopService>();
+    var goodsItem = shopService.GetGoods(Model);
+    
+}
+
+@if (goodsItem != null)
+{
+    @Html.Partial("_GoodsListItem", goodsItem)
+}

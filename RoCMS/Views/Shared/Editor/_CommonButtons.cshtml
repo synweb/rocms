@@ -1,0 +1,36 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+
+@Js("Content/admin/vendor/FU/short")
+
+@if (User.IsAuthorizedForResource(RoCmsResources.Albums))
+{
+    @Js("Content/admin/ro/album/rocms.albums.js")
+    @JsInline(@<script>
+                   $(function() {
+                       InitImageUploader();
+                   });
+    </script>)
+    <button type="button" class="btn btn-primary btn-xs wysiwyg-insert wysiwyg-insert-image"><i class="fa fa-picture-o"></i>&nbsp;@Strings.AdminWYSIWYG_InsertImage</button>
+    <button type="button" class="btn btn-primary btn-xs wysiwyg-insert wysiwyg-insert-thumbnail"><i class="fa fa-picture-o"></i>&nbsp;@Strings.AdminWYSIWYG_InsertThumbnail</button>
+    <button type="button" class="btn btn-primary btn-xs wysiwyg-insert wysiwyg-insert-album"><i class="fa fa-columns"></i>&nbsp;@Strings.AdminWYSIWYG_InsertAlbum</button>
+}
+@if (User.IsAuthorizedForResource(RoCmsResources.Blocks))
+{
+    <button type="button" class="btn btn-primary btn-xs wysiwyg-insert wysiwyg-insert-block"><i class="fa fa-external-link"></i>&nbsp;@Strings.AdminWYSIWYG_InsertBlock</button>
+}
+@if (User.IsAuthorizedForResource(RoCmsResources.UploadFiles))
+{    
+    @JsInline(@<script>
+                   $(function() {
+                       InitFileUploader();
+                   });
+        </script>)
+    <button type="button" class="btn btn-primary btn-xs wysiwyg-insert wysiwyg-insert-file"><i class="fa fa-file-o"></i>&nbsp;@Strings.AdminWYSIWYG_InsertFile</button>
+}
+@if (User.IsAuthorizedForResource(RoCmsResources.Dev_InterfaceStrings))
+{
+    <button type="button" class="btn btn-primary btn-xs wysiwyg-insert wysiwyg-insert-istr"><i class="fa fa-align-left"></i>&nbsp;Вставить строку интерфейса</button>
+}

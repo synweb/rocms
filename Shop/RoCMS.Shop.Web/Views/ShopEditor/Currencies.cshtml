@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.PageTitle = "Валюты";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+@Js("/bin/Content/admin/shop")
+<div>
+    <div class="currencies-container">
+
+        <a class="button-add btn btn-success" data-bind="click: createCurrency"><i class="fa fa-plus"></i>&nbsp;Добавить валюту</a>
+
+        <ul class="shipping-types-list" data-bind="template: { name: 'currency-list-item-template', foreach: currencies }"></ul>
+    </div>
+
+
+    <script type="text/html" id="currency-list-item-template">
+        <li class="currency-list-item" data-bind="click: $root.selectCurrency">
+            <div style="float: right">
+                <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                <a data-bind="click: function () { if(!confirmRemoval()) { return false;}  $root.removeCurrency($data); }, clickBubble: false"
+                   class="btn btn-danger btn-xs"
+                   title="Удалить">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+            <div class="row">
+                <div class="col-xs-4" data-bind="text: name"></div>
+                <div class="col-xs-3" data-bind="text: shortName"></div>
+                <div class="col-xs-3" data-bind="text: rate"></div>
+            </div>
+        </li>
+    </script>
+
+    <script type="text/html" id="currency-item-template">
+        <div class="currency-editor">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Идентификатор</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: currencyId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Название</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Сокращение</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: shortName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Курс</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: rate">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </script>
+
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            $(function () {
+                currenciesEditorLoaded();
+            });
+        </script>)
+    }
+
+
+
+</div>

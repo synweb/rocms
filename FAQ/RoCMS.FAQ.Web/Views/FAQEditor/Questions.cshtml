@@ -1,0 +1,58 @@
+﻿@model ICollection<RoCMS.FAQ.Contract.Models.Question>
+@{
+    ViewBag.PageTitle = ViewBag.Title = "Вопросы";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<a class="btn btn-success" href="/FAQEditor/CreateQuestion"><i class="fa fa-file-o"></i>&nbsp;Создать вопрос</a>
+
+<ul class="entity-list question-list o-sortable">
+    @foreach (var quetion in Model)
+    {
+        <li data-id="@quetion.QuestionId">
+            <div class="pull-right">
+                <div class="make-switch has-switch moderated-switch" data-on="success" data-off="warning">
+                    <input type="checkbox" @(quetion.Moderated ? "checked='checked'" : "")>
+                </div>
+                <a href="/FAQEditor/EditQuestion/@quetion.QuestionId" class="btn btn-warning btn-xs" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                <a href="#" class="btn btn-danger btn-xs delete" title="Удалить"><i class="fa fa-times"></i></a>
+            </div>
+            <div>
+                <span class="sortable-pin" draggable="true"><i class="fa fa-th"></i>&nbsp;</span>
+                <span @(string.IsNullOrEmpty(quetion.AnswerText) ? "class=label" : "")>
+                    @quetion.QuestionText
+                </span>
+            </div>
+        </li>
+    }
+</ul>
+
+
+@Js("/bin/Content/admin/faq")
+
+@JsInline(@<script>
+    $(function () {
+        questionListLoaded();
+
+        function reinitSortable() {
+            $('.o-sortable').sortable({
+                placeholderClass: 'sortable-placeholder',
+                handle: '.sortable-pin'
+            });
+        }
+        reinitSortable();
+        $('.o-sortable').on('sortupdate', function (e, obj) {
+            var ids = $(".entity-list li").map(function () {
+                return $(this).data("id");
+            }).get();
+
+            postJSON("/api/faq/questions/sort", ids, function(res) {
+                if (!res.succeed) {
+                    smartAlert("Ошибка при сортировке");
+                }
+            });
+            reinitSortable();
+        });
+
+    });
+</script>)

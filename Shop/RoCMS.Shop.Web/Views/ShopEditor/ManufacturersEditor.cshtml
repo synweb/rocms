@@ -1,0 +1,99 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Base.ForWeb.Models
+@{
+    ViewBag.PageTitle = "Производители и поставщики";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+@Js("/Content/base/vendor/ckeditor")
+@Js("/bin/Content/admin/shop")
+
+@Js("Content/admin/vendor/FU/short")
+@JsInline(@<script>
+    $(function () {
+        InitImageUploader();
+        InitFileUploader();
+    });
+    </script>)
+
+<div>
+
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createManufacturer"><i class="fa fa-plus"></i>&nbsp;@ShopStrings.Shop_Manufacturer_Create</a>
+    </div>
+    <div class="shop-manufacturer-list">
+        <ul data-bind="template: { name: 'manufacturer-item-template', foreach: manufacturers }"></ul>
+    </div>
+
+    <script type="text/html" id="manufacturer-item-template">
+        <li class="manufacturer" data-bind="click: $root.selectManufacturer">
+            <div style="float: right">
+                <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Manufacturer_Edit"><i class="fa fa-pencil"></i></a>
+                @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                {
+                    <a data-bind="click: function () { remove($data, $parent); }, clickBubble: false"
+                       class="btn btn-danger btn-xs"
+                       title="@ShopStrings.Shop_Manufacturer_Delete">
+                        <i class="fa fa-times"></i>
+                    </a>
+                }
+            </div>
+            <div><label data-bind="text: name"></label></div>
+        </li>
+    </script>
+
+    <script type="text/html" id="manufacturerTemplate">
+        <div class="shop-manufacturer">
+            <form class="form-horizontal" data-bind="with: vm">
+                <div class="col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Название</label>
+                        <div class="col-xs-10">
+                            <input type="text" class="form-control" data-bind="value: name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Страна</label>
+                        <div class="col-xs-10">
+                            <select id="fuckingSelect" class="form-control" data-bind="options: $root.countries, optionsText: 'name', optionsValue: 'countryId', value: countryId"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Адрес сайта</label>
+                        <div class="col-xs-10">
+                            <input type="text" class="form-control" data-bind="value: url">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Логотип</label>
+                        <div class="col-xs-10">
+                            <img alt="Логотип" data-bind="click: pickImage, thumbnailSrc: logoImageId"/>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Описание</label>
+                        <div class="col-xs-10">
+                            @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "manufacturerDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </script>
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            $(function () {
+                manufacturersEditorLoaded();
+            });
+        </script>)
+    }
+</div>

@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7C970A14-7C13-43E1-AF59-F592652D1CD5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RoCMS.Shop.Export</RootNamespace>
+    <AssemblyName>RoCMS.Shop.Export</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ExportShopService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShopDbSyncService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoCMS.Base\RoCMS.Base.csproj">
+      <Project>{83422666-7277-47C6-8CD1-D2B9721596DA}</Project>
+      <Name>RoCMS.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCMS.Shop.Contract\RoCMS.Shop.Contract.csproj">
+      <Project>{1C506F25-014A-4025-8E15-07FD5094F85E}</Project>
+      <Name>RoCMS.Shop.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCMS.Shop.Data\RoCMS.Shop.Data.csproj">
+      <Project>{2ffee8f9-9e87-4347-8d5d-649bcd044301}</Project>
+      <Name>RoCMS.Shop.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCms.Shop.Export.Contract\RoCMS.Shop.Export.Contract.csproj">
+      <Project>{effb37db-7de7-4b71-9433-9b06edc4e233}</Project>
+      <Name>RoCMS.Shop.Export.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCMS.Shop.Services\RoCMS.Shop.Services.csproj">
+      <Project>{2B33DED3-AFAA-4700-9D41-B68426A4A5A5}</Project>
+      <Name>RoCMS.Shop.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RoCMS.Web.Services\RoCMS.Web.Services.csproj">
+      <Project>{24a7e8f7-3f75-4326-ac83-7cd12a929b80}</Project>
+      <Name>RoCMS.Web.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\RoCms.WebContract\RoCMS.Web.Contract.csproj">
+      <Project>{5bb656e0-bfeb-42a2-b308-52ab78af8d38}</Project>
+      <Name>RoCMS.Web.Contract</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

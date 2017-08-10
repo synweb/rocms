@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Css("Content/base/vendor/Font-Awesome")
+    @Css("Content/base/ro/css")
+    @Css("Content/admin/vendor")
+    @Css("Content/admin/ro/css")
+    @RenderStylesheets()
+
+</head>
+<body>
+<div class="container" style="margin-top:40px; position:relative;">
+
+    
+    <h1>Установка <img src="/Content/base/ro/img/rocms-logo-install.png" style="height:50px; margin-top:-15px; margin-left:15px" /></h1>
+    <img src="/Content/base/ro/img/owl.png" style="position:absolute; right:0; top:0; opacity:0.1; height:800px"/>
+    @RenderBody()
+
+</div>
+
+    @Html.Partial("_SmartAlert")
+    @Js("Content/base/vendor/jquery/core")
+    @Js("Content/base/ro/js")
+    @RenderScripts()
+</body>
+</html>

@@ -1,0 +1,36 @@
+﻿@model IList<RoCMS.Shop.Contract.Models.GoodsItem>
+
+@{
+    var goods = Model;
+}
+
+
+<div class="product-grid">
+    <ul>
+       
+        @for (int i = 0; i < goods.Count; i++)
+        {
+            string cls = "";
+            var cat = goods[i];
+            switch (i % 3)
+            {
+                case 0:
+                    cls = @"class=""first-in-line""";
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    cls = @"class=""last-in-line""";
+                    break;
+            }
+
+
+            <li @cls>
+                @Html.Partial("_GoodsListItemTile", goods[i])
+            </li>
+
+        }
+
+    </ul>
+</div>
+                        

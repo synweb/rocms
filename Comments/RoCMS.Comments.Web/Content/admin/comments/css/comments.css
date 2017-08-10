@@ -1,0 +1,46 @@
+﻿.comments-threads.records-table .table-record:hover {
+    background-color: rgba(0, 142, 173, .3);
+    border-radius: 2px;
+}
+
+.comments-threads.records-table > a > div {
+    padding: 3px 0;
+}
+
+.comments-tree {
+    margin-top: 20px;
+}
+
+.comment-footer {
+    font-size: small;
+    color: #777;
+}
+
+.comment-container.nesting1 {
+    padding-left: 20px;
+}
+
+.comment-container.nesting2 {
+    padding-left: 40px;
+}
+.comment-container.nesting3 {
+    padding-left: 60px;
+}
+.comment-container.nesting4 {
+    padding-left: 80px;
+}
+.comment-container.nesting5 {
+    padding-left: 100px;
+}
+.comment-container.nesting6 {
+    padding-left: 120px;
+}
+.comment-container.nesting7 {
+    padding-left: 140px;
+}
+.comment-container.nesting8 {
+    padding-left: 160px;
+}
+.comment-container.nesting9 {
+    padding-left: 180px;
+}

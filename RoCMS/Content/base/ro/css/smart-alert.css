@@ -1,0 +1,25 @@
+﻿.smart-alert {
+    position: fixed;
+    top: 118px;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    display: none;
+}
+
+    .smart-alert > .container > div {
+
+        padding: 30px 30px;
+        border-radius: 4px;
+        color: #000;
+        border: 2px solid #939598;
+        background: url("/Content/base/ro/img/info.png") no-repeat 10px center #eee;
+    }
+
+    .smart-alert a.alert-hide{
+        color: #939598;
+    }
+
+    .smart-alert .alert-tools{
+        float: right;
+    }

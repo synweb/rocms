@@ -1,0 +1,288 @@
+﻿@using System.Threading
+@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Web.Contract.Services
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="robots" content="noindex">
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow" />
+
+    @Html.Partial("_BaseMetas")
+
+    <title>@Strings.Admin_Title</title>
+
+    @Js("Content/base/vendor/jquery/core")
+    @Js("Content/base/vendor/jquery/ui")
+    @Js("Content/base/vendor/knockout")
+    @Js("Content/base/ro/js")
+    @Js("Content/adminTemplate")
+    @Js("Content/admin/vendor")
+    @Js("Content/base/vendor/moment")
+    @Js("Content/adminTemplate")
+    @Js("Content/admin/ro/js/admin-ajax.js")
+    @Js("Content/admin/ro/js/rocms.admin.main.js")
+    @Js("Content/admin/ro/js/admin.dialogs.js")
+
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+    @Css("Content/base/vendor/Font-Awesome")
+    @Css("Content/base/ro/css")
+    @Css("Content/adminTemplate/css")
+    @Css("Content/admin/vendor")
+    @Css("Content/admin/ro/css")
+
+
+    @RenderStylesheets()
+    @{
+        var hideMenuCookie = Request.Cookies["hideAdminMenu"];
+        bool hideMenu = hideMenuCookie != null && hideMenuCookie.Value == "1";
+    }
+</head>
+<body@(hideMenu?" class=menu-hidden":"")>
+<div class="main-menu">
+    <ul id="menu">
+        @* Подключаем модули *@
+        @Html.MvcSiteMap().Menu(new { name = "AdminMenu" })
+
+        @* Нужна удобная настройка Я.Метрики *@
+        @if (User.IsAuthorizedForResource(RoCmsResources.Analytics))
+        {
+            <li><a href="@Url.Action("Analytics", "Admin")"><i class="fa fa-bar-chart-o"></i><span>@Strings.AdminMenu_Analytics</span></a></li>
+        }
+
+        <li>
+            <a href="javascript:void(0)" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" data-target="#component-nav">
+                <i class="fa fa-list-alt"></i><span>@Strings.AdminMenu_Components</span>
+                <span class="pull-right">
+                                <i class="fa fa-angle-double-down"></i>
+                            </span>
+            </a>
+            <ul class="collapse" id="component-nav">
+                @if (User.IsAuthorizedForResource(RoCmsResources.Pages))
+                {
+                    <li><a href="@Url.Action("CreatePage", "Admin")"><i class="fa fa-pencil-square-o"></i><span>Новая страница</span></a></li>
+                    <li><a href="@Url.Action("Pages", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Pages </span></a></li>
+                }
+                @if (User.IsAuthorizedForResource(RoCmsResources.Blocks))
+                {
+                    <li><a href="@Url.Action("Blocks", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Blocks</span></a></li>
+                }
+                @if (User.IsAuthorizedForResource(RoCmsResources.Menus))
+                {
+                    <li><a href="@Url.Action("Menu", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Menus</span></a></li>
+                }
+            </ul>
+        </li>
+
+        @if (User.IsAuthorizedForResource(RoCmsResources.RedirectToPageRoutes))
+        {
+            <li><a href="@Url.Action("RedirectToPageRoutes", "Admin")"><i class="fa fa-share-square-o"></i><span>Редиректы</span></a></li>
+        }
+
+        @if (User.IsAuthorizedForResource(RoCmsResources.Gallery)
+             || User.IsAuthorizedForResource(RoCmsResources.Albums)
+             || User.IsAuthorizedForResource(RoCmsResources.Sliders))
+        {
+            <li>
+                <a href="javascript:void(0)" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#form-nav">
+                    <i class="fa fa-picture-o"></i><span>@Strings.AdminMenu_Images</span>
+                    <span class="pull-right">
+                        <i class="fa fa-angle-double-down"></i>
+                    </span>
+                </a>
+                <ul class="collapse" id="form-nav">
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Gallery))
+                    {
+                        <li><a href="@Url.Action("Gallery", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Gallery</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Albums))
+                    {
+                        <li><a href="@Url.Action("Albums", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Albums</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Sliders))
+                    {
+                        <li><a href="@Url.Action("Sliders", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Sliders</span></a></li>
+                    }
+                </ul>
+            </li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.CommonSettings))
+        {
+            <li><a href="@Url.Action("CommonConfig", "Admin")"><i class="fa fa-wrench"></i><span>@Strings.AdminMenu_Settings</span></a></li>
+            <li><a href="@Url.Action("OrderForms", "Admin")"><i class="fa fa-list"></i><span>Формы</span></a></li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.Emails))
+        {
+            <li>
+                <a href="javascript:void(0)" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#mail-nav">
+                    <i class="fa fa-envelope-o"></i><span>@Strings.AdminMenu_Mail</span>
+                    <span class="pull-right">
+                                    <i class="fa fa-angle-double-down"></i>
+                                </span>
+                </a>
+                <ul class="collapse" id="mail-nav">
+                    <li><a href="@Url.Action("EmailTemplates", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_MailTemplates</span></a></li>
+                    <li><a href="@Url.Action("MailMessages", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_MailMessages</span></a></li>
+                </ul>
+            </li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.VideoGallery))
+        {
+            <li><a href="@Url.Action("VideoGallery", "Admin")"><i class="fa fa-video-camera"></i><span>@Strings.AdminMenu_VideoGallery</span></a></li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.Users))
+        {
+            <li><a href="@Url.Action("Users", "Admin")"><i class="fa fa-users"></i><span>@Strings.AdminMenu_Users</span></a></li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.Reviews))
+        {
+            <li><a href="@Url.Action("GetReviews", "Admin")"><i class="fa fa-comment"></i><span>@Strings.AdminMenu_Reviews</span></a></li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.UploadFiles))
+        {
+            <li><a href="@Url.Action("Index", "File")"><i class="fa fa-file"></i><span>@Strings.AdminMenu_Files</span></a></li>
+        }
+        <li><a href="@Url.Action("ChangePassword", "Admin")"><i class="fa fa-lock"></i><span>@Strings.AdminMenu_ChangePassword</span></a></li>
+
+        @if (User.IsAuthorizedForResource(RoCmsResources.Requests))
+        {
+            <li><a href="@Url.Action("Requests", "Admin")"><i class="fa fa-file"></i><span>@Strings.AdminMenu_Requests</span></a></li>
+        }
+        @if (User.IsAuthorizedForResource(RoCmsResources.Development))
+        {
+            <li>
+                <a href="javascript:void(0)" data-parent="#menu" data-toggle="collapse" class="accordion-toggle collapsed" data-target="#dev-nav">
+                    <i class="fa fa-magic"></i><span>Разработка</span>
+                    <span class="pull-right">
+                                    <i class="fa fa-angle-double-down"></i>
+                                </span>
+                </a>
+                <ul class="collapse" id="dev-nav">
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Dev_CodeEditor))
+                    {
+                        <li><a href="@Url.Action("CodeEditor", "Developer")"><i class="fa fa-code"></i><span>Код</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Dev_CodeEditor))
+                    {
+                        <li><a href="@Url.Action("RobotsTxt", "Developer")"><i class="fa fa-server"></i><span>Robots.txt</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Dev_Widgets))
+                    {
+                        <li><a href="@Url.Action("Widgets", "Developer")"><i class="fa fa-puzzle-piece"></i><span>Виджеты</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Dev_InterfaceStrings))
+                    {
+                        <li><a href="@Url.Action("InterfaceStrings", "Developer")"><i class="fa fa-align-left"></i><span>Строки интерфейса</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Dev_Database))
+                    {
+                        <li><a href="@Url.Action("Database", "Developer")"><i class="fa fa-database"></i><span>База данных</span></a></li>
+                    }
+                    @if (User.IsAuthorizedForResource(RoCmsResources.Development))
+                    {
+                        <li><a href="@Url.Action("ViewLogs", "Developer")"><i class="fa fa-file-text-o"></i><span>Логи</span></a></li>
+                    }
+                </ul>
+            </li>
+        }
+    </ul>
+    <!-- /#menu -->
+</div>
+
+<div class="fixed-navbar">
+    <header class="head">
+        <div class="pull-right">
+            <div class="btn-group">
+                <a href="@Url.Action("Index", "Home")" title="@Strings.AdminIndex_ToSite" class="btn btn-info btn-sm">
+                    <i class="fa fa-home"></i>
+                </a>
+
+                <a href="/Home/Restart" title="@Strings.AdminIndex_Restart" class="btn btn-warning btn-sm" id="restart-btn">
+                    <i class="fa fa-refresh"></i>
+                </a>
+
+                <a href="@Url.Action("Logout", "Home")" title="@Strings.AdminIndex_Logout" class="btn btn-danger btn-sm">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div>
+        </div>
+        <div class="heading pull-right hidden-xs">
+            <i class="fa fa-user"></i><span>@User.Identity.Name</span>
+        </div>
+
+
+        <div class="logo-container hidden-xs">
+            <a href="/admin" class="logo"><img src="/Content/admin/ro/img/rocms-logo.png" class="rocms-logo" alt="RoCMS" /></a>
+        </div>
+
+        <div class="pull-left heading-container">
+            <button type="button" class="menu-toggle-button fa fa-list"></button>
+            <div class="heading">@ViewBag.PageTitle</div>
+        </div>
+
+    </header>
+
+</div>
+
+<div class="main-wrapper">
+    <div class="main-content">
+        <div class="container-fluid">
+            <div id="adminContent">
+                @RenderBody()
+            </div>
+            <div id="footer">
+                <div class="copyright">
+                    <p>© 2010-@DateTime.Now.Year <a href="http://synweb.ru?utm_source=rocms_admin&utm_content=copyright" target="_blank">Синвеб</a>. Все права защищены.<br/>
+                            Спасибо, что используете <a href="http://rocms.ru?utm_source=rocms_admin&utm_content=copyright" target="_blank">RoCMS</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@JsInline(@<script>
+        var translitEnabled = @(Settings.GetSettings<bool>("TranslitEnabled").ToString().ToLower());
+    </script>)
+    @RenderScripts()
+
+
+
+    @Html.Partial("_SmartAlert")
+    @*@Html.Partial("_DialogContainer")*@
+
+    <!-- #helpModal -->
+    <div id="helpModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    <!-- /#helpModal -->
+
+
+
+</body>
+</html>

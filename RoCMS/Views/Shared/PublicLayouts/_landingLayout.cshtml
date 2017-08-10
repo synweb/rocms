@@ -1,0 +1,119 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Web.Contract.Services
+@using Block = RoCMS.Web.Contract.Models.Block
+@using Menu = RoCMS.Web.Contract.Models.Menu
+@using Review = RoCMS.Web.Contract.Models.Review
+@{
+
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+
+
+    string siteName = settingsService.GetSiteName();
+    var headerBlock = blockService.GetBlock(1);
+    var footerBlock = blockService.GetBlock(2);
+    var metriksBlock = blockService.GetBlock(3);
+    var copyrightBlock = blockService.GetBlock(4);
+
+
+    var rootUrl = settingsService.GetSettings<string>("RootUrl");
+
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>@(String.Format("{0} - {1}", ViewBag.Title, siteName))</title>
+    <meta charset="UTF-8" />
+    @Html.Raw(@TempData["AdditionalHeaders"])
+    <meta name="keywords" content="@TempData["MetaKeywords"]">
+    <meta name="description" content="@TempData["MetaDescription"]">
+    @if (ViewBag.CanonicalUrl != null && Request.Url.AbsolutePath != Url.Action("Index", "Home"))
+    {
+        <link rel="canonical" href="@rootUrl@ViewBag.CanonicalUrl">
+    }
+    @Js("Content/base/vendor/jquery/core")
+    @Js("Content/base/vendor/knockout")
+    @Js("Content/base/ro/js")
+    @Js("Content/theme")
+    @Js("Content/client/ro/js/rocms.client.callback.js")
+    @Html.Partial("_BaseMetas")
+ 
+    @Css("Content/base/vendor/Font-Awesome")
+    @Css("Content/base/ro/css")
+    @Css("Content/theme/css")
+    @Css("Content/client/ro/css")
+    @Css("Content/client/vendor/bootstrap-image-gallery/css")
+
+    <link rel="shortcut icon" href="@Url.Content("~/Content/theme/images/favicon.ico")" type="image/x-icon" />
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+
+    @RenderStylesheets()
+    
+    <style>
+        @Html.Raw(ViewBag.Styles)
+    </style>
+</head>
+<body>
+
+
+
+
+
+<div class="fixed-header">
+    <div id="header">
+        <div class="container">
+            @Block(headerBlock)
+        </div>
+    </div>
+</div>
+
+
+    @RenderBody()
+
+
+    <div id="footer" class="fixed-background bg3 text-center">
+        <div class="up-footer">
+            <div class="container">
+                @Block(footerBlock)
+
+
+            </div>
+        </div>
+        <div class="down-footer">
+            <div class="container text-center">
+                @Block(copyrightBlock)
+                <p><a href="http://synweb.ru" target="_blank">Создание сайта</a> - веб-студия "Синвеб"</p>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="totop">
+        <div class="gototop">
+            <a href="#">
+                <em class="fa fa-angle-up"></em>
+            </a>
+        </div>
+    </div>
+
+@Html.Partial("_BlueimpGallery")
+@Html.Partial("_DialogContainer")
+@Html.Partial("_SmartAlert")
+@if (!Request.IsLocal)
+{
+    @Block(metriksBlock)
+}
+
+@RenderScripts()
+
+
+
+<script>
+    @Html.Raw(ViewBag.Scripts)
+</script>
+</body>
+</html>

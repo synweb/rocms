@@ -1,0 +1,58 @@
+﻿@using RoCMS.News.Contract.Resources
+@using RoCMS.Web.Contract.Services
+@model System.Collections.Generic.IList<RoCMS.News.Contract.Models.Blog>
+@{
+    ViewBag.Title = "Блоги";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    var userService = DependencyResolver.Current.GetService<ISecurityService>();
+}
+<h2>Блоги</h2>
+<div class="blogs">
+    @foreach (var blog in Model)
+    {
+        string username = blog.OwnerId.HasValue ? userService.GetUser(blog.OwnerId.Value).Username : "";
+
+
+        <div class="box blog-summary" data-blog-id="@blog.BlogId">
+            <header>
+
+                <div class="toolbar">
+                    <a href="@Url.Action("EditBlog", new {id = blog.BlogId})" class="btn btn-warning btn-xs">
+                        <i class="fa fa-pencil"></i> @Strings.News_EditNews
+                    </a>
+                    @*<a onclick="true" class="btn btn-danger btn-xs button-delete">
+                            <i class="fa fa-times"></i> @Strings.News_DeleteNews
+                        </a>*@
+                </div>
+                <h5>@blog.Title</h5>
+            </header>
+            <div class="row">
+                <label class="col-sm-4 text-right">Название</label>
+                <div class="col-sm-8">@blog.Title</div>
+            </div>
+            <div class="row">
+                <label class="col-sm-4 text-right">Владелец блога</label>
+                <div class="col-sm-8">@username</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-4"><a href="@Url.RouteUrl("UserBlog", new {blogUrl = blog.RelativeUrl})">Перейти к блогу</a></div>
+            </div>
+        </div>
+
+
+
+
+
+    }
+</div>
+@Js("/bin/Content/admin/news")
+
+@JsInline(
+    @<script>
+        $(function () {
+            blogListEditorLoaded();
+        });
+    </script>)

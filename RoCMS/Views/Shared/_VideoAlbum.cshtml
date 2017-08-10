@@ -1,0 +1,23 @@
+﻿@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    var videoService = DependencyResolver.Current.GetService<IVideoGalleryService>();
+    var vids = videoService.GetAlbumVideos(Model);
+}
+
+<section id="gal-container">
+    <ul class="gallery-two-col" id="stage">
+        @foreach (var vid in vids)
+        {
+            <li data-tags="Videos">
+                <a class="thumb play" href="http://www.youtube.com/watch?v=@vid.VideoId"><img alt="@vid.Title" src="http://img.youtube.com/vi/@vid.VideoId/hqdefault.jpg" width="476" /></a>
+                <div class="gal-caption">
+                    <h3><a class="colr play" href="http://www.youtube.com/watch?v=@vid.VideoId">@vid.Title</a></h3>
+                </div>
+
+                <div class="gal-play"><a class="colr play" href="http://www.youtube.com/watch?v=@vid.VideoId"><span class="play">&nbsp;</span></a></div>
+            </li>
+        }
+    </ul>
+</section>

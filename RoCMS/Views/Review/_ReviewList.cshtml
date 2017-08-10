@@ -1,0 +1,35 @@
+﻿@using System.Globalization
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.News.Contract.Resources
+@model IEnumerable<RoCMS.Web.Contract.Models.Review>
+
+@{
+
+    var pagingParams = ParamExtractor.ExtractParamsForSEF(Request);
+
+    int page = ViewBag.Page;
+    int pageSize = ViewBag.PageSize;
+    int totalCount = ViewBag.TotalCount;
+
+}
+
+<div>
+    @foreach (var item in Model)
+    {
+
+        <div class="review-item-container">
+            <div class="author"><em class="glyphicon glyphicon-user">&nbsp;</em>@item.Author</div>
+            @if (!String.IsNullOrEmpty(item.Email))
+            {
+                <div class="email"><em class="glyphicon glyphicon-envelope">&nbsp;</em><a href="mailto:@(item.Email)">@item.Email</a>
+                </div>
+            }
+            <div class="text">
+                @item.Text
+            </div>
+
+        </div>
+    }
+</div>
+
+@Html.Partial("_Pager")

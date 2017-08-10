@@ -1,0 +1,35 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapNodeModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+@{
+    bool hasIcon = Model.Attributes.ContainsKey("iconClass");
+    string iconClass = hasIcon ? Model.Attributes["iconClass"] as string ?? "fa-angle-right" : "fa-angle-right";
+
+
+    bool hasChildren = Model.Children.Any();
+}
+@if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")
+{
+    <text>@Model.Title</text>
+}
+else
+{
+    bool clickable = Model.IsClickable;
+    
+    string description = Model.Description ?? "";
+
+    <a href='@(clickable ? Url.Action(Model.Action, Model.Controller) : "javascript:void(0)")' title="@description" data-parent="#menu" data-toggle="collapse" class="accordion-toggle" data-target="#nav-@Model.Key">
+
+        <i class="fa @iconClass"></i><span>@Model.Title</span>
+        
+
+        @if (@Model.Children.Any())
+        {
+            <span class="pull-right">
+                <i class="fa fa-angle-double-down"></i>
+            </span>
+        }
+    </a>
+}
+
+

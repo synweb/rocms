@@ -1,0 +1,61 @@
+﻿@using RoCMS.Base.Extentions
+@using RoCMS.Web.Contract.Extensions
+@model IEnumerable<RoCMS.Web.Contract.Models.ImageInfo>
+
+@{
+    ViewBag.PageTitle = "Галерея";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<table class="gallery-table image-pick-table pick-table table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Изображение</th>
+        <th class="autowidth">Размер</th>
+        <th class="autowidth">Альбомы</th>
+        <th class="autowidth">Дата</th>
+        <th class="last"></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var img in Model)
+    {
+        var link = Url.Action("Thumbnail", "Gallery", new {id = img.ImageId});
+        <tr>
+            <td class="thumb-td hover-preview-container">
+                <a href="@Url.Action("Image", "Gallery", new {id = img.ImageId})" target="_blank">
+                    <span class="thumb"><img class="picking-image" src="@link" data-id="@img.ImageId" /></span>
+                    <span class="hover-preview"><img src="@link" /></span>
+                    <span>@img.ImageId</span>
+                </a>
+            </td>
+            <td class="autowidth">
+                @if (img.Size != null)
+                {
+                    @img.Size.Value.BytesCountToString()
+                }
+            </td>
+            <td class="autowidth">
+                @img.AlbumCount
+            </td>
+            <td class="autowidth">
+                @img.CreationDate.ApplySiteTimezone().ToString("dd.MM.yyyy HH:mm:ss")
+            </td>
+            <td class="autowidth">
+                <button type="button" class="btn btn-xs btn-danger delete" data-id="@img.ImageId" data-type="POST" data-url="#">
+                    <i class="fa fa-trash-o"></i>
+                    <span>Удалить</span>
+                </button>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@Js("Content/admin/ro/js/rocms.gallery.js")
+
+@JsInline(@<script>
+    $(function () {
+        onAdminGalleryLoaded();
+    })
+    </script>)

@@ -1,0 +1,217 @@
+﻿@using RoCMS.Base.ForWeb.Models
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ViewBag.Title = ViewBag.PageTitle = "Редактор кода";
+    List<FileInfo> views = ViewBag.Views;
+    List<FileInfo> scripts = ViewBag.Scripts;
+    List<FileInfo> styles = ViewBag.Styles;
+}
+
+@helper FileList(List<FileInfo> files, string elementId)
+{
+     <ul id="@elementId" class="files collapse">
+         @foreach (var file in files)
+         {
+             string fileName = file.FullName.Replace(AppDomain.CurrentDomain.BaseDirectory, "");
+             <li>
+                 <a href="#@Url.Encode(fileName)" data-file-name="@fileName" title="@fileName">@fileName</a>
+             </li>
+         }
+     </ul>
+}
+
+<div class="views-editor">
+    <h3></h3>
+    <div class="row">
+        <div class="col-md-8" id="codeEditor" style="display:none">
+            @Html.Partial("ACE", new EditorVM(string.Empty, "view_editor", "view-editor", ACEModes.Text))
+                <button class="btn btn-success save-file" data-file-name="">Сохранить</button>
+        </div>
+        <div class="col-md-4" id="fileList">
+            <div class="box">
+                <header>
+                    <div class="toolbar">
+                        <nav>
+                            <a class="collapse-lists btn btn-default btn-xs" title="Свернуть всё" href="#"><i class="fa fa-minus"></i></a>
+                            <a class="expand-lists btn btn-default btn-xs" title="Развернуть всё" href="#"><i class="fa fa-plus"></i></a>
+                        </nav>
+                    </div>
+                    <div class="icons">
+                        <i class="fa fa-file-code-o"></i>
+                    </div>
+                    <h5>Файлы</h5>
+
+                </header>
+                <div class="body">
+                    <div class="form-group">
+                        <div class="input-group file-search">
+                            <i class="fa fa-search"></i>
+                            <input type="text" class="form-control filename-filter"/>
+                            <span class="input-group-addon">
+                                <a class="clear-filter" title="Очистить" href="#"><i class="fa fa-times"></i></a>
+                            </span>
+                        </div>
+                    </div>
+                    <a class="collapse-item" href="#" data-toggle="collapse" data-target="#collapsed-views"><h4>Серверные страницы</h4></a>
+                    @FileList(views, "collapsed-views")
+                    <a class="collapse-item" href="#" data-toggle="collapse" data-target="#collapsed-scripts"><h4>Скрипты</h4></a>
+                    @FileList(scripts, "collapsed-scripts")
+                    <a class="collapse-item" href="#" data-toggle="collapse" data-target="#collapsed-styles"><h4>Стили</h4></a>
+                    @FileList(styles, "collapsed-styles")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@JsInline(@<script>
+    function getFileExtenstion(filename) {
+        var re = /(?:\.([^.]+))?$/;
+        return re.exec(filename)[1];
+    }
+
+    $(function () {
+        var id = "view_editor";
+
+        var aceEditor = ace.edit("ace_"+id);
+
+        var loadFile = function(fileName) {
+            var ext = getFileExtenstion(fileName);
+            switch (ext) {
+                case "cshtml":
+                    setACEMode(id, "razor");
+                    break;
+                case "js":
+                    setACEMode(id, "javascript");
+                    break;
+                case "css":
+                    setACEMode(id, "css");
+                    break;
+                default:
+                    setACEMode(id, "text");
+                    break;
+            }
+            getJSON("/Developer/ViewContent?path=" + encodeURI(fileName), "", function (result) {
+                unblockUI();
+                aceEditor.setValue(result.content, 1);
+                $(".views-editor").find("h3").text(fileName);
+                $(".views-editor").find(".save-file").data("fileName", fileName);
+                aceEditor.focus();
+                aceEditor.selection.moveTo(0, 0);
+            });
+        };
+
+        var loadViaHash = function() {
+            if (location.hash !== "") {
+                $("#codeEditor").show();
+                loadFile(decodeURI(location.hash.replace("#", "")));
+            }
+        }
+
+        loadViaHash();
+
+        window.onhashchange = function(e) {
+            loadViaHash();
+        };
+
+        $(".files li a").click(function () {
+            blockUI();
+            $("#codeEditor").show();
+            var fileName = $(this).data("fileName");
+            loadFile(fileName);
+        });
+
+        $(".save-file").click(function () {
+            var fileName = $(this).data("fileName");
+            blockUI();
+            postJSON("/Developer/SaveView", {
+                    path: fileName,
+                    content: aceEditor.getValue()
+                }, function(res) {
+                    if (res.Succeed) {
+                        smartAlert("Файл сохранён");
+                    } else {
+                        smartAlert("Ошибка при сохранении");
+                    }
+                })
+                .fail(function () {
+                    smartAlert("Ошибка при сохранении");
+                })
+                .always(function() {
+                    unblockUI();
+                });
+        });
+
+        var collapseLists = function () {
+            $('#fileList .files').each(function () {
+                if ($(this).hasClass('in')) {
+                    $(this).collapse('hide');
+                }
+            });
+        }
+
+        var expandLists = function () {
+            $('#fileList .files').each(function () {
+                if ($(this).hasClass('collapse')) {
+                    $(this).collapse('show');
+                }
+            });
+        }
+
+        var filter = function () {
+            var val = $(".filename-filter").val();
+            if (filter.value === '') {
+                collapseLists();
+            } else {
+                expandLists();
+            }
+            $("ul.files li a").each(function (index, el) {
+                var $el = $(el);
+                if ($el.text().toLowerCase().indexOf(val) !== -1) {
+                    $el.show();
+                    $el.addClass("found");
+                } else {
+                    $el.hide();
+                    $el.removeClass("found");
+                }
+            });
+
+            $("ul.files").each(function (index, el) {
+                if ($(this).find("li a.found").length > 0) {
+                    $(this).collapse('show');
+                }
+            });
+        }
+        var filterElement = $(".filename-filter");
+        filterElement.bind("propertychange change click keyup input paste", function (event) {
+            if (filterElement.data('oldVal') !== filterElement.val()) {
+                filterElement.data('oldVal', filterElement.val());
+                filter();
+            }
+        });
+
+        $(".clear-filter").click(function (e) {
+            e.preventDefault();
+            $(".filename-filter").val("");
+            filter();
+            collapseLists();
+            return false;
+        });
+
+        $(".collapse-lists").click(function (e) {
+            e.preventDefault();
+            collapseLists();
+            return false;
+        });
+
+        $(".expand-lists").click(function (e) {
+            e.preventDefault();
+            expandLists();
+            return false;
+        });
+
+        $(".collapse-item").click(function(e) {
+            e.preventDefault();
+        });
+    });
+</script>)

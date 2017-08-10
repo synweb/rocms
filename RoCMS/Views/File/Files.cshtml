@@ -1,0 +1,154 @@
+﻿@using Resources
+@using RoCMS.Web.Contract.Extensions
+@using RoCMS.Web.Contract.Services
+@using RoCMS.Base.Extentions
+@{
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    var fileService = DependencyResolver.Current.GetService<IFileService>();
+    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+    List<FileInfo> files = fileService.GetFiles();
+
+    var allowedFiles = settingsService.GetSettings().AllowedFileExtensions;
+    string[] allowedFileExtensions = allowedFiles.Split(',');
+    string allowed = string.Join(", ", allowedFileExtensions);
+}
+@Js("Content/admin/vendor/FU/short")
+@Js("Content/admin/vendor/FU/ui")
+@Js("Content/admin/vendor/FU/cors")
+
+
+@Css("Content/admin/vendor/FU/jquery.fileupload-ui.css")
+@*IN ORDER TO USE MVC ACTIONS AS HANDLERS OF AJAX CALLS, USE THE FORM DECLARATION BELOW. (THE ONE COMMENTED OUT)
+    IT IS NOT ADVISED SINCE WHEN USING MVC CONTROLLER TO HANDLE REQUESTS ONE CAN'T CONTROL THE maxMessageLength OF THE POST REQUEST
+    THIS CASTS THE FUNCTIONALITY OF UPLOADING LARGE FILES USELESS, UNLESS YOU SUCRIFICE THE SECURITY AND ALLOW LARGE
+    POST MESSAGE SIZES SITE-WIDE.
+
+    IT IS BETTER TO USE HTTP HANDLER TO PROCESS UPLOAD REQUESTS UNTIL MVC FRAMEWORK PROVIDES WAYS TO SET maxMessageLength ON
+    PER ACTION BASIS *@
+@*<form id="fileupload" action="@Url.Action("UploadFiles")" method="POST" enctype="multipart/form-data">*@
+<div class="row">
+    <form id="fileupload" action="/Upload/FileUploadHandler.ashx" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-12">
+                <span class="btn btn-success fileinput-button">
+                    <i class="fa fa-plus"></i>
+                    <span>@Strings.Gallery_AddFiles</span>
+                    <input type="file" name="files[]" multiple />
+                </span>
+            </div>
+            <div class="col-lg-12">
+                <div class="progress progress-striped active fade">
+                    <div class="bar progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">Разрешенные файлы: @allowed</div>
+        <div class="fileupload-loading"></div>
+        <br>
+        <div class="files gallery">
+            @foreach (var file in files)
+            {
+                <div class="template-download fade in row">
+                    <div class="delete float-right">
+                        <button type="button" class="btn btn-danger delete" data-type="POST" data-url="@("/File/Delete/"+ file.Name +"/")">
+                            <i class="fa fa-trash-o"></i>
+                            <span>@Strings.Gallery_Delete</span>
+                        </button>
+                    </div>
+                    <div class="col-lg-6" style="text-overflow: ellipsis; overflow: hidden;">
+                        <a href="@("/File/Get/"+ file.Name +"/")" rel="gallery">@file.Name</a>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <span>@file.CreationTime.ToUniversalTime().ApplySiteTimezone()</span>
+                    </div>
+
+                    <div class="col-lg-2">
+                        <span>@(file.Length.BytesCountToString())</span>
+                    </div>
+                </div>
+            }
+        </div>
+    </form>
+</div>
+
+
+<script id="template-upload" type="text/x-tmpl">
+
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-upload fade row">
+        <div class="float-right">
+
+            <div class="progress progress-striped active"><div class="bar progress-bar progress-bar-success" style="width:0%;"></div></div>
+            {% if (!o.options.autoUpload) { %}
+            <button class="btn btn-primary start" disabled>
+                <i class="fa fa-upload"></i>
+                <span>@Strings.Gallery_Upload</span>
+            </button>
+            {% } %}
+
+            <button class="btn btn-warning cancel" type="button">
+                <i class="fa fa-ban"></i>
+                <span>Отмена</span>
+            </button>
+        </div>
+        <div class="col-lg-4"><span>{%=file.name%}</span><br /><strong class="error text-danger"></strong></div>
+        <div class="col-lg-4"><span>{%=o.formatFileSize(file.size)%}</span></div>
+    </div>
+    {% } %}
+
+</script>
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-download fade row">
+        {% if (file.error) { %}
+        <div class="col-lg-3"></div>
+        <div class="name col-lg-2"><span>{%=file.name%}</span></div>
+        <div class="size col-lg-2"><span>{%=o.formatFileSize(file.size)%}</span></div>
+        <div class="error"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</div>
+        {% } else { %}
+
+        <div class="delete float-right">
+            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
+                <i class="fa fa-trash-o"></i>
+                <span>@Strings.Gallery_Delete</span>
+            </button>
+        </div>
+        <div class="col-lg-6">
+            <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+        </div>
+        <div class="col-lg-2">
+            <span>@Strings.AdminGallery_JustUploaded</span>
+        </div>
+        {% } %}
+    </div>
+    {% } %}
+</script>
+@{
+    string accepted = string.Join("|", allowedFileExtensions).Replace(".", "");
+}
+
+@JsInline(@<script>
+    'use strict';
+    $(function() {
+
+        $('#fileupload').fileupload({
+            xhrFields: { withCredentials: true },
+            acceptFileTypes: /(\.|\/)(@accepted)$/i,
+
+        maxFileSize: 500000000
+
+    });
+    $('#fileupload').fileupload(
+        'option',
+        'redirect',
+        'http://' + location.host + '/Content/admin/vendor/FU/cors/result.html?%s'
+    );
+
+    });
+
+    </script>)

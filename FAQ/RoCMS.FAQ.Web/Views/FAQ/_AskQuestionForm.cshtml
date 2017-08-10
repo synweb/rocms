@@ -1,0 +1,31 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+
+<form class="email_form ask-question-form form-horizontal">
+
+    <span class="field-validation-valid" data-valmsg-for="name" data-valmsg-replace="true"></span>
+    <input type="text" placeholder="Ваше имя (обязательно)" name="name" id="name" class="name form-control" data-val="true" data-val-required="Поле обязательно для заполнения" />
+
+    <span class="field-validation-valid" data-valmsg-for="email" data-valmsg-replace="true"></span>
+    <input type="text" name="email" id="email" placeholder="Email (на него придет ответ)" class="email form-control" data-val="true" data-val-required="Поле обязательно для заполнения" data-val-regex="Неправильный формат email-адреса" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$" />
+
+
+    <span class="field-validation-valid" data-valmsg-for="question" data-valmsg-replace="true"></span>
+    <input type="text" placeholder="Вопрос (обязательно)" name="question" id="question" class="question form-control" data-val="true" data-val-required="Поле обязательно для заполнения">
+
+    <div class="form-group text-center">
+        <button type="button" class="btn btn-lg btn-dark">Задать вопрос</button>
+    </div>
+
+</form>
+
+<p class="bg-success question-asked alert alert-success" style="display:none;">Спасибо за ваш вопрос! Администрация сайта скоро на него ответит.</p>
+
+
+@Js("/bin/Content/client/faq")
+
+@JsInline(@<script>
+    $(function () {
+        askQuestionFormLoaded();
+    })
+    </script>)
+

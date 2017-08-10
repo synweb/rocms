@@ -1,0 +1,59 @@
+﻿@using System.Globalization
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.Helpers
+@using RoCMS.Base.Models
+@using RoCMS.Helpers
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Services
+@using RoCMS.Web.Contract.Services
+@using RoCMS.Web.Contract.Extensions
+@model string
+@{
+    var newsService = DependencyResolver.Current.GetService<INewsItemService>();
+    int total;
+    int count = 3;
+
+    IEnumerable<NewsItem> news = newsService.GetNewsPage(new NewsFilter()
+    {
+        TagName = Model,
+        OnlyPosted = true,
+        SortBy = NewsItemSortBy.PostingDate,
+        SortOrder = SortOrder.Desc
+    }, 1, count, out total);
+
+
+
+    var userService = DependencyResolver.Current.GetService<ISecurityService>();
+            }
+
+
+<div class="last-news row">
+    @foreach (var item in news)
+            {
+                var author = userService.GetUser(item.AuthorId).Username;
+
+        <div class="col-md-4">
+            <div class="blog-item">
+                @if (!string.IsNullOrEmpty(item.ImageId))
+                {
+                    <div class="blog-image">
+                        <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})">
+                            <img src="@Url.Action("Image", "Gallery", new {id = item.ImageId})" class="img-responsive" alt="@item.Title">
+                        </a>
+                    </div>
+                }
+                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
+                <p>@item.Description</p>
+                <a class="btn btn-dark" href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})">Читать далее...</a>
+            </div>
+        </div>
+    }
+
+</div>
+@*<div class="row">
+        <div class="col-xs-12" style="text-align: right;">
+            <a class="more-link" href="/Новости">
+                Все новости →
+            </a>
+        </div>
+    </div>*@

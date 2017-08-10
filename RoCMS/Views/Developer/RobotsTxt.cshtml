@@ -1,0 +1,30 @@
+﻿@using RoCMS.Base.ForWeb.Models
+@model string
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ViewBag.Title = ViewBag.PageTitle = "Редактор robots.txt";
+}
+
+
+<style>
+    .robots-editor{
+        width:100%; 
+        min-height: 500px;
+    }
+</style>
+@Html.Partial("ACE", new EditorVM(Model, "robots_editor", "robots-editor", ACEModes.Text))
+<a class="button-accept btn btn-success save" href="#"><i class="fa fa-check"></i> Сохранить</a>
+@JsInline(@<script>
+    $(function () {
+        $("a.save").click(function() {
+            postJSON("/api/dev/robots/save", { text: getTextFromEditor('robots_editor') }, function (res) {
+                if (res.succeed) {
+                    smartAlert("Файл сохранён");
+                } else {
+                    smartAlert("Ошибка при сохранении");
+                }
+            }).fail(function() { smartAlert("Ошибка при сохранении"); });
+        });
+    })
+</script>)

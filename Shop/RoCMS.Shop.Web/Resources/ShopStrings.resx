@@ -1,0 +1,297 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AdminMenu_Shop_Actions" xml:space="preserve">
+    <value>Акции</value>
+  </data>
+  <data name="AdminMenu_Shop_Categories" xml:space="preserve">
+    <value>Категории товаров</value>
+  </data>
+  <data name="AdminMenu_Shop_Clients" xml:space="preserve">
+    <value>Клиенты</value>
+  </data>
+  <data name="AdminMenu_Shop_Goods" xml:space="preserve">
+    <value>Товары</value>
+  </data>
+  <data name="AdminMenu_Shop_Manufacturers" xml:space="preserve">
+    <value>Производители</value>
+  </data>
+  <data name="AdminMenu_Shop_Orders" xml:space="preserve">
+    <value>Заказы</value>
+  </data>
+  <data name="AdminMenu_Shop_Specs" xml:space="preserve">
+    <value>Характеристики товаров</value>
+  </data>
+  <data name="Shop_Category_CreateCategory" xml:space="preserve">
+    <value>Добавить категорию</value>
+  </data>
+  <data name="Shop_Category_DeleteCategory" xml:space="preserve">
+    <value>Удалить категорию</value>
+  </data>
+  <data name="Shop_Category_AddSubCategory" xml:space="preserve">
+    <value>Добавить подкатегорию</value>
+  </data>
+  <data name="Shop_Category_EditCategory" xml:space="preserve">
+    <value>Редактировать категорию</value>
+  </data>
+  <data name="Shop_Manufacturer_Create" xml:space="preserve">
+    <value>Добавить производителя</value>
+  </data>
+  <data name="Shop_Manufacturer_Delete" xml:space="preserve">
+    <value>Удалить производителя</value>
+  </data>
+  <data name="Shop_Manufacturer_Edit" xml:space="preserve">
+    <value>Редактировать производителя</value>
+  </data>
+  <data name="Shop_Spec_Create" xml:space="preserve">
+    <value>Добавить характеристику</value>
+  </data>
+  <data name="Shop_Spec_Delete" xml:space="preserve">
+    <value>Удалить характеристику</value>
+  </data>
+  <data name="Shop_Spec_Edit" xml:space="preserve">
+    <value>Редактировать характеристику</value>
+  </data>
+  <data name="Shop_Action_Categories" xml:space="preserve">
+    <value>Категории в акции</value>
+  </data>
+  <data name="Shop_Action_Create" xml:space="preserve">
+    <value>Создать акцию</value>
+  </data>
+  <data name="Shop_Action_Delete" xml:space="preserve">
+    <value>Удалить акцию</value>
+  </data>
+  <data name="Shop_Action_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Shop_Action_Discount" xml:space="preserve">
+    <value>Скидка</value>
+  </data>
+  <data name="Shop_Action_Edit" xml:space="preserve">
+    <value>Редактировать акцию</value>
+  </data>
+  <data name="Shop_Action_EndDate" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="Shop_Action_Goods" xml:space="preserve">
+    <value>Товары в акции</value>
+  </data>
+  <data name="Shop_Action_Manufacturers" xml:space="preserve">
+    <value>Производители в акции</value>
+  </data>
+  <data name="Shop_Action_Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="SortCriterion_CreationDateAsc" xml:space="preserve">
+    <value>Новизна (сначала постарше)</value>
+  </data>
+  <data name="SortCriterion_CreationDateDesc" xml:space="preserve">
+    <value>Новизна (сначала новинки)</value>
+  </data>
+  <data name="SortCriterion_PriceAsc" xml:space="preserve">
+    <value>Цена (сначала подешевле)</value>
+  </data>
+  <data name="SortCriterion_PriceDesc" xml:space="preserve">
+    <value>Цена (сначала подороже)</value>
+  </data>
+  <data name="SortCriterion_RatingAsc" xml:space="preserve">
+    <value>Рейтинг (сначала непопулярные)</value>
+  </data>
+  <data name="SortCriterion_RatingDesc" xml:space="preserve">
+    <value>Рейтинг (сначала популярные)</value>
+  </data>
+  <data name="Shop_Create" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Shop_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Shop_Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="AdminMenu_Shop_Packs" xml:space="preserve">
+    <value>Упаковки</value>
+  </data>
+  <data name="AdminMenu_Shop_CompatibleGoods" xml:space="preserve">
+    <value>Наборы товаров</value>
+  </data>
+  <data name="AdminMenu_Shop_Reviews" xml:space="preserve">
+    <value>Отзывы о товарах</value>
+  </data>
+  <data name="AdminMenu_Shop_YmlExport" xml:space="preserve">
+    <value>Экспорт в Яндекс-Маркет</value>
+  </data>
+  <data name="Shop_GenerateYmlFile" xml:space="preserve">
+    <value>Запустить экспорт</value>
+  </data>
+  <data name="YmlExport_Header" xml:space="preserve">
+    <value>Экспортировать базу в Яндекс-маркет</value>
+  </data>
+  <data name="YmlExport_History" xml:space="preserve">
+    <value>История экспорта</value>
+  </data>
+  <data name="YmlExport_History_EndDate" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="YmlExport_History_ErrorCode" xml:space="preserve">
+    <value>Код ошибки</value>
+  </data>
+  <data name="YmlExport_History_StartDate" xml:space="preserve">
+    <value>Дата запуска</value>
+  </data>
+  <data name="YmlExport_History_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="SortCriterion_Relevance" xml:space="preserve">
+    <value>Релевантность</value>
+  </data>
+  <data name="SortCriterion_Article" xml:space="preserve">
+    <value>Артикул</value>
+  </data>
+  <data name="Menu_AcceptMenu" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Menu_CreateMenu" xml:space="preserve">
+    <value>Создать меню</value>
+  </data>
+  <data name="Menu_DeleteMenu" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Menu_Down" xml:space="preserve">
+    <value>Вниз</value>
+  </data>
+  <data name="Menu_EditMenu" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Menu_Up" xml:space="preserve">
+    <value>Вверх</value>
+  </data>
+  <data name="AdminMenu_InternetShop" xml:space="preserve">
+    <value>Интернет-магазин</value>
+  </data>
+  <data name="ShipmentType_Courier" xml:space="preserve">
+    <value>Курьер</value>
+  </data>
+  <data name="ShipmentType_Post" xml:space="preserve">
+    <value>Почта</value>
+  </data>
+  <data name="ShipmentType_SelfPickup" xml:space="preserve">
+    <value>Самовывоз</value>
+  </data>
+</root>

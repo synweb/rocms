@@ -1,0 +1,168 @@
+﻿@model RoCMS.Web.Contract.Models.Page
+@using Resources
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Web.Contract.Models
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+
+    if (((string)ViewBag.Action) == "Create")
+    {
+        ViewBag.PageTitle = Strings.CreateEditPage_CreateTitle;
+    }
+    else
+    {
+        ViewBag.PageTitle = Strings.CreateEditPage_EditTitle + " '" + Model.Title + "'";
+    }
+
+    IList<PageInfo> pages = ViewBag.Pages;
+}
+
+<div class="page-items-info">
+
+    <form class="page-info" data-page-id="@(Model != null ? Model.PageId : 0)">
+        <ul>
+            <li>
+                <div style="float: right">Длина заголовка: <span class="title-length">@(Model != null && !String.IsNullOrEmpty(Model.Title) ? Model.Title.Length : 0)</span></div>
+                <label>Заголовок (title)</label>
+                @Html.ValidationMessageFor(m => m.Title)
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Title, new {@class = "page-title form-control"})
+            </li>
+
+            <li>
+                <div style="float: right">Длина заголовка: <span class="header-length">@(Model != null && !String.IsNullOrEmpty(Model.Header) ? Model.Header.Length : 0)</span></div>
+                <label>Заголовок (H1)</label>
+                @Html.ValidationMessageFor(m => m.Header)
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Header, new {@class = "page-h1 form-control"})
+            </li>
+
+            <li>
+                @Html.LabelFor(m => m.RelativeUrl, Strings.CreatePage_RelativeUrl)
+                @Html.ValidationMessageFor(m => m.RelativeUrl)
+                @if (Model != null && !String.IsNullOrEmpty(Model.CannonicalUrl))
+                {
+                    <a href="/@Model.CannonicalUrl">@Strings.CreatePage_OpenPage</a>
+                }
+            </li>
+            <li>
+                @Html.TextBoxFor(m => m.RelativeUrl, new {@class = "page-relativeurl form-control"})
+
+            </li>
+            <li>
+                <label>Родительская страница</label>
+            </li>
+            <li>
+                <select class="form-control parent-page-id" name="ParentPageId">
+                    <option value="" @(Model == null || !Model.ParentPageId.HasValue ? "selected=selected" : "")>Нет</option>
+                    @foreach (var page in pages.OrderBy(x => x.Title))
+                    {
+                        if (Model == null || Model != null && page.PageId != Model.PageId)
+                        {
+                            <option value="@page.PageId" @(Model != null && page.PageId == Model.ParentPageId ? "selected=selected" : "")>@page.Title</option>
+                        }
+                    }
+                </select>
+            </li>
+
+            <li>
+                <div class="content-toggle-container">
+                    <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
+                    @Html.LabelFor(m => m.Content, Strings.CreatePage_Content)
+                    @Html.ValidationMessageFor(m => m.Content)
+                </div>
+
+            </li>
+            <li>
+                @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "page_content", "page-content", ACEModes.HTML) {ShowCommonButtons = true})
+            </li>
+            <li>
+                <div style="float: right">Длина аннотации: <span class="annotation-length">@(Model != null && !String.IsNullOrEmpty(Model.Annotation) ? Model.Annotation.Length : 0)</span></div>
+                <label>Meta description</label>
+                @Html.ValidationMessageFor(m => m.Annotation)
+            </li>
+            <li>
+                @Html.TextAreaFor(m => m.Annotation, new {@class = "page-annotation form-control"})
+
+            </li>
+            <li>
+                <label>Meta keywords</label>&nbsp;
+                @Html.TextBoxFor(m => m.Keywords, new {@class = "page-keywords form-control"})
+            </li>
+            <li>
+                <div class="row" style="padding-top: 10px;">
+                    <div class="col-lg-6">
+                        <div class="col-lg-4" style="padding: 6px 10px 0 0">
+                            <label>@Strings.CreatePage_Layout</label>
+                        </div>
+                        <div class="col-lg-8" style="padding: 0 !important;">
+                            <select class="layout form-control" data-selected-value="@(Model != null && Model.Layout != null ? Model.Layout : "clientLayout")">
+                                @{
+                                    var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Views\\Shared\\PublicLayouts"));
+                                    var files = dir.GetFiles();
+                                }
+                                @foreach (var file in files)
+                                {
+                                    string name = file.Name.TrimStart('_').Replace(".cshtml", "");
+                                    <option value="@name">@name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <input type="checkbox" @(Model != null && Model.HideInSitemap ? "checked" : "") id="sitemapHide" />&nbsp;
+                <label for="sitemapHide">Скрывать в Sitemap</label>
+            </li>
+            <li>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Стили</label>
+                        @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Styles, "page_styles", "page-styles", ACEModes.CSS))
+                    </div>
+                    <div class="col-md-4">
+                        <label>Скрипты</label>
+                        @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Scripts, "page_scripts", "page-scripts", ACEModes.JavaScript))
+                    </div>
+                    <div class="col-md-4">
+                        <label>Доп. заголовки</label>
+                        @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.AdditionalHeaders, "page_headers", "page-headers", ACEModes.XML))
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </form>
+    <div class="clear-both"/>
+
+
+    @Js("Content/admin/ro/js/rocms.page.edit.js")
+    @JsInline(@<script type="text/javascript">
+
+                   $(function() {
+                       pageEditorLoad();
+                   });
+
+               </script>)
+</div>
+
+<div class="fixed-action-menu">
+    @if (((string) ViewBag.Action) == "Create")
+    {
+        <a id="createPage" class="button-accept btn btn-success" title="@Strings.CreatePage_CreateButton" href="@Url.Action("CreatePage", "Admin")"><i class="fa fa-check"></i> @Strings.CreatePage_CreateButton</a>
+    }
+    else
+    {
+        <a id="acceptPage" class="button-accept btn btn-success" title="@Strings.EditPage_AcceptButton" href="@Url.Action("EditPage", "Admin")"><i class="fa fa-check"></i> @Strings.EditPage_AcceptButton</a>
+        <a class="btn btn-warning" href="/@Model.CannonicalUrl"><i class="fa fa-share"></i> Перейти</a>
+    }
+    <a class="btn btn-default" href="/Admin/Pages">@Strings.EditPage_ReturnToPages</a>
+</div>
+
+

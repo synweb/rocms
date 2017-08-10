@@ -1,0 +1,201 @@
+﻿@using RoCMS.Web.Contract.Models
+@using Resources
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Web.Contract.Extensions
+@model IEnumerable<RoCMS.Web.Contract.Models.Review>
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+
+    var pagingParams = ParamExtractor.ExtractParamsForSEF(Request);
+    int page = ViewBag.Page;
+    int pageSize = ViewBag.PageSize;
+    int totalCount = ViewBag.TotalCount;
+}
+
+<div class="admin-reviews">
+    <a class="btn btn-success button-create" href="@Url.Action("CreateReview")"><i class="fa fa-file-o"></i>&nbsp;@Strings.AdminReview_AddReview</a>  
+
+    @helper RenderReview(Review review) 
+    {
+    <div class="admin-review col-lg-6">
+        <div class="box">
+            <header>
+                <div class="toolbar multibutton" data-review-id="@review.ReviewId">
+                    <div class="make-switch has-switch moderated-switch" data-on="success" data-off="warning">
+                        <input type="checkbox" @(review.Moderated ? "checked='checked'" : "")>
+                    </div>
+                    <a class="btn btn-xs btn-warning button-edit" href="@Url.Action("EditReview", new {id = review.ReviewId})"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-xs btn-danger button-delete" href="@Url.Action("RemoveReview", new {id = review.ReviewId})"><i class="fa fa-trash-o"></i></a>
+                </div>
+                <h5>Отзыв от @review.CreationDate.ApplySiteTimezone().ToString("dd.MM.yyyy HH:mm")</h5>
+            </header>
+            <div class="body">
+                <div class="review-container" data-review-id="@review.ReviewId">
+                    @Html.Action("ShowReview", new { review = review })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    @*@foreach (var review in Model)*@
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <div class="row">
+            @RenderReview(Model.ElementAt(i))
+            @{ i++; }
+            @if (i < Model.Count())
+            {
+                @RenderReview(Model.ElementAt(i))
+            }
+        </div>
+
+    }
+
+    @if (Model.Count() != 0)
+    {
+        <a class="btn btn-success button-create" href="@Url.Action("CreateReview")"><i class="fa fa-file-o"></i>&nbsp;@Strings.AdminReview_AddReview</a>
+    }
+</div>
+
+@Pager(totalCount, pageSize, page, pagingParams)
+
+@helper Pager(int totalCount, int pageSize, int page, IDictionary<string, object> pagingParams)
+{
+    if (totalCount <= pageSize)
+    {
+        return;
+    }
+
+    <div class="news-pages">
+        @{
+            int pagesCount = totalCount / pageSize;
+            if (totalCount / pageSize * pageSize != totalCount)
+            {
+                pagesCount++;
+            }
+        }
+
+        @if (pagesCount > 1 && page != 1)
+        {
+
+            var args = new RouteValueDictionary(pagingParams);
+            if (page - 1 != 1)
+            {
+                args["page"] = page - 1;
+            }
+            else
+            {
+                args = args.RemoveRouteParam("page");
+            }
+            <a href="@Url.Action("GetReviews", "Admin", args)" class="prev">&larr;Предыдущая</a>
+        }
+
+        @for (int i = 1; i <= pagesCount; i++)
+        {
+            if (pagesCount > 10)
+            {
+                if (page > 4)
+                {
+                    if (i == 2)
+                    {
+                        <span>...</span>
+                    }
+                    if (i < page - 2 && i != 1)
+                    {
+                        continue;
+                    }
+
+                }
+                if (page + 3 < pagesCount)
+                {
+                    if (i >= page + 3 && i != pagesCount)
+                    {
+                        if (i == page + 3)
+                        {
+                            <span>...</span>
+                        }
+                        continue;
+                    }
+                }
+            }
+
+            if (page == i)
+            {
+                <span class="selected">@i</span>
+            }
+            else
+            {
+                var args = new RouteValueDictionary(pagingParams);
+                if (args.ContainsKey("id"))
+                {
+                    args.Remove("id");
+                }
+
+
+                if (args.ContainsKey("page"))
+                {
+                    args.Remove("page");
+                }
+                if (i != 1)
+                {
+                    args.Add("page", i);
+                }
+
+                if (args.ContainsKey("pgsize"))
+                {
+                    args.Remove("pgsize");
+                }
+                if (pageSize != 10)
+                {
+                    args.Add("pgsize", pageSize);
+                }
+
+                <a href="@Url.Action("GetReviews", "Admin", args)">@i</a>
+            }
+
+        }
+        @{
+            var argsAll = new RouteValueDictionary(pagingParams);
+            var routeValues = argsAll.AddRouteParam("pgsize", "all");
+            routeValues.Remove("page");
+        }
+        
+        @if (pagesCount > 1 && page != pagesCount)
+        {
+            var args = new RouteValueDictionary(pagingParams);
+            args["page"] = page + 1;
+            <a href="@Url.Action("GetReviews", "Admin", args)" class="next">Следующая&rarr;</a>
+        }
+    </div>
+}
+
+
+@Js("Content/admin/ro/review/rocms.reviews.js")
+@JsInline(@<script>
+        $(function() {
+            $('.moderated-switch').bootstrapSwitch('setOnLabel', '<i class="fa fa-eye"></i>');
+            $('.moderated-switch').bootstrapSwitch('setOffLabel', '<i class="fa fa-eye-slash"></i>');
+            $('.moderated-switch').bootstrapSwitch('setSizeClass', 'switch-small');
+
+
+            $('.moderated-switch').on('switch-change', function(e, data) {
+                var reviewId = $(this).parent().data("reviewId");
+                var url;
+                if (data.value === true) {
+                    url = "/api/review/" + reviewId + "/accept";
+                } else {
+                    url = "/api/review/" + reviewId + "/hide";
+                }
+                postJSON(url, "", function(res) {
+
+                });
+                return false;
+            });
+        });
+
+    </script>)

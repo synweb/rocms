@@ -1,0 +1,163 @@
+﻿@using RoCMS.Base.Helpers
+@using RoCMS.Web.Contract.Services
+@model RoCMS.News.Contract.Models.Blog
+@{
+    ViewBag.Title = ViewBag.Header = "Настройки блога";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+    var settingService = DependencyResolver.Current.GetService<ISettingsService>();
+    var rootUrl = settingService.GetSettings().RootUrl; //AppSettingsHelper.RootUrl;
+    bool isCreating = Model.BlogId == 0;
+
+    var user = DependencyResolver.Current.GetService<ISecurityService>()
+        .GetUser(DependencyResolver.Current.GetService<IPrincipalResolver>()
+        .GetUserId());
+
+}
+<h1>@(isCreating ? "Создание блога" : "Настройки блога")</h1>
+<form class="personal-blog-editor form-horizontal comment_form">
+    <input type="hidden" name="blogId" value="@Model.BlogId" />
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Адрес *</label>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-xs-7 nopadding-right">
+                    <span class="form-control-static blog-address-pre">@(rootUrl)/blogs/</span>
+                </div>
+                <div class="col-xs-5 nopadding-left">
+                    <input type="text" name="relativeUrl" value="@Model.RelativeUrl"
+                           data-val="true" data-val-required="Поле обязательно для заполнения"
+                           data-val-regex="Используйте строчные латинские буквы a-z, цифры 0-9 и знак подчёркивания _ (не в начале и не в конце)." data-val-regex-pattern="^[a-z0-9]([a-z0-9_-]*[a-z0-9])?$"
+                           data-val-urlexists="Блог с таким адресом уже существует. Выберите другой адрес."
+                           data-toggle="tooltip" data-placement="top" title="Используйте строчные латинские буквы a-z, цифры 0-9 и знак подчёркивания _ (не в начале и не в конце)." />
+                    @* TODO: валидация, проверка на предмет существования RelUrl *@
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <span class="field-validation-valid" data-valmsg-for="relativeUrl" data-valmsg-replace="true"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Заголовок *</label>
+        <div class="col-sm-5">
+            <input type="text" name="title" value="@Model.Title" class=""
+                   data-val="true" data-val-required="*" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Подзаголовок</label>
+        <div class="col-sm-5">
+            <input type="text" name="subtitle" value="@Model.Subtitle" class="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-4">
+            @if (isCreating)
+            {
+                <input type="submit" value="Создать" class="create-blog" />
+            }
+            else
+            {
+                <input type="submit" value="Сохранить" class="update-blog" />
+            }
+        </div>
+    </div>
+</form>
+
+<script>
+    $.validator.addMethod("urlexists", function (value, element) {
+        var isSuccess = false;
+
+        $.ajax({
+            url: "/api/news/blog/client/free/" + value,
+            data: {},
+            async: false,
+            success:
+                function (msg) { isSuccess = msg === "true" ? true : false }
+        });
+        return isSuccess;
+    });
+    $.validator.unobtrusive.adapters.addBool("urlexists");
+    $(function () {
+        clientBlogEditorLoaded();
+    })
+</script>
+
+<h2>Редактирование профиля</h2>
+<form class="form-horizontal comment_form" id="userProfile">
+    <input type="hidden" name="UserId" value="@user.UserId" />
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Email</label>
+        <div class="col-sm-5">
+            <input type="text" value="@user.Email" data-val="true" data-val-required="*" name="Email" class=" email" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">О себе</label>
+        <div class="col-sm-5">
+            <textarea name="Description" class="">@user.Description</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Vk</label>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-xs-7 nopadding-right">
+                    <span class="form-control-static blog-address-pre">https://vk.com/</span>
+                </div>
+                <div class="col-xs-5 nopadding-left">
+                    <input type="text" value="@user.Vk" name="Vk" class="" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Facebook</label>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-xs-7 nopadding-right">
+                    <span class="form-control-static blog-address-pre">https://facebook.com/</span>
+                </div>
+                <div class="col-xs-5 nopadding-left">
+                    <input type="text" value="@user.Fb" name="Fb" class="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Google+</label>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-xs-7 nopadding-right">
+                    <span class="form-control-static blog-address-pre">https://plus.google.com/</span>
+                </div>
+                <div class="col-xs-5 nopadding-left">
+                    <input type="text" value="@user.GoogleP" name="GoogleP" class="" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right">Twitter</label>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-xs-7 nopadding-right">
+                    <span class="form-control-static blog-address-pre">https://twitter.com/</span>
+                </div>
+                <div class="col-xs-5 nopadding-left">
+                    <input type="text" value="@user.Twitter" name="Twitter" class=""/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-md-5">
+            <button class="btn-save-profile">Сохранить профиль</button>        
+        </div>
+    </div>
+    
+</form>

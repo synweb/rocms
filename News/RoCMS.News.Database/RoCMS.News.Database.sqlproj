@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>RoCMS.News.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{b6adb985-847c-4f46-ae94-94b05ca7cf7f}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>RoCMS.News.Database</RootNamespace>
+    <AssemblyName>RoCMS.News.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultSchema>News</DefaultSchema>
+    <GenerateCreateScript>True</GenerateCreateScript>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Tables" />
+    <Folder Include="Schema" />
+    <Folder Include="Stored Procedures" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Tables\NewsItem.sql" />
+    <Build Include="Tables\Tag.sql" />
+    <Build Include="Tables\NewsItemTag.sql" />
+    <Build Include="Schema\News.sql" />
+    <Build Include="Stored Procedures\NewsItem_Delete.sql" />
+    <Build Include="Stored Procedures\NewsItem_Insert.sql" />
+    <Build Include="Stored Procedures\NewsItem_Select.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectOne.sql" />
+    <Build Include="Stored Procedures\NewsItem_Update.sql" />
+    <Build Include="Stored Procedures\NewsItemTag_Delete.sql" />
+    <Build Include="Stored Procedures\NewsItemTag_Insert.sql" />
+    <Build Include="Stored Procedures\NewsItemTag_Select.sql" />
+    <Build Include="Stored Procedures\NewsItemTag_SelectOne.sql" />
+    <Build Include="Stored Procedures\Tag_Delete.sql" />
+    <Build Include="Stored Procedures\Tag_Insert.sql" />
+    <Build Include="Stored Procedures\Tag_Select.sql" />
+    <Build Include="Stored Procedures\Tag_SelectOne.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectByUrl.sql" />
+    <Build Include="Stored Procedures\Tag_SelectByNews.sql" />
+    <Build Include="Stored Procedures\Tag_DeleteUnassociated.sql" />
+    <Build Include="Tables\Category.sql" />
+    <Build Include="Tables\NewsItem_Category.sql" />
+    <Build Include="Stored Procedures\Category_Delete.sql" />
+    <Build Include="Stored Procedures\Category_Insert.sql" />
+    <Build Include="Stored Procedures\Category_Select.sql" />
+    <Build Include="Stored Procedures\Category_Update.sql" />
+    <Build Include="Stored Procedures\NewsItem_Category_Delete.sql" />
+    <Build Include="Stored Procedures\NewsItem_Category_Insert.sql" />
+    <Build Include="Stored Procedures\NewsItem_Category_SelectByNews.sql" />
+    <Build Include="Stored Procedures\NewsItem_Category_SelectByCategory.sql" />
+    <Build Include="Stored Procedures\Category_SelectOne.sql" />
+    <Build Include="Tables\Blog.sql" />
+    <Build Include="Tables\Blog_User.sql" />
+    <Build Include="Stored Procedures\Blog_Insert.sql" />
+    <Build Include="Stored Procedures\Blog_Update.sql" />
+    <Build Include="Stored Procedures\Blog_Delete.sql" />
+    <Build Include="Stored Procedures\Blog_SelectOne.sql" />
+    <Build Include="Stored Procedures\Blog_Select.sql" />
+    <Build Include="Stored Procedures\Blog_User_Insert.sql" />
+    <Build Include="Stored Procedures\Blog_User_Delete.sql" />
+    <Build Include="Stored Procedures\Blog_User_SelectByBlog.sql" />
+    <Build Include="Stored Procedures\Blog_User_SelectByUser.sql" />
+    <Build Include="Stored Procedures\Blog_SelectOneByRelativeUrl.sql" />
+    <Build Include="Stored Procedures\Category_SelectByUrl.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectRelated.sql" />
+    <Build Include="Stored Procedures\Blog_SelectByOwner.sql" />
+    <Build Include="Stored Procedures\Category_SelectAll.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectIds.sql" />
+    <Build Include="Stored Procedures\NewsItemTag_SelectTagStats.sql" />
+    <Build Include="Stored Procedures\Tag_SelectByPattern.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectIdsByTagName.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectFilteredPage.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">
+      <Name>RoCMS.Database</Name>
+      <Project>{852c8177-33fb-4f10-9779-d3f106e2604c}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Comments\RoCMS.Comments.Database\RoCMS.Comments.Database.sqlproj">
+      <Name>RoCMS.Comments.Database</Name>
+      <Project>{005cf8bf-8116-4f7b-8534-3154a42e301f}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="RoCMS.News.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="InitialData.sql" />
+  </ItemGroup>
+</Project>

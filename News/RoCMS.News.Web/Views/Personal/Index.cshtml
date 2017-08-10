@@ -1,0 +1,59 @@
+﻿@using System.Globalization
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.News.Contract.Models
+@using RoCMS.Web.Contract.Services
+@model ICollection<NewsItem>
+@{
+    ViewBag.Title = "Мои записи";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+    Blog blog = ViewBag.Blog;
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+    var sideBar = blockService.GetBlock(9);
+}
+
+<h1>@(blog.Title ?? "Заголовок блога") <a class="edit-blog-link" href="@Url.RouteUrl("BlogEdit")"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+<h2>@(blog.Subtitle ?? "Подзаголовок блога") <a class="edit-blog-link" href="@Url.RouteUrl("BlogEdit")"><span class="glyphicon glyphicon-pencil"></span></a></h2>
+
+
+
+<div class="row latest_news_area">
+    <div class="col-md-8">
+        <a class="common-button" href="@Url.RouteUrl("BlogItemCreate")"><span class="glyphicon glyphicon-pencil"></span> Написать в блог</a>
+        @foreach (var item in Model)
+            {
+            <div class="single_blog_post_box">
+                <div class="blog_post_txt">
+                    <div class="blog_post_heading">
+                        <h2>
+                            <a href="@Url.RouteUrl("BlogItemEdit", new {id = item.NewsId})"><span class="glyphicon glyphicon-pencil"></span> @item.Title</a>
+                        </h2>
+                    </div>
+                    <div class="blog_post_content">
+                        <p>@(item.Description)</p>
+                        @*<ul>
+                                <li><i class="pe-7s-comment"></i>11 Comments</li>
+                                <li><i class="pe-7s-like"></i>13 Likes</li>
+                                <li><i class="pe-7s-look"></i>19 Viewers</li>
+                            </ul>*@
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+    <div class="col-md-4">
+        <aside>
+            <div class="right_sidebar">
+                <div class="all_right_widgets">
+                    @Html.Raw(ContentRenderHelper.RenderContent(sideBar.Content))
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+

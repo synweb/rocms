@@ -1,0 +1,69 @@
+﻿*** Как добавить элемент в поиск? ***
+
+1. Унаследовать тип элемента от ISearchable и прописать ему ключи поискового индекса.
+Пример:
+
+Работаем со следующим типом.
+	
+    public class Item
+    {
+		public int ItemId { get; set; }
+        public string Name { get; set; }
+		public string Content { get; set; }
+    }
+
+Мы собираемся индексировать поля Name и Content. Тип нужно привести к подобному виду:
+
+    public class Item: ISearchable
+    {
+		public int ItemId { get; set; }
+        public string Name { get; set; }
+		public string Content { get; set; }
+
+        public IEnumerable<string> SearchIndexKeys {
+            get { return new[] {SeachKeyName, SeachKeyContent}; }
+        }
+
+        public string SeachKeyName => $"Item_Name_{ItemId}";
+        public string SeachKeyContent => $"Item_Content_{ItemId}";
+    }
+
+2. Зарегистрировать правила индексации типа с помощью метода ISearchService.RegisterRules. Лучше место для этого — инициализатор модуля.
+Пример:
+
+	var searchService = DependencyResolver.Current.GetService<ISearchService>();
+    searchService.RegisterRules(typeof(Item), new List<IndexingRule>()
+    {
+        x =>
+        {
+            var item = (Item) x;
+            return new SearchItem()
+            {
+                SearchItemKey = item.SearchKeyName,
+                EntityName = x.GetType().FullName,
+                SearchContent = SearchHelper.ToSearchIndexText(item.Name),
+                Title = item.Name,
+                Weight = 2,
+                Text = item.Content,
+                Url = "/Item/"+item.ItemId
+            };
+        },
+        x =>
+        {
+            var item = (Item) x;
+            return new SearchItem()
+            {
+                SearchItemKey = item.SeachKeyContent,
+                EntityName = x.GetType().FullName,
+                SearchContent = SearchHelper.ToSearchIndexText(item.Content),
+                Title = item.Name,
+                Weight = 1,
+                Text = item.Content,
+                Url = "/Item/"+item.ItemId
+            };
+        }
+    });
+
+3. Добавить вызовы ISearchService.UpdateIndex в методы добавления и обновления элемента.
+4. Добавить вызов ISearchService.RemoveFromIndex в метод удаления элемента.
+

@@ -1,0 +1,11 @@
+﻿@using Resources
+@model IEnumerable<RoCMS.Base.Models.IdNamePair<int>>
+
+<ul class="block-pick-list">
+    @foreach (var val in Model)
+    {
+        <li class="block-pick-element">
+            <a class="picking-block" data-id="@val.ID" href="@Url.Action("EditBlock","Admin", new{id = val.ID})" title="@Strings.AdminPickBlocks_OpenInNewWindowToEdit">@val.Name</a>
+        </li>
+    }
+</ul>

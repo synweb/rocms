@@ -1,0 +1,24 @@
+﻿.review-info input,
+.review-info .review-text {
+    width: 440px;
+}
+
+.review-info .review-text {
+    resize: none;
+}
+
+@media (min-width: 1200px) {
+    .lg-right {
+        text-align: right;
+    }
+}
+
+.loading-img {
+    display: none;
+    width: 50px;
+    height: 50px;
+}
+
+.no-resize {
+    resize: none;
+}

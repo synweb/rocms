@@ -1,0 +1,33 @@
+﻿@using System.Web.Optimization
+@using RoCMS.Helpers
+@model string
+
+@{
+    DateTime date = DateHelper.CountdownTimerParse(Model);
+    Guid g = Guid.NewGuid();
+
+    var datestr = String.Format("{1}/{2}/{0} {3}:{4}:{5}",
+                                date.Year.ToString("0000"),
+                                date.Month.ToString("00"),
+                                date.Day.ToString("00"),
+                                date.Hour.ToString("00"),
+                                date.Minute.ToString("00"),
+                                date.Second.ToString("00")
+        );
+}
+<div>
+    @Scripts.Render("~/Content/client/clockjsbl")
+    @Styles.Render("~/Content/client/clockcssbl")
+
+    <div style="display:inline-block; width: auto;" class="clock @g"></div>
+
+    <script type="text/javascript">
+        $(function () {
+            $('.clock.@g').html("");
+            $('.clock.@g').flipcountdown({
+                size: "sm",
+                beforeDateTime: '@datestr'
+            });
+        });
+    </script>
+</div>

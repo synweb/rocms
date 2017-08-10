@@ -1,0 +1,32 @@
+﻿@using Resources
+@using RoCMS.Base.ForWeb.Models
+@model string
+
+@{
+    ViewBag.PageTitle = "Редактирование шаблона письма";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+<h2>Шаблон письма @ViewBag.TemplateName</h2>
+<div class="email-template-editor" data-name="@ViewBag.TemplateName">
+    <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
+    @Html.Partial("WYSIWYG", new EditorVM(Model, "template_editor", null, ACEModes.HTML))
+
+
+    <div class="fixed-action-menu">
+        <a class="button-accept btn btn-success" onclick="true"><i class="fa fa-check"></i> Применить</a>
+        <a class="text-right btn btn-default" href="/Admin/EmailTemplates">@Strings.EditEmailTemplate_ReturnToEmailTemplates</a>
+
+    </div>
+</div>
+
+@Js("Content/base/vendor/ckeditor")
+@Js("Content/admin/ro/js/rocms.email.templates.js")
+
+@JsInline(@<script>
+    $(function () {
+        emailTemplateEditorLoaded();
+    });
+</script>)

@@ -1,0 +1,15 @@
+﻿@using Resources
+@model RoCMS.Models.ErrorModel
+@{
+    ViewBag.Title = "Ошибка";
+    Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+}
+
+<fieldset class="error">
+    <span>@Strings.Exception_OccuredMessage: @Model.Code</span>
+    <br/>
+    @if(Model.ErrorId.HasValue)
+    {
+        <span>@Strings.Exception_CodeMessage: @Model.ErrorId</span>
+    }
+</fieldset>

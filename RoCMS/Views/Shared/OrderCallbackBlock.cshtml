@@ -1,0 +1,19 @@
+﻿@model RoCMS.Web.Contract.Models.Message
+
+<div class="callback-dialog callback-order">
+    <h2 class="text-center">Заказать звонок</h2>
+
+    <form class="callback-container form-horizontal" method="post">
+        <ul class="callback-list">
+            <li><label for="callback-name">Ваше имя:</label></li>
+            <li><input placeholder="Владимир" data-val="true" class="form-control" data-val-required="Укажите имя" id="callback-name" name="Name" type="text" value=""></li>
+            <li><label for="callback-phone">Телефон:</label></li>
+            <li><input placeholder="+7 499 123-45-67" data-val="true" class="form-control" data-val-required="Укажите телефон" id="callback-phone" name="Phone" type="text" value=""></li>
+            <li><label for="callback-time">Удобное время:</label></li>
+            <li><input placeholder="С 16:00 до 19:30" id="callback-time" class="form-control" name="callback-time" type="text" value=""></li>
+            <li><span id="callback-order-success" style="display: none">Спасибо! Наши операторы свяжутся с вами.</span></li>
+            <li><span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span></li>
+            <li><span class="field-validation-valid" data-valmsg-for="Phone" data-valmsg-replace="true"></span></li>
+        </ul>
+    </form>
+</div>

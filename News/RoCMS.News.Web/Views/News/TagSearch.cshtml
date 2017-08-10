@@ -1,0 +1,18 @@
+﻿@model IEnumerable<RoCMS.News.Contract.Models.NewsItem>
+
+@{
+    ViewBag.Title = "Записи с тегом «" + ViewBag.Tag + "»";
+
+    ViewBag.CanonicalUrl = Url.RouteUrl("BlogTagSearch", new {tag = ViewBag.Tag});
+
+    if (ViewBag.NoLayout != null && (bool) ViewBag.NoLayout)
+    {
+    }
+    else
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+    ViewBag.NoLayout = true;
+}
+
+@Html.Partial("Page", Model)

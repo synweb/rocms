@@ -1,0 +1,70 @@
+﻿@using Resources
+@using RoCMS.Base.Helpers
+@using RoCMS.Web.Contract.Models
+@using RoCMS.Web.Contract.Services
+@model ICollection<Album>
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminAlbum_PageTitle;
+
+}
+
+@helper Album(Album album)
+{
+    var authService = DependencyResolver.Current.GetService<ISecurityService>();
+    <li class="album">
+        <div>
+            <span class="album-name">@album.Name</span>, <span>@album.ImageCount @GrammarHelper.Decline(album.ImageCount, "изображение", "изображения", "изображений")</span>&nbsp;
+            <span>(создан @album.CreationDate.AddHours(3).ToString("dd.MM.yyyy HH:mm"))</span>
+            @if (album.OwnerId.HasValue)
+            {
+
+                string username = authService.GetUser(album.OwnerId.Value).Username;
+                <span>Владелец: @username</span>
+            }
+            <div class="edit-delete-container">
+                <a class="btn btn-xs btn-warning edit" href="@Url.Action("ConfigureAlbum", "Admin", new {id = album.AlbumId})"><i class="fa fa-pencil"></i>&nbsp;@Resources.Strings.Menu_EditMenu</a>
+                <a class="btn btn-xs btn-danger delete" data-album-id="@album.AlbumId" onclick=" true "><i class="fa fa-trash-o"></i>&nbsp;@Resources.Strings.Menu_DeleteMenu</a>
+            </div>
+        </div>
+    </li>
+}
+
+<ul id="myTab" class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#systemAlbums" role="tab" data-toggle="tab">Альбомы системы</a></li>
+    @*<li class=""><a href="#userAlbums" role="tab" data-toggle="tab">Альбомы пользователей</a></li>*@
+</ul>
+
+<div class="tab-content">
+    <p></p>
+    <div class="tab-pane fade active in" id="systemAlbums">
+        <a class="album-create btn btn-success"><i class="fa fa-plus"></i>&nbsp;@Strings.AdminAlbum_Create</a>
+        <ul class="albums-list generic-list">
+            @foreach (var album in Model.Where(x => !x.OwnerId.HasValue).OrderBy(x => x.Name))
+            {
+                @Album(album)
+            }
+        </ul>
+    </div>
+
+    <div class="tab-pane fade" id="userAlbums">
+        <ul class="albums-list generic-list">
+            @foreach (var album in Model.Where(x => x.OwnerId.HasValue).OrderBy(x => x.Name))
+            {
+                @Album(album)
+            }
+        </ul>
+    </div>
+</div>
+
+@Js("Content/admin/ro/album/rocms.albums.js")
+
+@JsInline(@<script>
+    $(function () {
+        onAlbumListLoaded();
+    });
+</script>)

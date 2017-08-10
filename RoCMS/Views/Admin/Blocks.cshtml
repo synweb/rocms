@@ -1,0 +1,42 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@model IList<RoCMS.Web.Contract.Models.Block>
+
+@{
+    ViewBag.PageTitle = Strings.AdminBlocks_PageTitle;
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+
+}
+
+@Js("Content/admin/ro/js/rocms.block.edit.js")
+<a class="btn btn-success" href="@Url.Action("CreateBlock")"><i class="fa fa-file-o"></i>&nbsp;@Strings.Blocks_CreateBlock</a>  
+    @foreach(var block in Model)
+    {
+        <div class="box block-summary" data-block-id="@block.BlockId">
+            <header>
+
+                <div class="toolbar">
+                    <a href="@Url.Action("EditBlock", new {id = block.BlockId})" class="btn btn-warning btn-xs">
+                        <i class="fa fa-pencil"></i> @Strings.Blocks_EditBlock
+                    </a>
+                    @if (block.BlockId > 6 && User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    {
+                        <a href="@Url.Action("DeleteBlock", "Admin", new {id = block.BlockId})" class="btn btn-danger btn-xs button-delete">
+                            <i class="fa fa-times"></i> @Strings.Blocks_DeleteBlock
+                        </a>
+                    }
+                </div>
+
+                <h5 class="block-title"><span class="block-id">#@block.BlockId.ToString() </span> @block.Title</h5>
+            </header>           
+        </div>
+    }
+@if(Model.Count != 0)
+{
+    <a class="btn btn-success" href="@Url.Action("CreateBlock")"><i class="fa fa-file-o"></i>&nbsp;@Strings.Blocks_CreateBlock</a>
+}
+ 

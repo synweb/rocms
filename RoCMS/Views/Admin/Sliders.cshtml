@@ -1,0 +1,37 @@
+﻿@using Resources
+@*@model IEnumerable<RoCMS.Web.Contract.Models.Slider>*@
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminSlider_PageTitle;
+    var list = new SelectList(Model, "Key", "Value");
+}
+
+<a class="btn btn-success" data-bind="click: createItem"><i class="fa fa-plus"></i>&nbsp;@Strings.AdminSlider_Create</a>
+<div class="slider-list" data-bind="template: { name: 'slider-list-item-template', foreach: sliders }">
+    
+</div>
+
+@Js("Content/admin/ro/js/rocms.slider.js")
+
+@JsInline(@<script type="text/javascript">
+    $(function () {
+        onSlidersLoad();
+    })
+</script>)
+
+<script type="text/html" id="slider-list-item-template">
+    <div class="box slider" style="display: inline-block; width: 250px;">
+        <header>
+            <h5 style="width: 150px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;" data-bind="text: name"></h5>
+            <div class="toolbar multibutton">
+                @{string url = (Url.Action("ConfigureSlider", "Admin", new { id = "_id_" })); }
+                <a class="btn btn-xs btn-warning edit" data-bind="click: function() { edit('@url')}" onclick="true"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-xs btn-danger delete" onclick="true" data-bind="click: $parent.removeItem"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </header>
+        </div>
+</script>

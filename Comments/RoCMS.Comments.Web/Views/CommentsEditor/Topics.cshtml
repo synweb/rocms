@@ -1,0 +1,70 @@
+﻿@model ICollection<RoCMS.Comments.Contract.ViewModels.CommentTopicVM>
+
+@{
+    ViewBag.PageTitle = "Комментарии";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+<h2>
+    Список тем
+</h2>
+
+<div class="comments-threads records-table">
+
+        <div class="table-header row">
+            <div class="col-xs-1">
+                #
+            </div>
+            <div class="col-xs-2">
+                Тип
+            </div>
+            <div class="col-xs-7">
+                Заголовок
+            </div>
+            <div class="col-xs-1">
+                Комментариев
+            </div>
+            <div class="col-xs-1">
+
+            </div>
+        </div>
+
+
+
+    @foreach (var topic in Model)
+    {
+        <div class="table-record row topic" data-topic-id="@topic.CommentTopicId">
+        @*<a href="@topic.TargetUrl">*@
+            <a href="@Url.Action("Topic",new{id = topic.CommentTopicId})">
+                <div class="col-xs-1">
+                    @topic.CommentTopicId
+                </div>
+                <div class="col-xs-2">
+                    @topic.TargetType
+                </div>
+                <div class="col-xs-7">
+                    @topic.TargetTitle
+                </div>
+                <div class="col-xs-1">
+                    @topic.CommentCount
+                </div>
+            </a>
+            <div class="col-xs-1">
+                <button class="btn btn-xs btn-danger btn-delete">
+                    <i class="fa fa-trash-o"></i>&nbsp;Удалить
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@Js("/bin/Content/admin/comments")
+
+@JsInline(@<script>
+    $(function() {
+        onThreadsEditorLoaded();
+    });
+</script>)

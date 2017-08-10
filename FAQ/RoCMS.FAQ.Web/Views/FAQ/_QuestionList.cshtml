@@ -1,0 +1,28 @@
+﻿@using System.Web.Mvc
+@using RoCMS.FAQ.Contract.Services
+@model IEnumerable<RoCMS.FAQ.Contract.Models.Question>
+
+@{
+    var questionService = DependencyResolver.Current.GetService<IQuestionService>();
+    var questions = questionService.GetQuestions().Where(x => x.Moderated && !string.IsNullOrEmpty(x.AnswerText)).ToList();
+}
+
+<div class="question-list panel-group" id="accordion">
+    @foreach (var question in questions)
+    {
+        <div class="panel">
+            <div class="panel-heading" role="tab" id="source">
+                <h4 class="panel-title">
+                    <a class="" role="button" data-toggle="collapse" data-parent="#accordion" href="#question@(question.QuestionId)" aria-expanded="false" aria-controls="question@(question.QuestionId)">
+                        <em class="fa fa-question-circle"></em>&nbsp;@question.QuestionText
+                    </a>
+                </h4>
+            </div>
+            <div id="question@(question.QuestionId)" class="panel-collapse collapse" role="tabpanel" aria-labelledby="source">
+                <div class="panel-body">
+                    @Html.Raw(question.AnswerText)
+                </div>
+            </div>
+        </div>
+    }
+</div>

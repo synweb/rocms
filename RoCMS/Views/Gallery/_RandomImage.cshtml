@@ -1,0 +1,14 @@
+﻿@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    int albumId = Model;
+    var albumService = DependencyResolver.Current.GetService<IAlbumService>();
+    string imageId = albumService.GetRandomImageFromAlbum(albumId);
+}
+
+<div class="random-image-container" data-album-id="@Model" style="text-align: center;">
+    <a data-href="@Url.Action("RandomAlbumImage", "Gallery", new { albumId = Model })" title="Мяу" onclick="true" style="cursor:pointer;">
+        <img src="@Url.Action("Image", "Gallery", new { id = imageId })" alt="" style="max-height:180px; max-width: 270px;" />
+    </a>
+</div>

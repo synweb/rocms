@@ -1,0 +1,302 @@
+﻿@using System.Text
+@using Resources
+@using RoCMS.Web.Contract.Models
+@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    var orderFormService = DependencyResolver.Current.GetService<IOrderFormService>();
+    var form = orderFormService.GetOrderForm(Model);
+
+    string formId = "frm" + Guid.NewGuid();
+}
+
+@if (form != null && form.Fields.Any())
+{
+    <div class="order-container" id="@formId">
+        <form class="message-container form-horizontal pd-sm">
+            @if (String.IsNullOrEmpty(form.HtmlTemplate))
+            {
+                foreach (var field in form.Fields.OrderBy(x => x.SortOrder))
+                {
+                    string elemName = "fld" + field.OrderFormFieldId;
+                    if (field.Required || field.ValueType == OrderFormFieldType.Email)
+                    {
+                        <span class="field-validation-valid" data-valmsg-for="@elemName" data-valmsg-replace="true"></span>
+                    }
+                    if (field.ValueType == OrderFormFieldType.TextArea)
+                    {
+                        <textarea rows="4" class="@(field.Required ? "required" : "") form-control" data-label="@field.LabelText" name="@elemName" placeholder="@field.LabelText"
+                                  type="@(field.ValueType == OrderFormFieldType.Number ? "number" : "text")"></textarea>
+                    }
+                    else
+                    {
+                        <input class="@(field.Required ? "required" : "") form-control @(Enum.GetName(typeof (OrderFormFieldType), field.ValueType).ToLower())" data-label="@field.LabelText" name="@elemName" placeholder="@field.LabelText"
+                               type="@(field.ValueType == OrderFormFieldType.Number ? "number" : "text")" />
+                    }
+                }
+            }
+            else
+            {
+                StringBuilder htmlFields = new StringBuilder(form.HtmlTemplate);
+                foreach (var field in form.Fields.OrderBy(x => x.SortOrder))
+                {
+                    StringBuilder element = new StringBuilder();
+                    string elemName = "fld" + field.OrderFormFieldId;
+                    if (field.Required || field.ValueType == OrderFormFieldType.Email)
+                    {
+                        element.Append(String.Format("<span class=\"field-validation-valid\" data-valmsg-for=\"{0}\" data-valmsg-replace=\"true\"></span>", elemName));
+                    }
+                    if (field.ValueType == OrderFormFieldType.TextArea)
+                    {
+                        element.Append(String.Format("<textarea rows=\"4\" class=\"{0} form-control\" data-label=\"{2}\" name=\"{1}\" placeholder=\"{2}\"" +
+                                                     "></textarea>", field.Required ? "required" : "", elemName, field.LabelText));
+                    }
+                    else
+                    {
+                        element.Append(String.Format("<input class=\"{0} form-control {1}\" data-label=\"{3}\" name=\"{2}\" placeholder=\"{3}\""
+                                                     + "type=\"{4}\" />", field.Required ? "required" : "",
+                                                     Enum.GetName(typeof(OrderFormFieldType), field.ValueType).ToLower(),
+                                                     elemName,
+                                                     field.LabelText,
+                                                     field.ValueType == OrderFormFieldType.Number ? "number" : "text"
+
+                                                     ));
+                    }
+
+                    int idx = form.Fields.IndexOf(field);
+                    string tmpl = String.Format("{{{0}}}", idx);
+                    htmlFields = htmlFields.ToString().Contains(tmpl) ? htmlFields.Replace(tmpl, element.ToString()) : htmlFields.Append(element.ToString());
+                }
+                
+                @Html.Raw(htmlFields.ToString())
+            }
+
+            @if (form.FileAttachmentEnabled)
+            {
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        <div class="pull-right text-right">
+                            <small>
+                                Максимальное количество файлов: @form.MaxFileAttachmentsCount<br />
+                                Максимальный суммарный размер файлов: 25 Мб
+                            </small>
+                        </div>
+
+                        <div class="order-attachment text-left">
+
+                            <div class="file-upload">
+                                <div class="fileupload-buttonbar">
+                                    <button type="button" class="btn btn-light fileinput-button">
+                                        <i class="fa fa-plus"></i>
+                                        <span>@Strings.Order_AddFile</span>
+                                    </button>
+
+                                    <input id="fileupload" type="file" name="files[]" data-url="/Upload/TempUploadHandler.ashx" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-left">
+                            <ul id="attachments"></ul>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="text-center">
+
+                <button class="send btn btn-lg btn-dark" type="button">Отправить</button>
+                <button class="clear btn btn-lg btn-light" type="button">Очистить</button>
+
+                <div class="message-state">&nbsp;</div>
+
+            </div>
+        </form>
+
+
+    </div>
+
+    @Js("Content/admin/vendor/FU/short")
+    @JsInline(
+    @<script type="text/javascript">
+
+
+
+        var maxFilesCount = parseInt("@form.MaxFileAttachmentsCount");
+
+        $.fn.pop = function () {
+            var top = this.get(-1);
+            this.splice(this.length - 1, 1);
+            return top;
+        };
+
+
+        $.validator.unobtrusive.adapters.addBool("optrequired");
+        $.validator.addMethod("optrequired", function (value, element) {
+            var $container = $("#@(formId).order-container");
+            var $phone = $container.find(".message-phone");
+            var $email = $container.find(".message-email");
+            return $phone.val() || $email.val();
+        });
+
+        $(function () {
+            var $container = $("#@(formId).order-container");
+
+
+            $(".fileinput-button", $container).click(function (e) {
+                $('#fileupload', $container).click();
+            });
+
+            $('#fileupload', $container).fileupload({
+                sequentialUploads: true,
+                replaceFileInput: false,
+                dataType: 'json',
+                autoUpload: false,
+                url: $('#fileupload').data('url'),
+                processdone: function (e, data) {
+
+                    var filename = data.files[0].name;
+
+                    var liid = "li" + ($("#attachments li", $container).length + 1);
+                    data.liid = liid;
+                    var li = $("<li  id='" + liid + "'><a href='#' class='remove-file' title='Удалить'><i class='fa fa-trash-o'>&nbsp;</i></a>&nbsp;" + filename + "</li>");
+                    li.data(data);
+
+                    $("#attachments", $container).append(li);
+
+                    if ($("#attachments li", $container).length >= maxFilesCount) {
+                        $(".fileinput-button", $container).hide();
+                    }
+                },
+                start: function () {
+                    $("button.send", $container).attr("disabled", true);
+                    $(".fileinput-button", $container).hide();
+                    $(".loading", $container).show();
+                },
+                done: function (e, data) {
+                    $(data.result).each(function () {
+
+                        $(".fileinput-button", $container).show();
+                        $(".loading", $container).hide();
+                        $("button.send", $container).removeAttr("disabled");
+
+                        if (this.error) {
+                            smartAlert(this.error);
+                        } else {
+
+                            var li = $("#" + data.liid, $container);
+                            li.data('attach-id', this.file_id);
+
+
+                        }
+                    });
+                }
+            });
+            var $div = $container.find(".message-container");
+            $.validator.unobtrusive.parse($div, true);
+
+            var clearForm = function () {
+
+
+                $("input, textarea", $container).each(function () {
+                    $(this).val("");
+                });
+                @if (form.FileAttachmentEnabled) {
+                         <text>
+                $(".file-upload", $container).show();
+                $(".fileinput-button", $container).show();
+                $(".loading", $container).hide();
+                $(".fileupload-restriction", $container).show();
+
+
+                $("#attachments", $container).html('');
+                $("#fileupload", $container).val('');
+
+                $(".fileinput-button", $container).show();
+                </text>
+                    }
+            };
+
+            $(document).on('click', "#attachments .remove-file", function () {
+                $(this).closest("li").remove();
+                if ($("#attachments li", $container).length < maxFilesCount) {
+                    $(".fileinput-button", $container).show();
+                }
+                return false;
+            });
+
+            $(".clear", $container).click(function () {
+                clearForm();
+            });
+
+            $(".send", $container).click(function () {
+                var form = $("form.message-container", $container);
+                $.validator.unobtrusive.parse(form, true);
+
+                var that = $(this);
+                $container.find('.message-state').html("");
+
+
+                var saveData = function () {
+                    that.attr("disabled", "disabled");
+
+                    var message = {
+
+                        Fields: form.serializeObject(),
+                        OrderFormId: parseInt("@(form.OrderFormId)"),
+                        Email: form.find(".email").val(),
+                        Name: form.find(".name").val(),
+                        Phone: form.find(".phone").val(),
+                        AttachIds: $("#attachments li", $container).map(function () {
+                            return $(this).data("attachId");
+                        }).get()
+
+                    };
+                    sendMessage(message, "order", function (result) {
+                        var msg;
+                        if (result.succeed === true) {
+                            msg = '<div class="alert alert-success">@(String.IsNullOrEmpty(form.SuccessMessage) ? "Ваша заявка принята, мы с вами свяжемся в ближайшее время." : form.SuccessMessage)</div>';
+                            if (window.yaCounter) {
+                                window.yaCounter.reachGoal("@(form.MetricsCode)");
+                            }
+                            clearForm();
+                            @if (!String.IsNullOrEmpty(form.RedirectUrl))
+                                 {<text>
+                            window.location.href = "@(form.RedirectUrl)";
+                            </text>
+                                }
+                        } else {
+                            msg = "Произошла ошибка, попробуйте еще раз.";
+                        }
+                        $container.find('.message-state').html(msg);
+                    }, function () { that.removeAttr("disabled"); });
+
+
+                };
+                if (form.valid()) {
+
+                    var attachments = $("#attachments li", $container);
+
+                    var uploadAttach = function () {
+
+                        if (attachments.length > 0) {
+
+                            var elem = attachments.pop();
+                            $(elem).data().submit().always(function () { uploadAttach(); });
+                        } else {
+                            saveData();
+                        }
+                    };
+
+                    uploadAttach();
+                } else {
+                    form.validate().focusInvalid();
+                }
+                return false;
+            });
+        });
+    </script>
+        )
+
+}

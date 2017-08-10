@@ -1,0 +1,7 @@
+﻿@model int
+@{
+    ViewBag.NoLayout = true;
+}
+<div>
+    @Html.Action("Rubric", "News", new { id = Model })
+</div>

@@ -1,0 +1,231 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base.Helpers
+@{
+    int maxFilesCount = AppSettingsHelper.TempFilesCount;
+}
+<div class="order-container">
+    <form class="message-container form-horizontal pd-sm">
+
+        <input class="message-name form-control" id="Name" name="Name" type="text" placeholder="Имя">
+
+        <span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+        <input class="message-email form-control" data-val="true" placeholder="Email" data-val-optrequired="Укажите телефон или email" data-val-regex="Неправильный формат email-адреса" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$" id="Email" name="Email" type="text" value="">
+
+
+        <span class="field-validation-valid" data-valmsg-for="Phone" data-valmsg-replace="true"></span>
+        <input class="message-phone form-control" placeholder="Телефон" data-val-optrequired="Укажите телефон или email" id="Phone" name="Phone" type="text" value="">
+
+        <textarea class="message-text form-control" placeholder="Сообщение" cols="20" data-val="true" data-val-required="Поле обязательно для заполнения" id="Text" name="Text" resize="none" rows="4"></textarea>
+
+        <div class="pull-right text-right">
+            <small>
+                Максимальное количество файлов: @maxFilesCount<br />
+                Максимальный суммарный размер файлов: 25 Мб
+            </small>
+        </div>
+
+        <div class="order-attachment text-left">
+
+            <div class="file-upload">
+                <div class="fileupload-buttonbar">
+                    <button type="button" class="btn btn-light fileinput-button">
+                        <i class="fa fa-plus"></i>
+                        <span>@Strings.Order_AddFile</span>
+                    </button>
+
+                    <input id="fileupload" type="file" name="files[]" data-url="/Upload/TempUploadHandler.ashx" style="display: none;">
+                </div>
+            </div>
+        </div>
+
+        <div class="text-left">
+            <ul id="attachments"></ul>
+        </div>
+
+
+
+
+        <div class="form-group text-center buttons">
+
+            <button class="send btn btn-lg btn-dark" type="button">Отправить</button>
+            <button class="clear btn btn-lg btn-light" type="button">Очистить</button>
+
+            <div class="message-state">&nbsp;</div>
+
+        </div>
+
+    </form>
+
+</div>
+
+@Js("Content/admin/vendor/FU/short")
+@JsInline(
+    @<script type="text/javascript">
+
+        var maxFilesCount = parseInt("@maxFilesCount");
+
+        $.fn.pop = function () {
+            var top = this.get(-1);
+            this.splice(this.length - 1, 1);
+            return top;
+        };
+
+
+        $.validator.unobtrusive.adapters.addBool("optrequired");
+        $.validator.addMethod("optrequired", function (value, element) {
+            var $container = $(".order-container");
+            var $phone = $container.find(".message-phone");
+            var $email = $container.find(".message-email");
+            return $phone.val() || $email.val();
+        });
+
+        $(function () {
+            var $container = $(".order-container");
+
+
+            $(".order-container  .fileinput-button").click(function (e) {
+                $('.order-container #fileupload').click();
+            });
+
+            $('#fileupload').fileupload({
+                sequentialUploads: true,
+                replaceFileInput: false,
+                dataType: 'json',
+                autoUpload: false,
+                url: $('#fileupload').data('url'),
+                processdone: function (e, data) {
+
+                    var filename = data.files[0].name;
+
+                    var liid = "li" + ($("#attachments li").length + 1);
+                    data.liid = liid;
+                    var li = $("<li  id='" + liid + "'><a href='#' class='remove-file' title='Удалить'><i class='fa fa-trash-o'>&nbsp;</i></a>&nbsp;" + filename + "</li>");
+                    li.data(data);
+
+                    $(".order-container #attachments").append(li);
+
+                    if ($("#attachments li").length >= maxFilesCount) {
+                        $(".order-container  .fileinput-button").hide();
+                    }
+                },
+                start: function () {
+                    $(".order-container button.send").attr("disabled", true);
+                    $(".order-container .fileinput-button").hide();
+                    $(".order-container .loading").show();
+                },
+                done: function (e, data) {
+                    $(data.result).each(function () {
+
+                        $(".order-container .fileinput-button").show();
+                        $(".order-container .loading").hide();
+                        $(".order-container button.send").removeAttr("disabled");
+
+                        if (this.error) {
+                            smartAlert(this.error);
+                        }
+                        else {
+
+                            var li = $("#" + data.liid);
+                            li.data('attach-id', this.file_id);
+
+
+                        }
+                    });
+                }
+            });
+            var $div = $container.find(".message-container");
+            $.validator.unobtrusive.parse($div, true);
+
+            var clearForm = function () {
+                $container.find(".message-text").val("");
+                $container.find(".message-phone").val("");
+                $container.find(".message-email").val("");
+                $container.find(".message-name").val("");
+                $container.find(".filename").text("");
+
+                $(".order-container .file-upload").show();
+                $(".order-container .fileinput-button").show();
+                $(".order-container .loading").hide();
+                $(".order-container .fileupload-restriction").show();
+
+
+                $("#attachments").html('');
+                $("#fileupload").val('');
+
+                $(".order-container  .fileinput-button").show();
+            };
+
+            $(document).on('click', "#attachments .remove-file", function () {
+                $(this).closest("li").remove();
+                if ($("#attachments li").length < maxFilesCount) {
+                    $(".order-container  .fileinput-button").show();
+                }
+                return false;
+            });
+
+            $(".order-container .clear").click(function () {
+                clearForm();
+            });
+
+            $(".order-container .send").click(function () {
+                var form = $("form.message-container");
+                $.validator.unobtrusive.parse(form, true);
+
+                var that = $(this);
+                $container.find('.message-state').html("");
+
+
+                var saveData = function () {
+                    that.attr("disabled", "disabled");
+                    var message = {
+                        Text: form.find(".message-text").val(),
+                        Phone: form.find(".message-phone").val(),
+                        Email: form.find(".message-email").val(),
+                        Name: form.find(".message-name").val(),
+                        AttachIds: $(".order-container #attachments li").map(function () {
+                            return $(this).data("attachId");
+                        }).get()
+
+                    };
+                    sendMessage(message, "order", function (result) {
+                        var msg;
+                        if (result.succeed === true) {
+                            msg = '<div class="alert alert-success">Ваша заявка принята, мы с вами свяжемся в ближайшее время.</div>';
+                            if (window.yaCounter) {
+                                window.yaCounter.reachGoal("METRIKA_MATERIAL");
+                            }
+                            clearForm();
+                        } else {
+                            msg = "Произошла ошибка, попробуйте еще раз.";
+                        }
+                        $container.find('.message-state').html(msg);
+                    }, function () { that.removeAttr("disabled"); });
+
+
+
+                }
+                if (form.valid()) {
+
+                    var attachments = $("#attachments li");
+
+                    var uploadAttach = function () {
+
+                        if (attachments.length > 0) {
+
+                            var elem = attachments.pop();
+                            $(elem).data().submit().always(function () { uploadAttach(); });
+                        } else {
+                            saveData();
+                        }
+                    };
+
+                    uploadAttach();
+                } else {
+                    form.validate().focusInvalid();
+                }
+                return false;
+            });
+        });
+    </script>
+)

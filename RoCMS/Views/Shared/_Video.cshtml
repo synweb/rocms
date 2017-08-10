@@ -1,0 +1,50 @@
+﻿@using RoCMS.Web.Contract.Services
+@using RoCMS.Base
+@model string
+
+@{
+    string videoId = Model;
+    var videoService = DependencyResolver.Current.GetService<IVideoGalleryService>();
+    var video = videoService.GetVideo(videoId);
+    //string descr = String.Empty;
+    string title = String.Empty;
+    string imageUrl = "http://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+    if (video != null)
+    {
+        //descr = video.Description;
+        title = video.Title;
+        if (!String.IsNullOrEmpty(video.ImageId))
+        {
+            imageUrl = Url.Action("Image", "Gallery", new { id = video.ImageId });
+        }
+    }
+
+
+}
+
+<a class="play" href="http://www.youtube.com/watch?v=@(videoId)">
+    <div class="image">
+        <div class="overlay">
+            <div class="port-icon"></div>
+        </div>
+        <img alt="@title" src="http://img.youtube.com/vi/@(videoId)/hqdefault.jpg">
+    </div>
+</a>
+
+
+@JsInline(
+    @<script>
+        $(function () {
+            $('.play').click(function () {
+                var src = 'http://www.youtube.com/v/@(videoId)&amp;autoplay=1';
+                $('#videoModal').modal('show');
+                $('#videoModal iframe').attr('src', src);
+                return false;
+            });
+
+            $('.modal.fade').click(function () {
+                $('#videoModal iframe').removeAttr('src');
+            });
+        });
+    </script>
+)

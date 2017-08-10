@@ -1,0 +1,120 @@
+﻿@using RoCMS.Models
+@using RoCMS.Web.Contract.Models.Shop
+@using RoCMS.Web.Contract.Services
+@model IList<GoodsItem>
+@{
+    var shopService = DependencyResolver.Current.GetService<IShopService>();
+    
+    int? categoryId = ViewBag.CategoryId ?? null;
+
+    var category = categoryId.HasValue ? shopService.GetCategory(categoryId.Value) : null;
+    
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_newUserLayout.cshtml";
+    }
+
+
+
+    int page = ViewBag.Page;
+    int pageSize = ViewBag.PageSize;
+    int totalCount = ViewBag.TotalCount;
+
+    int startIndex = (page - 1) * pageSize + 1;
+    IList<GoodsItem> goods = Model;
+
+    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+
+}
+
+
+
+@if (breadCrumbs.Any())
+{
+    Html.RenderPartial("_BreadCrumbs", breadCrumbs);
+}
+<h1>@category.Name</h1>
+@*<div class="product-filter">
+        <div class="display"><b>Display:</b> <div id="list_b"></div> <a id="grid_a" onclick="display('grid');">Grid</a></div>
+        <div class="sort">
+            Sort By:      <select onchange="location = this.value;">
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=p.sort_order&amp;order=ASC" selected="selected">Default</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=pd.name&amp;order=ASC">Name (A - Z)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=pd.name&amp;order=DESC">Name (Z - A)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=ps.price&amp;order=ASC">Price (Low &gt; High)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=ps.price&amp;order=DESC">Price (High &gt; Low)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=rating&amp;order=DESC">Rating (Highest)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=rating&amp;order=ASC">Rating (Lowest)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=p.model&amp;order=ASC">Model (A - Z)</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;sort=p.model&amp;order=DESC">Model (Z - A)</option>
+            </select>
+        </div> <div class="limit">
+            Show:      <select onchange="location = this.value;">
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;limit=12" selected="selected">12</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;limit=25">25</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;limit=50">50</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;limit=75">75</option>
+                <option value="http://livedemo00.template-help.com/opencart_39945/index.php?route=product/special&amp;limit=100">100</option>
+            </select>
+        </div>
+        <div class="product-compare"><a href="#" id="compare-total">Product Compare (0)</a></div>
+    </div>*@
+<div class="product-list">
+    <ul>
+        @foreach (var goodsItem in goods)
+        {
+            <li class="first-in-line">
+                <div class="right">
+                    <div class="price">
+                        <span class="price-new">@goodsItem.Price<em class="fa fa-rub">&nbsp;</em></span>
+                        @*<span class="price-old">@goodsItem.Price</span>*@
+                        @*<span class="price-tax">Ex Tax: $90.00</span>*@
+                    </div>
+                    <div class="cart">
+                        <a onclick="true" class="button addToCart order-link" data-bind="click: function(){ addItem(@goodsItem.GoodsId, 1) }">
+                            <span>Заказать</span>
+                        </a>
+                    </div>
+                    @*<div class="wishlist"><a class="tip" onclick="addToWishList('44');">Add to Wish List</a><span class="tooltip">Wishlist</span></div>  <div class="compare"><a class="tip2" onclick="addToCompare('44');">Add to Compare</a><span class="tooltip2">Compare</span></div>*@
+                </div>
+                <div class="left">
+                    <div class="image"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})"><img id="img_44" src="@Url.Action("Thumbnail", "Gallery" , new { id=goodsItem.MainImageId })" title="@goodsItem.Name" alt="@goodsItem.Name"></a></div>
+                    <div class="name">
+                        <a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})">@goodsItem.Name</a>
+                    </div>
+                    <div class="description">
+                        @goodsItem.Description
+                    </div>
+                    @*<div class="rating">
+                        </div>*@
+                </div>
+            </li>
+}
+    </ul>
+</div>
+<div class="pagination">
+    <ul class="pagination">
+        @{
+            int pagesCount = totalCount / pageSize;
+            if (totalCount / pageSize * pageSize != totalCount)
+            {
+                pagesCount++;
+            }
+        }
+        @for (int i = 1; i <= pagesCount; i++)
+        {
+
+            <li>
+                @if (page == i)
+                {
+                    <b>@i</b>
+                }
+                else
+                {
+                    <a href="@Url.Action("Category", "Shop", new {id = categoryId, page = i, pgsize = pageSize})">@i</a>
+                }
+            </li>
+        }
+    </ul><div class="results">Показано с @(startIndex) по @(startIndex + goods.Count() - 1) из @totalCount (@page Страница)</div>
+</div>
+

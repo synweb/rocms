@@ -1,0 +1,18 @@
+﻿@model RoCMS.Base.ForWeb.Models.EditorVM
+
+@Js("Content/admin/vendor/ace")
+@Js("Content/admin/ro/wysiwyg/rocms.wysiwyg.js")
+
+<div class="wysiwyg-container" data-editor-id="@(Model.ElementId)">
+    <textarea class="@Model.ElementClass" id="@(Model.ElementId)">@Model.Content</textarea>
+    @if (Model.ShowCommonButtons)
+    {
+        @Html.Partial("Editor/_CommonButtons", Model.ElementId)
+    }
+</div>
+
+@JsInline(@<script>
+    $(function () {
+        createACEEditor("@Model.ElementId", "@Model.ACEMode");
+    });
+    </script>)

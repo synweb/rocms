@@ -1,0 +1,26 @@
+﻿@model Tuple<RoCMS.Comments.Contract.Models.CommentTopic, ICollection<RoCMS.Comments.Contract.ViewModels.CommentVM>>
+
+@{
+    ViewBag.PageTitle = "Комментарии";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+<div class="pull-right">
+    <a class="btn btn-info to-albums" href="@Url.Action("Topics")"><i class="fa fa-backward"></i>&nbsp;К списку тем</a>
+</div>
+<h2>Комментарии к теме: &laquo;@(Model.Item1.TargetTitle)&raquo;</h2>
+<a href="@Model.Item1.TargetUrl" target="_blank">(перейти к объекту обсуждения)</a>
+
+<div class="comments-tree">
+    @Html.Partial("_ThreadEditorInternal", Model.Item2)
+</div>
+
+@Js("/bin/Content/admin/comments")
+
+@JsInline(@<script>
+    $(function() {
+        onCommentsEditorLoaded();
+    })
+</script>)

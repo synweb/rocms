@@ -1,0 +1,96 @@
+﻿@using System.Globalization
+@using RoCMS.News.Contract.Resources
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Helpers
+@using RoCMS.Web.Contract.Models
+@using RoCMS.Web.Contract.Services
+@using RoCMS.Web.Contract.Extensions
+@model RoCMS.News.Contract.Models.NewsItem
+@{
+    ViewBag.Title = ViewBag.Header = Model.Title;
+
+    if (Model.Categories.Any())
+    {
+        ViewBag.CanonicalUrl = Url.RouteUrl("BlogItem",
+            new
+            {
+                relativeUrl = Model.CanonicalUrl
+            });
+    }
+    var userService = DependencyResolver.Current.GetService<ISecurityService>();
+    var author = userService.GetUser(Model.AuthorId).Username;
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+    bool showEditLink = User.IsAuthorizedForResource(RoCMS.Base.RoCmsResources.News);
+
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+    var sidebarBlock = blockService.GetBlock(6);
+
+    var shareBlock = blockService.GetBlock(7);
+
+}
+
+@if (showEditLink)
+{
+    @Html.Partial("_AdminWidget", Url.Action("EditNews", "NewsEditor", new { id = Model.NewsId }))
+}
+
+<div class="row">
+    <div class="col-md-9">
+        <div class="blog-item news-item" data-news-id="@Model.NewsId">
+            @if (!string.IsNullOrEmpty(Model.ImageId))
+            {
+
+                <img src="@Url.Action("Image", "Gallery", new {id = Model.ImageId})" class="img-responsive" alt="@Model.Title">
+
+            }
+            <div class="post-meta">
+                <em class="fa fa-clock-o"></em>&nbsp;@Model.PostingDate.ApplySiteTimezone().ToString("d MMM yyyy HH:mm", CultureInfo.CurrentUICulture)
+
+                @if (!string.IsNullOrEmpty(Model.Tags))
+                {
+                    <text> / </text>
+                    foreach (var tag in Model.Tags.Split(','))
+                    {
+                        <a href="@Url.RouteUrl("BlogTagSearch", new {tag = tag})">@tag</a>
+                        if (!Model.Tags.EndsWith(tag))
+                        {
+                            <text> / </text>
+                        }
+                    }
+                }
+
+            </div>
+
+            @Html.Raw(ContentRenderHelper.RenderContent(Model.Text))
+
+        </div>
+
+
+        @*@Html.Action("TopicThread", "Comments", new { id = Model.CommentTopicId })
+            @if (Model.CommentTopicId.HasValue)
+            {
+                @Html.Partial("_Thread", Model.CommentTopicId.Value)
+            }
+            @Html.Partial("_LeaveComment")*@
+
+        @Block(shareBlock)
+    </div>
+    <div class="col-md-3 sidebar">
+        @Block(sidebarBlock)
+    </div>
+</div>
+
+
+
+@JsInline(@<script>
+    $(function () {
+        pageLoaded();
+    });
+    </script>)

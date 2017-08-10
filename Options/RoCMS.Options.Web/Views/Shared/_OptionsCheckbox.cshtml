@@ -1,0 +1,25 @@
+﻿@using RoCMS.Options.Contract.Models
+@using RoCMS.Options.Contract.Services
+
+@{
+    IOptionService optionsService = DependencyResolver.Current.GetService<IOptionService>();
+    IList<OptionKey> options = optionsService.GetOptions();
+}
+
+<div class="options-selector">
+    <h2>Характеристики</h2>
+    <div class="row">
+        @foreach (var option in options)
+        {
+            <div class="col-sm-4">
+                <label class="control-label ">@option.Name</label>
+                @foreach (var value in option.OptionValues)
+                {
+                <div class="checkbox">
+                    <label class="option-value"><input type="checkbox" value="@value.Id">@value.Value</label>
+                </div>
+                }
+            </div>
+        }
+    </div>
+</div>

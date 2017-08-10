@@ -1,0 +1,4 @@
+﻿CREATE TYPE [String_Table] AS TABLE
+(
+	Val VARCHAR(255)
+)

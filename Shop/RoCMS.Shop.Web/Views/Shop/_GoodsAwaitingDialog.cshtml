@@ -1,0 +1,34 @@
+﻿@{
+    string phone = ViewBag.Phone ?? "";
+    string email = ViewBag.Email ?? "";
+}
+
+
+<form class="form-horizontal goods-awaiting text-center">
+    <h3>Сообщите мне о появлении товара в наличии</h3>
+    <div class="form-group">
+        <label class="col-sm-4 text-left">Email</label>
+        <div class="col-sm-8">
+            <input class="form-control email" type="text" value="@email"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-4 text-left">Телефон</label>
+        <div class="col-sm-8">
+            <input class="form-control phone" type="text" placeholder="+7 (903) 111-44-55" value="@phone"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <button class="create-awaiting btn btn-primary" type="button">Сохранить</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <p class="form-control-static bg-danger error-info">Укажите email или телефон</p>
+        </div>
+    </div>
+    @Html.AntiForgeryToken()
+</form>
+
+@Js("/bin/Content/client/shop")

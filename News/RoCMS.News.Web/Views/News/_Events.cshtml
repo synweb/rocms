@@ -1,0 +1,37 @@
+﻿@using System.Globalization
+@using RoCMS.Base.Models
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Services
+@using RoCMS.Web.Contract.Extensions
+@model int?
+
+
+
+@if (Model.HasValue)
+{
+    var newsService = DependencyResolver.Current.GetService<INewsItemService>();
+    int total;
+    var news = newsService.GetNewsPage(new NewsFilter()
+    {
+        OnlyPosted = false,
+        OnlyFutureEventDate = true,
+        RecordTypes = new List<RecordType>() { RecordType.Event },
+        SortBy = NewsItemSortBy.EventDate,
+        SortOrder = SortOrder.Asc
+    }, 1, Model ?? int.MaxValue, out total);
+
+
+
+    <div class="calendar">
+
+        @foreach (var item in news.OrderBy(x => x.EventDate))
+        {
+            @Html.Partial("_EventItem", item)
+        }
+
+    </div>
+}
+else
+{
+    @Html.Action("Events", new { future = true })
+}

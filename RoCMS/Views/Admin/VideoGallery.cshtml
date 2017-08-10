@@ -1,0 +1,33 @@
+﻿@using Resources
+@model IEnumerable<RoCMS.Web.Contract.Models.VideoAlbum>
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminVideoGallery_PageTitle;
+}
+<a class="video-album-create btn btn-success"><i class="fa fa-plus"></i>&nbsp;@Strings.AdminAlbum_Create</a>
+
+<div class="video-albums-list">
+    @foreach (var album in Model)
+    {
+        <div class="box video-album">
+            <header>
+                <h5 title="@album.Name">@album.Name</h5>
+                <div class="toolbar multibutton">
+                    <a class="btn btn-xs btn-warning edit" href="@Url.Action("ConfigureVideoAlbum", "Admin", new {id = album.ID})"><i class="fa fa-pencil"></i></a>
+                    <a class="btn btn-xs btn-danger delete" data-album-id="@album.ID" onclick="true"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </header>
+        </div>
+    }
+</div>
+@Js("Content/admin/ro/album/rocms.video.albums.js")
+
+@JsInline(@<script>
+    $(function() {
+        onVideoAlbumListLoaded();
+    });
+</script>)

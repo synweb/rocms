@@ -1,0 +1,20 @@
+﻿
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+@model IList<RoCMS.Shop.Contract.Models.GoodsItem>
+@{
+
+
+    IList<GoodsItem> goods = Model;
+
+
+
+}
+
+@Js("/bin/Content/client/shop")
+
+@Html.Partial("_GoodsSet", goods)
+
+
+@Html.Partial("_Pager")

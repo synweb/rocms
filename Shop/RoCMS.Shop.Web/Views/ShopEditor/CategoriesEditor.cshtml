@@ -1,0 +1,185 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Base.ForWeb.Models
+@{
+    ViewBag.Title = "Категории";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+
+    string emptyImg = Url.Content("~/Content/admin/ro/img/no-image.png");
+    string imgSrc;
+    if (Model != null && !String.IsNullOrEmpty(Model.ImageId))
+    {
+        imgSrc = Url.Action("Thumbnail", "Gallery", new { id = Model.ImageId });
+    }
+    else
+    {
+        imgSrc = emptyImg;
+    }
+}
+@Js("/Content/base/vendor/ckeditor")
+@Js("/bin/Content/admin/shop")
+<div>
+
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createCategory"><i class="fa fa-plus"></i>&nbsp;@ShopStrings.Shop_Category_CreateCategory</a>
+        <a class="button-edit-order btn btn-success" data-bind="click: enableEditOrder"><i class="fa fa-pencil"></i>&nbsp;Изменить порядок категорий</a>
+        <a class="button-save-order btn btn-success" data-bind="click: saveOrder, style: {display: orderEditingEnabled() === true ? 'inline-block': 'none'}"><i class="fa fa-save"></i>&nbsp;Сохранить порядок категорий</a>
+    </div>
+    <div class="shop-categories-list">
+        <ul data-bind="template: { name: 'category-list-item-template', foreach: childrenCategories }"></ul>
+    </div>
+
+    <script type="text/html" id="category-list-item-template">
+        <li class="category">
+            <div class="category-name" data-bind="click: $root.selectCategory">
+                <div style="float: right">
+                    <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Category_EditCategory"><i class="fa fa-pencil"></i></a>
+                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    {
+                        <a data-bind="click: function (e) {if(!confirmRemoval()) { return false;} remove($data, $parent);}, clickBubble: false" class="remove button-delete btn btn-danger btn-xs" title="@ShopStrings.Shop_Category_DeleteCategory"><i class="fa fa-times"></i></a>
+                    }
+
+                    <div data-bind="style: {display: $root.orderEditingEnabled() === true ? 'inline-block': 'none'}">
+                        <a data-bind="click: function () { moveUp($data, $parent); }, clickBubble: false" class="moveUp button-up btn btn-warning btn-xs" title="@ShopStrings.Menu_Up"><i class="fa fa-chevron-up"></i></a>
+                        <a data-bind="click: function () { moveDown($data, $parent); }, clickBubble: false" class="moveDown button-down btn btn-warning btn-xs" title="@ShopStrings.Menu_Down"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+
+
+                </div>
+                <label data-bind="text: name"></label>
+                <a href="#" data-bind="click: addChild, clickBubble: false" title="@ShopStrings.Shop_Category_AddSubCategory"><i class="fa fa-plus-circle"></i></a>
+            </div>
+            <div style="clear: both; padding-left: 30px;" class="child-categories">
+                <div>
+                    <ul data-bind="template: { name: 'category-list-item-template', foreach: childrenCategories }"></ul>
+                </div>
+            </div>
+        </li>
+    </script>
+
+
+    <script type="text/html" id="categoryTemplate">
+        <div class="shop-category">
+            <form class="form-horizontal">
+
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li class="active"><a href="#mainCatSettings" role="tab" data-toggle="tab">Главные настройки</a></li>
+                    <li class=""><a href="#orderFormSettings" role="tab" data-toggle="tab">Форма заказа</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="mainCatSettings">
+                        <div class="tab-content">
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Название</label>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control" data-bind="value: name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Относительный URL</label>
+                                <div class="col-xs-10">
+                                    <input type="text" class="form-control" data-bind="value: relativeUrl">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Родительская категория</label>
+                                <div class="col-xs-10" style="margin-top: 15px;">
+                                    <span data-bind="text: parentCategory().name"></span>
+                                    <a data-bind="click: editParentCategory, clickBubble: false" class="btn btn-warning btn-xs" title="Изменить"><i class="fa fa-pencil"></i></a>
+                                    <a data-bind="click: clearParentCategory, clickBubble: false" class="remove button-delete btn btn-danger btn-xs" title="Сделать корневой"><i class="fa fa-times"></i></a>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Описание</label>
+                                <div class="col-xs-10">
+
+                                        @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "categoryDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Скрывать в каталоге</label>
+                                <div class="col-xs-10">
+                                    <input type="checkbox" data-bind="checked: hidden">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Meta Description</label>
+                                <div class="col-xs-10">
+                                    <textarea class="category-meta-description form-control" data-bind="value: metaDescription"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-xs-2">Изображение</label>
+                                <div class="col-xs-10">
+
+                                    <img class="category-img" data-bind="click: pickImage, thumbnailSrc: imageId" />
+
+                                    <button type="button" class="btn btn-danger btn-xs remove-image"
+                                            data-bind="click: removeImage, style: { display: imageId ? '' : 'none'}">
+                                        Убрать картинку
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="orderFormSettings">
+                        <div class="specs-rows" data-bind="template: { name: 'spec-item-category-template', foreach: orderFormSpecs }">
+                        </div>
+                        <a data-bind="click: addSpec" onclick="true" class="btn btn-xs btn-success"><em class="fa fa-plus"></em> Добавить характеристику</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="spec-item-category-template">
+        <div class="row spec-item">
+            <div class="col-xs-5">
+                <span data-bind="text: name"></span>
+            </div>
+            <div class="col-xs-4">
+            </div>
+            <div class="col-xs-1">
+            </div>
+            <div class="col-xs-2">
+                <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeSpec($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+            </div>
+        </div>
+    </script>
+
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            $(function () {
+                function InsertImageToEditor() {
+                    var content;
+                    showImagePickDialog(function (imageData) {
+
+                        content = '<img src="/Gallery/Image/' + imageData.ID + '"/>';
+
+                        if (CKEDITOR.instances['categoryDescription']) {
+                            var el = CKEDITOR.dom.element.createFromHtml(content);
+                            CKEDITOR.instances['categoryDescription'].insertElement(el);
+                        } else {
+                            $('#categoryDescription').insertAtCaret(content);
+                        }
+                    });
+                }
+                categoriesEditorLoaded();
+                $(document).on("click", ".wysiwyg-insert-image", function () {
+                    InsertImageToEditor();
+                });
+            });
+
+        </script>)
+    }
+</div>

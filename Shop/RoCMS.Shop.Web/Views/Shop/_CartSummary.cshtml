@@ -1,0 +1,23 @@
+﻿
+
+@Js("/bin/Content/client/shop")
+
+
+
+<div class="cart-container" data-bind="with: cartSummary">
+    <a href="@Url.Action("Checkout", "Shop")" title="Корзина">
+        <span class="badge" data-bind="text: quantity"></span>
+        <em class="glyphicon glyphicon-shopping-cart"></em>Корзина
+    </a>
+</div>
+
+
+@*<div data-bind="with: cartSummary">
+        <a href="@Url.Action("Checkout", "Shop")" title="Корзина">
+            <div class="cart-header">ВАША КОРЗИНА</div>
+            <div>
+                Товаров: <span data-bind="text: quantity"></span><br>
+                на сумму: <span data-bind="text: summary"></span><em class="fa fa-rub"></em>
+            </div>
+        </a>
+    </div>*@

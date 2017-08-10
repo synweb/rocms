@@ -1,0 +1,19 @@
+﻿@model int
+@using RoCMS.Web.Contract.Services
+@{
+    var menuService = DependencyResolver.Current.GetService<IMenuService>();
+    var menu = menuService.GetMenu(Model);
+}
+<ul class="categories">
+    @foreach (var menuItem in menu.Items)
+    {
+        string url = "#";
+        if (!String.IsNullOrEmpty(menuItem.PageUrl))
+        {
+            url = String.Format("/{0}", menuItem.PageUrl);
+        }
+        <li class="@(Request.Url.AbsolutePath == url ? "active" : "")">
+            <a href="@url">@menuItem.Name</a>
+        </li>
+    }
+</ul>

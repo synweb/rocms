@@ -1,0 +1,49 @@
+﻿
+<div class="review-container">
+
+    <form method="post" class="form-horizontal" novalidate="novalidate" data-page-id="@((Model == null) ? 0 : Model.ReviewId)">
+        <span class="field-validation-valid" data-valmsg-for="Author" data-valmsg-replace="true"></span>
+        <input class="review-author form-control" data-val="true" data-val-required="Поле обязательно для заполнения" id="Author" name="Author" type="text" placeholder="ФИО (обязательно)">
+
+        <span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+        <input class="review-email form-control" data-val="true" placeholder="Email" data-val-regex="Неправильный формат email-адреса" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$" id="Email" name="Email" type="text" value=""/>
+
+        <span class="field-validation-valid" data-valmsg-for="Text" data-valmsg-replace="true"></span>
+        <textarea data-val="true" data-val-required="Поле обязательно для заполнения" class="review-text form-control" placeholder="Ваш отзыв (обязательно)" cols="20" id="Text" name="Text" resize="none" rows="4"></textarea>
+
+        <div class="form-group text-center">
+            <button class="send btn-success btn-lg btn btn-dark" onclick="true">Отправить</button>
+            <button class="clear btn-default btn-lg btn btn-light" onclick="true">Очистить</button>
+            <div class="message-state col-xs-12">
+                <div class="review-sent alert-success alert" style="display: none;">Спасибо за ваш отзыв!</div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+@Js("Content/admin/ro/review/rocms.reviews.js")
+
+@JsInline(@<script type="text/javascript">
+    $(function () {
+        $(".review-container button.send").click(function () {
+            
+            var that = $(this);
+            that.attr("disabled", "disabled");
+            sendReview($(".review-container"), function () {
+                    clearReviewContainer($(".review-container"));
+                    $(".review-sent").show();
+                    
+                },
+            function () {
+                that.removeAttr("disabled");
+
+            }, function() {
+                $(".review-container button.clear").click(function () {
+                    clearReviewContainer($(".review-container"));
+                });
+                });
+        });
+
+    });
+</script>)

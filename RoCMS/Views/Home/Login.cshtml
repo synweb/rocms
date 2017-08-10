@@ -1,0 +1,31 @@
+﻿@using Resources
+@model RoCMS.Web.Contract.Models.User
+
+@{
+    Layout = "~/Views/Shared/_loginLayout.cshtml";
+}
+
+<div class="login-container">
+    <div class="text-center">
+        <img src="/Content/base/ro/img/rocms-logo-install.png" alt="RoCMS Logo">
+    </div>
+    <div class="tab-content">
+        <div id="login" class="tab-pane active">
+            @using (Html.BeginForm("LoginAndRedirect", "Home", new { ReturnUrl = (string)ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-signin" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <p class="text-center">
+                    @Strings.UserLogin_EnterUsernameAndPassword
+                </p>
+                @Html.TextBoxFor(x => x.Username, new { @class = "textbox-username form-control", placeholder = Strings.UserLogin_Username })
+                @Html.PasswordFor(x => x.Password, new { @class = "textbox-password form-control", placeholder = Strings.UserLogin_Password })
+
+                <button class="btn btn-lg btn-primary btn-block" type="submit">@Strings.UserLogin_LoginButton</button>
+            }
+        </div>
+
+
+    </div>
+
+</div>

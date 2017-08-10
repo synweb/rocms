@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="OptionKey">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Moderated" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OptionValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OptionKeyId" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Moderated" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_OptionValue_OptionKey">
+          <End Role="OptionKey" Type="Self.OptionKey" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="OptionValue" Type="Self.OptionValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OptionKey">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OptionValue">
+              <PropertyRef Name="OptionKeyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="OptionKey" EntityType="Self.OptionKey" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OptionValue" EntityType="Self.OptionValue" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_OptionValue_OptionKey" Association="Self.FK_OptionValue_OptionKey">
+            <End Role="OptionKey" EntitySet="OptionKey" />
+            <End Role="OptionValue" EntitySet="OptionValue" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Options" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="OptionKey">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Moderated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OptionValues" Relationship="Self.FK_OptionValue_OptionKey" FromRole="OptionKey" ToRole="OptionValue" />
+        </EntityType>
+        <EntityType Name="OptionValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OptionKeyId" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Moderated" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="OptionKey" Relationship="Self.FK_OptionValue_OptionKey" FromRole="OptionValue" ToRole="OptionKey" />
+        </EntityType>
+        <Association Name="FK_OptionValue_OptionKey">
+          <End Role="OptionKey" Type="Self.OptionKey" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="OptionValue" Type="Self.OptionValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OptionKey">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="OptionValue">
+              <PropertyRef Name="OptionKeyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="OptionsContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="OptionKey" EntityType="Self.OptionKey" />
+          <EntitySet Name="OptionValue" EntityType="Self.OptionValue" />
+          <AssociationSet Name="FK_OptionValue_OptionKey" Association="Self.FK_OptionValue_OptionKey">
+            <End Role="OptionKey" EntitySet="OptionKey" />
+            <End Role="OptionValue" EntitySet="OptionValue" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="OptionsContainer">
+          <EntitySetMapping Name="OptionKey">
+            <EntityTypeMapping TypeName="Options.OptionKey">
+              <MappingFragment StoreEntitySet="OptionKey">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Moderated" ColumnName="Moderated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OptionValue">
+            <EntityTypeMapping TypeName="Options.OptionValue">
+              <MappingFragment StoreEntitySet="OptionValue">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OptionKeyId" ColumnName="OptionKeyId" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Moderated" ColumnName="Moderated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

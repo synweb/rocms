@@ -1,0 +1,214 @@
+﻿@using RoCMS.Base.ForWeb.Helpers 
+@using RoCMS.News.Contract.Resources
+@using RoCMS.Web.Contract.Extensions
+@using RoCMS.Web.Contract.Services
+@model RoCMS.News.Web.Models.NewsVM
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminNews_PageTitle;
+    var userService = DependencyResolver.Current.GetService<ISecurityService>();
+    IEnumerable<int> newsOnPageOptions = new[] {5, 10, 20, 50, 100, 300};
+
+    var pagingParams = ParamExtractor.ExtractAllParams(Request);
+}
+@*<div class="navbar navbar-default">
+    <ul class="nav navbar-nav">
+        <li><a href="/NewsEditor/News">Лента администрации</a></li>
+        <li><a href="/NewsEditor/AllUserNews">Все пользователи</a></li>
+    </ul>
+</div>*@
+
+<h1>@ViewBag.Header</h1>
+
+<div class="admin-news">
+
+    <div>
+        <a class="btn btn-success" href="@Url.Action("CreateNews")"><i class="fa fa-file-o"></i>&nbsp;@Strings.News_CreateNews</a>
+    </div>
+    
+    @foreach (var newsItem in Model.News)
+    {
+        string username = userService.GetUser(newsItem.AuthorId).Username;
+        <div class="box news-summary" data-news-id="@newsItem.NewsId">
+            <header>
+
+                <div class="toolbar">
+                    <a href="@Url.Action("EditNews", new {id = newsItem.NewsId})" class="btn btn-warning btn-xs">
+                        <i class="fa fa-pencil"></i> @Strings.News_EditNews
+                    </a>
+                    <a onclick="true" class="btn btn-danger btn-xs button-delete">
+                        <i class="fa fa-times"></i> @Strings.News_DeleteNews
+                    </a>
+                </div>
+                <h5>@newsItem.Title</h5>
+            </header>
+            <div class="form-horizontal body">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.News_Author
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@username</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.CreateNews_RelativeUrl
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@newsItem.RelativeUrl</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.News_Annotation
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@newsItem.Description</p>
+                    </div>
+                </div>
+                <div class="form-group prog">
+                    <label class="control-label col-lg-4">
+                        @Strings.News_CreationDate
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@newsItem.CreationDate.ApplySiteTimezone().ToShortDateString()</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.News_PostingDateTime
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@newsItem.PostingDate.ApplySiteTimezone()</p>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    }
+    @if (Model.News.Any())
+    {
+        <div>
+            <a class="btn btn-success" href="@Url.Action("CreateNews")"><i class="fa fa-file-o"></i>&nbsp;@Strings.News_CreateNews</a>
+        </div>
+    }
+</div>
+
+@Pager(Model.TotalCount, Model.NewsOnPage, Model.CurrentPage, pagingParams)
+
+@helper Pager(int totalCount, int pageSize, int page, IDictionary<string, object> pagingParams)
+{
+
+    <div class="pagination-container">
+        <ul class="pagination">
+            @{
+                int pagesCount = totalCount / pageSize;
+                if (totalCount / pageSize * pageSize != totalCount)
+                {
+                    pagesCount++;
+                }
+            }
+            @if (pagesCount > 1 && page != 1)
+            {
+
+                var args = new RouteValueDictionary(pagingParams);
+                args["page"] = page - 1;
+
+                <li><a href="@Url.RouteUrl(args)" class="prev"><i class="fa fa-angle-left"></i></a></li>
+            }
+            @for (int i = 1; i <= pagesCount; i++)
+            {
+                if (pagesCount > 10)
+                {
+                    if (page > 4)
+                    {
+                        if (i == 2)
+                        {
+                            <li class="dots"><span>...</span></li>
+                        }
+                        if (i < page - 2 && i != 1)
+                        {
+                            continue;
+                        }
+
+                    }
+                    if (page + 3 < pagesCount)
+                    {
+                        if (i >= page + 3 && i != pagesCount)
+                        {
+                            if (i == page + 3)
+                            {
+                                <li class="dots"><span>...</span></li>
+                            }
+                            continue;
+                        }
+                    }
+                }
+                <li>
+                    @if (page == i)
+                    {
+                        <a class="active">@i</a>
+                    }
+                    else
+                    {
+                        var args = new RouteValueDictionary(pagingParams);
+                        if (args.ContainsKey("page"))
+                        {
+                            args.Remove("page");
+                        }
+                        if (i != 1)
+                        {
+                            args.Add("page", i);
+                        }
+                        if (args.ContainsKey("pgsize"))
+                        {
+                            args.Remove("pgsize");
+                        }
+                        if (pageSize != 12)
+                        {
+                            args.Add("pgsize", pageSize);
+                        }
+
+                        <a href="@Url.RouteUrl(args)">@i</a>
+                    }
+                </li>
+            }
+            @if (pagesCount > 1 && page != pagesCount)
+            {
+                var args = new RouteValueDictionary(pagingParams);
+                args["page"] = page + 1;
+
+                <li><a href="@Url.RouteUrl(args)" class="next"><i class="fa fa-angle-right"></i></a></li>
+            }
+        </ul>
+
+    </div>
+}
+
+@Js("/bin/Content/admin/news")
+
+@JsInline(
+@<script>
+    $(function() {
+        $(".button-delete").click(function () {
+            if (!confirmRemoval()) {
+                return false;
+            }
+            var box = $(this).closest(".news-summary");
+            var id = box.data("newsId");
+            if (!id) return false;
+            blockUI();
+            $.post("/api/news/news/" + id + "/delete", null, function(res) {
+                if (res.succeed) {
+                    box.hide(1000, function () { box.remove(); });
+                } else {
+                    smartAlert("Ошибка при удалении");
+                }
+            }).always(unblockUI);
+        });
+    });
+</script>)

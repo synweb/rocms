@@ -1,0 +1,45 @@
+﻿@using Resources
+@{
+    ViewBag.Title = "Экспорт товарной базы";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+@Js("/bin/Content/admin/shop")
+<div>
+    <h1>Экспорт товарной базы на сайт Мирчая.рф</h1>
+
+    <div class="form-group text-center">
+        <button type="button" class="btn btn-success start-price-export" data-bind="click: $root.startExport"><i class="fa fa-check"></i>&nbsp;Начать экспорт</button>
+    </div>
+    <div class="alert alert-warning" style="font-size: 16px; font-weight: bold; text-align:center;">
+        <span>
+            Процесс экспорта может занимать много времени и будет завершен автоматически в фоновом режиме. <br>
+            Чтобы проверить статус - обновите страницу (F5).<br>
+        </span>
+    </div>
+
+    <h3>@ShopStrings.YmlExport_History</h3>
+    <table class="table">
+        <tr>
+            <th>@ShopStrings.YmlExport_History_StartDate</th>
+            <th>@ShopStrings.YmlExport_History_EndDate</th>
+            <th>@ShopStrings.YmlExport_History_Status</th>
+            <th>@ShopStrings.YmlExport_History_ErrorCode</th>
+        </tr>
+        <tbody data-bind="template: { name: 'export-task-item', foreach: exportTasks }"></tbody>
+    </table>
+
+    <script type="text/html" id="export-task-item">
+        <tr>
+            <td data-bind="text: startDate"></td>
+            <td data-bind="text: endDate"></td>
+            <td data-bind="text: status"></td>
+            <td data-bind="text: errorCode"></td>
+        </tr>
+    </script>
+    @JsInline(@<script>
+        $(function() {
+            priceExportLoaded();
+        })
+    </script>)
+</div>

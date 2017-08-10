@@ -1,0 +1,48 @@
+﻿@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@model System.Collections.Generic.IList<RoCMS.Web.Contract.Models.OrderForm>
+
+@{
+    ViewBag.Title = ViewBag.PageTitle = "Формы обратной связи";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+
+}
+
+
+
+
+<a class="btn btn-success" href="@Url.Action("CreateOrderForm")"><i class="fa fa-file-o"></i>&nbsp;Создать</a>
+@foreach (var orderForm in Model)
+{
+    <div class="box block-summary" data-order-form-id="@orderForm.OrderFormId">
+        <header>
+
+            <div class="toolbar">
+                <a href="@Url.Action("EditOrderForm", new {id = orderForm.OrderFormId})" class="btn btn-warning btn-xs">
+                    <i class="fa fa-pencil"></i> Редактировать
+                </a>
+                @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                {
+                    <a href="#" class="btn btn-danger btn-xs button-delete">
+                        <i class="fa fa-times"></i> Удалить
+                    </a>
+                }
+            </div>
+
+            <h5 class="block-title"><span class="orderForm-id">#@orderForm.OrderFormId.ToString() </span> @orderForm.Title</h5>
+        </header>
+    </div>
+}
+@if (Model.Count != 0)
+{
+    <a class="btn btn-success" href="@Url.Action("CreateOrderForm")"><i class="fa fa-file-o"></i>&nbsp;Создать</a>
+}
+
+@Js("Content/admin/ro/js/rocms.orderForm.edit.js")
+@JsInline(@<script type="text/javascript">
+
+                   $(function() {
+                       onOrderFormListLoad();
+                   });
+
+    </script>)

@@ -1,0 +1,115 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.Models
+@using RoCMS.Helpers
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+@using RoCMS.Shop.Web.Helpers
+@using RoCMS.Web.Contract.Models
+
+@{
+    int? countryCode = ViewBag.CountryId as int?;
+    int? packCode = ViewBag.PackId as int?;
+    
+    SortCriterion? sort = ViewBag.Sort as SortCriterion?;
+
+    var routeParams = new RouteValueDictionary(ParamExtractor.ExtractAllParams(Request)).RemovePaging();
+    IEnumerable<IdNamePair<int>> countries = null;
+    if (ViewBag.Countries != null)
+    {
+        countries = (IEnumerable<IdNamePair<int>>)ViewBag.Countries;
+    }
+    IEnumerable<IdNamePair<int>> manufacturers = null;
+    if (ViewBag.Manufacturers != null)
+    {
+        manufacturers = (IEnumerable<IdNamePair<int>>)ViewBag.Manufacturers;
+    }
+    RouteValueDictionary rv = null; 
+}
+
+<div class="row">
+    @if (countries != null && countries.Any())
+    {
+        <div class="col-xs-2">
+            <div class="dropdown">
+                <a role="button" data-toggle="dropdown" data-target="#" href="#">
+                    @(countryCode.HasValue && countries.Any(x => x.ID == countryCode) ? countries.First(x => x.ID == countryCode).Name : "Страна") <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    @{
+                        rv = routeParams.AddRouteParam("pack", packCode);
+                    }
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">Любая</a></li>
+                    <li role="presentation" class="divider"></li>
+
+
+
+                    @foreach (var country in countries)
+                    {
+                        var routeValues = routeParams.AddRouteParam("country", country.ID);
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(routeValues)">@country.Name</a></li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    @*@if (hasPacks)
+    {
+        <div class="col-xs-2">
+            <div class="dropdown">
+                <a role="button" data-toggle="dropdown" data-target="#" href="#">
+                    @(packCode.HasValue && packs.Any(x => x.PackId == packCode) ? packs.First(x => x.PackId == packCode).Name : "Упаковка") <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    @{
+                        rv = routeParams.RemoveRouteParam("pack");
+                    }
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">Любая</a></li>
+                    <li role="presentation" class="divider"></li>
+                    @foreach (var pack in packs)
+                    {
+                        var routeValues = rv.AddRouteParam("pack", pack.PackId);
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(routeValues)">@pack.Name</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }*@
+    <div class="col-xs-4">
+        <div class="dropdown">
+            <a role="button" data-toggle="dropdown" data-target="#" href="#">
+                @Html.Raw(sort.Description()) <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+             @if (ViewBag.Action != null && ViewBag.Action == "Search")
+             {
+                 rv = routeParams.AddRouteParam("sort", SortCriterion.Relevance);
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.Relevance.Description())</a></li>
+             }
+                @{
+                    rv = routeParams.AddRouteParam("sort", SortCriterion.PriceDesc);
+                }
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.PriceDesc.Description())</a></li>
+                @{
+
+                    rv = routeParams.AddRouteParam("sort", SortCriterion.PriceAsc);
+                }
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.PriceAsc.Description())</a></li>
+                @{
+                    rv = routeParams.AddRouteParam("sort", SortCriterion.CreationDateDesc);
+                }
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.CreationDateDesc.Description())</a></li>
+                @{
+
+                    rv = routeParams.AddRouteParam("sort", SortCriterion.CreationDateAsc);
+                }
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.CreationDateAsc.Description())</a></li>
+                @{
+
+                    rv = routeParams.AddRouteParam("sort", SortCriterion.Article);
+                }
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.Article.Description())</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

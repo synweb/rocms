@@ -1,0 +1,15 @@
+﻿User-agent: *
+Disallow: /Admin/
+Disallow: /Review/
+Disallow: /ShopEditor/
+Disallow: /Shop/Checkout
+Disallow: /Shop/Search
+Disallow: /Shop/ThankYou
+Disallow: /Message/
+Disallow: /Gallery/Thumbnail/
+Disallow: /Shop/Personal
+Disallow: /ForgotPassword
+Disallow: /RestorePassword
+Disallow: /Home/
+Clean-param: sort&specs&country&mnf&pgsize /Shop/Category/*
+Crawl-delay: 10

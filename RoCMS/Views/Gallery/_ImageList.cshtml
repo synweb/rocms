@@ -1,0 +1,31 @@
+﻿@using RoCMS.Web.Contract.Models
+@using RoCMS.Web.Contract.Services
+@{
+    var imageService = DependencyResolver.Current.GetService<IImageService>();
+    IEnumerable<ImageInfo> imgs = imageService.GetGalleryImageInfos();
+}
+
+
+<div class="gallery-container">
+    <div class="thumbnails">
+
+        <ul class="thumbnail-list">
+
+            @foreach (var img in imgs)
+            {
+                <li data-image-id="@img.ImageId">
+                    <img src="@Url.Action("Thumbnail", new {id = img.ImageId})"/>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@Js("Content/client/ro/js/rocms.gallery.js")
+@JsInline(
+    @<script type="text/javascript">
+         $(function() {
+             galleryLoaded();
+         });
+     </script>
+)

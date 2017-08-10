@@ -1,0 +1,49 @@
+﻿@using RoCMS.Base.Helpers
+@model ICollection<RoCMS.Web.Contract.Models.InterfaceString>
+
+@Js("Content/admin/ro/js/rocms.interface.strings.js")
+
+<div>
+    <div class="picking-buttons text-center">
+        <button type="button" class="btn btn-success istr-create-indialog">
+            <i class="fa fa-plus"></i>
+            <span>Добавить строку интерфейса</span>
+        </button>
+    </div>
+    <table class="pick-table interface-string-pick-table table table-bordered table-condensed table-hover table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Значение</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var str in Model)
+        {
+            <tr class="istr-pick" data-id="@str.Key">
+                <td>
+                    @str.Key
+                </td>
+                <td>
+                    @TextCutHelper.Cut(@str.Value, 60)
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+
+    <script id="istr-pick-template" type="text/x-jquery-tmpl">
+
+        <tr class="istr-pick" data-id="${key}">
+            <td>
+                ${key}
+            </td>
+            <td>
+                ${value}
+            </td>
+        </tr>
+
+    </script>
+
+</div>

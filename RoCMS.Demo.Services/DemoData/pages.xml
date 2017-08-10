@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<ArrayOfPage xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Page>
+    <CreationDate>1970-01-01T00:00:00</CreationDate>
+    <Title>Главная страница</Title>
+    <Annotation>Краткое описание</Annotation>
+    <RelativeUrl>home</RelativeUrl>
+    <Keywords>страница, rocms, главная</Keywords>
+    <PageId>1</PageId>
+    <Header>Демо-сайт RoCMS</Header>
+    <Layout>clientLayout</Layout>
+    <ParentPageId xsi:nil="true" />
+    <HideInSitemap>false</HideInSitemap>
+    <Content>
+		<![CDATA[
+			<div class="section-heading">
+				<h2>Вы можете редактировать весь контент</h2>
+
+				<p>
+					Для этого 
+					<a href="/admin" target="_blank">
+						зайдите в админ-панель
+					</a>
+					.<br />
+					Логин: rocms<br />
+					Пароль: ropasswd
+				</p>
+			</div>
+			<div class="row pd-lg">		
+				<div class="col-md-9">
+					<div class="blog-item"> 
+						<img class="img-responsive" src="/Content/theme/images/bg-grey.jpg" alt=""> 
+						<div class="date-post">30 сентября 2016</div>
+						<div class="post-meta">Автор: admin </div> 
+						<a href="#" class="heading">Страшная новость: на мир напали Вера, Надежда и Любовь</a>
+						<p>Ежегодная проказа поражает все больше людей на улицах городов по всему миру! Спасенья нет, мы все умрем, ройте могилы.</p>
+					</div>
+					<div class="blog-item"> 
+						<img class="img-responsive" src="/Content/theme/images/bg-grey.jpg" alt=""> 
+						<div class="date-post">30 сентября 2016</div>
+						<div class="post-meta">Автор: admin </div> 
+						<a href="#" class="heading">Страшная новость: на мир напали Вера, Надежда и Любовь</a>
+						<p>Ежегодная проказа поражает все больше людей на улицах городов по всему миру! Спасенья нет, мы все умрем, ройте могилы.</p>
+					</div>
+				</div>
+				<div class="col-md-3 sidebar">
+					<h4>Новости</h4>
+					<ul>
+						<li class="short">
+							<div class="short-left"> 
+								<a href="#"> 
+									<img class="img-responsive" src="/Content/theme/images/bg-grey.jpg" alt="">
+								</a> 
+							</div>
+							<div class="short-body"> 
+								<a class="heading" href="#">Это заголовок новости</a> 
+								<span>20 сентября 2016</span> 
+							</div>
+						</li>
+						<li class="short">
+							<div class="short-left"> 
+								<a href="#"> 
+									<img class="img-responsive" src="/Content/theme/images/bg-grey.jpg" alt="">
+								</a> 
+							</div>
+							<div class="short-body"> 
+								<a class="heading" href="#">Это заголовок новости</a> 
+								<span>20 сентября 2016</span> 
+							</div>
+						</li>
+						<li class="short">
+							<div class="short-left"> 
+								<a href="#"> 
+									<img class="img-responsive" src="/Content/theme/images/bg-grey.jpg" alt="">
+								</a> 
+							</div>
+							<div class="short-body"> 
+								<a class="heading" href="#">Это заголовок новости</a> 
+								<span>20 сентября 2016</span> 
+							</div>
+						</li>
+
+                  
+					</ul>
+				</div>
+			</div>
+		
+			<div class="section-heading">
+				<h2>Здесь у нас пример магаза</h2>
+				<p>Подзаголовок какой-то странный в несколько строк</p>
+			</div>
+			<div class="row pd-lg">	
+				<div class="col-md-4">
+					<div class="goods-item">
+						<img src="/Content/theme/images/eggs.jpg" class="img-responsive">
+						<div class="goods-tag"><em class="glyphicon glyphicon-fire"></em></div>
+						<div class="goods-price">1 000 руб.</div>
+						<a href="#" class="heading">Охрененные золотые яйца от курорябы</a>
+						<p>Только в яйцах курорябы не один, не два, а сразу ТРИ желтка для потрясающей глазуньи.</p>
+						<div class="buttons">
+							<a href="#" class="btn btn-light">Купить в один клик</a>
+							<a href="#" class="btn btn-dark pull-right"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="goods-item">
+						<img src="/Content/theme/images/headset.jpg" class="img-responsive">
+						<div class="goods-tag"><em class="glyphicon glyphicon-fire"></em></div>
+						<div class="goods-price">15 000 руб.</div>
+						<a href="#" class="heading">Наушники</a>
+						<p>Купите в общем.</p>
+						<div class="buttons">
+							<a href="#" class="btn btn-light">Купить в один клик</a>
+							<a href="#" class="btn btn-dark pull-right"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="goods-item">
+						<img src="/Content/theme/images/fir-cone.jpg" class="img-responsive">
+						<div class="goods-tag"><em class="glyphicon glyphicon-fire"></em></div>
+						
+						<div class="goods-price action">3 600 руб. <span class="old-price">5 600 руб.</span></div>
+						
+						<a href="#" class="heading">Шишки натуральные сосновые</a>
+						<p>Вы не ошиблись: именно у нас вы можете за безумные деньги купить то, что у всех в лесу под ногами валяется. Зато не надо идти в лес!</p>
+						<div class="buttons">
+							<a href="#" class="btn btn-light">Купить в один клик</a>
+							<a href="#" class="btn btn-dark pull-right"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="pd-lg">
+				<div class="section-heading">
+					<h2>Форма отправки заявки</h2>
+					<p>Вы знаете, что делать</p>
+				</div>
+				
+
+				[[BLOCK(6)]]
+			</div>
+		
+		
+
+
+				[[BLOCK(7)]]
+		]]>
+	</Content>
+  </Page>
+  <Page>
+    <CreationDate>1970-01-01T00:00:00</CreationDate>
+    <Title>Контакты</Title>
+    <Annotation>Краткое описание</Annotation>
+    <RelativeUrl>contacts</RelativeUrl>
+    <Keywords>страница, rocms, контакты</Keywords>
+    <PageId>2</PageId>
+    <Layout>clientLayout</Layout>
+    <ParentPageId xsi:nil="true" />
+    <HideInSitemap>false</HideInSitemap>
+    <Content>&lt;p&gt;Добро пожаловать на страницу контактов&lt;/p&gt;</Content>
+  </Page>
+</ArrayOfPage>

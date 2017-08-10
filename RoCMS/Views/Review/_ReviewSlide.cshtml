@@ -1,0 +1,33 @@
+﻿@using Resources
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.Helpers
+@using RoCMS.Helpers
+@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    IReviewService _reviewService = DependencyResolver.Current.GetService<IReviewService>();
+    RoCMS.Web.Contract.Models.Review review = _reviewService.GetReview(Model);
+
+    bool hasVk = !String.IsNullOrEmpty(review.VK);
+}
+
+<div class="item">
+    <div data-holder-rendered="true">
+        <p class="lead">@TextCutHelper.Cut(review.Text, 300)</p>
+        <cite>
+            @review.Author
+            <a href="mailto:@review.Email">
+                @review.Email
+            </a><br/>
+            @if (hasVk)
+            {
+                <span class="review-vk">
+                    <a title="@review.Author в vk" href="http://vk.com/@(review.VK)" class="social-link vk" target="_blank"></a>
+                    <a title="@review.Author в vk" href="http://vk.com/@(review.VK)" target="_blank">http://vk.com/@(review.VK)</a>
+                </span>
+            }
+            
+        </cite>
+    </div>
+</div>

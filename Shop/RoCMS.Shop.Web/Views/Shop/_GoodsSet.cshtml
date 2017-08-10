@@ -1,0 +1,15 @@
+﻿@model IList<RoCMS.Shop.Contract.Models.GoodsItem>
+
+<div class="goods-page pd-lg goods-list">
+    @for (int i = 0; i < Model.Count(); i += 3)
+    {
+        <div class="row">
+            @foreach (var item in Model.Skip(i).Take(3))
+            {
+                @Html.Partial("_GoodsListItem", item)
+            }
+        </div>
+    }
+</div>
+
+@Css("/bin/Content/client/shop/css/style.css")

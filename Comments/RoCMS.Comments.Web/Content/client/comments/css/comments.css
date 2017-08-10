@@ -1,0 +1,33 @@
+﻿.comment-footer {
+    font-size: small;
+    color: #777;
+}
+
+.comment-container.nesting1 {
+    padding-left: 50px;
+}
+
+.comment-container.nesting2 {
+    padding-left: 50px;
+}
+.comment-container.nesting3 {
+    padding-left: 50px;
+}
+.comment-container.nesting4 {
+    padding-left: 50px;
+}
+.comment-container.nesting5 {
+    padding-left: 50px;
+}
+.comment-container.nesting6 {
+    padding-left: 0;
+}
+.comment-container.nesting7 {
+    padding-left: 0;
+}
+.comment-container.nesting8 {
+    padding-left: 0;
+}
+.comment-container.nesting9 {
+    padding-left: 0;
+}

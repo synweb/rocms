@@ -1,0 +1,1110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Admin_ViewPages" xml:space="preserve">
+    <value>Просмотр страниц</value>
+  </data>
+  <data name="CreateMenu_AddMenuItem" xml:space="preserve">
+    <value>Добавить элемент меню</value>
+  </data>
+  <data name="CreateMenu_MenuName" xml:space="preserve">
+    <value>Название меню</value>
+  </data>
+  <data name="CreatePage_Annotation" xml:space="preserve">
+    <value>Аннотация</value>
+  </data>
+  <data name="CreatePage_Content" xml:space="preserve">
+    <value>Контент</value>
+  </data>
+  <data name="CreatePage_CreateButton" xml:space="preserve">
+    <value>Создать страницу</value>
+  </data>
+  <data name="CreatePage_PageName" xml:space="preserve">
+    <value>Название страницы</value>
+  </data>
+  <data name="CreatePage_RelativeUrl" xml:space="preserve">
+    <value>Относительный адрес</value>
+  </data>
+  <data name="CreatePage_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="EditPage_AcceptButton" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="MenuItem_Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Pages_Annotation" xml:space="preserve">
+    <value>Аннотация</value>
+  </data>
+  <data name="Pages_CreationDate" xml:space="preserve">
+    <value>Дата создания</value>
+  </data>
+  <data name="Pages_RelativeUrl" xml:space="preserve">
+    <value>Относительный адрес</value>
+  </data>
+  <data name="Pages_Title" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Page_CreatePage" xml:space="preserve">
+    <value>Создать страницу</value>
+  </data>
+  <data name="Pages_EditPage" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Blocks_CreateBlock" xml:space="preserve">
+    <value>Содать блок</value>
+  </data>
+  <data name="Blocks_DeleteBlock" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Blocks_EditBlock" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Blocks_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="CreateBlock_Content" xml:space="preserve">
+    <value>Контент</value>
+  </data>
+  <data name="CreateBlock_CreateButton" xml:space="preserve">
+    <value>Создать блок</value>
+  </data>
+  <data name="CreateBlock_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="CreatePage_InputError" xml:space="preserve">
+    <value>Введённые данные некорректны</value>
+  </data>
+  <data name="EditBlock_AcceptButton" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="EditBlock_Content" xml:space="preserve">
+    <value>Контент</value>
+  </data>
+  <data name="EditBlock_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="Pages_DeletePage" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="AdminIndex_Blocks" xml:space="preserve">
+    <value>Блоки</value>
+  </data>
+  <data name="AdminIndex_Menu" xml:space="preserve">
+    <value>Меню</value>
+  </data>
+  <data name="AdminIndex_Pages" xml:space="preserve">
+    <value>Страницы</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>&amp;copy; 2014 SynWeb Systems. Все права защищены.</value>
+  </data>
+  <data name="CreatePage_Preview" xml:space="preserve">
+    <value>Предпросмотр</value>
+  </data>
+  <data name="Admin_Title" xml:space="preserve">
+    <value>Администрация</value>
+  </data>
+  <data name="CreateBlock_Preview" xml:space="preserve">
+    <value>Предпросмотр</value>
+  </data>
+  <data name="AdminCommonConfig_MainMenu" xml:space="preserve">
+    <value>Главное меню</value>
+  </data>
+  <data name="AdminCommonConfig_MainPage" xml:space="preserve">
+    <value>Главная страница</value>
+  </data>
+  <data name="AdminCommonConfig_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="AdminCommonConfig_SiteName" xml:space="preserve">
+    <value>Название сайта</value>
+  </data>
+  <data name="AdminIndex_CommonConfig" xml:space="preserve">
+    <value>Основные настройки</value>
+  </data>
+  <data name="AdminIndex_ToSite" xml:space="preserve">
+    <value>На сайт</value>
+  </data>
+  <data name="CreateReview_AcceptButton" xml:space="preserve">
+    <value>Одобрить отзыв</value>
+  </data>
+  <data name="CreateReview_Author" xml:space="preserve">
+    <value>Автор</value>
+  </data>
+  <data name="CreateReview_City" xml:space="preserve">
+    <value>Город</value>
+  </data>
+  <data name="CreateReview_CreateButton" xml:space="preserve">
+    <value>Добавить озыв</value>
+  </data>
+  <data name="CreateReview_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="CreateReview_Text" xml:space="preserve">
+    <value>Отзыв</value>
+  </data>
+  <data name="GetReview_Accept" xml:space="preserve">
+    <value>Одобрить</value>
+  </data>
+  <data name="Menu_AcceptMenu" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Menu_CreateMenu" xml:space="preserve">
+    <value>Создать меню</value>
+  </data>
+  <data name="Menu_DeleteMenu" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Menu_EditMenu" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="UserIndex_Admin" xml:space="preserve">
+    <value>Администрирование</value>
+  </data>
+  <data name="UserIndex_Login" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="UserIndex_Logout" xml:space="preserve">
+    <value>Выйти</value>
+  </data>
+  <data name="UserIndex_Register" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="UserIndex_Welcome" xml:space="preserve">
+    <value>Добро пожаловать</value>
+  </data>
+  <data name="UserLogin_LoginButton" xml:space="preserve">
+    <value>Войти</value>
+  </data>
+  <data name="UserLogin_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="UserLogin_Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="AdminCommonConfig_AdminPassword" xml:space="preserve">
+    <value>Пароль администратора</value>
+  </data>
+  <data name="AdminCommonConfig_ChangePassword" xml:space="preserve">
+    <value>Сменить пароль</value>
+  </data>
+  <data name="AdminCommonConfig_CurrentPassword" xml:space="preserve">
+    <value>Текущий пароль</value>
+  </data>
+  <data name="AdminCommonConfig_NewPassword" xml:space="preserve">
+    <value>Новый пароль</value>
+  </data>
+  <data name="AdminCommonConfig_RepeatPassword" xml:space="preserve">
+    <value>Повторите ввод</value>
+  </data>
+  <data name="MessageType_CallMeBack" xml:space="preserve">
+    <value>Перезвоните мне</value>
+  </data>
+  <data name="MessageType_Order" xml:space="preserve">
+    <value>Заказ</value>
+  </data>
+  <data name="MessageType_Question" xml:space="preserve">
+    <value>Вопрос</value>
+  </data>
+  <data name="MessageType_Suggestion" xml:space="preserve">
+    <value>Предложение</value>
+  </data>
+  <data name="Message_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Message_Phone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="Message_Text" xml:space="preserve">
+    <value>Ваши пожелания</value>
+  </data>
+  <data name="Message_Type" xml:space="preserve">
+    <value>Тип сообщения</value>
+  </data>
+  <data name="AdminCommonConfig_Reviews" xml:space="preserve">
+    <value>Отзывы</value>
+  </data>
+  <data name="AdminIndex_Reviews" xml:space="preserve">
+    <value>Отзывы</value>
+  </data>
+  <data name="UserIndex_AddReview" xml:space="preserve">
+    <value>Оставить отзыв</value>
+  </data>
+  <data name="UserIndex_Reviews" xml:space="preserve">
+    <value>Отзывы</value>
+  </data>
+  <data name="AdminCommonConfig_Gallery" xml:space="preserve">
+    <value>Галерея</value>
+  </data>
+  <data name="AdminIndex_Gallery" xml:space="preserve">
+    <value>Галерея</value>
+  </data>
+  <data name="GetReview_Hide" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
+  <data name="Reviews_DeleteReview" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Reviews_EditReview" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Menu_Down" xml:space="preserve">
+    <value>Вниз</value>
+  </data>
+  <data name="Menu_Up" xml:space="preserve">
+    <value>Вверх</value>
+  </data>
+  <data name="UserRegister_Password" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="UserRegister_RegisterButton" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="UserRegister_RepeatPassword" xml:space="preserve">
+    <value>Повторите пароль</value>
+  </data>
+  <data name="UserRegister_Username" xml:space="preserve">
+    <value>Имя пользователя</value>
+  </data>
+  <data name="AdminIndex_Slider" xml:space="preserve">
+    <value>Слайдер</value>
+  </data>
+  <data name="AdminIndex_Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="AdminSlider_AddImage" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="AdminSlider_RemoveImage" xml:space="preserve">
+    <value>Убрать</value>
+  </data>
+  <data name="AdminUsers_AddUser" xml:space="preserve">
+    <value>Добавить пользователя</value>
+  </data>
+  <data name="AdminUsers_AllowRegForUsers" xml:space="preserve">
+    <value>Разрешить регистрацию</value>
+  </data>
+  <data name="AdminUsers_ChangePassword" xml:space="preserve">
+    <value>Сменить пароль</value>
+  </data>
+  <data name="AdminUsers_DenyRegForUsers" xml:space="preserve">
+    <value>Запретить регистрацию</value>
+  </data>
+  <data name="AdminUsers_RemoveUser" xml:space="preserve">
+    <value>Удалить пользователя</value>
+  </data>
+  <data name="AdminUsers_UserList" xml:space="preserve">
+    <value>Список пользователей</value>
+  </data>
+  <data name="AdminSlider_CurrentImages" xml:space="preserve">
+    <value>Изображения в слайдере</value>
+  </data>
+  <data name="AdminSlider_SiteImages" xml:space="preserve">
+    <value>Изображения на сайте</value>
+  </data>
+  <data name="AdminSlider_Choose" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="AdminSlider_Create" xml:space="preserve">
+    <value>Новый слайдер</value>
+  </data>
+  <data name="AdminSlider_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="AdminAlbum_Choose" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="AdminAlbum_Create" xml:space="preserve">
+    <value>Новый альбом</value>
+  </data>
+  <data name="AdminAlbum_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="AdminAlbum_Title" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="AdminIndex_Albums" xml:space="preserve">
+    <value>Альбомы</value>
+  </data>
+  <data name="AdminAlbum_AlbumImages" xml:space="preserve">
+    <value>Изображения в альбоме</value>
+  </data>
+  <data name="AdminAlbum_SiteImages" xml:space="preserve">
+    <value>Изображения на сайте</value>
+  </data>
+  <data name="AdminAlbum_UploadImages" xml:space="preserve">
+    <value>Загрузить изображения</value>
+  </data>
+  <data name="Exception_CodeMessage" xml:space="preserve">
+    <value>Сообщите код ошибки администратору</value>
+  </data>
+  <data name="Exception_OccuredMessage" xml:space="preserve">
+    <value>Произошла ошибка</value>
+  </data>
+  <data name="AdminIndex_News" xml:space="preserve">
+    <value>Новости</value>
+  </data>
+  <data name="AdminIndex_Shop" xml:space="preserve">
+    <value>Интернет-магазин</value>
+  </data>
+  <data name="CallbackOrder_Order" xml:space="preserve">
+    <value>Заказать звонок</value>
+  </data>
+  <data name="CallbackOrder_Phone" xml:space="preserve">
+    <value>Телефон</value>
+  </data>
+  <data name="CallbackOrder_YourName" xml:space="preserve">
+    <value>Ваше имя</value>
+  </data>
+  <data name="UserIndex_OrderCallback" xml:space="preserve">
+    <value>Заказать звонок</value>
+  </data>
+  <data name="Message_Name" xml:space="preserve">
+    <value>Ваше имя</value>
+  </data>
+  <data name="CallbackOrder_ConvenientTime" xml:space="preserve">
+    <value>Удобное время</value>
+  </data>
+  <data name="CallbackOrder_SuccessMessage" xml:space="preserve">
+    <value>Спасибо! Наши операторы свяжутся с вами.</value>
+  </data>
+  <data name="CreatePage_Keywords" xml:space="preserve">
+    <value>Ключевые слова</value>
+  </data>
+  <data name="AdminIndex_ToggleNavigation" xml:space="preserve">
+    <value>Навигация</value>
+  </data>
+  <data name="AdminMenu_Accounting" xml:space="preserve">
+    <value>Бухгалтерия</value>
+  </data>
+  <data name="AdminMenu_Albums" xml:space="preserve">
+    <value>Альбомы</value>
+  </data>
+  <data name="AdminMenu_Analytics" xml:space="preserve">
+    <value>Аналитика</value>
+  </data>
+  <data name="AdminMenu_Blocks" xml:space="preserve">
+    <value>Блоки</value>
+  </data>
+  <data name="AdminMenu_Components" xml:space="preserve">
+    <value>Компоненты</value>
+  </data>
+  <data name="AdminMenu_Gallery" xml:space="preserve">
+    <value>Галерея</value>
+  </data>
+  <data name="AdminMenu_Images" xml:space="preserve">
+    <value>Изображения</value>
+  </data>
+  <data name="AdminMenu_InternetShop" xml:space="preserve">
+    <value>Интернет-магазин</value>
+  </data>
+  <data name="AdminMenu_News" xml:space="preserve">
+    <value>Новости</value>
+  </data>
+  <data name="AdminMenu_Pages" xml:space="preserve">
+    <value>Страницы</value>
+  </data>
+  <data name="AdminMenu_Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="AdminMenu_Sliders" xml:space="preserve">
+    <value>Слайдеры</value>
+  </data>
+  <data name="AdminMenu_Menus" xml:space="preserve">
+    <value>Меню</value>
+  </data>
+  <data name="AdminMenu_Reviews" xml:space="preserve">
+    <value>Отзывы</value>
+  </data>
+  <data name="AdminMenu_Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="AdminAlbum_PageTitle" xml:space="preserve">
+    <value>Альбомы</value>
+  </data>
+  <data name="AdminBlocks_PageTitle" xml:space="preserve">
+    <value>Блоки</value>
+  </data>
+  <data name="AdminCommonConfig_Title" xml:space="preserve">
+    <value>Основные настройки</value>
+  </data>
+  <data name="AdminConfigureAlbum_PageTitle" xml:space="preserve">
+    <value>Редактирование альбома</value>
+  </data>
+  <data name="AdminConfigureSlider_PageTitle" xml:space="preserve">
+    <value>Редактирование слайдера</value>
+  </data>
+  <data name="AdminIndex_Logout" xml:space="preserve">
+    <value>Выйти из системы</value>
+  </data>
+  <data name="AdminIndex_ShowHideSidebar" xml:space="preserve">
+    <value>Скрыть / показать меню</value>
+  </data>
+  <data name="AdminMenu_PageTitle" xml:space="preserve">
+    <value>Меню</value>
+  </data>
+  <data name="AdminPages_PageTitle" xml:space="preserve">
+    <value>Страницы</value>
+  </data>
+  <data name="AdminSlider_PageTitle" xml:space="preserve">
+    <value>Слайдеры</value>
+  </data>
+  <data name="AdminUsers_PageTitle" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="CreateEditPage_CreateTitle" xml:space="preserve">
+    <value>Создание страницы</value>
+  </data>
+  <data name="CreateEditPage_EditTitle" xml:space="preserve">
+    <value>Редактирование страницы</value>
+  </data>
+  <data name="Gallery_AddFiles" xml:space="preserve">
+    <value>Добавить файлы</value>
+  </data>
+  <data name="Gallery_CancelUpload" xml:space="preserve">
+    <value>Отменить загрузку</value>
+  </data>
+  <data name="Gallery_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Gallery_StartUpload" xml:space="preserve">
+    <value>Начать загрузку</value>
+  </data>
+  <data name="Albums_BackToAlbums" xml:space="preserve">
+    <value>К списку альбомов</value>
+  </data>
+  <data name="Gallery_Cancel" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="Gallery_Upload" xml:space="preserve">
+    <value>Загрузить</value>
+  </data>
+  <data name="CreateEditBlock_CreateTitle" xml:space="preserve">
+    <value>Создание блока</value>
+  </data>
+  <data name="CreateEditBlock_EditTitle" xml:space="preserve">
+    <value>Редактирование блока</value>
+  </data>
+  <data name="GetReview_Accepted" xml:space="preserve">
+    <value>Одобрен</value>
+  </data>
+  <data name="GetReview_Hidden" xml:space="preserve">
+    <value>Скрыт</value>
+  </data>
+  <data name="MenuItem_Page" xml:space="preserve">
+    <value>Страница</value>
+  </data>
+  <data name="Albums_BackToSliders" xml:space="preserve">
+    <value>Назад к слайдерам</value>
+  </data>
+  <data name="AdminSlide_Create" xml:space="preserve">
+    <value>Создать слайд</value>
+  </data>
+  <data name="AdminSlider_Slides" xml:space="preserve">
+    <value>Список слайдов</value>
+  </data>
+  <data name="AdminSlide_Edit" xml:space="preserve">
+    <value>Редактировать слайд</value>
+  </data>
+  <data name="AdminSlide_Remove" xml:space="preserve">
+    <value>Удалить слайд</value>
+  </data>
+  <data name="CreateSlide_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="CreateSlide_Image" xml:space="preserve">
+    <value>Изображение</value>
+  </data>
+  <data name="CreateSlide_Link" xml:space="preserve">
+    <value>Ссылка</value>
+  </data>
+  <data name="CreateSlide_Title" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="PageNotFound" xml:space="preserve">
+    <value>Страница не найдена</value>
+  </data>
+  <data name="RedirectToHome" xml:space="preserve">
+    <value>Перейти на главную</value>
+  </data>
+  <data name="EditPage_AddImage" xml:space="preserve">
+    <value>Добавить изображение</value>
+  </data>
+  <data name="AdminMenu_Shop_Actions" xml:space="preserve">
+    <value>Акции</value>
+  </data>
+  <data name="AdminMenu_Shop_Categories" xml:space="preserve">
+    <value>Категории товаров</value>
+  </data>
+  <data name="AdminMenu_Shop_Clients" xml:space="preserve">
+    <value>Клиенты</value>
+  </data>
+  <data name="AdminMenu_Shop_Goods" xml:space="preserve">
+    <value>Товары</value>
+  </data>
+  <data name="AdminMenu_Shop_Manufacturers" xml:space="preserve">
+    <value>Производители</value>
+  </data>
+  <data name="AdminMenu_Shop_Orders" xml:space="preserve">
+    <value>Заказы</value>
+  </data>
+  <data name="AdminMenu_Shop_Specs" xml:space="preserve">
+    <value>Характеристики товаров</value>
+  </data>
+  <data name="Shop_Category_CreateCategory" xml:space="preserve">
+    <value>Добавить категорию</value>
+  </data>
+  <data name="Shop_Category_DeleteCategory" xml:space="preserve">
+    <value>Удалить категорию</value>
+  </data>
+  <data name="ColorScheme_Blue" xml:space="preserve">
+    <value>Синяя</value>
+  </data>
+  <data name="ColorScheme_Default" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="ColorScheme_Orange" xml:space="preserve">
+    <value>Оранжевая</value>
+  </data>
+  <data name="CreatePage_ColorScheme" xml:space="preserve">
+    <value>Цветовая схема</value>
+  </data>
+  <data name="CreatePage_Layout" xml:space="preserve">
+    <value>Шаблон</value>
+  </data>
+  <data name="LayoutType_Landing" xml:space="preserve">
+    <value>Лендинг</value>
+  </data>
+  <data name="LayoutType_Site" xml:space="preserve">
+    <value>Сайт</value>
+  </data>
+  <data name="Shop_Category_AddSubCategory" xml:space="preserve">
+    <value>Добавить подкатегорию</value>
+  </data>
+  <data name="Shop_Category_EditCategory" xml:space="preserve">
+    <value>Редактировать категорию</value>
+  </data>
+  <data name="Shop_Manufacturer_Create" xml:space="preserve">
+    <value>Добавить производителя</value>
+  </data>
+  <data name="Shop_Manufacturer_Delete" xml:space="preserve">
+    <value>Удалить производителя</value>
+  </data>
+  <data name="Shop_Manufacturer_Edit" xml:space="preserve">
+    <value>Редактировать производителя</value>
+  </data>
+  <data name="UserLogin_EnterUsernameAndPassword" xml:space="preserve">
+    <value>Введите имя пользователя и пароль</value>
+  </data>
+  <data name="UserLogin_LoginPageTitle" xml:space="preserve">
+    <value>Вход в систему</value>
+  </data>
+  <data name="AdminGallery_Image" xml:space="preserve">
+    <value>Изображение</value>
+  </data>
+  <data name="AdminGallery_ImageId" xml:space="preserve">
+    <value>ID в базе</value>
+  </data>
+  <data name="AdminGallery_ImageUploadDate" xml:space="preserve">
+    <value>Дата загрузки</value>
+  </data>
+  <data name="AdminGallery_JustUploaded" xml:space="preserve">
+    <value>Загружено только что</value>
+  </data>
+  <data name="AdminGallery_ImageSize" xml:space="preserve">
+    <value>Размер</value>
+  </data>
+  <data name="CreatePage_OpenPage" xml:space="preserve">
+    <value>Перейти на страницу...</value>
+  </data>
+  <data name="Page_EditPage" xml:space="preserve">
+    <value>Редактировать страницу</value>
+  </data>
+  <data name="AdminGallery_ImageDescription" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="AdminGallery_ImageTitle" xml:space="preserve">
+    <value>Заголовок</value>
+  </data>
+  <data name="AdminMenu_ChangePassword" xml:space="preserve">
+    <value>Поменять пароль</value>
+  </data>
+  <data name="AdminWYSIWYG_EditHtml" xml:space="preserve">
+    <value>Редактировать HTML</value>
+  </data>
+  <data name="AdminWYSIWYG_EditWYSIWYG" xml:space="preserve">
+    <value>Редактировать визуально</value>
+  </data>
+  <data name="AdminAnalytics_PageTitle" xml:space="preserve">
+    <value>Аналитика</value>
+  </data>
+  <data name="AdminCommonConfig_YaId" xml:space="preserve">
+    <value>ID Яндекс.Метрики</value>
+  </data>
+  <data name="AdminAnalytics_CustomRange" xml:space="preserve">
+    <value>Выбрать промежуток</value>
+  </data>
+  <data name="AdminAnalytics_Month" xml:space="preserve">
+    <value>Месяц</value>
+  </data>
+  <data name="AdminAnalytics_Quarter" xml:space="preserve">
+    <value>Квартал</value>
+  </data>
+  <data name="AdminAnalytics_Today" xml:space="preserve">
+    <value>Сегодня</value>
+  </data>
+  <data name="AdminAnalytics_Week" xml:space="preserve">
+    <value>Неделя</value>
+  </data>
+  <data name="AdminAnalytics_Year" xml:space="preserve">
+    <value>Год</value>
+  </data>
+  <data name="AdminAnalytics_Yesterday" xml:space="preserve">
+    <value>Вчера</value>
+  </data>
+  <data name="AdminCommonConfig_GetYaMetrikaAuthKey" xml:space="preserve">
+    <value>Получить</value>
+  </data>
+  <data name="AdminCommonConfig_YaAuthKey" xml:space="preserve">
+    <value>Ключ доступа</value>
+  </data>
+  <data name="AdminAnalytics_EnterVerificationCode" xml:space="preserve">
+    <value>Введите код подтверждения</value>
+  </data>
+  <data name="AdminAnalytics_AuthKeyExpires" xml:space="preserve">
+    <value>Истекает:</value>
+  </data>
+  <data name="AdminAnalytics_BadAuthCode" xml:space="preserve">
+    <value>Неверный или просроченный код подтверждения. Повторите процедуру авторизации.</value>
+  </data>
+  <data name="AdminPickBlocks_OpenInNewWindowToEdit" xml:space="preserve">
+    <value>Откройте ссылку в новом окне для редактирования блока</value>
+  </data>
+  <data name="AdminMenu_Files" xml:space="preserve">
+    <value>Файлы</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertBlock" xml:space="preserve">
+    <value>Вставить блок</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertCountdown" xml:space="preserve">
+    <value>Вставить обратный отсчёт</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertCut" xml:space="preserve">
+    <value>Вставить раскрывающееся поле</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertFile" xml:space="preserve">
+    <value>Вставить файл</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertImage" xml:space="preserve">
+    <value>Вставить изображение</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertThumbnail" xml:space="preserve">
+    <value>Вставить миниатюру</value>
+  </data>
+  <data name="AdminPickFiles_OpenInNewWindowToDownload" xml:space="preserve">
+    <value>Откройте ссылку в новом окне для скачивания файла</value>
+  </data>
+  <data name="AdminPickAlbums_OpenInNewWindowToEdit" xml:space="preserve">
+    <value>Откройте ссылку в новом окне для редактирования альбома</value>
+  </data>
+  <data name="AdminWYSIWYG_InsertAlbum" xml:space="preserve">
+    <value>Вставить альбом</value>
+  </data>
+  <data name="Message_Attachment" xml:space="preserve">
+    <value>Вложение</value>
+  </data>
+  <data name="Order_AddFile" xml:space="preserve">
+    <value>Добавить файл</value>
+  </data>
+  <data name="Order_MaxFileSize" xml:space="preserve">
+    <value>Максимальный размер файла</value>
+  </data>
+  <data name="Order_MaxFileCount" xml:space="preserve">
+    <value>Максимальное количество файлов</value>
+  </data>
+  <data name="Order_TempFileTimespan" xml:space="preserve">
+    <value>Файлы будут удалены с сервера через {0} минут</value>
+  </data>
+  <data name="AdminPickImage_ToAlbums" xml:space="preserve">
+    <value>К альбомам</value>
+  </data>
+  <data name="Shop_Spec_Create" xml:space="preserve">
+    <value>Добавить характеристику</value>
+  </data>
+  <data name="Shop_Spec_Delete" xml:space="preserve">
+    <value>Удалить характеристику</value>
+  </data>
+  <data name="Shop_Spec_Edit" xml:space="preserve">
+    <value>Редактировать характеристику</value>
+  </data>
+  <data name="AdminMenu_VideoGallery" xml:space="preserve">
+    <value>Видеогалерея</value>
+  </data>
+  <data name="AdminVideoGallery_PageTitle" xml:space="preserve">
+    <value>Видеогалерея</value>
+  </data>
+  <data name="VideoAlbumEditor_AddVideo" xml:space="preserve">
+    <value>Добавить видео</value>
+  </data>
+  <data name="AdminVideoGallery_VideoPublishDate" xml:space="preserve">
+    <value>Дата добавления</value>
+  </data>
+  <data name="Shop_Action_Categories" xml:space="preserve">
+    <value>Категории в акции</value>
+  </data>
+  <data name="CreateReview_Vk" xml:space="preserve">
+    <value>Ссылка на профиль в vk.com</value>
+  </data>
+  <data name="Shop_Action_Create" xml:space="preserve">
+    <value>Создать акцию</value>
+  </data>
+  <data name="Shop_Action_Delete" xml:space="preserve">
+    <value>Удалить акцию</value>
+  </data>
+  <data name="Shop_Action_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Shop_Action_Discount" xml:space="preserve">
+    <value>Скидка</value>
+  </data>
+  <data name="Shop_Action_Edit" xml:space="preserve">
+    <value>Редактировать акцию</value>
+  </data>
+  <data name="Shop_Action_EndDate" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="Shop_Action_Goods" xml:space="preserve">
+    <value>Товары в акции</value>
+  </data>
+  <data name="Shop_Action_Manufacturers" xml:space="preserve">
+    <value>Производители в акции</value>
+  </data>
+  <data name="Shop_Action_Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="SortCriterion_CreationDateAsc" xml:space="preserve">
+    <value>Новизна (сначала постарше)</value>
+  </data>
+  <data name="SortCriterion_CreationDateDesc" xml:space="preserve">
+    <value>Новизна (сначала новинки)</value>
+  </data>
+  <data name="SortCriterion_PriceAsc" xml:space="preserve">
+    <value>Цена (сначала подешевле)</value>
+  </data>
+  <data name="SortCriterion_PriceDesc" xml:space="preserve">
+    <value>Цена (сначала подороже)</value>
+  </data>
+  <data name="SortCriterion_RatingAsc" xml:space="preserve">
+    <value>Рейтинг (сначала непопулярные)</value>
+  </data>
+  <data name="SortCriterion_RatingDesc" xml:space="preserve">
+    <value>Рейтинг (сначала популярные)</value>
+  </data>
+  <data name="Shop_Create" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
+  <data name="Shop_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Shop_Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="AdminMenu_Shop_Packs" xml:space="preserve">
+    <value>Упаковки</value>
+  </data>
+  <data name="AdminGallery_ImageDestinationUrl" xml:space="preserve">
+    <value>Ссылка для перехода</value>
+  </data>
+  <data name="AdminMenu_Shop_CompatibleGoods" xml:space="preserve">
+    <value>Наборы товаров</value>
+  </data>
+  <data name="AdminMenu_Shop_Reviews" xml:space="preserve">
+    <value>Отзывы о товарах</value>
+  </data>
+  <data name="AdminMenu_Shop_YmlExport" xml:space="preserve">
+    <value>Экспорт в Яндекс-Маркет</value>
+  </data>
+  <data name="Shop_GenerateYmlFile" xml:space="preserve">
+    <value>Запустить экспорт</value>
+  </data>
+  <data name="YmlExport_Header" xml:space="preserve">
+    <value>Экспортировать базу в Яндекс-маркет</value>
+  </data>
+  <data name="YmlExport_History" xml:space="preserve">
+    <value>История экспорта</value>
+  </data>
+  <data name="YmlExport_History_EndDate" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="YmlExport_History_ErrorCode" xml:space="preserve">
+    <value>Код ошибки</value>
+  </data>
+  <data name="YmlExport_History_StartDate" xml:space="preserve">
+    <value>Дата запуска</value>
+  </data>
+  <data name="YmlExport_History_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="SortCriterion_Relevance" xml:space="preserve">
+    <value>Релевантность</value>
+  </data>
+  <data name="SortCriterion_Article" xml:space="preserve">
+    <value>Артикул</value>
+  </data>
+  <data name="AdminCommonConfig_AutoEmailReplyEnabled" xml:space="preserve">
+    <value>Автоответ</value>
+  </data>
+  <data name="AdminCommonConfig_EmailLogin" xml:space="preserve">
+    <value>Логин</value>
+  </data>
+  <data name="AdminCommonConfig_EmailPassword" xml:space="preserve">
+    <value>Пароль</value>
+  </data>
+  <data name="AdminCommonConfig_EmailSmtpPort" xml:space="preserve">
+    <value>Порт SMTP</value>
+  </data>
+  <data name="AdminCommonConfig_EmailSmtpUrl" xml:space="preserve">
+    <value>Сервер SMTP</value>
+  </data>
+  <data name="AdminCommonConfig_ImageMaxHeight" xml:space="preserve">
+    <value>Макс. высота картинки</value>
+  </data>
+  <data name="AdminCommonConfig_ImageMaxWidth" xml:space="preserve">
+    <value>Макс. ширина картинки</value>
+  </data>
+  <data name="AdminCommonConfig_ImageQuality" xml:space="preserve">
+    <value>Качество JPG (1‑100)</value>
+  </data>
+  <data name="AdminCommonConfig_OrderEmailAddress" xml:space="preserve">
+    <value>Почта для заявок</value>
+  </data>
+  <data name="AdminCommonConfig_RootUrl" xml:space="preserve">
+    <value>URL сайта</value>
+  </data>
+  <data name="AdminCommonConfig_SmtpSslEnabled" xml:space="preserve">
+    <value>Сервер SMTP требует шифрование </value>
+  </data>
+  <data name="AdminCommonConfig_ThumbnailHeight" xml:space="preserve">
+    <value>Высота миниатюры</value>
+  </data>
+  <data name="AdminCommonConfig_ThumbnailWidth" xml:space="preserve">
+    <value>Ширина миниатюры</value>
+  </data>
+  <data name="EditBlock_ReturnToBlocks" xml:space="preserve">
+    <value>К блокам</value>
+  </data>
+  <data name="EditSlider_ReturnToSliders" xml:space="preserve">
+    <value>Возврат к слайдерам </value>
+  </data>
+  <data name="AdminCommonConfig_SystemEmailAddress" xml:space="preserve">
+    <value>Исходящий почтовый адрес</value>
+  </data>
+  <data name="AdminCommonConfig_SystemEmailSenderName" xml:space="preserve">
+    <value>Имя в исходящих письмах</value>
+  </data>
+  <data name="AdminMenu_Requests" xml:space="preserve">
+    <value>База заявок</value>
+  </data>
+  <data name="AdminRequests_PageTitle" xml:space="preserve">
+    <value>Заявки</value>
+  </data>
+  <data name="Message_Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Message_TextAdmin" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="AdminMail_PageTitle" xml:space="preserve">
+    <value />
+  </data>
+  <data name="AdminMenu_Mail" xml:space="preserve">
+    <value>Письма</value>
+  </data>
+  <data name="AdminMenu_MailMessages" xml:space="preserve">
+    <value>Сообщения</value>
+  </data>
+  <data name="AdminMenu_MailTemplates" xml:space="preserve">
+    <value>Шаблоны</value>
+  </data>
+  <data name="AdminMail_Body" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="AdminMail_Error" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="AdminMail_NotSent" xml:space="preserve">
+    <value>Не отправлено</value>
+  </data>
+  <data name="AdminMail_Receiver" xml:space="preserve">
+    <value>Кому</value>
+  </data>
+  <data name="AdminMail_Resend" xml:space="preserve">
+    <value>Отправить повторно</value>
+  </data>
+  <data name="AdminMail_Sent" xml:space="preserve">
+    <value>Отправлено</value>
+  </data>
+  <data name="AdminMail_Attaches" xml:space="preserve">
+    <value>Вложения</value>
+  </data>
+  <data name="AdminGallery_ReturnToGallerys" xml:space="preserve">
+    <value>К списку видеогалерей</value>
+  </data>
+  <data name="EditAlbum_ReturnToAlbums" xml:space="preserve">
+    <value>К альбомам</value>
+  </data>
+  <data name="EditEmailTemplate_ReturnToEmailTemplates" xml:space="preserve">
+    <value>К шаблонам</value>
+  </data>
+  <data name="EditMenu_ReturnToMenus" xml:space="preserve">
+    <value>К списку меню</value>
+  </data>
+  <data name="EditPage_ReturnToPages" xml:space="preserve">
+    <value>К списку страниц</value>
+  </data>
+  <data name="AdminIndex_Restart" xml:space="preserve">
+    <value>Перезапустить сайт</value>
+  </data>
+  <data name="AdminCommonConfig_CirillicURL" xml:space="preserve">
+    <value>Кириллицей</value>
+  </data>
+  <data name="AdminCommonConfig_TransliteURL" xml:space="preserve">
+    <value>Латиницей</value>
+  </data>
+  <data name="AdminCommonConfig_URL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="AdminGallery_CopyID" xml:space="preserve">
+    <value>Копировать ID изображения</value>
+  </data>
+  <data name="AdminGallery_CopyThumbnailURL" xml:space="preserve">
+    <value>Копировать ссылку на миниатюру</value>
+  </data>
+  <data name="AdminGallery_CopyURL" xml:space="preserve">
+    <value>Копировать ссылку на изображение</value>
+  </data>
+  <data name="AdminReview_AddReview" xml:space="preserve">
+    <value>Добавить отзыв</value>
+  </data>
+</root>

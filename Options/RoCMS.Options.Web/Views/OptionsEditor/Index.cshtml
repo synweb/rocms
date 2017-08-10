@@ -1,0 +1,104 @@
+﻿@using System.Web.Optimization
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+        ViewBag.Title = "Характеристики";
+    }
+}
+<div>
+    <h1>Характеристики</h1>
+    <div>
+        <a class="btn btn-success" data-bind="click: createOption"><i class="fa fa-plus"></i>&nbsp;Добавить</a>
+    </div>
+    <div class="option-list">
+        <ul data-bind="template: { name: 'option-item-template', foreach: options }"></ul>
+    </div>
+
+    <script type="text/html" id="option-item-template">
+        <li class="option-item" data-bind="click: $root.selectOption">
+            <div style="float: right">
+                <a data-bind="click: edit" class="btn btn-warning btn-xs" title="Редактировать"><i class="fa fa-pencil"></i></a>
+
+                <a data-bind="click: function () { remove($data, $parent); }"
+                   class="btn btn-danger btn-xs"
+                   title="Удалить">
+                    <i class="fa fa-times"></i>
+                </a>
+
+            </div>
+            <div>
+                <i data-bind="visible: moderated" class="fa fa-eye"></i>
+                <i data-bind="visible: moderated() === false" class="fa fa-eye-slash"></i>
+                <label data-bind="text: name"></label>
+            </div>
+        </li>
+    </script>
+
+    <script type="text/html" id="optionTemplate">
+        <div class="option">
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-xs-2">Название</label>
+                <div class="col-xs-10">
+                    <input type="text" class="form-control" data-bind="value: name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-xs-2">Разрешена</label>
+                <div class="col-xs-10">
+                    <input type="checkbox" data-bind="checked: moderated"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <a class="btn btn-success" data-bind="click: addValue"><i class="fa fa-plus"></i>&nbsp;Добавить</a>
+                </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-8">
+                        Значение
+                    </div>
+                    <div class="col-xs-3 text-center">
+                        Разрешено
+                    </div>
+                </div>
+                <div class="option-values-list" data-bind="foreach: optionValues">
+                    <div class="form-group">
+                        <div class="col-xs-8">
+                            <input type="text" data-bind="value: value"  class="form-control"/>
+                        </div>
+                        <div class="col-xs-3 text-center">
+                            <input type="checkbox" data-bind="checked: moderated" />
+                        </div>
+                        <div class="col-xs-1 text-right">
+                            <a data-bind="click: function () { $parent.removeValue($data, $parent); }"
+                               class="btn btn-danger btn-xs"
+                               title="Удалить">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </script>
+
+    @Js("/bin/Content/admin/options")
+    @Css("/bin/Content/admin/options")
+
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            $(function () {
+                optionsEditorLoaded();
+            });
+        </script>)
+    }
+</div>

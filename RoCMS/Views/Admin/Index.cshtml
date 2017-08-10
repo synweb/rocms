@@ -1,0 +1,31 @@
+﻿@using System.Diagnostics
+@using System.Reflection
+@using Resources
+
+@{
+    ViewBag.PageTitle = "Админ-панель";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    string version = ViewBag.Version;
+}
+
+@*<style>
+
+
+</style>
+
+<iframe class="admin-iframe" src="http://synweb.ru/Блог"></iframe>*@
+<div>
+    <img src="/Content/admin/ro/img/synweb-logo.png" alt="Синвеб - разработка сайтов на заказ" class="sws-logo">
+    <h4>Сайт разработан веб-студией Синвеб</h4>
+    <a href="http://synweb.ru" target="_blank">http://synweb.ru</a>
+    <p>
+        Наш адрес: Москва, ул. Народная, дом 14, строение 3.<br>
+        Телефон: +7 (919) 997-15-17<br>
+        Email: <a href="mailto:order@synweb.ru">order@synweb.ru</a><br/>
+        Версия CMS: @version
+    </p>
+    <iframe class="admin-news-frame" src="http://synweb.ru/embed-blog"></iframe>
+</div>

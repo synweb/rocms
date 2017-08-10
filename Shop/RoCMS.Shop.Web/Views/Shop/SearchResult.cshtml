@@ -1,0 +1,140 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Base.Helpers
+@model IList<RoCMS.Web.Contract.Models.Search.SearchResultItem>
+
+@{
+
+    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+
+    string query = (string)ParamExtractor.ExtractUrlParams(Request)["query"];
+
+    ViewBag.Title = "Результаты поиска по запросу &laquo;" + query + " &laquo;";
+
+    var pagingParams = ParamExtractor.ExtractAllParams(Request);
+
+    int pageSize = pagingParams.ContainsKey("pgsize") ? int.Parse((string)pagingParams["pgsize"]) : 10;
+    int page = pagingParams.ContainsKey("page") ? int.Parse((string)pagingParams["page"]) : 1;
+    int totalCount = ViewBag.TotalCount;
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+}
+@if (Model.Any())
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Результаты поиска по запросу &laquo;@query&raquo;</h1>
+        </div>
+    </div>
+}
+else
+{
+    <span class="search-not-found">По запросу &laquo;@query&raquo; ничего не найдено</span>
+}
+
+@Pager(totalCount, pageSize, page, pagingParams)
+
+@foreach (var searchItem in Model)
+{
+    <div class="row article-container">
+        <a href="@searchItem.Url">
+            <div class='@(searchItem.ImageId != null ? "col-xs-9" : "col-xs-12")'>
+                <h4>@searchItem.Title</h4>
+                <p>@TextCutHelper.Cut(searchItem.Text, 190)</p>
+                <span class="article-link">Подробнее &raquo;</span>
+            </div>
+            @if (searchItem.ImageId != null)
+            {
+                <div class="col-xs-3">
+                    <img src="@Url.Action("Thumbnail", "Gallery", new { id = searchItem.ImageId })" />
+                </div>
+            }
+        </a>
+    </div>
+}
+
+@Pager(totalCount, pageSize, page, pagingParams)
+
+@helper Pager(int totalCount, int pageSize, int page, IDictionary<string, object> pagingParams)
+{
+    <div class="pagination">
+        <ul class="pagination">
+            @{
+                int pagesCount = totalCount / pageSize;
+                if (totalCount / pageSize * pageSize != totalCount)
+                {
+                    pagesCount++;
+                }
+            }
+            @if (pagesCount > 1 && page != 1)
+            {
+
+                var args = new RouteValueDictionary(pagingParams);
+                args["page"] = page - 1;
+                <li><a href="@Url.RouteUrl(args)" class="prev">&lt;&lt; Предыдущая</a></li>
+            }
+            @for (int i = 1; i <= pagesCount; i++)
+            {
+                if (pagesCount > 10)
+                {
+                    if (page > 4)
+                    {
+                        if (i == 2)
+                        {
+                            <li class="dots"><span>...</span></li>
+                        }
+                        if (i < page - 2 && i != 1)
+                        {
+                            continue;
+                        }
+
+                    }
+                    if (page + 3 < pagesCount)
+                    {
+                        if (i >= page + 3 && i != pagesCount)
+                        {
+                            if (i == page + 3)
+                            {
+                                <li class="dots"><span>...</span></li>
+                            }
+                            continue;
+                        }
+                    }
+                }
+                <li>
+                    @if (page == i)
+                    {
+                        <a class="current">@i</a>
+                    }
+                    else
+                    {
+                        var args = new RouteValueDictionary(pagingParams);
+                        if (args.ContainsKey("page"))
+                        {
+                            args.Remove("page");
+                        }
+                        args.Add("page", i);
+
+                        if (args.ContainsKey("pgsize"))
+                        {
+                            args.Remove("pgsize");
+                        }
+                        args.Add("pgsize", pageSize);
+
+                        <a href="@Url.RouteUrl(args)">@i</a>
+                    }
+                </li>
+            }
+            @if (pagesCount > 1 && page != pagesCount)
+            {
+                var args = new RouteValueDictionary(pagingParams);
+                args["page"] = page + 1;
+                <li><a href="@Url.RouteUrl(args)" class="next">Следующая &gt;&gt;</a></li>
+            }
+        </ul>
+        @*<div class="results">Показано с @(startIndex) по @(startIndex + goods.Count() - 1) из @totalCount (@page Страница)</div>*@
+    </div>
+}

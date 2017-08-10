@@ -1,0 +1,167 @@
+/*
+@reference style.css
+*/
+
+body {
+	background: #fff;
+	color:#888;
+}
+
+a {
+	color: #4c0000;
+}
+
+#header {
+	background: #ffffff;
+	color: #222222;
+}
+
+#header .navbar {
+	background-image:linear-gradient(rgba(0,0,0,0.7), rgba(10,10,10,0.7)), url(../images/bg-brush.jpg);
+
+    background-size: cover;
+    background-position: center center;
+	
+}
+
+#header .navbar a {
+	color: #ffffff;
+}
+
+#header .navbar .dropdown-menu a {
+	color: #222;
+}
+
+#header .nav > li > a:hover, .nav > li > a:focus {
+	background: #555;
+	
+}
+
+#header .navbar-toggle .icon-bar {
+	background: #dddddd;
+}
+
+.full-height-header {
+	
+}
+
+.full-height-header .arrow-down a:not(:hover) {
+	color: #fff;
+}
+
+
+.bg1 {
+	background-image:linear-gradient(rgba(0,0,0,0.7), rgba(10,10,10,0.7)), url(../images/bg-grey.jpg);
+	color: #caccc3;
+}
+
+.light {
+	background: #eee;
+	color: #222222;
+}
+
+.dark {
+
+	background: #222222;
+	color: #eee;
+}
+
+#footer {
+	background: #222222;
+	color: #ffffff;
+
+}
+
+#footer a {
+	color: #eee;
+}
+
+#cta {
+	background: #222222;
+	color: #ffffff;
+
+}
+
+.btn-light {
+	background: #eee;
+	color: #222222;
+}
+
+.btn-light:hover {
+	color: #222;
+}
+
+.btn-dark {
+	background: #222222;
+	color: #eee;
+}
+
+.btn-dark:hover {
+	color: #fff;
+}
+
+.section-heading h1,
+.section-heading h2,
+.section-heading h3,
+.section-heading h4,
+.section-heading h5 {
+	color: #222;
+}
+
+.section-heading:after {
+	background: #ccc;
+}
+
+.gototop {
+    background: #222222;
+	border-radius: 0;
+}
+
+.blog-item .date-post {
+	background: #222;
+	color: #eee;
+}
+
+.blog-item .heading {
+	color: #222;
+}
+
+.heading {
+	color: #222;
+}
+
+.blog-item .post-meta {
+	color: #666;
+}
+
+.short {
+    border-bottom: 1px solid #ccc;
+}
+
+.goods-item .goods-tag {
+	background: rgba(76,0,0,0.75);
+}
+
+.goods-item .goods-price {
+	background: #fff;
+}
+
+.form-control:focus {
+	border-color: rgba(76,0,0,1);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(76,0,0, .6);
+}
+
+.field-validation-error {
+	color: rgba(76,0,0,1);
+}
+
+#footer {}
+
+.up-footer .social .icon {
+	background: #fff;
+    color: #222 !important;
+}
+
+.up-footer .social .icon:hover {
+	background: #ccc;
+}

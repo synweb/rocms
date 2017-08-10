@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ArrayOfUser xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <User>
+    <UserId>1</UserId>
+    <Username>rocms</Username>
+    <Password>ropasswd</Password>
+    <CreationDate>2008-01-22T00:00:00</CreationDate>
+    <EmailConfirmed>true</EmailConfirmed>
+  </User>
+</ArrayOfUser>

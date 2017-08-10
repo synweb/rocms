@@ -1,0 +1,46 @@
+﻿@using Resources
+@using RoCMS.Web.Contract.Services
+@model RoCMS.Web.Contract.Models.Review
+
+<div>
+    <form method="post" class="form-horizontal" novalidate="novalidate" data-page-id="@((Model == null) ? 0 : Model.ReviewId)">
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.Author, Strings.CreateReview_Author)
+                @Html.ValidationMessageFor(m => m.Author)
+                <br>
+                @Html.TextBoxFor(m => m.Author, new { @class = "review-author form-control" })
+            </div>
+            <div class="col-md-6">
+                @Html.LabelFor(m => m.Email, Strings.CreateReview_Email)
+                @Html.ValidationMessageFor(m => m.Email)
+                <br>
+                @Html.TextBoxFor(m => m.Email, new { @class = "review-email form-control" })
+            </div>
+        </div>
+        @*<div class="field">
+                @Html.LabelFor(m => m.VK, Strings.CreateReview_Vk)
+                <span style="font-size: 10px;">(не обязательно)</span>
+                <br>
+                @Html.TextBoxFor(m => m.VK, new { @class = "review-vk form-control" })
+
+            </div>*@
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.LabelFor(m => m.Text, Strings.CreateReview_Text)
+                @Html.ValidationMessageFor(m => m.Text)
+                <br>
+                @Html.TextAreaFor(m => m.Text, new { @class = "review-text form-control", rows = 5 })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.LabelFor(m => m.Response, "Ответ на отзыв")
+                @Html.ValidationMessageFor(m => m.Response)
+                <br>
+                @Html.TextAreaFor(m => m.Response, new { @class = "review-response form-control", rows = 5 })
+            </div>
+        </div>
+
+    </form>
+</div>

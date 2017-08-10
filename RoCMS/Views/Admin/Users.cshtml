@@ -1,0 +1,88 @@
+﻿@using Resources
+@using RoCMS.Web.Contract.Services
+@model ICollection<RoCMS.Web.Contract.Models.User>
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminUsers_PageTitle;
+    var names = new SelectList(Model);
+    //var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+    //var regAllowed = settingsService.RegistrationAllowed;
+}
+
+<div class="admin-users">
+
+    <div class="form-group">
+        <h2>@(Strings.AdminUsers_UserList)</h2>
+    </div>
+
+    <div class="users-table records-table">
+        <div class="table-header row">
+            <div class="col-xs-1">
+                #
+            </div>
+            <div class="col-xs-3">
+                Логин
+            </div>
+            <div class="col-xs-2">
+                Дата регистрации
+            </div>
+            <div class="col-xs-2"> </div>
+        </div>
+
+        <div data-bind="foreach: users">
+
+            <div class="table-record row">
+                <a data-bind="attr:{href: '/Admin/EditUser/'+userId()}">
+                    <div class="col-xs-1">
+                        <span data-bind="text: userId"></span>
+                    </div>
+                    <div class="col-xs-3">
+                        <span data-bind="text: username"></span>
+                    </div>
+                    <div class="col-xs-2">
+                        <span style="white-space: nowrap" data-bind="text: moment(creationDate()).format('DD.MM.YYYY HH:mm')"></span>
+                    </div>
+                </a>
+                <div class="col-xs-2">
+                    <button class="admin-remove-user btn btn-xs btn-danger" data-bind="click: function(){ if(!confirmRemoval()) { return false;} deleteUser($data, $parent)}, visible: userId()!==1">@Strings.AdminUsers_RemoveUser</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<div class="form-group">
+            <div class="col-lg-3">
+                <select class="usernames form-control" name="Usernames" size="10">
+                    @foreach (var name in names)
+                    {
+                        <option>@name.Text</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-9 text-left">
+                <ul class="admin-users-buttons-list">
+                    <li>
+                        <button class="admin-add-user btn btn-success">@Strings.AdminUsers_AddUser</button>
+                    </li>
+                    <li>
+                        <button class="admin-remove-user btn btn-danger">@Strings.AdminUsers_RemoveUser</button>
+                    </li>
+                    <li>
+                        <button class="admin-change-pwd btn btn-warning">@Strings.AdminUsers_ChangePassword</button>
+                    </li>
+                </ul>
+            </div>
+    </div>*@
+</div>
+<button class="admin-add-user btn btn-success"><i class="fa fa-plus"></i>&nbsp;@Strings.AdminUsers_AddUser</button>
+
+@Js("Content/admin/ro/js/rocms.users.js")
+@JsInline(@<script>
+    $(function () {
+        onUserListLoaded();
+    })
+</script>)

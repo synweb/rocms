@@ -1,0 +1,33 @@
+﻿@using Resources
+@using RoCMS.Base.Extentions
+@using RoCMS.Base.Helpers
+@using RoCMS.Web.Contract.Extensions
+@model List<FileInfo>
+
+<div>
+
+    <div class="picking-buttons file-picking-buttons">
+        <span class="btn btn-success fileinput-button">
+            <i class="fa fa-plus"></i>
+            <span>@Strings.Gallery_AddFiles</span>
+        </span>
+        <input id="fileupload" type="file" name="files[]" data-url="/Upload/FileUploadHandler.ashx" style="display: none;">
+    </div>
+    <div>
+        <div class="col-xs-7 text-center"><strong>Файл</strong></div>
+        <div class="col-xs-3 text-center"><strong>Дата изменения</strong></div>
+        <div class="col-xs-2 text-center"><strong>Размер</strong></div>
+    </div>
+    <ul class="file-pick-list">
+        @foreach (var file in Model)
+        {
+            <li class="file-pick-element" data-filename="@file.Name">
+                <a class="picking-file" href="@("/File/Get/" + file.Name)" title="@Strings.AdminPickFiles_OpenInNewWindowToDownload">
+                    <div class="col-xs-7"><i class="fa fa-file"></i>&nbsp;@file.Name</div>
+                    <div class="col-xs-3 text-center">@file.LastWriteTime.ToUniversalTime().ApplySiteTimezone()</div>
+                    <div class="col-xs-2 text-center">@file.Length.BytesCountToString()</div>
+                </a>
+            </li>
+        }
+    </ul>
+</div>

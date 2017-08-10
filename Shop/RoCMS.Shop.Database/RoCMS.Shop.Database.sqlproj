@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>RoCMS.Shop.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{bac15920-d6d0-4ab0-a0fe-5e94a18159f2}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>RoCMS.Shop.Database</RootNamespace>
+    <AssemblyName>RoCMS.Shop.Database</AssemblyName>
+    <ModelCollation>1033, CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultSchema>Shop</DefaultSchema>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <!-- VS10 without SP1 will not have VisualStudioVersion set, so do that here -->
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <!-- Default to the v10.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Fulltext" />
+    <Folder Include="Functions" />
+    <Folder Include="Stored Procedures" />
+    <Folder Include="Tables" />
+    <Folder Include="Views" />
+    <Folder Include="Schema" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Fulltext\GoodsCatalog.sql" />
+    <Build Include="Fulltext\GoodsIndex.sql" />
+    <Build Include="Functions\CheckSpecValue.sql" />
+    <Build Include="Stored Procedures\Goods_Filter.sql" />
+    <Build Include="Stored Procedures\Goods_GetCountries.sql" />
+    <Build Include="Stored Procedures\Goods_GetManufacturers.sql" />
+    <Build Include="Stored Procedures\Goods_GetPacks.sql" />
+    <Build Include="Stored Procedures\Goods_GetSpecs.sql" />
+    <Build Include="Tables\Action_Category.sql" />
+    <Build Include="Tables\Action_Goods.sql" />
+    <Build Include="Tables\Action_Manufacturer.sql" />
+    <Build Include="Tables\Action.sql" />
+    <Build Include="Tables\Cart.sql" />
+    <Build Include="Tables\CartItem.sql" />
+    <Build Include="Tables\Category.sql" />
+    <Build Include="Tables\Client.sql" />
+    <Build Include="Tables\CompatibleSet_Goods.sql" />
+    <Build Include="Tables\CompatibleSet.sql" />
+    <Build Include="Tables\Currency.sql" />
+    <Build Include="Tables\Dimension.sql" />
+    <Build Include="Tables\GoodsAwaiting.sql" />
+    <Build Include="Tables\Goods_Category.sql" />
+    <Build Include="Tables\Goods_Image.sql" />
+    <Build Include="Tables\GoodsInOrder.sql" />
+    <Build Include="Tables\Goods_Pack.sql" />
+    <Build Include="Tables\GoodsReview.sql" />
+    <Build Include="Tables\GoodsItem.sql" />
+    <Build Include="Tables\Goods_Spec.sql" />
+    <Build Include="Tables\Manufacturer.sql" />
+    <Build Include="Tables\MassPriceChangeTask.sql" />
+    <Build Include="Tables\Order.sql" />
+    <Build Include="Tables\Pack.sql" />
+    <Build Include="Tables\PickUpPoint.sql" />
+    <Build Include="Tables\RegularCustomerDiscount.sql" />
+    <Build Include="Tables\ShopDbExportTask.sql" />
+    <Build Include="Tables\Spec_Category.sql" />
+    <Build Include="Tables\Spec.sql" />
+    <Build Include="Views\GoodsWithActualDiscounts.sql" />
+    <Build Include="Schema\Shop.sql" />
+    <Build Include="Stored Procedures\Action_Category_Delete.sql" />
+    <Build Include="Stored Procedures\Action_Category_Insert.sql" />
+    <Build Include="Stored Procedures\Action_Category_SelectByAction.sql" />
+    <Build Include="Stored Procedures\Action_Delete.sql" />
+    <Build Include="Stored Procedures\Action_Goods_Delete.sql" />
+    <Build Include="Stored Procedures\Action_Goods_Insert.sql" />
+    <Build Include="Stored Procedures\Action_Goods_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\Action_Goods_SelectByAction.sql" />
+    <Build Include="Stored Procedures\Action_Insert.sql" />
+    <Build Include="Stored Procedures\Action_Manufacturer_Delete.sql" />
+    <Build Include="Stored Procedures\Action_Manufacturer_Insert.sql" />
+    <Build Include="Stored Procedures\Action_Manufacturer_SelectByAction.sql" />
+    <Build Include="Stored Procedures\Action_Select.sql" />
+    <Build Include="Stored Procedures\Action_SelectOne.sql" />
+    <Build Include="Stored Procedures\Action_Update.sql" />
+    <Build Include="Stored Procedures\Cart_Delete.sql" />
+    <Build Include="Stored Procedures\Cart_Insert.sql" />
+    <Build Include="Stored Procedures\Cart_SelectOne.sql" />
+    <Build Include="Stored Procedures\CartItem_Delete.sql" />
+    <Build Include="Stored Procedures\CartItem_Insert.sql" />
+    <Build Include="Stored Procedures\CartItem_SelectByCart.sql" />
+    <Build Include="Stored Procedures\CartItem_SelectOne.sql" />
+    <Build Include="Stored Procedures\CartItem_Update.sql" />
+    <Build Include="Stored Procedures\Category_Delete.sql" />
+    <Build Include="Stored Procedures\Category_Insert.sql" />
+    <Build Include="Stored Procedures\Category_Select.sql" />
+    <Build Include="Stored Procedures\Category_SelectOne.sql" />
+    <Build Include="Stored Procedures\Category_Update.sql" />
+    <Build Include="Stored Procedures\Client_Delete.sql" />
+    <Build Include="Stored Procedures\Client_Insert.sql" />
+    <Build Include="Stored Procedures\Client_Select.sql" />
+    <Build Include="Stored Procedures\Client_SelectOne.sql" />
+    <Build Include="Stored Procedures\Client_Update.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Delete.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Goods_Delete.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Goods_Insert.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Goods_SelectByCompatibleSet.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Goods_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Insert.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Select.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_SelectOne.sql" />
+    <Build Include="Stored Procedures\CompatibleSet_Update.sql" />
+    <Build Include="Stored Procedures\Currency_Delete.sql" />
+    <Build Include="Stored Procedures\Currency_Insert.sql" />
+    <Build Include="Stored Procedures\Currency_Select.sql" />
+    <Build Include="Stored Procedures\Currency_SelectOne.sql" />
+    <Build Include="Stored Procedures\Dimension_Delete.sql" />
+    <Build Include="Stored Procedures\Dimension_Insert.sql" />
+    <Build Include="Stored Procedures\Dimension_Select.sql" />
+    <Build Include="Stored Procedures\Dimension_SelectOne.sql" />
+    <Build Include="Stored Procedures\Dimension_Update.sql" />
+    <Build Include="Stored Procedures\Goods_Category_Delete.sql" />
+    <Build Include="Stored Procedures\Goods_Category_Insert.sql" />
+    <Build Include="Stored Procedures\Goods_Category_SelectByCategory.sql" />
+    <Build Include="Stored Procedures\Goods_Category_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\Goods_Image_Delete.sql" />
+    <Build Include="Stored Procedures\Goods_Image_Insert.sql" />
+    <Build Include="Stored Procedures\Goods_Image_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\Goods_Pack_Delete.sql" />
+    <Build Include="Stored Procedures\Goods_Pack_Insert.sql" />
+    <Build Include="Stored Procedures\Goods_Pack_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\Goods_Spec_Delete.sql" />
+    <Build Include="Stored Procedures\Goods_Spec_Insert.sql" />
+    <Build Include="Stored Procedures\Goods_Spec_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\GoodsAwaiting_Delete.sql" />
+    <Build Include="Stored Procedures\GoodsAwaiting_Insert.sql" />
+    <Build Include="Stored Procedures\GoodsAwaiting_Select.sql" />
+    <Build Include="Stored Procedures\GoodsAwaiting_SelectOne.sql" />
+    <Build Include="Stored Procedures\GoodsAwaiting_Update.sql" />
+    <Build Include="Stored Procedures\GoodsInOrder_Delete.sql" />
+    <Build Include="Stored Procedures\GoodsInOrder_Insert.sql" />
+    <Build Include="Stored Procedures\GoodsInOrder_Select.sql" />
+    <Build Include="Stored Procedures\GoodsInOrder_SelectByOrder.sql" />
+    <Build Include="Stored Procedures\GoodsInOrder_Update.sql" />
+    <Build Include="Stored Procedures\GoodsItem_Delete.sql" />
+    <Build Include="Stored Procedures\GoodsItem_Insert.sql" />
+    <Build Include="Stored Procedures\GoodsItem_Select.sql" />
+    <Build Include="Stored Procedures\GoodsItem_SelectOne.sql" />
+    <Build Include="Stored Procedures\GoodsItem_Update.sql" />
+    <Build Include="Stored Procedures\GoodsReview_Delete.sql" />
+    <Build Include="Stored Procedures\GoodsReview_Insert.sql" />
+    <Build Include="Stored Procedures\GoodsReview_Select.sql" />
+    <Build Include="Stored Procedures\GoodsReview_SelectOne.sql" />
+    <Build Include="Stored Procedures\GoodsReview_Update.sql" />
+    <Build Include="Stored Procedures\Manufacturer_Delete.sql" />
+    <Build Include="Stored Procedures\Manufacturer_Insert.sql" />
+    <Build Include="Stored Procedures\Manufacturer_Select.sql" />
+    <Build Include="Stored Procedures\Manufacturer_SelectOne.sql" />
+    <Build Include="Stored Procedures\Manufacturer_Update.sql" />
+    <Build Include="Stored Procedures\MassPriceChangeTask_Delete.sql" />
+    <Build Include="Stored Procedures\MassPriceChangeTask_Insert.sql" />
+    <Build Include="Stored Procedures\MassPriceChangeTask_Select.sql" />
+    <Build Include="Stored Procedures\MassPriceChangeTask_SelectOne.sql" />
+    <Build Include="Stored Procedures\MassPriceChangeTask_Update.sql" />
+    <Build Include="Stored Procedures\Order_Delete.sql" />
+    <Build Include="Stored Procedures\Order_Insert.sql" />
+    <Build Include="Stored Procedures\Order_Select.sql" />
+    <Build Include="Stored Procedures\Order_SelectOne.sql" />
+    <Build Include="Stored Procedures\Order_Update.sql" />
+    <Build Include="Stored Procedures\Pack_Delete.sql" />
+    <Build Include="Stored Procedures\Pack_Insert.sql" />
+    <Build Include="Stored Procedures\Pack_Select.sql" />
+    <Build Include="Stored Procedures\Pack_SelectOne.sql" />
+    <Build Include="Stored Procedures\Pack_Update.sql" />
+    <Build Include="Stored Procedures\PickUpPoint_Delete.sql" />
+    <Build Include="Stored Procedures\PickUpPoint_Insert.sql" />
+    <Build Include="Stored Procedures\PickUpPoint_Select.sql" />
+    <Build Include="Stored Procedures\PickUpPoint_SelectOne.sql" />
+    <Build Include="Stored Procedures\PickUpPoint_Update.sql" />
+    <Build Include="Stored Procedures\RegularCustomerDiscount_Delete.sql" />
+    <Build Include="Stored Procedures\RegularCustomerDiscount_Insert.sql" />
+    <Build Include="Stored Procedures\RegularCustomerDiscount_Select.sql" />
+    <Build Include="Stored Procedures\RegularCustomerDiscount_SelectOne.sql" />
+    <Build Include="Stored Procedures\RegularCustomerDiscount_Update.sql" />
+    <Build Include="Stored Procedures\ShopDbExportTask_Delete.sql" />
+    <Build Include="Stored Procedures\ShopDbExportTask_Insert.sql" />
+    <Build Include="Stored Procedures\ShopDbExportTask_Select.sql" />
+    <Build Include="Stored Procedures\ShopDbExportTask_SelectOne.sql" />
+    <Build Include="Stored Procedures\ShopDbExportTask_Update.sql" />
+    <Build Include="Stored Procedures\Spec_Category_Delete.sql" />
+    <Build Include="Stored Procedures\Spec_Category_Insert.sql" />
+    <Build Include="Stored Procedures\Spec_Category_Select.sql" />
+    <Build Include="Stored Procedures\Spec_Delete.sql" />
+    <Build Include="Stored Procedures\Spec_Insert.sql" />
+    <Build Include="Stored Procedures\Spec_Select.sql" />
+    <Build Include="Stored Procedures\Spec_SelectOne.sql" />
+    <Build Include="Stored Procedures\Spec_Update.sql" />
+    <Build Include="Stored Procedures\GoodsInOrder_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\Manufacturer_SelectUsed.sql" />
+    <Build Include="Stored Procedures\Manufacturer_SelectSuppliers.sql" />
+    <Build Include="Stored Procedures\Manufacturer_SelectManufacturerCountries.sql" />
+    <Build Include="Stored Procedures\Category_SelectOneByRelativeUrl.sql" />
+    <Build Include="Stored Procedures\Category_Exists.sql" />
+    <Build Include="Stored Procedures\Category_ExistsByRelativeUrl.sql" />
+    <Build Include="Stored Procedures\Action_Exists.sql" />
+    <Build Include="Stored Procedures\Action_Manufacturer_SelectByManufacturer.sql" />
+    <Build Include="Stored Procedures\Action_Category_SelectByCategory.sql" />
+    <Build Include="Stored Procedures\GoodsReview_SelectByGoods.sql" />
+    <Build Include="Stored Procedures\GoodsItem_Exists.sql" />
+    <Build Include="Stored Procedures\GoodsItem_ExistsByRelativeUrl.sql" />
+    <Build Include="Stored Procedures\GoodsItem_SelectOneByRelativeUrl.sql" />
+    <Build Include="Stored Procedures\GoodsItem_SelectNew.sql" />
+    <Build Include="Stored Procedures\Goods_Spec_Update.sql" />
+    <Build Include="Stored Procedures\Goods_Pack_Update.sql" />
+    <Build Include="Stored Procedures\Currency_Update.sql" />
+    <Build Include="Stored Procedures\Client_SelectOneByUserId.sql" />
+    <Build Include="Stored Procedures\Client_SelectPage.sql" />
+    <Build Include="Stored Procedures\Order_SelectPage.sql" />
+    <Build Include="Stored Procedures\Cart_Update.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">
+      <Name>RoCMS.Database</Name>
+      <Project>{852c8177-33fb-4f10-9779-d3f106e2604c}</Project>
+      <Private>True</Private>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="RoCMS.Shop.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Shop_InitialData.sql" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,162 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Web.Contract.Extensions
+@model IList<RoCMS.Web.Contract.Models.PageInfo>
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminPages_PageTitle;
+}
+
+@Js("Content/admin/ro/js/rocms.page.edit.js")
+<p>
+    <a class="btn btn-success" href="@Url.Action("CreatePage")"><i class="fa fa-file-o"></i>&nbsp;@Strings.Page_CreatePage</a>
+</p>
+
+<div>
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#hierarchical" aria-controls="hierarchical" role="tab" data-toggle="tab"><em class="fa fa-sitemap"></em></a></li>
+        <li role="presentation"><a href="#flat" aria-controls="flat" role="tab" data-toggle="tab"><em class="fa fa-list"></em></a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="hierarchical">
+            @if (Model.Any(p => (p.ParentPageId == null)))
+            {
+                <ul>
+
+                    @foreach (var page in Model.Where(p => (p.ParentPageId == null)))
+                    {
+                        @HierarchicalPageBlock(page)
+                    }
+
+                </ul>
+
+                
+            }
+        </div>
+        <div role="tabpanel" class="tab-pane" id="flat">
+            <ul>
+
+                @foreach (var page in Model.OrderByDescending(x => x.CreationDate))
+                {
+                    @FlatPageBlock(page)
+                }
+
+            </ul>
+
+        </div>
+    </div>
+
+</div>
+<a class="btn btn-success" href="@Url.Action("CreatePage")"><i class="fa fa-file-o"></i>&nbsp;@Strings.Page_CreatePage</a>
+
+@helper HierarchicalPageBlock(RoCMS.Web.Contract.Models.PageInfo page)
+{
+    <li class="page-summary page-list-item" data-page-url="@page.RelativeUrl" data-page-id="@page.PageId">
+        <div class="row">
+            <div class="text-right float-left collapser-block">
+                @if (Model.Any(p => (p.ParentPageId == page.PageId)))
+                {
+                    <span class="no-underline collapser collapsed" role="button" data-toggle="collapse" data-target="#page-collapsed-@page.PageId.ToString()">
+                        <span class="large"></span>
+                    </span>
+                }
+                else
+                {
+                    <span>&nbsp;</span>
+                }
+            </div>
+            <div class="box page-block">
+                <div class="row">
+                    <div class="col-xs-4 page-text-block">
+                        <a href="@Url.Action("EditPage", new {relativeUrl = page.RelativeUrl})" class="text-left h4 no-underline page-title" onclick="blockUI()">
+                            <span class="icon text-right">
+                                <i class="fa fa-pencil page-edit-pensil"></i>
+                            </span>
+                            @page.Title
+                        </a>
+                    </div>
+                    <div class="col-xs-4 page-text-block">
+                        @{
+                            string url = string.Format("/{0}", page.CannonicalUrl);
+                        }
+                        <p class="control-label text-left">
+                            <a target="_blank" href="@url">@url</a>
+                        </p>
+                    </div>
+                    <div class="toolbar col-xs-4 text-right">
+                        <a href="#" class="btn btn-info btn-xs button-copy">
+                            <i class="fa fa-copy"></i> Создать копию
+                        </a>
+                        @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                        {
+                            <a href="@Url.Action("DeletePage", "Admin", new {pageId = page.PageId})" class="btn btn-danger btn-xs button-delete">
+                                <i class="fa fa-times"></i> @Strings.Pages_DeletePage
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="collapse" id="page-collapsed-@page.PageId.ToString()">
+
+            @if (Model.Any(p => p.ParentPageId == page.PageId))
+            {
+                <ul>
+                    @foreach (var childPage in Model.Where(p => (p.ParentPageId == page.PageId)))
+                    {
+                        @HierarchicalPageBlock(childPage)
+                    }
+                </ul>
+            }
+        </div>
+    </li>
+}
+
+
+@helper FlatPageBlock(RoCMS.Web.Contract.Models.PageInfo page)
+{
+    <li class="page-summary page-list-item" data-page-url="@page.RelativeUrl" data-page-id="@page.PageId">
+        <div class="row">
+            <div class="box page-block">
+                <div class="row">
+                    <div class="col-xs-4 page-text-block">
+                        <a href="@Url.Action("EditPage", new {relativeUrl = page.RelativeUrl})" class="text-left h4 no-underline page-title" onclick="blockUI()">
+                            <span class="icon text-right">
+                                <i class="fa fa-pencil page-edit-pensil"></i>
+                            </span>
+                            @page.Title 
+                        </a>
+                    </div>
+                    <div class="col-xs-3 page-text-block">
+                        @{
+                            string url = string.Format("/{0}", page.CannonicalUrl);
+                        }
+                        <p class="control-label text-left">
+                            <a target="_blank" href="@url">@url</a>
+                        </p>
+                    </div>
+                    <div class="col-xs-2  page-text-block"><span>@page.CreationDate.ApplySiteTimezone().ToString("dd.MM.yyyy HH:mm")</span></div>
+                    <div class="toolbar col-xs-3 text-right">
+                        @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                        {
+                            <a href="@Url.Action("DeletePage", "Admin", new {pageId = page.PageId})" class="btn btn-danger btn-xs button-delete">
+                                <i class="fa fa-times"></i> @Strings.Pages_DeletePage
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </li>
+}
+
+
+

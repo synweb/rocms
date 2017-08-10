@@ -1,0 +1,47 @@
+﻿@model List<RoCMS.Web.Contract.Models.RedirectToPageRouter>
+
+@{
+    ViewBag.Title = ViewBag.PageTitle = "Редиректы";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+<form class="redirect-list-form">
+    <div class="row bold text-center">
+        <div class="col-xs-3 col-lg-2">Исходный адрес</div>
+        <div class="col-xs-5 col-lg-6">Целевой адрес</div>
+    </div>
+    <div class="redirect-items" data-bind="template: { name: 'redirect-template', foreach: redirects }">
+    </div>
+
+    <button type="button" class="btn btn-link" data-bind="click: addItem"><i class="fa fa-plus"></i></button>
+</form>
+<div>
+    <button class="button-accept btn btn-success" data-bind="click: save"><i class="fa fa-check"></i> Сохранить</button>
+</div>
+
+
+<script type="text/html" id="redirect-template">
+    <div class="row redirect-item">
+        <div class="col-xs-3 col-lg-2">
+            <input type="text" class="form-control" data-bind="value: key">
+        </div>
+        <div class="col-xs-5 col-lg-6">
+            <input type="text" class="form-control" data-bind="value: value">
+        </div>
+        <div class="col-xs-1">
+            <div class="form-control-static">
+                <a class="remove-item" data-bind="click: $parent.removeItem"><i class="fa fa-trash-o"></i></a>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+@Js("Content/admin/ro/js/admin.redirect.js")
+
+@JsInline(@<script>
+    $(function () {
+        redirectListLoaded();
+    });
+    </script>)

@@ -1,0 +1,65 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Web.Contract.Extensions
+@model IList<RoCMS.Web.Contract.Models.FormRequest>
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminRequests_PageTitle;
+}
+
+
+@Js("Content/admin/ro/js/rocms.formRequest.edit.js")
+
+@foreach (var formRequest in Model)
+    {
+        <div class="box formRequest-summary" data-block-id="@formRequest.FormRequestId">
+            <header>                
+                <h5>@formRequest.Name</h5>
+                <span class="formRequest-creationDate"> @formRequest.CreationDate.ApplySiteTimezone() </span>
+                <div class="toolbar">                    
+                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    {
+                        <a href="@Url.Action("DeleteFormRequest", "Admin", new {formRequestId = formRequest.FormRequestId})" class="btn btn-danger btn-xs button-delete">
+                            <i class="fa fa-times"></i> @Strings.Message_Delete
+                        </a>
+                    }
+                </div>
+            </header>
+
+            <div class="form-horizontal body">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.Message_Email
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@formRequest.Email</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.Message_Phone
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@formRequest.Phone</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        @Strings.Message_TextAdmin
+                    </label>
+                    <div class="col-lg-8">
+                        <p class="control-label text-left">@formRequest.Text</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+

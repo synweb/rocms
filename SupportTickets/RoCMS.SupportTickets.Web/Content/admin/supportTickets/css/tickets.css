@@ -1,0 +1,54 @@
+﻿table.tickets, table.tickets th, table.tickets td {
+    text-align: center;
+}
+
+table.tickets span {
+    color: #000;
+}
+
+table.tickets span:hover {
+    text-decoration: none;
+}
+
+.ticket-answer-field {
+    width: 70%;
+    resize: none;
+    margin: 10px 0;
+    display: block;
+    height: 130px;
+}
+
+.inner-message {
+    width: 70%;
+    display: inline-block;
+    border-radius: 4px;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.ticket-messages {
+    margin-top: 20px;
+}
+
+    .ticket-messages .incoming > div {
+        background-color: rgb(218, 243, 220);
+        text-align: left;
+    
+    }
+
+    .ticket-messages .outgoing {
+    text-align: right;
+    }
+
+    .ticket-messages .outgoing > div {
+        background-color: rgb(245, 224, 224);
+        text-align: left;
+    }
+
+.ticket-subject {
+    font-size: 20px;
+}
+
+.ticket-resolved {
+    display: block;
+}

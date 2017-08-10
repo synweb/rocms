@@ -1,0 +1,55 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Base.Helpers
+@model IEnumerable<RoCMS.Web.Contract.Models.Search.SearchResultItem>
+
+@{
+
+    //List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+
+    string query = (string)ParamExtractor.ExtractUrlParams(Request)["query"];
+
+    ViewBag.Title = "Результаты поиска по запросу \"" + query + "\"";
+
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+}
+@if (Model.Any())
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Результаты поиска по запросу &laquo;@query&raquo;</h1>
+        </div>
+    </div>
+}
+else
+{
+    <span class="search-not-found">По запросу &laquo;@query&raquo; ничего не найдено</span>
+}
+
+@Html.Partial("_Pager")
+
+
+@foreach (var searchItem in Model)
+{
+    <div class="row search-result">
+        <a href="@searchItem.Url">
+            <div class='@(searchItem.ImageId != null ? "col-xs-9" : "col-xs-12")'>
+                <h4>@searchItem.Title</h4>
+                <p>@TextCutHelper.Cut(searchItem.Text, 190)</p>
+                <span class="article-link">Подробнее &raquo;</span>
+            </div>
+            @if (searchItem.ImageId != null)
+            {
+                <div class="col-xs-3">
+                    <img src="@Url.Action("Thumbnail", "Gallery", new { id = searchItem.ImageId })" />
+                </div>
+            }
+        </a>
+    </div>
+}
+
+@Html.Partial("_Pager")

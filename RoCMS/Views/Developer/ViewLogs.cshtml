@@ -1,0 +1,57 @@
+﻿@model IEnumerable<string>
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ViewBag.Title = "Просмотр логов";
+    ViewBag.PageTitle = "Просмотр логов";
+}
+
+<div class="log-view">
+    <h3></h3>
+    <div class="row">
+        <div class="box col-md-8" id="logView" style="display:none">  
+            <header>
+                <div class="icons">
+                    <i class="fa fa-file-code-o"></i>
+                </div>
+                <h5></h5>
+            </header>
+            <pre id="logViewContent">
+            </pre>
+            </div>
+        <div class="col-md-4" id="fileList">
+            <div class="box">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-file-code-o"></i>
+                    </div>
+                    <h5>Файлы</h5>
+                </header>
+                <div class="body">                    
+                    <ul class="files">
+                        @foreach (var item in Model)
+                        {
+                            <li>
+                                <a href="#" data-file-name="@item" title="@item">@item</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@JsInline(@<script>
+    $(function () {
+        $(".files li a").click(function () {
+            $("#logView").show();
+            var fileName = "logs\\" +  $(this).data("fileName");
+           
+            getJSON("/Developer/ViewContent?path=" + encodeURI(fileName), "", function (result) {
+                $('#logView h5').text(fileName);
+                $('#logViewContent').text(result.content);
+            });
+        });
+    });
+    </script>)

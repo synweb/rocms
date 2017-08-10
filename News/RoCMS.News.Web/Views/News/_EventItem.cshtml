@@ -1,0 +1,23 @@
+﻿@using System.Globalization
+@using RoCMS.Web.Contract.Extensions
+@model RoCMS.News.Contract.Models.NewsItem
+
+@{
+    var item = Model;
+}
+
+<div class="single_blog_post_box">
+    <div class="event_post_info">
+        <ul>
+            <li><i class="fa fa-calendar"></i>@item.EventDate.Value.ApplySiteTimezone().ToString("d MMM yyyy", CultureInfo.CurrentUICulture)</li>
+            <li><i class="pe-7s-clock"></i>@item.EventDate.Value.ApplySiteTimezone().ToString("HH:mm", CultureInfo.CurrentUICulture)</li>
+        </ul>
+    </div>
+    <div class="blog_post_txt">
+        <div class="blog_post_heading text-center">
+            <h2>
+                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" rel="bookmark" title="@item.Title">@item.Title</a>
+            </h2>
+        </div>
+    </div>
+</div>

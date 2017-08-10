@@ -1,0 +1,70 @@
+﻿@using System.Globalization
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+@model RoCMS.Shop.Contract.Models.GoodsItem
+
+@helper RenderGoodsItem(GoodsItem goodsItem)
+{
+NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalDigits = 0 };
+
+var currencyService = DependencyResolver.Current.GetService<IShopCurrencyService>();
+
+
+    <div class="image"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})"><img src="@Url.Action("Thumbnail", "Gallery" , new { id=goodsItem.MainImageId })" title="@goodsItem.Name" alt="@goodsItem.Name"></a></div>
+    <div class="name"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})">@goodsItem.Name</a></div>
+
+        <div class="price">
+            @if (goodsItem.HasDiscount)
+            {
+                <span class="price-new">
+                    @if (goodsItem.Currency == "RUR")
+                    {
+                        <text>
+                            @goodsItem.DiscountedPrice.ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            @goodsItem.DiscountedPrice.ToString("# ###.##", nfi)&nbsp;@goodsItem.Currency1.ShortName
+                            <br />
+                            (@currencyService.Convert(goodsItem.DiscountedPrice, goodsItem.Currency, "RUR") .ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>)
+                        </text>
+                    }
+
+                </span>
+                <span class="price-old">@goodsItem.Price.ToString("# ###.##", nfi)&nbsp;@goodsItem.Currency1.ShortName</span>
+            }
+            else
+            {
+                <span class="price">
+
+                    @if (goodsItem.Currency == "RUR")
+                    {
+                        <text>
+                            @goodsItem.DiscountedPrice.ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            @goodsItem.Price.ToString("# ###.##", nfi)&nbsp;@goodsItem.Currency1.ShortName
+                            <br />
+                            (@currencyService.Convert(goodsItem.Price, goodsItem.Currency, "RUR").ToString("# ###.##", nfi) & nbsp;
+                            <em class="fa fa-rub"></em>)
+                        </text>
+                    }
+                </span>
+            }
+
+        </div>
+        <div class="cart order-btn-container buttons">
+            <a onclick="true" class="button addToCart order-link" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.GoodsId, 1) }">
+                <span>Заказать</span>
+            </a>
+        </div>
+
+
+}
+@Js("/bin/Content/client/shop")
+@RenderGoodsItem(Model)

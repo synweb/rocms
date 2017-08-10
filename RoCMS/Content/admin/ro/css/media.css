@@ -1,0 +1,16 @@
+﻿@media (max-width: 767px) {
+    .fixed-action-menu{
+        position: static;
+        background: transparent;
+        border: 1px solid #ccd1d9;
+        border-radius: 2px;
+    }
+    .fixed-action-menu a, .fixed-action-menu button{
+        margin: 5px 0;
+    }
+}
+@media (max-width: 1199px) {
+    .admin-news-frame {
+        min-height: 400px;
+    }
+}

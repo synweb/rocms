@@ -1,0 +1,223 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+
+@{
+    ViewBag.Title = "Акции";
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+
+
+    int? catId = Settings.GetSettings<int?>(SettingKey.LastGoodsCategory.ToString());
+    int? manId = Settings.GetSettings<int?>(SettingKey.LastGoodsManufacturer.ToString());
+    int? supId = Settings.GetSettings<int?>(SettingKey.LastGoodsSupplier.ToString());
+    SortCriterion sortBy = Settings.GetSettings<SortCriterion>(SettingKey.LastGoodsSortBy.ToString());
+
+    string catName = "";
+    string manName = "";
+    string supName = "";
+    IShopCategoryService shopCategoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
+    IShopManufacturerService shopManufacturerService = DependencyResolver.Current.GetService<IShopManufacturerService>();
+
+    if (catId.HasValue)
+    {
+
+        var cat = shopCategoryService.GetCategory(catId.Value);
+        if (cat != null)
+        {
+            catName = cat.Name;
+        }
+        else
+        {
+            catId = null;
+        }
+    }
+
+    if (manId.HasValue)
+    {
+
+        var cat = shopManufacturerService.GetManufacturer(manId.Value);
+        if (cat != null)
+        {
+            manName = cat.Name;
+        }
+        else
+        {
+            manId = null;
+        }
+    }
+
+    if (supId.HasValue)
+    {
+
+        var cat = shopManufacturerService.GetManufacturer(supId.Value);
+        if (cat != null)
+        {
+            supName = cat.Name;
+        }
+        else
+        {
+            supId = null;
+        }
+    }
+}
+
+@Js("/Content/base/vendor/ckeditor")
+
+<div>
+    
+
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createAction"><i class="fa fa-plus"></i>&nbsp;@ShopStrings.Shop_Action_Create</a>
+    </div>
+    <div class="shop-action-list">
+        <ul data-bind="template: { name: 'action-item-template', foreach: actions }"></ul>
+    </div>
+
+    <script type="text/html" id="action-item-template">
+        <li class="action" data-bind="click: $root.selectAction">
+            <div style="float: right">
+                <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Action_Edit"><i class="fa fa-pencil"></i></a>
+                @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                {
+                    <a data-bind="click: function () { remove($data, $parent); }, clickBubble: false"
+                       class="btn btn-danger btn-xs"
+                       title="@ShopStrings.Shop_Action_Delete">
+                        <i class="fa fa-times"></i>
+                    </a>
+                }
+            </div>
+            <div><label data-bind="text: name"></label></div>
+        </li>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="category-item-action-template">
+        <span class="category-item name-block">
+            <span data-bind="text: name"></span>
+            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeCategory($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+        </span>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="goods-item-action-template">
+        <span class="goods-item name-block">
+            <span data-bind="text: name"></span>
+            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeGoods($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+        </span>
+    </script>
+
+    <script type="text/x-jquery-tmpl" id="manufacturer-item-action-template">
+        <span class="manufacturer-item name-block">
+            <span data-bind="text: name"></span>
+            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeManufacturer($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+        </span>
+    </script>
+
+    <script type="text/html" id="actionTemplate">
+        <div class="shop-action">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Name</label>
+                    <div class="col-xs-10">
+                        <input type="text" class="form-control" data-bind="value: name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_EndDate</label>
+                    <div class="col-xs-10">
+                        <input type="text" class="form-control" data-bind="value: dateOfEnding">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Discount</label>
+                    <div class="col-xs-10">
+                        <input type="text" class="form-control" data-bind="value: discount">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2" for="price">@ShopStrings.Shop_Action_Goods</label>
+                    <div class="col-xs-9">
+                        <div class="row goods-row name-blocks-row" data-bind="template: { name: 'goods-item-action-template', foreach: goods }">
+                        </div>
+                    </div>
+                    <div class="col-xs-1">
+                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addGoods"><em class="fa fa-plus"></em></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2" for="price">@ShopStrings.Shop_Action_Categories</label>
+                    <div class="col-xs-9">
+                        <div class="row categories-row name-blocks-row" data-bind="template: { name: 'category-item-action-template', foreach: categories }">
+                        </div>
+                    </div>
+                    <div class="col-xs-1">
+                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-3" for="price">@ShopStrings.Shop_Action_Manufacturers</label>
+                    <div class="col-xs-8">
+                        <div class="row manufacturers-row name-blocks-row" data-bind="template: { name: 'manufacturer-item-action-template', foreach: manufacturers }">
+                        </div>
+                    </div>
+                    <div class="col-xs-1">
+                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addManufacturer"><em class="fa fa-plus"></em></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Description</label>
+                    <div class="col-xs-10">
+                        @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "actionDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Изображение</label>
+                    <div class="col-xs-10">
+                        <img alt="Изображение" data-bind="click: pickImage, thumbnailSrc: imageId" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Отображать в слайдере</label>
+                    <div class="col-xs-10">
+                        <input type="checkbox" data-bind="checked: showInSlider" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Акция активна</label>
+                    <div class="col-xs-10">
+                        <input type="checkbox" data-bind="checked: active" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </script>
+
+    @Js("/bin/Content/admin/shop")
+
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            var lastCategoryId = '@(catId.HasValue ? catId.Value.ToString() : "")';
+            var lastCategoryName = '@catName';
+
+            var lastManufacturerId = '@(manId.HasValue ? manId.Value.ToString() : "")';
+            var lastManufacturerName = '@manName';
+
+            var lastSupplierId = '@(supId.HasValue ? supId.Value.ToString() : "")';
+            var lastSupplierName = '@supName';
+
+            var lastSortBy = '@sortBy.ToString()';
+            $(function () {
+                actionsEditorLoaded();
+            });
+        </script>)
+    }
+
+</div>

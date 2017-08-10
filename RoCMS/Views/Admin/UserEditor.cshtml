@@ -1,0 +1,148 @@
+﻿@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Web.Contract.Services
+@model RoCMS.Web.Contract.Models.User
+@using Resources
+
+@{
+    ViewBag.PageTitle = "Редактирование пользователя " + Model.Username;
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    var authService = DependencyResolver.Current.GetService<ISecurityService>();
+    var resources = authService.GetResources().OrderBy(x => x.Description).ToArray();
+    const int COLS = 3;
+}
+
+<a href="/Admin/Users" class="btn btn-danger"><i class="fa fa-backward"></i>&nbsp;К пользователям</a>
+
+<h2>Профиль пользователя @Model.Username</h2>
+<form class="form-horizontal" id="userProfile">
+    <input type="hidden" name="UserId" value="@Model.UserId" />
+    <div class="form-group">
+        <label class="col-xs-4">Email</label>
+        <div class="col-xs-8">
+            <input type="text" value="@Model.Email" data-val="true" data-val-required="*" name="Email" class="form-control email" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4">Description</label>
+        <div class="col-xs-8">
+            <textarea name="Description" class="form-control">@Model.Description</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4">Vk</label>
+        <div class="col-xs-8">
+            <input type="text" value="@Model.Vk" name="Vk" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4">Facebook</label>
+        <div class="col-xs-8">
+            <input type="text" value="@Model.Fb" name="Fb" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4">Google+</label>
+        <div class="col-xs-8">
+            <input type="text" value="@Model.GoogleP" name="GoogleP" class="form-control" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4">Twitter</label>
+        <div class="col-xs-8">
+            <input type="text" value="@Model.Twitter" name="Twitter" class="form-control" />
+        </div>
+    </div>
+    <button class="btn btn-success btn-save-profile"><i class="fa fa-check"></i> Сохранить профиль</button>
+</form>
+
+<h2>Права пользователя</h2>
+<div class="row user-resources" data-user-id="@Model.UserId">
+    <div class="col-md-4">
+        @{
+            int length1 = resources.Length/COLS;
+            if (resources.Length%COLS > 0)
+            {
+                length1++;
+            }
+            for (int i = 0; i < length1; i++)
+            {
+                var resource = resources[i];
+                <div class="cms-resource">
+                    <input type="checkbox" class="user-resource-checkbox" @(authService.IsAuthorizedForResource(Model.UserId, resource.Name) ? "checked='checked'" : "") data-resource-id="@resource.CmsResourceId" id="res@(resource.CmsResourceId)"/>
+                    &nbsp;
+                    <label for="res@(resource.CmsResourceId)">@resource.Description</label>
+                </div>
+            }
+        }
+    </div>
+    <div class="col-md-4">
+        @{
+            int length2 = resources.Length/COLS;
+            if (resources.Length%COLS > 1)
+            {
+                length2++;
+            }
+            for (int i = length1; i < length1 + length2; i++)
+            {
+                var resource = resources[i];
+                <div class="cms-resource">
+                    <input type="checkbox" class="user-resource-checkbox" @(authService.IsAuthorizedForResource(Model.UserId, resource.Name) ? "checked='checked'" : "") data-resource-id="@resource.CmsResourceId" id="res@(resource.CmsResourceId)"/>
+                    &nbsp;
+                    <label for="res@(resource.CmsResourceId)">@resource.Description</label>
+                </div>
+            }
+        }
+    </div>
+    <div class="col-md-4">
+        @{
+            int length3 = resources.Length / COLS;
+            if (resources.Length % COLS > 2)
+            {
+                length3++;
+            }
+            for (int i = length1+length2; i < length1 + length2 + length3; i++)
+            {
+                var resource = resources[i];
+                <div class="cms-resource">
+                    <input type="checkbox" class="user-resource-checkbox" @(authService.IsAuthorizedForResource(Model.UserId, resource.Name) ? "checked='checked'" : "") data-resource-id="@resource.CmsResourceId" id="res@(resource.CmsResourceId)" />
+                    &nbsp;
+                    <label for="res@(resource.CmsResourceId)">@resource.Description</label>
+                </div>
+            }
+        }
+    </div>
+</div>
+<div>
+    <div class="form-horizontal common-settings">
+        <div class="form-group text-center">
+            <a href="#" class="change-user-pass-link btn btn-warning">@Strings.AdminCommonConfig_ChangePassword</a>
+            <div class="change-pass" style="display: none">
+                <ul>
+                    <li>
+                        <span class="change-pass-captition">@Strings.AdminCommonConfig_NewPassword</span>
+                        <input type="password" class="new-user-pass form-control" />
+                    </li>
+                    <li>
+                        <span class="change-pass-captition">@Strings.AdminCommonConfig_RepeatPassword</span>
+                        <input type="password" class="repeat-user-pass form-control" />
+                    </li>
+                </ul>
+                <div class="form-group text-center">
+                    <a class="save-user-password btn btn-success cent" title="@Strings.AdminCommonConfig_Save" href="#">@Strings.AdminCommonConfig_Save</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>&nbsp;</p>
+<button class="btn btn-success btn-save"><i class="fa fa-check"></i> Сохранить доступы</button>
+
+@Js("Content/admin/ro/js/rocms.users.js")
+@JsInline(@<script>
+    $(function () {
+        onUserEditorLoaded();
+    });</script>)

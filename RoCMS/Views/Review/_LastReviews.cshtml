@@ -1,0 +1,30 @@
+﻿@using RoCMS.Web.Contract.Services
+@model int
+@{
+    IReviewService reviewService = DependencyResolver.Current.GetService<IReviewService>();
+    int total;
+    var reviews = reviewService.GetModeratedReviewPage(1, Model, out total);
+}
+
+<div class="carousel-container">
+    <div id="reviewsCarousel" class="owl-carousel">
+        @foreach (var review in reviews)
+        {
+            <div class="owl-item">
+                <div class="review">
+                    <blockquote>
+                        <p>@review.Text</p>
+                        <footer>
+                            <cite>@review.Author</cite>
+                        </footer>
+                    </blockquote>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="control-panel">
+        <button class="prev owl-nav"><i class="fa fa-angle-left"></i></button>
+        <button class="next owl-nav"><i class="fa fa-angle-right"></i></button>
+        <div class="dots"></div>
+    </div>
+</div>

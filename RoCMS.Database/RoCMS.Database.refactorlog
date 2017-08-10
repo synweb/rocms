@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="81772b9f-4ab3-4667-baeb-19cbac23b9db" ChangeDateTime="08/10/2016 17:55:55">
+    <Property Name="ElementName" Value="[dbo].[FormRequest].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[FormRequest]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="FormRequestId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="8da056fa-c952-4afa-a87c-9795a92efc81" ChangeDateTime="08/29/2016 18:03:32">
+    <Property Name="ElementName" Value="[dbo].[Mail].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mail]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="MailId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2e189d63-fc20-4f5f-8311-50580d2b4fea" ChangeDateTime="08/29/2016 18:18:00">
+    <Property Name="ElementName" Value="[dbo].[Mail].[ErrorMessage ]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Mail]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ErrorMessage" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="4d9bd3bb-5efd-4b26-b3e1-8c072c53ced4" ChangeDateTime="05/17/2017 14:58:33">
+    <Property Name="ElementName" Value="[dbo].[OrderForm].[FormId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[OrderForm]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="OrderFormId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2b512dd3-81fd-4f5d-b241-2811aecf9136" ChangeDateTime="05/17/2017 15:32:34">
+    <Property Name="ElementName" Value="[dbo].[OrderFormField].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[OrderFormField]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[OrderFormField]Id" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="597026d6-0501-4349-83e3-089d87f61784" ChangeDateTime="05/17/2017 15:32:56">
+    <Property Name="ElementName" Value="[dbo].[OrderFormField].[[OrderFormField]]Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[OrderFormField]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="OrderFormFieldId" />
+  </Operation>
+</Operations>

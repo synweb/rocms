@@ -1,0 +1,13 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Web.Contract.Services
+@{
+
+    string url = HttpUtility.UrlDecode(Request.Url.AbsolutePath);
+
+    var breadCrumbs = BreadCrumbsHelper.ForCurrentPage(url);
+}
+
+@if (breadCrumbs.Any())
+{
+    @Html.Partial("_BreadCrumbs", breadCrumbs)
+}

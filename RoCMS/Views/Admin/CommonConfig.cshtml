@@ -1,0 +1,376 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Web.Contract.Services
+@model RoCMS.Web.Contract.Models.Setting
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminCommonConfig_Title;
+    var menuService = DependencyResolver.Current.GetService<IMenuService>();
+    var pageService = DependencyResolver.Current.GetService<IPageService>();
+    SelectList m = null;
+
+    SelectList p = null;
+    try
+    {
+        m = new SelectList(from menu in menuService.GetMenus() select menu, "MenuId", "Name");
+    }
+    catch (InvalidOperationException)
+    {}
+    try
+    {
+        p = new SelectList(from page in pageService.GetPagesInfo() select page, "RelativeUrl", "Title");
+    }
+    catch (InvalidOperationException)
+    {}
+    string expiredStr = String.Empty;
+    if (Model.AnalyticsAuthKeyExpires.HasValue)
+    {
+        expiredStr = String.Format("({0} {1})", Strings.AdminAnalytics_AuthKeyExpires,
+                                     Model.AnalyticsAuthKeyExpires.Value.ToString("dd.MM.yyyy"));
+    }
+}
+<div class="setting-container">
+    <form novalidate="novalidate">
+    <div class="form-horizontal common-settings">
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="box">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-gears"></i>
+                    </div>
+                    <h5>Главные настройки</h5>
+                </header>
+                <div class="body collapse in" aria-expanded="true">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.SiteName, Strings.AdminCommonConfig_SiteName, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.SiteName, new {@class = "site-name form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.RootUrl, Strings.AdminCommonConfig_RootUrl, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                <input class="root-url form-control valid" id="RootUrl" name="RootUrl" type="text" value="@Model.RootUrl"
+                                        data-toggle="tooltip" title="URL без '/' на конце, начинающийся с http:// или https://. Пример: http://ya.ru">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-lg-4" for="timezone">Часовой пояс</label>
+                            <div class="col-lg-8">
+                                <select class="form-control timezone" id="timezone">
+                                    <option @(Model.Timezone == 12 ? "selected='selected'" : "") value="12">(UTC/GMT+12)</option>
+                                    <option @(Model.Timezone == 11 ? "selected='selected'" : "") value="11">(UTC/GMT+11)</option>
+                                    <option @(Model.Timezone == 10 ? "selected='selected'" : "") value="10">(UTC/GMT+10)</option>
+                                    <option @(Model.Timezone == 9 ? "selected='selected'" : "") value="9">(UTC/GMT+9)</option>
+                                    <option @(Model.Timezone == 8 ? "selected='selected'" : "") value="8">(UTC/GMT+8)</option>
+                                    <option @(Model.Timezone == 7 ? "selected='selected'" : "") value="7">(UTC/GMT+7)</option>
+                                    <option @(Model.Timezone == 6 ? "selected='selected'" : "") value="6">(UTC/GMT+6)</option>
+                                    <option @(Model.Timezone == 5 ? "selected='selected'" : "") value="5">(UTC/GMT+5)</option>
+                                    <option @(Model.Timezone == 4 ? "selected='selected'" : "") value="4">(UTC/GMT+4)</option>
+                                    <option @(Model.Timezone == 3 ? "selected='selected'" : "") value="3">(UTC/GMT+3)</option>
+                                    <option @(Model.Timezone == 2 ? "selected='selected'" : "") value="2">(UTC/GMT+2)</option>
+                                    <option @(Model.Timezone == 1 ? "selected='selected'" : "") value="1">(UTC/GMT+1)</option>
+                                    <option @(Model.Timezone == 0 ? "selected='selected'" : "") value="0">(UTC/GMT+0)</option>
+                                    <option @(Model.Timezone == -1 ? "selected='selected'" : "") value="-1">(UTC/GMT-1)</option>
+                                    <option @(Model.Timezone == -2 ? "selected='selected'" : "") value="-2">(UTC/GMT-2)</option>
+                                    <option @(Model.Timezone == -3 ? "selected='selected'" : "") value="-3">(UTC/GMT-3)</option>
+                                    <option @(Model.Timezone == -4 ? "selected='selected'" : "") value="-4">(UTC/GMT-4)</option>
+                                    <option @(Model.Timezone == -5 ? "selected='selected'" : "") value="-5">(UTC/GMT-5)</option>
+                                    <option @(Model.Timezone == -6 ? "selected='selected'" : "") value="-6">(UTC/GMT-6)</option>
+                                    <option @(Model.Timezone == -7 ? "selected='selected'" : "") value="-7">(UTC/GMT-7)</option>
+                                    <option @(Model.Timezone == -8 ? "selected='selected'" : "") value="-8">(UTC/GMT-8)</option>
+                                    <option @(Model.Timezone == -9 ? "selected='selected'" : "") value="-9">(UTC/GMT-9)</option>
+                                    <option @(Model.Timezone == -10 ? "selected='selected'" : "") value="-10">(UTC/GMT-10)</option>
+                                    <option @(Model.Timezone == -11 ? "selected='selected'" : "") value="-11">(UTC/GMT-11)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.MainMenuId, Strings.AdminCommonConfig_MainMenu, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.DropDownListFor(x => x.MainMenuId, m, new {@class = "mainmenu-id form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.MainPageUrl, Strings.AdminCommonConfig_MainPage, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.DropDownListFor(x => x.MainPageUrl, p, new {@class = "mainpage-id form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.RootBreadcrumbsTitle, "Заголовок главной в хлебных крошках", new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.RootBreadcrumbsTitle, new {@class = "root-breadcrumbs-title form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-lg-4">@Strings.AdminCommonConfig_URL</label>
+                            <div class="col-lg-8">
+                                <div>
+                                    <div class="radiobutton">
+                                        <input id="translitEnabledOn" name="translitEnabled" class="translit-enabled" type="radio" value="translit" @(Model.TranslitEnabled ? "checked='checked'" : "")>
+                                        <label for="translitEnabledOn"></label>
+                                    </div>
+                                    <label for="translitEnabledOn">@Strings.AdminCommonConfig_TransliteURL</label>
+                                </div>
+                                <div>
+                                    <div class="radiobutton">
+                                        <input id="translitEnabledOff" name="translitEnabled" class="translit-enabled" type="radio" value="cirillic" @(!Model.TranslitEnabled ? "checked='checked'" : "")>
+                                        <label for="translitEnabledOff"></label>
+                                    </div>
+                                    <label for="translitEnabledOff">@Strings.AdminCommonConfig_CirillicURL</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.AllowedFileExtensions, "Разрешённые типы файлов", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                <input class="allowed-files form-control valid" data-toggle="tooltip" id="AllowedFileExtensions"
+                                       name="AllowedFileExtensions" title="Расширения файлов с точкой через запятую. Пример: .doc,.docx,.xls,.xlsx"
+                                       data-val-regex="Неверный формат" data-val-regex-pattern="^(\.\w+,? ?)+$"
+                                       data-val="true"
+                                       type="text" value="@Model.AllowedFileExtensions">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-photo"></i>
+                    </div>
+                    <h5>Изображения</h5>
+                </header>
+                <div class="body collapse in" aria-expanded="true">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ImageMaxWidth, Strings.AdminCommonConfig_ImageMaxWidth, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.ImageMaxWidth, new {@class = "image-max-width form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ImageMaxHeight, Strings.AdminCommonConfig_ImageMaxHeight, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.ImageMaxHeight, new {@class = "image-max-height form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ImageQuality, Strings.AdminCommonConfig_ImageQuality, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.ImageQuality, new {@class = "image-quality form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ThumbnailSizes, "Размеры миниатюр", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                <input class="thumbnail-sizes form-control valid" data-toggle="tooltip" id="ThumbnailSizes"
+                                       name="ThumbnailSizes" title="Размеры миниатюр по ширине ИЛИ высоте через запятую. Пример: 800w,600w,300h"
+                                       data-val-regex="Неверный формат" data-val-regex-pattern="^(\d+(w|h))(,\d+(w|h))*$"
+                                       data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured"
+                                       data-val="true"
+                                       type="text" value="@Model.ThumbnailSizes">
+                            </div>
+                        </div>
+                        @*<div class="form-group">
+                            @Html.LabelFor(x => x.ThumbnailHeight, Strings.AdminCommonConfig_ThumbnailHeight, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.ThumbnailHeight, new {@class = "thumbnail-height form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ThumbnailWidth, Strings.AdminCommonConfig_ThumbnailWidth, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.ThumbnailWidth, new {@class = "thumbnail-width form-control"})
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="box">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-at"></i>
+                    </div>
+                    <h5>Почта</h5>
+                </header>
+                <div class="body collapse in" aria-expanded="true">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.EmailSmtpUrl, Strings.AdminCommonConfig_EmailSmtpUrl, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.EmailSmtpUrl, new {@class = "email-smtp-url form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.EmailSmtpPort, Strings.AdminCommonConfig_EmailSmtpPort, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.EmailSmtpPort, new {@class = "email-smtp-port form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.SmtpSslEnabled, Strings.AdminCommonConfig_SmtpSslEnabled, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(x => x.SmtpSslEnabled, new {@class = "smtp-ssl-enabled form-control checkbox"})
+                                    <label for="SmtpSslEnabled"></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-4" for="SystemEmailAddress">@Strings.AdminCommonConfig_SystemEmailAddress</label>
+                            <div class="col-lg-8">
+                                <div class="field-validation-valid" data-valmsg-for="SystemEmailAddress" data-valmsg-replace="true"></div>
+                                <input class="system-email-address form-control" id="SystemEmailAddress" name="SystemEmailAddress" type="text" value="@Model.SystemEmailAddress" data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" data-val-regex="@RoCMS.Web.Contract.Resources.Strings.Validation_WrongEmail" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.EmailLogin, Strings.AdminCommonConfig_EmailLogin, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.EmailLogin, new {@class = "email-login form-control"})
+                            </div>
+                        </div>
+                        @*SMTP Pass*@
+                        <div class="form-group">
+                            <label class="control-label col-lg-4">@Strings.AdminCommonConfig_EmailPassword</label>
+                            <div class="col-lg-8">
+                                <div class="form-group text-center">
+                                    <a href="#" class="change-email-pass-link btn btn-warning">@Strings.AdminCommonConfig_ChangePassword</a>
+                                    <div class="change-pass" style="display: none">
+                                        <ul>
+                                            <li>
+                                                <span class="change-pass-captition">@Strings.AdminCommonConfig_NewPassword</span>
+                                                <input type="password" class="new-email-pass form-control"/>
+                                            </li>
+                                            <li>
+                                                <span class="change-pass-captition">@Strings.AdminCommonConfig_RepeatPassword</span>
+                                                <input type="password" class="repeat-email-pass form-control"/>
+                                            </li>
+                                        </ul>
+                                        <div class="form-group text-center">
+                                            <a class="save-email-password btn btn-success cent" title="@Strings.AdminCommonConfig_Save" href="#">@Strings.AdminCommonConfig_Save</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*SMTP Pass*@
+
+                        <div class="form-group">
+                            <label class="control-label col-lg-4" for="SystemEmailSenderName">@Strings.AdminCommonConfig_SystemEmailSenderName</label>
+                            <div class="col-lg-8">
+                                <div class="field-validation-valid" data-valmsg-for="SystemEmailSenderName" data-valmsg-replace="true"></div>
+                                <input class="system-email-sender-name form-control" id="SystemEmailSenderName" name="SystemEmailSenderName" type="text" value="@Model.SystemEmailSenderName" data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.OrderEmailAddress, Strings.AdminCommonConfig_OrderEmailAddress, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                @Html.TextBoxFor(x => x.OrderEmailAddress, new {@class = "order-email-address form-control"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.AutoEmailReplyEnabled, Strings.AdminCommonConfig_AutoEmailReplyEnabled, new {@class = "control-label col-lg-4"})
+                            <div class="col-lg-8">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(x => x.AutoEmailReplyEnabled, new {@class = "auto-email-replyenabled form-control"})
+                                    <label for="AutoEmailReplyEnabled"></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-bar-chart-o"></i>
+                    </div>
+                    <h5>Метрика</h5>
+                </header>
+
+                <div class="body collapse in" aria-expanded="true">
+                    <div class="form-horizontal">
+                        @* Метрика *@
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.YaMetrika, Strings.AdminCommonConfig_YaId, new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                <input class="ya-metrika-id form-control" data-val="true"
+                                       data-val-number="Значением поля YaMetrika должно быть число."
+                                       data-toggle="tooltip"
+                                       title="Номер счётчика Яндекс.Метрики"
+                                       id="YaMetrika" name="YaMetrika" type="text" value="@(Model.YaMetrika==0?"":Model.YaMetrika.ToString())">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.AnalyticsAuthKeyExpires, Strings.AdminCommonConfig_YaAuthKey, new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8" id="auth-container">
+
+                                <span class="token-expiration">@expiredStr</span>
+
+                                <button class="get-ya-auth-key btn btn-info"><i class="fa fa-key"></i> @Strings.AdminCommonConfig_GetYaMetrikaAuthKey</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box">
+                <header>
+                    <div class="icons">
+                        <i class="fa fa-cog"></i>
+                    </div>
+                    <h5>Прочие настройки</h5>
+                </header>
+
+                <div class="body collapse in" aria-expanded="true">
+                    <div class="form-horizontal">
+                        @* Метрика *@
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.YoutubeAPIKey, "YouTube API Key", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                <input class="youtube-api-key form-control"
+                                       
+                                       data-val-regex="Неверный формат" data-val-regex-pattern="^[a-zA-Z0-9 _-]+$"
+                                       data-val="true"
+                                       data-toggle="tooltip"
+                                       title="Ключ доступа к API YouTube"
+                                       id="YoutubeAPIKey" name="YoutubeAPIKey" type="text" value="@Model.YoutubeAPIKey">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </form>
+</div>
+       
+    <div class="form-group text-center">
+        <a class="save-settings btn btn-success cent" title="@Strings.AdminCommonConfig_Save" href="#"><i class="fa fa-save"></i> @Strings.AdminCommonConfig_Save</a>
+    </div>
+
+@Js("Content/admin/ro/settings/rocms.settings.js")
+
+@JsInline(@<script>
+        $(function () {
+            onSettingsLoaded();
+        })
+    </script>
+)

@@ -1,0 +1,46 @@
+﻿@using Resources
+@model RoCMS.Base.ForWeb.Models.EditorVM
+
+<div id="wysiwyg-container-@(Model.ElementId)" class="wysiwyg-container for-dialog" data-editor-id="@(Model.ElementId)">
+    <textarea name="content" class="@Model.ElementClass" id="@(Model.ElementId)">@(Model.Content ?? "")</textarea>
+    @if (Model.ShowCommonButtons)
+    {
+        @Html.Partial("Editor/_CommonButtons", Model.ElementId)
+    }
+    <button type="button" class="btn btn-info btn-xs toggle-ck" id="toggle-ck"></button>
+</div>
+
+
+@Js("Content/base/vendor/ckeditor")
+@Js("Content/admin/vendor/ace")
+@Js("Content/admin/ro/wysiwyg/rocms.wysiwyg.js")
+
+@JsInline(
+    @<script>
+        function initContentEditor() {
+
+            var defaultEditor = "@(Model.DefaultIsWYSIWYG?"CK":"ACE")";
+            var btnTxt = "@Strings.AdminWYSIWYG_EditWYSIWYG";
+            if (defaultEditor === "CK") {
+                createCKEditor('@Model.ElementId');
+                btnTxt = "@Strings.AdminWYSIWYG_EditHtml";
+            } else {
+                createACEEditor('@Model.ElementId', '@Model.ACEMode');
+            }
+            $("#wysiwyg-container-@(Model.ElementId) #toggle-ck").html('<i class="fa fa-html5"></i>&nbsp;' + btnTxt);
+            $("#wysiwyg-container-@(Model.ElementId) #toggle-ck").click(function () {
+                var e = CKEDITOR.instances['@Model.ElementId'];
+                if (e) {
+                    createACEEditor('@Model.ElementId', '@Model.ACEMode');
+                    $("#wysiwyg-container-@(Model.ElementId) #toggle-ck").html('<i class="fa fa-pencil"></i>&nbsp;@Strings.AdminWYSIWYG_EditWYSIWYG');
+                } else {
+                    var aceEditor = ace.edit("ace_@Model.ElementId");
+                    var content = aceEditor.getValue();
+                    $("#@Model.ElementId").val(content);
+                    createCKEditor('@Model.ElementId');
+                    $("#wysiwyg-container-@(Model.ElementId) #toggle-ck").html('<i class="fa fa-html5"></i>&nbsp;@Strings.AdminWYSIWYG_EditHtml');
+                }
+            });
+        };
+     </script>
+)

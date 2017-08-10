@@ -1,0 +1,316 @@
+﻿@using Resources
+@using System.Web.Optimization
+@using RoCMS.Base.Helpers
+@using RoCMS.Web.Contract.Services
+@using RoCMS.Web.Contract.Models
+@model IEnumerable<RoCMS.Web.Contract.Models.AlbumImageInfo>
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ViewBag.PageTitle = Strings.AdminConfigureAlbum_PageTitle;
+    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+    var rootUrl = settingsService.GetSettings<string>("RootUrl");
+    Album album = ViewBag.Album;
+}
+
+@*<script type="text/ecmascript">
+        var jQuery2 = jQuery.noConflict();
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js?cdv=1" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js?cdv=1" type="text/javascript"></script>
+    <script src="~/Content/base/vendor/jquery/jquery.ui.widget.js"></script>
+    @{
+        @Scripts.Render("~/Content/admin/fileUploader/jsbl")
+        @Styles.Render("~/Content/admin/fileUploader/cssbl")
+        ViewBag.FileUploaderIncluded = true;
+    }
+    <script type="text/ecmascript">
+        var jQuery171 = jQuery.noConflict();
+        var $ = jQuery2;
+    </script>*@
+
+
+@Js("Content/admin/vendor/FU/short")
+@Js("Content/admin/vendor/FU/ui")
+@Js("Content/admin/vendor/FU/cors")
+@Js("Content/admin/ro/album/rocms.album.edit.js")
+
+@Css("Content/admin/vendor/FU/jquery.fileupload-ui.css")
+
+@*IN ORDER TO USE MVC ACTIONS AS HANDLERS OF AJAX CALLS, USE THE FORM DECLARATION BELOW. (THE ONE COMMENTED OUT)
+    IT IS NOT ADVISED SINCE WHEN USING MVC CONTROLLER TO HANDLE REQUESTS ONE CAN'T CONTROL THE maxMessageLength OF THE POST REQUEST
+    THIS CASTS THE FUNCTIONALITY OF UPLOADING LARGE FILES USELESS, UNLESS YOU SUCRIFICE THE SECURITY AND ALLOW LARGE
+    POST MESSAGE SIZES SITE-WIDE.
+
+    IT IS BETTER TO USE HTTP HANDLER TO PROCESS UPLOAD REQUESTS UNTIL MVC FRAMEWORK PROVIDES WAYS TO SET maxMessageLength ON
+    PER ACTION BASIS *@
+
+@*<form id="fileupload" action="@Url.Action("UploadFiles")" method="POST" enctype="multipart/form-data">*@
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="control-label col-lg-1" for="albumName">@Strings.AdminAlbum_Title</label>
+        <div class="col-lg-5">
+            <input id="albumName" type="text" class="form-control" value="@album.Name" data-album-id="@ViewBag.AlbumId" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-lg-1" for="albumDescription">Описание</label>
+        <div class="col-lg-5">
+            <input id="albumDescription" type="text" class="form-control" value="@album.Description" />
+        </div>
+    </div>
+</div>
+<div class="row album-editor" data-album-id="@ViewBag.AlbumId">
+    <form id="fileupload_album" action="@(rootUrl + "/Upload/UploadHandler.ashx")" method="POST" enctype="multipart/form-data">
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="fileupload-buttonbar">
+            <div class="col-lg-12">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="fa fa-plus"></i>
+                    <span>@Strings.Gallery_AddFiles</span>
+                    <input type="file" name="files[]" multiple>
+                </span>
+                <button type="button" class="btn btn-success add-from-another">
+                    <i class="fa fa-plus"></i>
+                    <span>Добавить из другого альбома</span>
+                </button>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="fa fa-upload"></i>
+                    <span>@Strings.Gallery_StartUpload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="fa fa-ban"></i>
+                    <span>@Strings.Gallery_CancelUpload</span>
+                </button>
+                @if (!Request.IsLocal)
+                {
+                    <button type="button" class="btn btn-danger delete">
+                        <i class="fa fa-trash-o"></i>
+                        <span>@Strings.Gallery_Delete</span>
+                    </button>
+                    <input type="checkbox" class="toggle">
+                }
+            </div>
+
+            <div class="col-lg-12">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active fade">
+                    <div class="bar progress-bar progress-bar-success" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+        <!-- The loading indicator is shown during image processing -->
+        <div class="fileupload-loading"></div>
+        <br>
+        <!-- The table listing the files available for upload/download -->
+        <div class="files gallery">
+
+            @foreach (var img in Model)
+            {
+                <div class="template-download fade in row" data-image-id="@img.ImageId">
+                        <div class="delete float-right">
+                            <button class="btn btn-danger delete" data-type="POST" data-url="/api/album/@ViewBag.AlbumId/images/remove/@img.ImageId">
+                                <i class="fa fa-trash-o"></i>
+                                <span>@Strings.Gallery_Delete</span>
+                            </button>
+                        </div>
+                    <div class="col-lg-3 preview">
+                        <ul>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageId</strong>
+                                <a href="@Url.Action("Image", "Gallery", new { id = img.ImageId })" title="@img.ImageId" rel="gallery" download="@img.ImageId">@img.ImageId</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="@Url.Action("Image", "Gallery", new { id = img.ImageId })" title="@img.ImageId" rel="gallery">
+                                    <img style="max-width: 200px;" src="@Url.Action("Thumbnail", "Gallery", new { id = img.ImageId })">
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <div class="col-lg-5">
+                        <ul>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageTitle</strong>
+                                <input class="form-control image-title" type="text" value="@img.Title" style="min-width: 300px;" />
+                            </li>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageDescription</strong>
+                                <textarea class="form-control image-description">@img.Description</textarea>
+                            </li>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageDestinationUrl</strong>
+                                <input class="form-control image-destination-url" type="text" value="@img.DestinationUrl" style="min-width: 300px;" />
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2">
+                        <ul>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageUploadDate</strong>
+                                <span>@img.CreationDate</span>
+                            </li>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageSize</strong>
+                                <span>@(img.Size.HasValue ? ((img.Size.Value) / 1024).ToString("## Kb") : "?")</span>
+                            </li>
+                            <li>
+                                <a class="image-copy-btn btn btn-xs btn-info" data-clipboard-text="@img.ImageId" >@Strings.AdminGallery_CopyID</a>                                
+                            </li>
+                            <li>
+                                <a class="image-copy-btn btn btn-xs btn-info" data-clipboard-text="/Gallery/Thumbnail/@img.ImageId" >@Strings.AdminGallery_CopyThumbnailURL</a>
+                            </li>
+                            <li>
+                                <a class="image-copy-btn btn btn-xs btn-info" data-clipboard-text="/Gallery/Image/@img.ImageId" >@Strings.AdminGallery_CopyURL</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+            }
+        </div>
+    </form>
+
+    <div class="fixed-action-menu">
+        <a class="btn btn-default" href="/Admin/Albums">@Strings.EditAlbum_ReturnToAlbums</a>
+    </div>
+    
+</div>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-upload fade row">
+        <div class="float-right">
+
+            <div>
+                <div class="progress progress-striped active"><div class="bar progress-bar progress-bar-success" style="width:0%;"></div></div>
+            </div>
+            <div>
+                {% if (!o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="fa fa-upload"></i>
+                    <span>@Strings.Gallery_Upload</span>
+                </button>
+
+                {% } %}
+            </div>
+
+            <div>
+                <button class="btn btn-warning cancel">
+                    <i class="fa fa-ban"></i>
+                    <span>@Strings.Gallery_Cancel</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-3"><span class="preview"></span></div>
+        <div class="col-lg-2"><span>{%=file.name%}</span><br/><strong class="error text-danger"></strong></div>
+        <div class="col-lg-2"><span>{%=o.formatFileSize(file.size)%}</span></div>
+    </div>
+    {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <div class="template-download fade row {% if (file.error) { %}error{% } %}" data-image-id="{%=file.name%}">
+        <div class="delete float-right">
+                <button class="btn btn-danger delete" data-type="POST" data-url="{%=file.delete_url%}">
+                <i class="fa fa-trash-o"></i>
+                <span>@Strings.Gallery_Delete</span>
+            </button>
+                <input type="checkbox" name="delete" value="1">
+        </div>
+        {% if (file.error) { %}
+        <div class="col-lg-3"></div>
+        <div class="name col-lg-2"><span>{%=file.name%}</span></div>
+        <div class="size col-lg-2"><span>{%=o.formatFileSize(file.size)%}</span></div>
+        <div class="error"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</div>
+        {% } else { %}
+                        <div class="col-lg-3 preview">
+                        <ul>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageId</strong>
+                                <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}">{%=file.name%}</a>
+                            </li>
+                            <li>
+                                <a target="_blank" href="{%=file.url%}" title="{%=file.name%}" rel="gallery">
+                                    <img style="max-width: 200px;" src="{%=file.thumbnail_url%}"></a>        
+                            </li>
+                        </ul>
+                        
+                    </div>
+                    <div class="col-lg-5">
+                        <ul>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageTitle</strong>
+                                <input class="form-control image-title" type="text" value="{%=file.title%}" style="min-width: 300px;" />
+                            </li>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageDescription</strong>
+                                <textarea class="form-control image-description">{%=file.description%}</textarea>
+                            </li>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageDestinationUrl</strong>
+                                <input class="form-control image-destination-url" type="text" value="" style="min-width: 300px;" />
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2">
+                        <ul>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageUploadDate</strong>
+                                <span>@Strings.AdminGallery_JustUploaded</span>
+                            </li>
+                            <li>
+                                <strong>@Strings.AdminGallery_ImageSize</strong>
+                                <span>{%=file.size%} Kb</span>
+                            </li>
+                            <li>
+                                <a class="image-copy-btn btn btn-xs btn-info" data-clipboard-text="{%=file.name%}">@Strings.AdminGallery_CopyID</a>
+                            </li>
+                            <li>
+                                <a class="image-copy-btn btn btn-xs btn-info" data-clipboard-text="/Gallery/Thumbnail/{%=file.name%}">@Strings.AdminGallery_CopyThumbnailURL</a>
+                            </li>
+                            <li>
+                                <a class="image-copy-btn btn btn-xs btn-info" data-clipboard-text="/Gallery/Image/{%=file.name%}">@Strings.AdminGallery_CopyURL</a>
+                            </li>
+                        </ul>
+                    </div>
+    
+    
+        {% } %}
+    </div>
+    {% } %}
+</script>
+
+
+
+@JsInline(@<script type="text/javascript">
+
+    $(function () {
+        new Clipboard('.image-copy-btn');
+        albumEditorLoaded();
+
+        window.jQuery('#fileupload_album').fileupload({
+            xhrFields: { withCredentials: true },
+            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+            maxFileSize: 50000000,
+            resizeMaxWidth: 1920,
+            resizeMaxHeight: 1200
+        });
+
+        window.jQuery('#fileupload_album').fileupload(
+            'option',
+            'redirect',
+
+            'http://' + location.host + '/Content/admin/vendor/FU/cors/result.html?%s'
+
+        );
+    });
+
+    </script>
+)

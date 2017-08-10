@@ -1,0 +1,11 @@
+﻿@model string
+
+
+
+<div class="current-image-container">
+    <div>
+        <a class="nav-overlay image-nav-prev" data-href="@Url.Action("Image", "Gallery", new { id = (string)ViewBag.PrevId })" href="#"></a> 
+        <a class="nav-overlay image-nav-next" data-href="@Url.Action("Image", "Gallery", new { id = (string)ViewBag.NextId })" href="#"></a>
+        <img alt="" style="max-width: 600px" class="current-image" src="@Url.Action("Image", "Gallery", new {id = Model})"/>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@using RoCMS.Comments.Contract.ViewModels
+@model ICollection<CommentVM>
+
+@helper RenderThread(CommentVM thread, int nesting = 0)
+{
+    string classNesing = "nesting" + (nesting > 9 ? 9 : nesting);
+    <div class="comment-container @classNesing" id="@("comment" + thread.CommentId)" data-id="@thread.CommentId">
+
+        @if (thread.Deleted)
+        {
+            @DeletedCommentTemplate()
+        }
+        else
+        {
+            <div class="comment-body">
+                @Html.Raw(Html.Encode(thread.Text).Replace("\n", "\n<br/>"))
+            </div>
+
+            <div class="comment-footer">
+                @thread.Name · @thread.Email · @thread.Url ·  @thread.Author · @thread.CreationDate.AddHours(3) · <a href="#" class="btn-delete"><i class="fa fa-trash-o"></i></a>
+                ·
+                <span class="comment-moderate">
+                    @if (thread.Moderated)
+                    {
+                        @BtnHideTemplate()
+                    }
+                    else
+                    {
+                       @BtnShowTemplate()
+                    }
+                </span>
+                @if (thread.ParentCommentId.HasValue)
+                {
+                    <text>
+                        · <a href="@("#comment" + thread.ParentCommentId.Value)">↑</a>
+                    </text>
+                }
+
+            </div>
+        }
+    </div>
+    foreach (var reply in thread.Replies)
+    {
+        <div class="subthread">
+            @RenderThread(reply, nesting + 1)
+        </div>
+    }
+}
+
+<div class="comments">
+    @foreach (var thread in Model)
+    {
+        @RenderThread(thread)
+    }
+</div>
+
+@helper DeletedCommentTemplate()
+{
+    <div class="comment-footer">
+        Комментарий удалён
+    </div>
+}
+
+<script id="deleted-comment-template" type="text/x-custom-template">
+    @DeletedCommentTemplate()
+</script>
+
+@helper BtnHideTemplate()
+{
+    <a href="#" class="btn-moderate-hide">
+        <i class="fa fa-eye"></i>
+    </a>
+}
+
+<script id="btn-moderate-hide-template" type="text/x-custom-template">
+    @BtnHideTemplate()
+</script>
+
+@helper BtnShowTemplate()
+{
+    <a href="#" class="btn-moderate-show">
+        <i class="fa fa-eye-slash"></i>
+    </a>
+}
+
+<script id="btn-moderate-show-template" type="text/x-custom-template">
+    @BtnShowTemplate()
+</script>

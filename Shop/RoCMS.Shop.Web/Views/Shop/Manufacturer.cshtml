@@ -1,0 +1,19 @@
+﻿@using RoCMS.Base.ForWeb.Models
+@model RoCMS.Shop.Contract.Models.Manufacturer
+
+@{
+    ViewBag.Title = Model.Name;
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+    List<BreadCrumb> breadCrumbs = new List<BreadCrumb>();
+    breadCrumbs.Add(new BreadCrumb() { Title = "Производители", IsLast = false, Url = "/Page/Производители"  });
+    breadCrumbs.Add(new BreadCrumb() { Title = Model.Name, IsLast = true, Url = "#" });
+}
+<div>
+    @Html.Partial("_BreadCrumbs", breadCrumbs)
+</div>
+<h1>@Model.Name</h1>
+<div class="about-page">@Html.Raw(Model.Description)</div>

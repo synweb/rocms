@@ -1,0 +1,59 @@
+﻿@model string
+
+<!--noindex-->
+    <style>
+        .rocms_admin-widget {
+            display: block;
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid #efefef;
+            border-width: 1px 1px 1px 0;
+            border-radius: 2px;
+            z-index:9999;
+        }
+
+        .rocms_hr {
+            width: 100%;
+            margin: 10px 0;
+            height: 1px;
+            background: #c0c0c0;
+        }
+
+        .rocms_admin-widget .rocms_icon {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            text-align: center;
+        }
+
+            .rocms_admin-widget .rocms_icon img {
+                position: absolute;
+                max-width: 50px;
+                max-height: 50px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+    </style>
+
+    <div class="rocms_admin-widget">
+        <div class="rocms_icon">
+            <a href="@Url.Action("Index", "Admin")">
+                <img src="/Content/base/ro/img/rocms-emblem.png" />
+            </a>
+        </div>
+        @if (!string.IsNullOrEmpty(Model))
+        {
+            <div class="rocms_hr"></div>
+            <div class="rocms_icon">
+                <a href="@Model">
+                    <img src="/Content/base/ro/img/edit-img.png" title="Редактировать" />
+                </a>
+            </div>
+        }
+    </div>
+<!--/noindex-->

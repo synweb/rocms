@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>RoCMS.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{852c8177-33fb-4f10-9779-d3f106e2604c}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql110DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>RoCMS.Database</RootNamespace>
+    <AssemblyName>RoCMS.Database</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <GenerateCreateScript>True</GenerateCreateScript>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <!-- VS10 without SP1 will not have VisualStudioVersion set, so do that here -->
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <!-- Default to the v10.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Functions\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="dbo\FullText Catalogs" />
+    <Folder Include="dbo\Types" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\UserCmsResource.sql" />
+    <Build Include="dbo\Tables\CmsResource.sql" />
+    <Build Include="dbo\Tables\Slide.sql" />
+    <Build Include="dbo\Tables\Block.sql" />
+    <Build Include="dbo\Tables\Setting.sql" />
+    <Build Include="dbo\Tables\User.sql" />
+    <Build Include="dbo\Tables\Review.sql" />
+    <Build Include="dbo\Tables\Page.sql" />
+    <Build Include="dbo\Tables\Menu.sql" />
+    <Build Include="dbo\Tables\MenuItem.sql" />
+    <Build Include="dbo\Tables\Album.sql" />
+    <Build Include="dbo\Tables\ImageInAlbum.sql" />
+    <Build Include="dbo\Tables\Image.sql" />
+    <Build Include="dbo\Tables\Slider.sql" />
+    <Build Include="dbo\Functions\f_BinaryToBase64.sql" />
+    <Build Include="dbo\Tables\Video.sql" />
+    <Build Include="dbo\Tables\VideoAlbum.sql" />
+    <Build Include="dbo\Tables\Country.sql" />
+    <Build Include="dbo\FullText Catalogs\Search_FullTextCatalog.sql" />
+    <Build Include="dbo\Tables\PasswordTicket.sql" />
+    <Build Include="dbo\Tables\SearchItem.sql" />
+    <Build Include="dbo\Stored Procedures\SearchItem_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\SearchItem_Upsert.sql" />
+    <Build Include="dbo\Stored Procedures\SearchItem_Find.sql" />
+    <Build Include="dbo\Types\String_Table.sql" />
+    <Build Include="dbo\Types\Int_String_Table.sql" />
+    <Build Include="dbo\Types\Int_Table.sql" />
+    <Build Include="dbo\Stored Procedures\Block_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Block_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Block_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Block_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Block_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Video_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Video_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Video_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Video_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Video_Update.sql" />
+    <Build Include="dbo\Stored Procedures\VideoAlbum_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\VideoAlbum_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\VideoAlbum_Select.sql" />
+    <Build Include="dbo\Stored Procedures\VideoAlbum_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\VideoAlbum_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Video_SelectByAlbum.sql" />
+    <Build Include="dbo\Stored Procedures\Review_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Review_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Review_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Review_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Review_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Slider_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Slider_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Slider_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Slider_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Slider_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Slide_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Slide_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Slide_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Slide_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Slide_Update.sql" />
+    <Build Include="dbo\Tables\FormRequest.sql" />
+    <Build Include="dbo\Stored Procedures\FormRequest_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\FormRequest_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\FormRequest_Select.sql" />
+    <Build Include="dbo\Stored Procedures\FormRequest_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\FormRequest_Update.sql" />
+    <Build Include="dbo\Tables\Mail.sql" />
+    <Build Include="dbo\Stored Procedures\Mail_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Mail_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Mail_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Mail_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Mail_Update.sql" />
+    <Build Include="dbo\Tables\InterfaceString.sql" />
+    <Build Include="dbo\Stored Procedures\InterfaceString_Select.sql" />
+    <Build Include="dbo\Stored Procedures\InterfaceString_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\InterfaceString_Upsert.sql" />
+    <Build Include="dbo\Stored Procedures\InterfaceString_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Page_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Page_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Page_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Page_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Page_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Page_SelectByRelativeUrl.sql" />
+    <Build Include="dbo\Stored Procedures\Page_SelectChildren.sql" />
+    <Build Include="dbo\Stored Procedures\Album_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Album_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Album_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Album_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Album_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Album_SelectUserAlbums.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_SelectByAlbum.sql" />
+    <Build Include="dbo\Stored Procedures\Image_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Image_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Image_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Image_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Image_CheckIfExists.sql" />
+    <Build Include="dbo\Stored Procedures\Image_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_Update.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_SelectCountByAlbum.sql" />
+    <Build Include="dbo\Stored Procedures\User_Select.sql" />
+    <Build Include="dbo\Stored Procedures\User_Authenticate.sql" />
+    <Build Include="dbo\Stored Procedures\User_UpdatePassword.sql" />
+    <Build Include="dbo\Stored Procedures\CmsResource_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\CmsResource_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\CmsResource_Select.sql" />
+    <Build Include="dbo\Stored Procedures\CmsResource_Update.sql" />
+    <Build Include="dbo\Stored Procedures\User_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\User_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\CmsResource_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\User_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\User_SelectByUsername.sql" />
+    <Build Include="dbo\Stored Procedures\User_SelectByEmail.sql" />
+    <Build Include="dbo\Stored Procedures\UserCmsResource_CheckIfAuthorizedForResource.sql" />
+    <Build Include="dbo\Stored Procedures\CmsResource_SelectByName.sql" />
+    <Build Include="dbo\Stored Procedures\UserCmsResource_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\UserCmsResource_SelectByUser.sql" />
+    <Build Include="dbo\Stored Procedures\UserCmsResource_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\User_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Menu_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Menu_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Menu_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Menu_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Menu_Select.sql" />
+    <Build Include="dbo\Stored Procedures\MenuItem_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\MenuItem_Update.sql" />
+    <Build Include="dbo\Stored Procedures\MenuItem_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\MenuItem_Select.sql" />
+    <Build Include="dbo\Stored Procedures\MenuItem_SelectChildren.sql" />
+    <Build Include="dbo\Stored Procedures\PasswordTicket_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\PasswordTicket_SelectAvailableByToken.sql" />
+    <Build Include="dbo\Stored Procedures\PasswordTicket_UseTicket.sql" />
+    <Build Include="dbo\Stored Procedures\Setting_GetValue.sql" />
+    <Build Include="dbo\Stored Procedures\Setting_Upsert.sql" />
+    <Build Include="dbo\Stored Procedures\Setting_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Setting_Select.sql" />
+    <Build Include="dbo\Stored Procedures\ImageInAlbum_SelectByImage.sql" />
+    <Build Include="dbo\Tables\OrderForm.sql" />
+    <Build Include="dbo\Stored Procedures\OrderForm_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\OrderForm_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\OrderForm_Update.sql" />
+    <Build Include="dbo\Stored Procedures\OrderForm_Select.sql" />
+    <Build Include="dbo\Stored Procedures\OrderForm_SelectOne.sql" />
+    <Build Include="dbo\Tables\OrderFormField.sql" />
+    <Build Include="dbo\Stored Procedures\OrderFormField_Update.sql" />
+    <Build Include="dbo\Stored Procedures\OrderFormField_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\OrderFormField_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\OrderFormField_SelectByForm.sql" />
+    <Build Include="dbo\Stored Procedures\OrderFormField_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Country_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Country_Select.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="localdb.publish.xml" />
+    <None Include="ExportImages.sql" />
+    <None Include="test.artplay.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="InitialData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="RoCMS.Database.refactorlog" />
+  </ItemGroup>
+</Project>

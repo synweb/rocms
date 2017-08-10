@@ -1,0 +1,122 @@
+﻿@using RoCMS.SupportTickets.Contract
+@using RoCMS.Web.Contract.Services
+@{
+    var principal = DependencyResolver.Current.GetService<IPrincipalResolver>();
+    int userId = principal.GetUserId();
+}
+<div class="support-tickets">
+    <h2>Новое обращение</h2>
+    <div class="form-horizontal" data-bind="with: newTicket">
+        <div class="form-group">
+            <label class="control-label col-sm-4">Тема</label>
+            <div class="col-sm-8">
+                <input class="form-control" data-bind="value: subject"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4">Тип обращения</label>
+            <div class="col-sm-8">
+                <select class="form-control" data-bind="value:ticketType, options: $root.ticketTypes, optionsText: ticketTypeDescription"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-4">Сообщение</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" data-bind="value: text"></textarea>
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <button data-bind="click: $root.createTicket" class="btn btn-success">Создать</button>
+        </div>
+    </div>
+
+    <h2>Список обращений</h2>
+
+    <div class="tickets" data-bind="foreach: tickets">
+        <div class="ticket">
+            <div class="row" data-bind="css: { 'font-bold': hasUnreadMessages}, click: $root.showTicket">
+                <div class="col-sm-1 col-xs-4">
+
+                    <div>
+                        <span data-bind="text: ticketId"></span>
+                    </div>
+
+                </div>
+                @* DateFormat подставляет часовой пояс! *@
+                <div class="col-xs-4 col-sm-2">
+
+                    <div>
+                        <span style="white-space: nowrap" data-bind="text: moment(creationDate()).format('DD.MM.YYYY HH:mm') @* new Date(creationDate).format('dd.mm.yyyy HH:MM')*@"></span>
+                    </div>
+
+                </div>
+                <div class="col-xs-4 col-sm-2">
+
+                    <div>
+                        <span data-bind="text: ticketTypeDescription(ticketType())"></span>
+                    </div>
+
+                </div>
+                <div class="col-xs-8 col-sm-5">
+
+                    <div>
+                        <span data-bind="text: subject"></span>
+                    </div>
+
+                </div>
+                <div class="col-sm-2 col-xs-4">
+
+                    <div>
+                        <i class="fa fa-check" data-bind="visible: resolved"></i>
+                        <span data-bind="visible: resolved">&nbsp;Решено</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div data-bind="attr: {class: collapsed() === true ? 'collapsed' : 'expanded'}">
+            <div class="ticket-details" data-bind="with: ticket">
+
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Сообщение</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control ticket-answer-field" data-bind="value: reply"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group text-center">
+                        <button data-bind="click: $root.sendMessage" class="btn btn-success"><i class="fa fa-check"></i>&nbsp;Отправить</button>
+                        <button type="button" class="btn btn-info ticket-resolved" data-bind="click: $root.resolveTicket, visible: resolved() == false"><i class="fa fa-legal"></i>&nbsp;Проблема решена</button>
+                    </div>
+                </div>
+
+
+                <div class="ticket-messages" data-bind="foreach: messages">
+
+                    <div data-bind="attr: {class: authorId() == @userId ? 'outgoing' : 'incoming'}">
+                        <div class="inner-message">
+                            <strong style="float: right;" data-bind="text: moment(creationDate()).format('DD.MM.YYYY HH:mm')"></strong>
+                            <em data-bind="attr: {class: authorId() == @userId ? 'fa fa-angle-right' : 'fa fa-angle-left'}"></em>
+                            <label class="control-label" data-bind="text: authorId() == @userId ? 'Вы' : 'Техподдержка'"></label>
+                            <p data-bind="text: text"></p>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@Css("/bin/Content/client/supportTickets")
+@Js("/bin/Content/client/supportTickets")
+
+@JsInline(@<script>
+    $(function () {
+        onSupportTicketsLoaded();
+    });
+</script>)

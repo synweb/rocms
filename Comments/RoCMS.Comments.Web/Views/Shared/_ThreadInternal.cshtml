@@ -1,0 +1,85 @@
+﻿@using RoCMS.Comments.Contract.ViewModels
+@using RoCMS.Web.Contract.Extensions
+@model ICollection<CommentVM>
+
+@{
+    ICollection<CommentVM> threads = Model;
+}
+
+@helper RenderThread(CommentVM thread, int nesting = 0)
+{
+string classNesing = "nesting" + (nesting > 9 ? 9 : nesting);
+    <li class="comment depth-@nesting comment-container @classNesing" id="@("comment" + thread.CommentId)" data-id="@thread.CommentId">
+        <div class="comment-body">
+            @if (!thread.Moderated)
+            {
+                <div class="hidden-comment-body">
+                    Прилетело НЛО и украло комментарий
+                </div>
+            }
+            else if (!thread.Deleted)
+            {
+
+
+                <div class="comment_details">
+
+
+                    @{
+                        var url = String.IsNullOrWhiteSpace(thread.Url) ? "#" : thread.Url;
+                    }
+                    @if (!String.IsNullOrWhiteSpace(thread.Url))
+                    {
+                        <h3><a href="@url" rel="nofollow">@thread.Name</a></h3>
+                    }
+                    else
+                    {
+                        <h3>@thread.Name</h3>
+                    }
+
+
+
+                    <h4>@thread.CreationDate.ApplySiteTimezone().ToShortDateString()</h4>
+                    <p>
+                        @Html.Raw(Html.Encode(thread.Text).Replace("\n", "\n<br/>"))
+                    </p>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="comment-reply-link comment-reply reply" href="#">Ответить</a>
+                    }
+                    @if (thread.ParentCommentId.HasValue)
+                    {
+                        <text>
+                            · <a href="@("#comment" + thread.ParentCommentId.Value)">↑</a>
+                        </text>
+                    }
+
+                </div>
+
+
+                        }
+                        else
+                        {
+                            <div class="deleted-comment-body">
+                                Комментарий удалён
+                            </div>
+                        }
+        </div>
+        <ul class="subthread children">
+            @foreach (var reply in thread.Replies)
+            {
+
+                @RenderThread(reply, nesting + 1)
+
+            }
+        </ul>
+    </li>
+
+}
+
+<ul class="commentlist coments">
+    @foreach (var thread in threads)
+    {
+        @RenderThread(thread)
+    }
+</ul>
+

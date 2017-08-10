@@ -1,0 +1,89 @@
+﻿@using Resources
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+@Js("/bin/Content/admin/shop")
+
+<div>
+
+    <h1>@ShopStrings.YmlExport_Header</h1>
+
+    <form class="form-horizontal" data-bind="with: settings">
+        <div class="form-group">
+            <label class="control-label col-lg-4">Название интернет-магазина</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: siteName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Описание компании</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: siteDescription">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">URL</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: siteUrl">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Ставка за клик, у.е.</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: clickRate">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Стоимость доставки курьером, руб</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: deliveryCost">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Возможен самовывоз</label>
+            <div class="col-lg-8">
+                <input type="checkbox" class="form-control" data-bind="checked: pickup">
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-success" title="@ShopStrings.Shop_GenerateYmlFile" data-bind="click: $root.generateFile"> @ShopStrings.Shop_GenerateYmlFile</a>
+        </div>
+        <div class="alert alert-warning" style="font-size: 16px; font-weight: bold; text-align:center;">
+            <span>
+                Процесс генерации файла может занимать много времени и будет завершен автоматически в фоновом режиме. <br />
+                Чтобы проверить статус - обновите страницу (F5).<br />
+                Яндекс-Маркет автоматически загрузит изменения из файла в течение нескольких дней.<br />
+                Файл доступен по ссылке <a href="/api/shop/export/file/yml">ваш_сайт/api/shop/export/file/yml</a>
+            </span>
+        </div>
+    </form>
+    <h3>@ShopStrings.YmlExport_History</h3>
+    <table class="table">
+        <tr>
+            <th>@ShopStrings.YmlExport_History_StartDate</th>
+            <th>@ShopStrings.YmlExport_History_EndDate</th>
+            <th>@ShopStrings.YmlExport_History_Status</th>
+            <th>@ShopStrings.YmlExport_History_ErrorCode</th>
+        </tr>
+        <tbody data-bind="template: { name: 'export-task-item', foreach: exportTasks }"></tbody>
+    </table>
+
+    <script type="text/html" id="export-task-item">
+        <tr>
+            <td data-bind="text: startDate"></td>
+            <td data-bind="text: endDate"></td>
+            <td data-bind="text: status"></td>
+            <td data-bind="text: errorCode"></td>
+        </tr>
+    </script>
+
+    @JsInline(@<script>
+        $(function () {
+            ymlExportLoaded();
+        });
+    </script>)
+</div>

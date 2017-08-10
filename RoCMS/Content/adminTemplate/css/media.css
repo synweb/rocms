@@ -1,0 +1,77 @@
+﻿/*
+@reference style.css
+*/
+@media (min-width: 768px) {
+    .menu-hidden .main-menu {
+        width: 60px;
+        overflow: visible;
+    }
+
+        .menu-hidden .main-menu .in {
+            display: none;
+        }
+
+        .menu-hidden .main-menu li {
+            position: relative;
+        }
+
+            .menu-hidden .main-menu li a span {
+                display: none;
+            }
+
+        .menu-hidden .main-menu #menu > li:hover > a {
+            background: #465086;
+            color: #fff;
+        }
+
+        .menu-hidden .main-menu #menu > li > a span {
+            margin-left: 60px;
+        }
+
+        .menu-hidden .main-menu #menu > li:hover {
+            background: #f5f7fa;
+            width: 250px;
+        }
+
+        .menu-hidden .main-menu li:hover ul {
+            display: block;
+            position: absolute;
+            width: 250px;
+        }
+
+            .menu-hidden .main-menu li:hover ul a {
+                background: #e6e9ed;
+                color: #428bca;
+            }
+
+        .menu-hidden .main-menu li:hover a span {
+            display: inline-block;
+            position: absolute;
+        }
+
+            .menu-hidden .main-menu li:hover a span.pull-right {
+                display: none;
+            }
+
+    .menu-hidden .main-content {
+        margin-left: 80px;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .main-menu{
+        margin-left: -260px;
+        width:210px;
+            border-right: 1px solid #ddd;
+    }
+    
+    .main-content{
+        margin-left: 20px;
+        
+    }
+
+    .menu-hidden .main-menu {
+        margin-left:0;
+    }
+}

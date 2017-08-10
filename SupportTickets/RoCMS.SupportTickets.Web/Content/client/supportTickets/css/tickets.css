@@ -1,0 +1,83 @@
+﻿.support-tickets .collapsed{
+    display: none;
+}
+
+.support-tickets .expanded{
+    display: initial;
+}
+
+.ticket-details {
+    border-bottom: 1px solid;
+    padding: 0 15px;
+}
+
+.ticket {
+    padding: 5px 20px;
+    border-bottom: 1px solid #000;
+    background: #fff;
+}
+.ticket:first-child{
+    border-top: 1px solid #000;
+}
+
+.ticket:hover {
+    background: #00bff3;
+    cursor: pointer;
+}
+
+.tickets {
+    background: #fff;
+    
+    
+}
+
+.tickets span {
+    color: #000;
+}
+
+.tickets span:hover {
+    text-decoration: none;
+}
+
+.ticket-answer-field {
+    width: 70%;
+    resize: none;
+    margin: 10px 0;
+    display: block;
+    height: 130px;
+}
+
+.inner-message {
+    width: 70%;
+    display: inline-block;
+    border-radius: 4px;
+    margin: 5px 0;
+    padding: 5px;
+}
+
+.ticket-messages {
+    margin-top: 20px;
+}
+
+    .ticket-messages .incoming > div {
+        background-color: rgb(218, 243, 220);
+        text-align: left;
+    
+    }
+
+    .ticket-messages .outgoing {
+    text-align: right;
+    }
+
+    .ticket-messages .outgoing > div {
+        background-color: rgb(245, 224, 224);
+        text-align: left;
+    }
+
+.ticket-subject {
+    font-size: 20px;
+}
+
+.ticket-resolved {
+    display: block;
+}

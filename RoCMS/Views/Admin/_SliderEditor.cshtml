@@ -1,0 +1,58 @@
+﻿@using System.Web.Optimization
+@using Resources
+@model RoCMS.Web.Contract.Models.Slider
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminConfigureSlider_PageTitle + " '" + Model.Name + "'"; ;
+}
+
+   
+
+    <a class="btn btn-success" data-bind="click: createItem"><i class="fa fa-plus"></i>&nbsp;@Strings.AdminSlide_Create</a>
+
+<div class="row" data-bind="template: { name: 'slide-list-item-template', foreach: slides }">
+</div>
+
+<script type="text/x-jquery-tmpl" id="slide-list-item-template">
+    <div class="slideItem col-xs-4">
+        <div class="box">
+            <header style="white-space: nowrap;">
+                <div class="toolbar">
+                    <a data-bind="click: edit, clickBubble: false" class="btn btn-xs btn-warning" onclick="true"><i class="fa fa-pencil"></i></a>
+                    <a data-bind="click: function() { remove($data, $parent) }, clickBubble: false" class="btn btn-xs btn-danger" onclick="true"><i class="fa fa-trash-o"></i></a>
+                </div>
+                <h5 data-bind="text: title"></h5>
+            </header>
+            <div class="body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-xs-12" style="text-align:center;overflow: hidden">
+                            <img alt="Изображение" data-bind="thumbnailSrc: imageId" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
+
+<div style="text-align:right" >
+    <a style="text-align:right" href="/Admin/Sliders">@Strings.EditSlider_ReturnToSliders</a>
+</div>
+
+@Js("Content/admin/ro/js/rocms.interface.strings.js")
+@Js("Content/admin/ro/js/rocms.slider.js")
+@Js("Content/admin/vendor/FU/short")
+
+@JsInline(@<script type="text/javascript">
+    $(function() {
+        onSliderEditorLoad({
+            sliderId: @(Model.SliderId),
+            name: '@(Model.Name)'
+        });
+    });
+</script>)

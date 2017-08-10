@@ -1,0 +1,243 @@
+﻿@using System.Activities.Statements
+@using System.Web.Optimization
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.Helpers
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Services
+@using RoCMS.Web.Contract.Services
+@model RoCMS.News.Contract.Models.NewsItem
+@{
+    var blogService = DependencyResolver.Current.GetService<IBlogService>();
+    var blog = blogService.GetBlog(Model.BlogId);
+
+    ViewBag.Header = ViewBag.Title = "Пост в блоге";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+    string emptyImg = Url.Content("~/Content/admin/ro/img/no-image.png");
+    string imgSrc;
+    if (Model != null && !String.IsNullOrEmpty(Model.ImageId))
+    {
+        imgSrc = Url.Action("Thumbnail", "Gallery", new { id = Model.ImageId });
+    }
+    else
+    {
+        imgSrc = emptyImg;
+    }
+    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+    var rootUrl = settingsService.GetSettings().RootUrl;
+
+
+    bool disabled = Model.Categories.Any();
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+    //var sideBar = blockService.GetBlock(9);
+}
+
+<form id="fileupload" method="POST" action="@(rootUrl + "/Upload/UploadHandler.ashx")" enctype="multipart/form-data">
+    <input type="file" name="files[]" style="display: none">
+</form>
+
+
+<div class="row">
+    <div class="col-md-8">
+        <form class="post-editor">
+            <input type="hidden" value="@Model.NewsId" name="newsId" />
+            <input type="hidden" value="@Model.ImageId" name="imageId" />
+            <input type="hidden" value="" name="fileData" />
+            <ul>
+                <li>
+                    <label for="Title">Заголовок</label>
+                </li>
+                <li>
+                    <input @(disabled ? "disabled=disabled" : "") type="text" name="title" id="Title" value="@Model.Title" data-val="true" data-val-required="Поле обязательно для заполнения" />
+                </li>
+                <li>
+                    <label for="Description">Описание</label>
+                </li>
+                <li>
+                    <textarea @(disabled ? "disabled=disabled" : "") data-val="true" data-val-required="Поле обязательно для заполнения" id="Description" name="description" rows="3">@Model.Description</textarea>
+                </li>
+                <li>
+                    <textarea @(disabled ? "disabled=disabled" : "") data-val="true" data-val-required="Поле обязательно для заполнения" id="textarea_id" name="text">@Model.Text</textarea>
+                </li>
+                <li>
+                    <label for="ImageId">Изображение</label>
+                </li>
+                <li>
+                    @{
+                        bool hasImage = !string.IsNullOrEmpty(Model.ImageId);
+                        string imageId = Model.ImageId;
+                    }
+                    <div class="post-img-container">
+                        <img class="news-img pointer img-responsive" src="@imgSrc" style="@(hasImage ? "" : "display: none")" />
+                    </div>
+                    <input @(disabled ? "disabled=disabled" : "") id="fileupload" type="file" name="files[]" data-url="@(rootUrl)/Upload/UploadHandler.ashx" style="display: none;">
+                    @if (!disabled)
+                    {
+                        <a href="#" class="upload-img" style="@(hasImage ? "display:none" : "")">Загрузить</a>
+                        <a href="#" class="removeNewsImage" style="@(hasImage ? "" : "display:none")">Убрать картинку</a>
+                    }
+                </li>
+            </ul>
+            @if (!disabled)
+            {
+                <input @(disabled ? "disabled=disabled" : "") type="submit" value="Опубликовать" />
+            }
+        </form>
+    </div>
+    <div class="col-md-4">
+        <aside>
+            <div class="right_sidebar">
+                <div class="all_right_widgets">
+                    <div class="tools">
+                        <ul>
+                            @if (!String.IsNullOrEmpty(Model.RelativeUrl))
+                            {
+                                <li>
+                                    <a href="@Url.RouteUrl("UserBlogItem", new {blogUrl = blog.RelativeUrl, newsUrl = Model.RelativeUrl})">
+                                        <em class="fa fa-link"></em>Перейти к записи
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.NewsId > 0 && !disabled)
+                            {
+                                <li>
+                                    <a href="#" data-news-id="@Model.NewsId" class="delete-post">
+                                        <em class="fa fa-trash-o"></em>Удалить запись
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    @if (Model.Categories.Any())
+                    {
+                        <div class="cats">
+                            <h3>Администрация добавила ваш пост в рубрики:</h3>
+                            <ul>
+                                @{
+                                    var categories = ViewBag.Categories as ICollection<Category>;
+                                }
+
+                                @foreach (var cat in Model.Categories)
+                                {
+                                    var category = categories.SingleOrDefault(x => x.CategoryId == cat.ID);
+                                    if (category == null)
+                                    {
+                                        continue;
+                                    }
+                                    <li>
+                                        <a href="@Url.RouteUrl("NewsCategoryItem", new {relativeUrl = category.CanonicalUrl})"><em class="fa fa-angle-right"></em>@cat.Name</a>
+                                    </li>
+                                }
+                            </ul>
+
+                            <p class="disclaimer">Если вы хотите отредактировать или удалить этот пост - свяжитесь с администрацией.</p>
+                        </div>
+                    }
+                    <hr/>
+                    @*@Html.Raw(ContentRenderHelper.RenderContent(sideBar.Content))*@
+
+
+
+                </div>
+            </div>
+        </aside>
+
+    </div>
+</div>
+
+
+
+@Scripts.Render("~/Content/base/vendor/wysiwygbl")
+@Scripts.Render("~/Content/admin/fileUploaderShort/jsbl")
+
+<script>
+    @if (!disabled)
+    {
+        <text>
+    var CKEDITOR_BASEPATH = '@Url.Content("~/Content/base/vendor/ckeditor/")';
+    CKEDITOR.tools.enableHtml5Elements(document);
+    CKEDITOR.config.allowedContent = true;
+    CKEDITOR.replace('textarea_id', {
+        toolbar: [
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat'] },
+            { name: 'lists', items: ['NumberedList', 'BulletedList'] },
+            { name: 'links', items: ['Link', 'Unlink'] },
+        ]
+    });
+    CKEDITOR.config.removePlugins = 'elementspath';
+    </text>
+    }
+    $(function () {
+
+        clientBlogItemEditorLoaded();
+
+
+
+        $(".upload-img").click(function () {
+            $("#fileupload").click();
+            return false;
+        });
+
+
+        $(".removeNewsImage").click(function () {
+            $("input[name=imageId]").val('');
+            $(".removeNewsImage").hide();
+            $(".upload-img").show();
+            $(".post-img-container").html('');
+            $("input[name=fileData]").removeData();
+            $("#fileupload").val('');
+            return false;
+        });
+
+
+        $('#fileupload').fileupload({
+            dataType: 'json',
+            disableImageResize: /Android(?!.*Chrome)|Opera/
+                .test(window.navigator.userAgent),
+            previewMaxWidth: 300,
+            previewMaxHeight: 300,
+            //previewCrop: true,
+            processdone: function (e, data) {
+                $("input[name=fileData]").data(data);
+                $(".upload-img").hide();
+                $(".removeNewsImage").show();
+            },
+            processalways: function (e, data) {
+                $("input[name=fileData]").removeData();
+                $(".post-img-container").html("");
+                var index = data.index,
+                    file = data.files[index];
+                if (file.preview) {
+                    $(".post-img-container").append(file.preview);
+                }
+            },
+            //processfail: function (e, data) {
+            //    $('<span/>').text("Неверный формат файла").appendTo($('.img-container'));
+            //},
+            done: function (e, data) {
+                $(data.result).each(function () {
+
+                    if (this.error) {
+                        smartAlert(this.error);
+                    }
+                    else {
+                        if (data.result && data.result.files && data.result.files[0]) {
+                            var imageId = data.result.files[0].name;
+                            postJSON('/api/useralbum/' + imageId + '/add');
+                            $(".news-img").attr("src", '/Gallery/Thumbnail/' + imageId);
+                            $("input[name=imageId]").val(imageId);
+                            $(".removeNewsImage").show();
+                        }
+                    }
+
+                });
+            },
+            acceptFileTypes: /(\.|\/)(jpg|png|gif|jpeg)$/i
+        });
+
+    });
+</script>

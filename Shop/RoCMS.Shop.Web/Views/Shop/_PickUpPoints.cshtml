@@ -1,0 +1,17 @@
+﻿@using RoCMS.Shop.Contract.Services
+@model string
+           
+@{
+    var shopService = DependencyResolver.Current.GetService<IShopPickupPointService>();
+    var pickUpPoints = shopService.GetPickupPoints().Where(x => x.City == Model).ToArray();
+}
+
+@if (pickUpPoints.Any())
+{
+    <ul>
+        @foreach (var point in pickUpPoints)
+        {
+            <li>@point.Title</li>
+        }
+    </ul>
+}

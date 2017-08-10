@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.PageTitle = "Поддержка";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+<h2>Список тикетов</h2>
+
+<table class="table table-striped tickets">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Тема</th>
+            <th>Решено</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: tickets">
+
+        <tr data-bind="css: { 'font-bold': hasUnreadMessages}">
+            <td>
+                <a data-bind="attr:{href: '/TicketsEditor/Ticket/'+ticketId}">
+                    <div>
+                        <span data-bind="text: ticketId"></span>
+                    </div>
+                </a>
+            </td>
+            @* DateFormat подставляет часовой пояс! *@
+            <td>
+                <a data-bind="attr:{href: '/TicketsEditor/Ticket/'+ticketId}">
+                    <div>
+                        <span style="white-space: nowrap" data-bind="text: new Date(creationDate).format('dd.mm.yyyy HH:MM')"></span>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <a data-bind="attr:{href: '/TicketsEditor/Ticket/'+ticketId}">
+                    <div>
+                        <span data-bind="text: ticketTypeDescription(ticketType)"></span>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <a data-bind="attr:{href: '/TicketsEditor/Ticket/'+ticketId}">
+                    <div>
+                        <span data-bind="text: subject"></span>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <a data-bind="attr:{href: '/TicketsEditor/Ticket/'+ticketId}">
+                    <div>
+                        <i class="fa fa-check" data-bind="visible: resolved"></i>
+                    </div>
+                </a>
+            </td>
+            <td>
+                <button class="btn btn-danger" data-bind="click: function(){ $root.removeTicket($data) }, clickBubble: false">
+                    <i class="fa fa-trash-o"></i>&nbsp;Удалить
+                </button>
+            </td>
+        </tr>
+
+
+
+
+    </tbody>
+</table>
+
+@Css("/bin/Content/admin/supportTickets")
+@Js("/bin/Content/admin/supportTickets")
+
+@JsInline(@<script>
+    $(function () {
+        onSupportTicketsLoaded();
+    });
+</script>)

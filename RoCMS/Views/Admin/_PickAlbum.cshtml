@@ -1,0 +1,11 @@
+﻿@using Resources
+@model ICollection<RoCMS.Web.Contract.Models.Album>
+
+<ul class="album-pick-list">
+    @foreach (var val in Model)
+    {
+        <li class="album-pick-element">
+            <a class="picking-album" data-id="@val.AlbumId" href="@Url.Action("ConfigureAlbum","Admin", new{id = val.AlbumId})" title="@Strings.AdminPickAlbums_OpenInNewWindowToEdit">@val.Name</a>
+        </li>
+    }
+</ul>

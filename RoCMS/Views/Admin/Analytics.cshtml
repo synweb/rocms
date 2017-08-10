@@ -1,0 +1,39 @@
+﻿@using System.Web.Optimization
+@using Resources
+
+@{
+    ViewBag.PageTitle = Strings.AdminAnalytics_PageTitle;
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+
+<div class="choose-stat-period">
+
+    <button class="analytics-daterange" id="today">@Strings.AdminAnalytics_Today</button>
+    <button class="analytics-daterange" id="yesterday">@Strings.AdminAnalytics_Yesterday</button>
+    <button class="analytics-daterange" id="week">@Strings.AdminAnalytics_Week</button>
+    <button class="analytics-daterange" id="month">@Strings.AdminAnalytics_Month</button>
+    <button class="analytics-daterange" id="quarter">@Strings.AdminAnalytics_Quarter</button>
+    @*<button class="analytics-daterange" id="year">@Strings.AdminAnalytics_Year</button>*@
+    <button class="analytics-daterange" id="customRange">@Strings.AdminAnalytics_CustomRange</button>
+
+</div>
+<div class="traffic-summary-container">
+    <div id="placeholder" class="demo-placeholder"></div>
+    
+</div>
+<div class="sources-summary-container">
+    <div id="sources_placeholder" class="demo-placeholder"></div>
+</div>
+
+@Js("Content/admin/ro/analytics/rocms.analytics.js")
+@Js("Content/admin/vendor/flot")
+
+@JsInline(@<script>
+    $(function() {
+        onAnalyticsLoaded();
+    });
+</script>)

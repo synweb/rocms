@@ -1,0 +1,28 @@
+﻿@using Resources
+@model RoCMS.Web.Contract.Models.UserRegistration
+
+
+<div class="register-block">
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <ul>
+        <li>
+            @Strings.UserRegister_Username:&nbsp;
+        </li>
+        <li>
+            @Html.TextBoxFor(x => x.Username, new {@class = "textbox-username form-control"})
+        </li>
+        <li>
+            @Strings.UserRegister_Password:&nbsp;
+        </li>
+        <li>
+            @Html.PasswordFor(x => x.Password, new { @class = "textbox-password form-control" })
+        </li>
+        <li>
+            @Strings.UserRegister_RepeatPassword:&nbsp;
+        </li>
+        <li>
+            @Html.PasswordFor(x => x.RepeatPassword, new { @class = "textbox-password-repeat form-control" })
+        </li>
+    </ul>
+</div>

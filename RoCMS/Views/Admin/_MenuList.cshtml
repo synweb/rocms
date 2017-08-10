@@ -1,0 +1,25 @@
+﻿@model List<RoCMS.Web.Contract.Models.Menu>
+@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+
+<div class="menu-list">
+        <ul class="generic-list">
+            @foreach(var menu in Model)
+            {
+                
+                <li><div><span class="menuName">@menu.Name</span>
+                    <div class="edit-delete-container">
+                        <a class="editLink button-edit btn btn-warning btn-xs" title="@Strings.Menu_EditMenu" data-menu-id="@menu.MenuId" href="@Url.Action("MenuEditor", new {Id = menu.MenuId})"><i class="fa fa-pencil"></i>&nbsp;@Resources.Strings.Menu_EditMenu</a>
+                        @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                        {
+                            <a class="deleteLink button-delete btn btn-danger btn-xs" title="@Strings.Menu_DeleteMenu" href="@Url.Action("DeleteMenu", new {menuId = menu.MenuId})"><i class="fa fa-times"></i>&nbsp;@Resources.Strings.Menu_DeleteMenu</a>
+                        }
+                    </div>
+                    </div>
+                </li>
+            
+            }
+        </ul>
+    </div>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<Setting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <MainMenuId>1</MainMenuId>
+  <SiteName>RoCMS Demo Website</SiteName>
+  <MainPageUrl>home</MainPageUrl>
+  <Reviews>false</Reviews>
+  <YaMetrika>0</YaMetrika>
+  <AnalyticsAuthKeyExpires xsi:nil="true" />
+  <Timezone>3</Timezone>
+  <RootUrl>http://demo.rocms.ru</RootUrl>
+  <ImageMaxHeight>1080</ImageMaxHeight>
+  <ImageMaxWidth>1920</ImageMaxWidth>
+  <ImageQuality>90</ImageQuality>
+  <AutoEmailReplyEnabled>false</AutoEmailReplyEnabled>
+  <EmailSmtpUrl>smtp.rocms.ru</EmailSmtpUrl>
+  <EmailSmtpPort>465</EmailSmtpPort>
+  <SmtpSslEnabled>true</SmtpSslEnabled>
+  <EmailLogin>mail</EmailLogin>
+  <EmailPassword />
+  <OrderEmailAddress>mail@rocms.ru</OrderEmailAddress>
+  <SystemEmailAddress>mail@rocms.ru</SystemEmailAddress>
+  <SystemEmailSenderName>RoCMS</SystemEmailSenderName>
+  <TranslitEnabled>true</TranslitEnabled>
+  <RootBreadcrumbsTitle>Home</RootBreadcrumbsTitle>
+  <AllowedFileExtensions />
+  <ThumbnailSizes>300w,200h</ThumbnailSizes>
+</Setting>

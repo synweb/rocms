@@ -1,0 +1,44 @@
+﻿@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+@model IList<RoCMS.Shop.Contract.Models.GoodsItem>
+@{
+    var shopService = DependencyResolver.Current.GetService<IShopCategoryService>();
+
+    int? categoryId = ViewBag.CategoryId ?? null;
+
+    var category = categoryId.HasValue ? shopService.GetCategory(categoryId.Value) : null;
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+
+    IList<GoodsItem> goods = Model;
+
+    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+
+    //Для отделения тысяч в ценах
+
+}
+
+@Js("/bin/Content/client/shop")
+@Css("/bin/Content/client/shop/css/style.css")
+
+@if (category != null)
+{
+    <div class="row">
+        <div class="col-xs-12">
+            @if (breadCrumbs.Any())
+            {
+                Html.RenderPartial("_BreadCrumbs", breadCrumbs);
+            }
+            <h1>@category.Name</h1>
+        </div>
+    </div>
+    @Html.Partial("_CategoriesPage", categoryId)
+}
+
+@Html.Partial("_GoodsPage", goods)
+

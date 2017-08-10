@@ -1,0 +1,37 @@
+﻿@using System.Globalization
+@using RoCMS.News.Contract.Services
+@using RoCMS.Web.Contract.Extensions
+
+@model int
+@{
+    var newsService = DependencyResolver.Current.GetService<INewsItemService>();
+    var news = newsService.GetRandomNews(Model);
+}
+
+@foreach (var item in news)
+{
+    <div class="col-sm-4">
+        <div class="image-box" style="background-image:url(/Gallery/Image/@item.ImageId);">
+            <div class="title">
+                <a href="@Url.RouteUrl("BlogItem", new { relativeUrl = item.RelativeUrl })">
+                    <h4>@item.Title</h4>
+                </a>
+                <p>
+                    <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.RelativeUrl})">@item.PostingDate.ApplySiteTimezone().ToString("d MMMM yyyy HH:mm", CultureInfo.CurrentUICulture)</a>
+                    @if (!string.IsNullOrEmpty(item.Tags))
+                    {
+                        <text> / </text>
+                        foreach (var tag in item.Tags.Split(','))
+                        {
+                            <a href="@Url.RouteUrl("BlogTagSearch", new {tag = tag})">@tag</a>
+                            if (!item.Tags.EndsWith(tag))
+                            {
+                                <text> / </text>
+                            }
+                        }
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+}

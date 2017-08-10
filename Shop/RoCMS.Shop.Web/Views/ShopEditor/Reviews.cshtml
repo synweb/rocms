@@ -1,0 +1,88 @@
+﻿@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@{
+    ViewBag.Title = "Отзывы о товарах";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+@Js("/bin/Content/admin/shop")
+<div class="goods-reviews row">
+    <div class="col-xs-12">
+        <button class="btn btn-success all-leave-goods-review-containers" data-bind="click: allGoods"><i class="fa fa-th"></i> Все отзывы</button>
+        <button class="btn btn-success pick-goods-item" data-bind="click: pickGoods"><i class="fa fa-square"></i> Выбрать товар</button>
+    </div>
+    <div class="col-xs-12" data-bind="template: { name: 'review-item-template', foreach: reviews }"></div>
+</div>
+
+<script type="text/html" id="review-item-template">
+    <div class="col-xs-12" data-bind="attr: {id: containerId()}">
+        <div class="admin-review box">
+            <header>
+                <div class="toolbar multibutton" data-bind="attr: {'data-review-id': goodsReviewId}">
+                    <div class="make-switch has-switch moderated-switch" data-on="success" data-off="warning">
+                        <input type="checkbox" data-bind="checked: moderated">
+                    </div>
+                    <a class="btn btn-xs btn-warning button-edit" onclick="true" data-bind="click: edit"><i class="fa fa-pencil"></i></a>
+                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    {
+                        <a class="btn btn-xs btn-danger button-delete" onclick=" true " data-bind="click: remove"><i class=" fa fa-trash-o"></i></a>
+                    }
+                </div>
+                <h5>Товар: <a onclick="true" data-bind="attr: {href: goodsUrl()}"><span data-bind="text: goodsItem.name"></span></a></h5>
+            </header>
+            <div class="body">
+                <div class="review-container" data-bind="attr: {dataReviewId: goodsReviewId}">
+                    <ul>
+                        <li><strong data-bind="text: author"></strong></li>
+                        <li data-bind="if: authorContact">Контакты: <span class="email" data-bind="text: authorContact"></span></li>
+                        <li data-bind="if: rating">Оценка: <strong data-bind="text: rating"></strong></li>
+                        <li><span data-bind="text: text"></span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="reviewEditorTemplate">
+    <div class="goods-review-editor">
+        <form class="form-horizontal" data-bind="with: vm">
+            <div class="form-group">
+                <label class="control-label col-lg-3">Автор</label>
+                <div class="col-lg-9">
+                    <input type="text" class="form-control" data-bind="value: author">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3">Контакты автора</label>
+                <div class="col-lg-9">
+                    <input type="text" class="form-control" data-bind="value: authorContact">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3">Оценка</label>
+                <div class="col-lg-9">
+                    <select class="form-control" data-bind="options: $root.ratingValues, value: rating">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-3">Тест отзыва</label>
+                <div class="col-lg-9">
+                    <textarea class="form-control" data-bind="value: text"></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</script>
+        
+
+@JsInline(@<script>
+    $(function () {
+        goodsReviewsEditorLoaded();
+    });
+</script>)

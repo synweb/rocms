@@ -1,0 +1,41 @@
+﻿@using RoCMS.Shop.Contract.Services
+
+@{
+    IShopActionService shopActionService = DependencyResolver.Current.GetService<IShopActionService>();
+    var actions = shopActionService.GetActionsForSlider();
+}
+
+@if (actions.Any())
+{
+    <div class="theme-default">
+        <div class="actionsSlider">
+            @foreach (var action in actions)
+            {
+                string url = action.Goods.Count() == 1 && !action.Categories.Any() && !action.Manufacturers.Any() ?
+                    Url.Action("Goods", "Shop", new { id = action.Goods.Single().ID }) :
+                    Url.Action("Action", "Shop", new { id = action.ActionId });
+
+                <a href="@url">
+                    <img src="@Url.Action("Image", "Gallery", new {id = action.ImageId})" alt="@action.Name" @(action.DateOfEnding.HasValue ? "title = #action" + action.ActionId : "")>
+                    
+                    @if (action.DateOfEnding.HasValue)
+                    {
+                        string id = "action" + action.ActionId;
+                        <div id="@id" class="nivo-html-caption" style="text-align:center;">
+                            @Html.Partial("CountdownTimer", action.DateOfEnding.ToString())
+                        </div>
+                    }
+                </a>
+
+
+            }
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            $(".actionsSlider").nivoSlider({ pauseTime: 5000 });
+        });
+    </script>
+    
+
+}

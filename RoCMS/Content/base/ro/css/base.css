@@ -1,0 +1,10 @@
+﻿ul
+{
+    list-style: none;
+}
+
+.ui-dialog { margin:0 auto; }
+
+#fileupload {
+    display: none;
+}

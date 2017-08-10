@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AE493D69-0FF4-4153-B7AF-23513D8D914F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RoCMS.Data</RootNamespace>
+    <AssemblyName>RoCMS.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.EnterpriseLibrary.Data, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Gateways\AlbumGateway.cs" />
+    <Compile Include="Gateways\BlockGateway.cs" />
+    <Compile Include="Gateways\CMSResourceGateway.cs" />
+    <Compile Include="Gateways\OrderFormFieldGateway.cs" />
+    <Compile Include="Gateways\OrderFormGateway.cs" />
+    <Compile Include="Gateways\CountryGateway.cs" />
+    <Compile Include="Gateways\QueryGateway.cs" />
+    <Compile Include="Gateways\FormRequestGateway.cs" />
+    <Compile Include="Gateways\ImageGateway.cs" />
+    <Compile Include="Gateways\ImageInAlbumGateway.cs" />
+    <Compile Include="Gateways\MailGateway.cs" />
+    <Compile Include="Gateways\InterfaceStringGateway.cs" />
+    <Compile Include="Gateways\MenuGateway.cs" />
+    <Compile Include="Gateways\MenuItemGateway.cs" />
+    <Compile Include="Gateways\PageGateway.cs" />
+    <Compile Include="Gateways\PasswordTicketGateway.cs" />
+    <Compile Include="Gateways\ReviewGateway.cs" />
+    <Compile Include="Gateways\SearchItemGateway.cs" />
+    <Compile Include="Gateways\SettingGateway.cs" />
+    <Compile Include="Gateways\SlideGateway.cs" />
+    <Compile Include="Gateways\SliderGateway.cs" />
+    <Compile Include="Gateways\UserCMSResourceGateway.cs" />
+    <Compile Include="Gateways\UserGateway.cs" />
+    <Compile Include="Gateways\VideoAlbumGateway.cs" />
+    <Compile Include="Gateways\VideoGateway.cs" />
+    <Compile Include="Models\Album.cs" />
+    <Compile Include="Models\Block.cs" />
+    <Compile Include="Models\CMSResource.cs" />
+    <Compile Include="Models\Country.cs" />
+    <Compile Include="Models\FormRequest.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ImageInAlbum.cs" />
+    <Compile Include="Models\Mail.cs" />
+    <Compile Include="Models\InterfaceString.cs" />
+    <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\MenuItem.cs" />
+    <Compile Include="Models\OrderForm.cs" />
+    <Compile Include="Models\OrderFormField.cs" />
+    <Compile Include="Models\Page.cs" />
+    <Compile Include="Models\PasswordTicket.cs" />
+    <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\SearchItem.cs" />
+    <Compile Include="Models\SearchResultItem.cs" />
+    <Compile Include="Models\Setting.cs" />
+    <Compile Include="Models\Slide.cs" />
+    <Compile Include="Models\Slider.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserCMSResource.cs" />
+    <Compile Include="Models\VideoAlbum.cs" />
+    <Compile Include="Models\VideoInfo.cs" />
+    <Compile Include="OrderFormFieldGateway.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RoCMS.Base\RoCMS.Base.csproj">
+      <Project>{83422666-7277-47C6-8CD1-D2B9721596DA}</Project>
+      <Name>RoCMS.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCMS.WebContract\RoCMS.Web.Contract.csproj">
+      <Project>{5bb656e0-bfeb-42a2-b308-52ab78af8d38}</Project>
+      <Name>RoCMS.Web.Contract</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

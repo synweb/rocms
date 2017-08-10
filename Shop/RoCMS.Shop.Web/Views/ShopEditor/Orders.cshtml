@@ -1,0 +1,297 @@
+﻿@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@*@model IEnumerable<RoCMS.ViewModels.OrderVM>*@
+
+@{
+    ViewBag.Title = "Заказы";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+	
+	int? clientId = ViewBag.ClientId;
+}
+
+<!--Begin Datatables-->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box">
+            <header>
+                <div class="icons"><i class="icon-move"></i></div>
+                <h5>Заказы</h5>
+            </header>
+            <div id="collapse4" class="body">
+                <table id="dataTable" class="table table-striped ">
+                    <thead>
+                        <tr>
+                            <th style="width:auto;">№</th>
+                            <th>Дата</th>
+                            <th>Состояние</th>
+                            <th>Доставка</th>
+                            <th>Клиент</th>
+                            <th>Телефон</th>
+                            <th>Email</th>
+                            <th>Сумма</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="template: { name: 'order-item', foreach: orders }"></tbody>
+                </table>
+                <button title="Загрузить еще" style="margin: 0 auto;" class="btn btn-success btn-xs" data-bind="click: loadMoreOrders, style: {display: hasMoreOrders() === true ? 'block': 'none'}"><em class="fa fa-caret-square-o-down"></em></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/html" id="order-item">
+    <tr>
+        <td data-bind="text: orderId"></td>
+        <td data-bind="text: creationDateView"></td>
+        <td>
+            <select class="form-control order-type" data-bind="value: state, clickBubble: false, event:{change: updateState}">
+                <option value="New">Новый</option>
+                <option value="Confirmed">Подтверждён</option>
+                <option value="Shipping">Доставка</option>
+                <option value="Completed">Выполнен</option>
+                <option value="Rejected">Отказ</option>
+            </select>
+        </td>
+        <td data-bind="text: shipmentTypeView"></td>
+        <td><a data-bind="attr: {href: '/ShopEditor/Orders/'+client.clientId()}"><span data-bind="text: client.name"></span></a></td>
+        <td data-bind="text: client.phone"></td>
+        <td data-bind="text: client.email"></td>
+        <td><span data-bind="text: priceFormat(summary())"></span><i class="fa fa-rub"></i></td>
+
+        <td>
+            <a data-bind="click: function () { edit($data, $root); }, clickBubble: false"
+               class="btn btn-warning btn-xs"
+               title="Редактировать">
+                <i class="fa fa-pencil"></i>
+            </a>
+        </td>
+
+        <td>
+            @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+            {
+                <a data-bind="click: function () { remove($data, $root); }, clickBubble: false"
+                   class="btn btn-danger btn-xs"
+                   title="Удалить заказ">
+                    <i class="fa fa-times"></i>
+                </a>
+            }
+        </td>
+    </tr>
+</script>
+
+
+<script type="text/html" id="orderTemplate">
+    <div class="shop-order">
+        <form class="form-horizontal">
+            <ul id="myTab" class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#commonInfo" role="tab" data-toggle="tab">Заказ</a></li>
+                <li class=""><a href="#goodsInfo" role="tab" data-toggle="tab">Товары в заказе</a></li>
+                <li class=""><a href="#commentsInfo" role="tab" data-toggle="tab">Комментарии к заказу</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="commonInfo" data-bind="validationOptions: {insertMessages: false}">
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Клиент</label>
+                        <div class="col-xs-4 info-label-container">
+                            <span data-bind="text: client.name"></span> <span data-bind="text: client.lastName"></span>
+                        </div>
+                        <label class="control-label col-xs-2">Сумма заказа</label>
+                        <div class="col-xs-4 info-label-container">
+                            <span data-bind="text: priceFormat(summary())"></span><i class="fa fa-rub"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Финальная скидка</label>
+                        <div class="col-xs-4 info-label-container">
+                            <span data-bind="text: totalDiscount()"></span>%
+                        </div>
+                        <label class="control-label col-xs-2">Стоимость доставки</label>
+                        <div class="col-xs-4 info-label-container">
+                            <span data-bind="text: priceFormat(deliveryPrice())"></span><i class="fa fa-rub"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Состояние</label>
+                        <div class="col-xs-4">
+                            <select class="form-control" data-bind="value: state">
+                                <option value="New">Новый</option>
+                                <option value="Confirmed">Подтверждён</option>
+                                <option value="Shipping">Доставка</option>
+                                <option value="Completed">Выполнен</option>
+                                <option value="Rejected">Отказ</option>
+                            </select>
+                        </div>
+                        <label class="control-label col-xs-2">Доставка</label>
+                        <div class="col-xs-4">
+                            <select class="form-control" data-bind="value: shipmentType">
+                                <option value="Courier">Курьер</option>
+                                <option value="SelfPickup">Самовывоз</option>
+                                <option value="Post">Почта</option>
+                            </select>
+                        </div>
+                    </div>
+                    @*Доставка почтой*@
+                    <div data-bind="style: {display: shipmentType() === 'Post' ? 'block': 'none'}">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Индекс</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: postCode" />
+                            </div>
+                            <label class="control-label col-xs-2">Город</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: city" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Метро</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: metro" />
+                            </div>
+                            <label class="control-label col-xs-2">Улица</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: street" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Дом</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: house" />
+                            </div>
+                            <label class="control-label col-xs-2">Корпус</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: houseIndex" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Подъезд</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: frontNumber" />
+                            </div>
+                            <label class="control-label col-xs-2">Кв./офис</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: appartment" />
+                            </div>
+                        </div>
+                    </div>
+                    @*Доставка курьером*@
+                    <div data-bind="style: {display: shipmentType() === 'Courier' ? 'block': 'none'}">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Город</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: city" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Метро</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: metro" />
+                            </div>
+                            <label class="control-label col-xs-2">Улица</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: street" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Дом</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: house" />
+                            </div>
+                            <label class="control-label col-xs-2">Корпус</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: houseIndex" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Подъезд</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: frontNumber" />
+                            </div>
+                            <label class="control-label col-xs-2">Кв./офис</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: appartment" />
+                            </div>
+                        </div>
+                    </div>
+                    @*Самовывоз*@
+                    <div data-bind="style: {display: shipmentType() === 'SelfPickup' ? 'block': 'none'}">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Город</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: city" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Точка самовывоза</label>
+                            <div class="col-xs-10">
+                                <select data-bind="options: $root.pickUpPoints, optionsText: 'title', optionsValue: 'pickUpPointId', value: pickUpPointId" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="goodsInfo">
+                    <div class="form-group">
+                        <table class="order-goods-table">
+                            <thead>
+                                <tr>
+                                    <th>Товар</th>
+                                    <th>К-во</th>
+                                    <th>Упаковка</th>
+                                    <th>Цена</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="template: { name: 'goods-item-order-template', foreach: goodsInOrder}"></tbody>
+                        </table>
+                        @*<a class="btn btn-xs btn-success" onclick="true" data-bind="click: addGoods"><em class="fa fa-plus"></em></a>*@
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="commentsInfo">
+                    <div class="form-group">
+                        <label class="control-label">Комментарий клиента</label>
+                        <textarea class="form-control" data-bind="value: comment"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">Комментарий администратора</label>
+                        <textarea class="form-control" data-bind="value: adminComment"></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</script>
+
+<script type="text/x-jquery-tmpl" id="goods-item-order-template">
+    <tr>
+        <td>
+            <a target="_blank" data-bind="attr:{href:'/Shop/Goods/'+goods.goodsId()}">
+                <span data-bind="text: goods.name"></span>
+            </a>
+            @*<a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeGoods($data, $parent);}"><em class="fa fa-trash-o"></em></a>*@
+        </td>
+        <td>
+            @*<input class="form-control goods-in-order-count" type="text" data-bind="value: quantity" />*@
+            <span data-bind="text: quantity"></span>
+        </td>
+        <td>
+            <span data-bind="text: packId() ? pack.name() : ''"></span>
+        </td>
+        <td>
+            <span data-bind="text: priceFormat(price())"></span><i class="fa fa-rub"></i>
+        </td>
+        @*<td>
+                <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeGoods($data);}"><em class="fa fa-trash-o"></em></a>
+            </td>*@
+    </tr>
+</script>
+
+
+@Js("/bin/Content/admin/shop")
+@JsInline(@<script>
+    $(function () {
+        onShopOrdersLoaded(@(clientId.HasValue?clientId.Value.ToString():"null"));
+    })
+</script>)
+

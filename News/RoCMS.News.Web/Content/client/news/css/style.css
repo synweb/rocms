@@ -1,0 +1,31 @@
+﻿a.news-cut {
+    font-weight: 600;
+}
+
+.news-pages {
+    text-align: center;
+}
+
+  .tag-xs { 
+      font-size : x-small; 
+  }
+  .tag-sm { 
+      font-size : small;
+  }
+  .tag-md { 
+      font-size : medium;
+  }
+  .tag-lg { 
+      font-size : large;
+  }
+  .tag-xl { 
+      font-size : x-large;
+  }
+  .tag {
+      font-weight: normal;
+      margin-left: 5px;
+      margin-right: 5px;
+  }
+  .tag:hover{
+      font-weight: bold;
+  }

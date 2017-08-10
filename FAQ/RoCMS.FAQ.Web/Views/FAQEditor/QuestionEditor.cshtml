@@ -1,0 +1,92 @@
+﻿@using System.Web.Optimization
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Web.Contract.Extensions
+@using RoCMS.Base.ForWeb.Helpers
+@model RoCMS.FAQ.Contract.Models.Question
+
+@{
+    ViewBag.PageTitle = ((string)ViewBag.Action) == "Create" ? "Создание вопроса" : "Редактирование вопроса";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+<a href="/FAQEditor/Questions" class="btn btn-danger"><i class="fa fa-backward"></i>&nbsp;К вопросам</a>
+
+<form class="question-editor" data-id="@Model.QuestionId" data-moderated="@Model.Moderated" data-sent="@Model.AnswerSentToAuthor">
+    <ul>
+        <li>
+            <label for="QuestionText">Вопрос</label>
+            <span class="field-validation-valid" data-valmsg-for="AnswerText" data-valmsg-replace="true"></span>
+        </li>
+        <li>
+            <input type="text" class="form-control" data-val="true" data-val-required="Поле обязательно для заполнения"
+                   id="QuestionText" name="QuestionText" value="@Model.QuestionText" />
+        </li>
+        <li>
+            
+        @if ((string) ViewBag.Action != "Create")
+        {
+            <span class="label">Создан</span> @Model.CreationDate.ApplySiteTimezone().ToString("dd MMMM yyyy в HH:mm")
+        }
+        </li>
+        @if (!string.IsNullOrEmpty(Model.AuthorName) || !string.IsNullOrEmpty(Model.AuthorEmail))
+        {
+            <li>
+                <span class="label">Автор:</span>
+            </li>
+            <li>
+                @if (!string.IsNullOrEmpty(Model.AuthorName))
+                {
+                    <span>@Model.AuthorName</span>
+                    <a href="mailto:@Model.AuthorEmail">(@Model.AuthorEmail)</a>
+                }
+            </li>
+        }
+        <li>
+            <label for="AnswerText">Ответ</label>
+            <span class="field-validation-valid" data-valmsg-for="AnswerText" data-valmsg-replace="true"></span>
+        </li>
+        <li>
+            @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.AnswerText, "question_content", "question-content", ACEModes.HTML))
+        </li>
+    </ul>
+
+    @if (!string.IsNullOrEmpty(Model.AuthorEmail))
+    {
+        <p class="answer-sent-status">
+            @if (Model.AnswerSentToAuthor)
+            {
+                <text>
+                    Ответ отправлен автору.
+                </text>
+            }
+            else
+            {
+                <text>Ответ не отправлен автору.</text>
+            }
+
+        </p>
+    }
+
+    @if ((string)ViewBag.Action == "Create")
+            {
+        <button type="button" class="button-create btn btn-success"><i class="fa fa-check"></i> Создать</button>
+    }
+    else
+    {
+        <button type="button" class="button-accept btn btn-success"><i class="fa fa-check"></i> Сохранить</button>
+        if (!string.IsNullOrEmpty(Model.AuthorEmail))
+        {
+            <button type="button" class="button-send-answer btn btn-success"><i class="fa fa-mail-forward"></i> Сохранить и отправить ответ</button>
+        }
+    }
+</form>
+
+@Js("/Content/base/vendor/ckeditor")
+
+@Js("/bin/Content/admin/faq")
+
+@JsInline(@<script>
+
+    $(function () {
+        questionEditorLoaded();
+    });
+</script>)

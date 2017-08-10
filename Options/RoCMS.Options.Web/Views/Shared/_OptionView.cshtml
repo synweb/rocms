@@ -1,0 +1,7 @@
+﻿@model RoCMS.Options.Contract.Models.OptionKey
+
+<label class="control-label ">@Model.Name:</label>
+@foreach (var value in Model.OptionValues)
+{
+    <span class="option-value"><em class="fa fa-check-circle-o"></em>@value.Value</span>
+}

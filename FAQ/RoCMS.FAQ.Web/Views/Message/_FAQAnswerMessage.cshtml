@@ -1,0 +1,17 @@
+﻿@model RoCMS.FAQ.Contract.Models.Question
+
+@if (!string.IsNullOrEmpty(Model.AuthorName))
+{
+    <p>Здравствуйте, @Model.AuthorName!</p>
+}
+else
+{
+    <p>Здравствуйте!</p>
+}
+
+<p>Вы задавали следующий вопрос:</p>
+
+<p style="font-style: italic;">@Html.Raw(Model.QuestionText.Replace("\n", "<br/>\n"))</p>
+
+<p>Администрация сайта подготовила ответ:</p>
+@Html.Raw(Model.AnswerText)

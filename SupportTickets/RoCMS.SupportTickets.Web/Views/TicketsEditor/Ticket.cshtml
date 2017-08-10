@@ -1,0 +1,51 @@
+﻿@using RoCMS.SupportTickets.Contract
+@using RoCMS.Web.Contract.Services
+@model RoCMS.SupportTickets.Contract.Models.Ticket
+
+@{
+    ViewBag.PageTitle = "Просмотр тикета";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+
+    var authService = DependencyResolver.Current.GetService<ISecurityService>();
+}
+<div class="ticket-details" data-ticket-id="@Model.TicketId">
+    <h2>Тикет @Model.TicketId</h2>
+    <button type="button" class="btn btn-info ticket-resolved" @(Model.Resolved?"disabled='disabled":"") ><i class="fa fa-legal"></i>&nbsp;Проблема решена</button>
+
+    <span class="ticket-subject">Тема: @Model.Subject</span><br/>
+    <span class="ticket-date">Создан: @Model.CreationDate.AddHours(3).ToString("dd.MM.yyyy HH:mm")</span>
+    
+    <div class="ticket-answer">
+        <textarea class="ticket-answer-field"></textarea>
+        <button type="button" class="btn btn-success send-answer"><i class="fa fa-check"></i>&nbsp;Отправить</button>
+    </div>
+
+    <div class="ticket-messages">
+        @foreach (var msg in Model.Messages.OrderByDescending(x => x.CreationDate))
+        {
+            var user = authService.GetUser(msg.AuthorId).Username;
+            bool outgoing = authService.IsAuthorizedForResource(msg.AuthorId, SupportTicketsRoCMSResources.SupportTickets);
+            <div class="@(outgoing ? "incoming" : "outgoing")">
+                <div class="inner-message">
+                    <strong style="float: right;">@msg.CreationDate.AddHours(3).ToString("dd.MM.yyyy HH:mm")</strong>
+                    <em class="fa @(outgoing ? "fa-angle-right" : "fa-angle-left") "></em>
+                    <label class="control-label">@user</label>
+                    <p>@Html.Raw(msg.Text.Replace("\n", "<br/>\n"))</p>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+@Css("/bin/Content/admin/supportTickets")
+@Js("/bin/Content/admin/supportTickets")
+
+@JsInline(@<script>
+    $(function() {
+        onTicketMessagesLoaded();
+    })
+</script>)

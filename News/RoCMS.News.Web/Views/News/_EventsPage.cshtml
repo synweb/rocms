@@ -1,0 +1,34 @@
+﻿@using System.Globalization
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Resources
+@using RoCMS.Web.Contract.Extensions
+@using RoCMS.Web.Contract.Services
+@model IEnumerable<RoCMS.News.Contract.Models.NewsItem>
+
+@{
+
+    var pagingParams = ParamExtractor.ExtractParamsForSEF(Request);
+
+    int page = ViewBag.Page;
+    int pageSize = ViewBag.PageSize;
+    int totalCount = ViewBag.TotalCount;
+
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+
+
+}
+
+
+
+<div class="calendar">
+
+    @foreach (var item in Model)
+    {
+        @Html.Partial("_EventItem", item)
+    }
+
+</div>
+
+@Html.Partial("_Pager")

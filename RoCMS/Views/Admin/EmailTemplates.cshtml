@@ -1,0 +1,30 @@
+﻿@model string[]
+
+@{
+    ViewBag.PageTitle = "Шаблоны писем";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+<h2>Шаблоны писем</h2>
+
+<div>
+    <ul class="generic-list">
+        @foreach (var template in Model)
+        {
+            <li class="album">
+                <div>
+                    <a href="@Url.Action("EditEmailTemplate", "Admin", new {id = template})">
+                        <span class="album-name">@template</span>
+                    </a>
+                    <div class="edit-delete-container">
+                        <a class="btn btn-xs btn-warning edit" href="@Url.Action("EditEmailTemplate", "Admin", new {id = template})"><i class="fa fa-pencil"></i>&nbsp;Редактировать</a>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+@Js("Content/admin/ro/js/rocms.email.templates.js")

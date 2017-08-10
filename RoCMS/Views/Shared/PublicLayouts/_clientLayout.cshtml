@@ -1,0 +1,46 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Web.Contract.Services
+@using Block = RoCMS.Web.Contract.Models.Block
+@using Menu = RoCMS.Web.Contract.Models.Menu
+@using Review = RoCMS.Web.Contract.Models.Review
+@{
+
+    Layout = "~/Views/Shared/PublicLayouts/_landingLayout.cshtml";
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+
+    var ctaBlock = blockService.GetBlock(5);
+    var orderFormBlock = blockService.GetBlock(6);
+}
+
+@if (ViewBag.Header != null)
+{
+    <div class="fixed-background bg1 page-title">
+        <div class="container text-center">
+            <h1>@ViewBag.Header</h1>
+        </div>
+    </div>
+}
+
+@Html.Partial("_BreadCrumbsBlock")
+
+
+<div id="main">
+    <div class="container">
+        <div class="page-content">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    @Block(orderFormBlock)
+</div>
+
+<div id="cta">
+    <div class="container">
+        @Block(ctaBlock)
+    </div>
+</div>

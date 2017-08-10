@@ -1,0 +1,22 @@
+﻿@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    var albumService = DependencyResolver.Current.GetService<IAlbumService>();
+    var albumImages = albumService.GetAlbumImages(Model);
+}
+
+
+
+
+
+<div id="gallery-@Model">
+    @foreach (var img in albumImages)
+    {
+        <a title="@img.Title" data-description="@img.Description" data-gallery="gallery-@Model" href="@Url.Action("Image", new { id=img.ImageId})"><img alt="@(img.Title ?? img.ImageId)" src="@Url.Action("Thumbnail", new { id=img.ImageId })"></a>
+    }
+</div>
+
+
+
+@Js("Content/client/vendor/bootstrap-image-gallery/js")

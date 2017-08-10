@@ -1,0 +1,38 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Base.ForWeb.Models
+@using RoCMS.Shop.Contract.Services
+@model int
+@{
+    var shopActionService = DependencyResolver.Current.GetService<IShopActionService>();
+    int actionId = Model;
+
+    var actionInfo = shopActionService.GetAction(actionId);
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        @if (breadCrumbs.Any())
+        {
+            Html.RenderPartial("_BreadCrumbs", breadCrumbs);
+        }
+        <h1>@actionInfo.Name</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <img src="@Url.Action("Image", "Gallery", new {id = actionInfo.ImageId})" alt="@actionInfo.Name" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @Html.Raw(ContentRenderHelper.RenderContent(actionInfo.Description))
+    </div>
+</div>

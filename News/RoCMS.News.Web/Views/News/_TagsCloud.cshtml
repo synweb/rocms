@@ -1,0 +1,59 @@
+﻿@using RoCMS.News.Contract.Services;
+
+@{
+    const int showingTagCount = 40;
+    var newsItemService = DependencyResolver.Current.GetService<INewsItemService>();
+    var tags = newsItemService.GetTagStats(showingTagCount);
+
+
+    int maxCount = tags.Max(x => x.Mentions);
+    int minCount = tags.Min(x => x.Mentions);
+    const int maxFontSize = 5;
+    const int minFontSize = 1;
+    
+}
+
+@foreach (var item in tags)
+{
+
+    if (String.IsNullOrWhiteSpace(item.Name)) { continue; }
+
+    string fontSizeClass;
+    if (maxCount > minCount)
+    {
+        double scale = maxCount / 5f;
+
+        int fontSize = (int)Math.Round(item.Mentions / scale, MidpointRounding.AwayFromZero);
+
+
+
+
+        switch (fontSize)
+        {
+            case 1:
+                fontSizeClass = "tag-xs";
+                break;
+            case 2:
+                fontSizeClass = "tag-sm";
+                break;
+            case 3:
+                fontSizeClass = "tag-md";
+                break;
+            case 4:
+                fontSizeClass = "tag-lg";
+                break;
+            case 5:
+                fontSizeClass = "tag-xl";
+                break;
+            default:
+                fontSizeClass = "tag-md";
+                break;
+        }
+    }
+    else
+    {
+        fontSizeClass = "tag-md";
+    }
+
+    <a class="tag @fontSizeClass" href="@Url.RouteUrl("BlogTagSearch", new { tag = @item.Name })" target="_blank">@item.Name (@item.Mentions.ToString())</a>
+}

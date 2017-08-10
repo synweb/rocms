@@ -1,0 +1,226 @@
+﻿/*Shop*/
+
+.input-validation-error {
+    border-color:  #d43c3c;
+}
+
+.goods-item {
+	position:relative;
+	border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.goods-item .goods-tag {
+	position: absolute;
+	background: rgba(76,0,0,0.75);
+	top: 0;
+	padding: 20px;
+	font-size: 20px;
+}
+
+.goods-item .heading {
+	margin: 20px 0;
+}
+
+.goods-item .goods-price {
+	position: absolute;
+    margin-top: -50px;
+    right: 10px;
+    background: #fff;
+    padding: 0 20px;
+    line-height: 40px;
+    font-size: 20px;
+}
+
+.goods-item .goods-price.action {
+	color: #d43c3c;
+}
+
+.goods-item .old-price {
+    color: #222;
+    padding: 0 20px;
+	display: inline-block;
+	position: relative;
+}
+
+.goods-item .old-price:after { 
+    background: #d43c3c;
+    height: 2px;
+    display: block;
+    content: " ";
+    width: 100%;
+    position: absolute;
+    bottom: 50%;
+    transform: rotate(-14deg);
+    left: 0;
+}
+
+.goods-item p {
+	margin-bottom: 20px;
+}
+
+.goods-item .buttons {
+	margin: 20px 0 10px;
+}
+
+.goods-list .col-md-4{
+	width: 100%;
+	
+}
+
+.goods-list .goods-item {
+	margin-bottom: 10px;
+	width: 100%;
+	float: left;
+}
+
+.goods-list .goods-item img {
+	float: left;
+	margin-right: 20px;
+	max-width: 30%;
+}
+
+.goods-list .goods-item .goods-price {
+	position: initial;
+    margin-top: 0;
+	
+    background: #fff;
+    padding: 0 20px;
+    line-height: 40px;
+    font-size: 30px;
+}
+
+.goods {
+	
+}
+
+.goods figure {
+	position: relative;
+}
+
+.goods .goods-tag {
+	position: absolute;
+	background: rgba(76,0,0,0.75);
+	top: 0;
+	padding: 20px;
+	font-size: 20px;
+}
+
+.goods .goods-price {
+    background: #fff;
+    line-height: 40px;
+    font-size: 30px;
+}
+
+.goods .goods-price.action {
+	color: #d43c3c;
+}
+
+.goods .old-price {
+    color: #222;
+    padding: 0 20px;
+	display: inline-block;
+	position: relative;
+}
+
+.goods .old-price:after { 
+    background: #d43c3c;
+    height: 2px;
+    display: block;
+    content: " ";
+    width: 100%;
+    position: absolute;
+    bottom: 50%;
+    transform: rotate(-14deg);
+    left: 0;
+}
+
+.buttons {
+    position: relative;
+}
+
+.goods-in-cart-message {
+    white-space: normal;
+    background: #f3f3f3;
+    bottom: 30px;
+    display: block;
+    padding: 10px;
+    position: absolute;
+    width: 200px;
+    right: 0;
+    display: none;
+    position: absolute;
+    text-align: left;
+    border: 1px solid #333;
+    z-index: 10;
+}
+
+.goods .buttons a+a {
+	margin-left: 20px;
+}
+
+.goods .spec {
+	background: #eee;
+    padding: 10px;
+	color: #555;
+}
+
+.goods .spec:not(:last-child) {
+	margin-bottom: 5px;
+}
+
+.cart-container {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	position: relative;
+}
+
+.cart-container em {
+	/* font-size: 20px; */
+	
+}
+
+.cart-container .badge {
+	position: absolute;
+	right: 62px;
+	top: 3px;
+}
+
+.cart .item-count {
+	position: relative;
+	width: 102px;
+}
+
+.cart .item-count input {
+	text-align: center;
+}
+
+.cart .item-count .btn {
+	width: 34px;
+}
+
+.cart .item-count .minus {
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+.cart .item-count .plus {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.cart-goods-item {
+	margin-bottom: 10px;
+}
+
+.cart-goods-item .price {
+	font-size: 20px;
+}
+
+.cart-goods-item-header {
+	font-size: 20px;
+}
+
+/*Конец Shop*/

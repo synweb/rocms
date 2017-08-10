@@ -1,0 +1,7 @@
+﻿@using RoCMS.Helpers
+@model string
+@{
+    DateTime dateTime = DateHelper.NextDateTimeParse(Model);
+}
+
+@dateTime.ToString("dd.MM.yyyy") в @dateTime.ToString("HH:mm")

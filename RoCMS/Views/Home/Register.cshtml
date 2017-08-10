@@ -1,0 +1,43 @@
+﻿@using Resources
+@model RoCMS.Web.Contract.Models.UserRegistration
+
+@{
+    Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+}
+
+<h1>Регистрация</h1>
+
+<form class="register-block form-horizontal">
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right" for="Username">@Strings.UserRegister_Username</label>
+        <div class="col-sm-5">
+            <input class="textbox-username" id="Username" name="Username" type="text" data-val="true" data-val-required="*">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right" for="Email">Email</label>
+        <div class="col-sm-5">
+            <input class="textbox-email" id="Email" name="Email" type="text" data-val="true" data-val-required="*">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right" for="Password">@Strings.UserRegister_Password</label>
+        <div class="col-sm-5">
+            <input class="textbox-password" id="Password" name="Password" type="password" data-val="true" data-val-required="*">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label text-right" for="RepeatPassword">@Strings.UserRegister_RepeatPassword</label>
+        <div class="col-sm-5">
+            <input class="textbox-password-repeat" id="RepeatPassword" name="RepeatPassword" type="password" data-val="true" data-val-required="*">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-4">
+            <button class="register common-button">@Strings.UserRegister_RegisterButton</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,106 @@
+﻿@using System.Web.UI.WebControls
+@using Resources
+@using System.Web.Optimization
+@using RoCMS.Web.Contract.Services
+@model IEnumerable<RoCMS.Web.Contract.Models.VideoInfo>
+
+@{
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+    ViewBag.PageTitle = Strings.AdminConfigureAlbum_PageTitle;
+}
+
+@Styles.Render("~/Content/admin/fileUploader/cssbl")
+
+
+<div class="row" style="padding-bottom: 10px;">
+    <div class="col-lg-1">
+        <label style="margin-top:7px;" for="albumName">@Strings.AdminAlbum_Title</label>
+    </div>
+    <div class="col-lg-5">
+        <input id="albumName" type="text" class="form-control" value="@ViewBag.AlbumName" data-album-id="@ViewBag.AlbumId" />
+    </div>
+
+</div>
+
+<div class="row album-editor" data-album-id="@ViewBag.AlbumId">
+    <div class="fileupload-buttonbar">
+        <div class="col-lg-12">
+            <span class="btn btn-success fileinput-button">
+                <i class="fa fa-plus"></i>
+                <span>@Strings.VideoAlbumEditor_AddVideo</span>
+            </span>
+            <button type="button" class="btn btn-danger delete">
+                <i class="fa fa-trash-o"></i>
+                <span>@Strings.Gallery_Delete</span>
+            </button>
+            <input type="checkbox" class="toggle">
+        </div>
+    </div>
+    
+    <div class="files gallery video-gallery">
+        @foreach (var vid in Model)
+        {
+            <div class="template-download fade in row" data-video-id="@vid.VideoId">
+                <div class="delete float-right">
+                    <button class="btn btn-danger" data-id="@vid.VideoId">
+                        <i class="fa fa-trash-o"></i>
+                        <span>@Strings.Gallery_Delete</span>
+                    </button>
+                    <input type="checkbox" name="delete" value="1">
+                </div>
+                <div class="col-lg-3 preview">
+                    <ul>
+                        <li>
+                            <strong>@Strings.AdminGallery_ImageId</strong>
+                            <a href="http://youtu.be/@vid.VideoId" title="@vid.Title" rel="gallery">@vid.VideoId</a>
+                        </li>
+                        <li>
+                            <a target="_blank" href="http://youtu.be/@vid.VideoId" title="@vid.Title" rel="gallery">
+                                <img style="max-width: 200px;" src="http://img.youtube.com/vi/@vid.VideoId/mqdefault.jpg">
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="col-lg-5">
+                    <ul>
+                        <li>
+                            <strong>@Strings.AdminGallery_ImageTitle</strong>
+                            <input class="form-control video-title" type="text" value="@vid.Title" style="min-width: 300px;" />
+                        </li>
+                        <li>
+                            <strong>@Strings.AdminGallery_ImageDescription</strong>
+                            <textarea class="form-control video-description">@vid.Description</textarea>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2">
+                    <ul>
+                        <li>
+                            <strong>@Strings.AdminVideoGallery_VideoPublishDate</strong>
+                            @*//TODO: захардкожен московский часовой пояс*@
+                            <span>@vid.CreationDate.AddHours(4)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="text-right">
+    <a href="/Admin/VideoGallery">@Strings.AdminGallery_ReturnToGallerys</a>
+</div>
+
+@* TODO: вместо reload сделать шаблон *@
+
+
+@Js("Content/admin/ro/album/rocms.video.album.editor.js")
+@JsInline(@<script type="text/javascript">
+
+    $(function () {
+        videoAlbumEditorLoaded();
+    });
+
+</script>
+)

@@ -1,0 +1,33 @@
+﻿
+
+
+<div data-bind="with: cart">
+    <div class="cart" data-bind="foreach: cartItems">
+        <div class="cart-goods-item">
+            <div class="row">
+                <div class="col-sm-2 col-xs-4">
+                    <a data-bind="attr: { href: '/Shop/Goods/' + goodsItem.goodsId(), title: goodsItem.name }">
+                        <img class="img-responsive" data-bind="attr: { src: '/Gallery/Thumbnail/' + goodsItem.mainImageId(), alt: goodsItem.name, title: goodsItem.name}" />
+                    </a>
+                </div>
+                <div class="col-xs-8">
+                    <div class="cart-goods-item-header"><a data-bind="attr: { href: '/Shop/Goods/' + goodsItem.goodsId(), title: goodsItem.name }, text: packId() != null ? goodsItem.name() + ' ' + pack.packInfo.name() : goodsItem.name"></a></div>
+                    <div class="small">Артикул: <span data-bind="text: goodsItem.article"></span></div>
+                </div>
+                <div class="col-sm-2 col-xs-12">
+                    <div class="price"><span data-bind="text: summary"></span> руб.</div>
+                    <div class="small"><span data-bind="text: quantity"></span> x <span data-bind="text: discountedPrice"></span> руб.</div>
+                    <div class="item-count">
+                        <button class="btn minus" data-bind="click: function(){ $root.increaseItemCount($data, false); }">-</button>
+                        <input type="text" class="form-control" data-bind="value: quantity">
+                        <button class="btn plus" data-bind="click: function(){ $root.increaseItemCount($data, true ); }">+</button>
+                    </div>
+                    <div class="small">
+                        <a href="#" data-bind="click: function(){ $root.removeItem(goodsItem.goodsId()); }">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

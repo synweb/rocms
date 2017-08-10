@@ -1,0 +1,20 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Helpers
+@{
+    var urlParams = ParamExtractor.ExtractUrlParams(Request);    
+}
+<form class="navbar-form navbar-left" role="search" action="@Url.Action("Search","Shop")">
+    <div class="form-group">
+        @if (urlParams.ContainsKey("query"))
+        {
+            <input type="text" class="form-control" name="query" value="@urlParams["query"]" />
+        }
+        else
+        {
+            <input type="text" class="form-control" name="query" />
+        }
+        <button type="submit" class="btn btn-xs btn-default search-btn"><em class="glyphicon glyphicon-search"></em></button>
+    </div>
+
+</form>
+

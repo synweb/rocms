@@ -1,0 +1,80 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+@{
+    ViewBag.PageTitle = "Упаковки";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+<div>
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createPack"><i class="fa fa-plus"></i>&nbsp;@ShopStrings.Shop_Create</a>
+    </div>
+    <div class="shop-packs-list">
+        <ul data-bind="template: { name: 'pack-item-template', foreach: packs }"></ul>
+    </div>
+
+    <script type="text/html" id="pack-item-template">
+        <li class="pack" data-bind="click: $root.selectPack">
+            <div style="float: right">
+                <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Edit"><i class="fa fa-pencil"></i></a>
+                @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                {
+                    <a data-bind="click: function () { remove($data, $parent); }, clickBubble: false"
+                       class="btn btn-danger btn-xs"
+                       title="@ShopStrings.Shop_Delete">
+                        <i class="fa fa-times"></i>
+                    </a>
+                }
+            </div>
+            <div><label data-bind="text: name"></label></div>
+        </li>
+    </script>
+
+    <script type="text/html" id="packTemplate">
+        <div class="shop-pack">
+            <form class="form-horizontal" data-bind="with: vm">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Название</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Размер упаковки</label>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control" data-bind="value: size">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Ед. измерения</label>
+                    <div class="col-lg-8">
+                        <select class="form-control" data-bind="options: $root.dimensions, optionsText: 'full', optionsValue: 'dimensionId', value: dimensionId"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Скидка, %</label>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control" data-bind="value: defaultDiscount">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </script>
+    
+    @Js("/bin/Content/admin/shop")
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            $(function () {
+                packsEditorLoaded();
+            });
+        </script>)
+    }
+
+
+</div>

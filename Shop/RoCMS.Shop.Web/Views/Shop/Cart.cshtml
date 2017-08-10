@@ -1,0 +1,33 @@
+﻿@using RoCMS.Shop.Contract.Services
+@model Guid
+@{
+    var cartService = DependencyResolver.Current.GetService<ICartService>();
+    Guid cartId = Model;
+
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+
+    int totalCount;
+    //var goods = cartService.GetCart(cartId).CartItems;
+
+}
+
+
+@*<div class="breadcrumb">
+        <a href="index.html">Home</a>
+        » <a class="last" href="#">Special Offers</a>
+    </div>*@
+<h1>Корзина</h1>
+@Html.Partial("_CartItems")
+
+<a  class="cart-button-order" href="@Url.Action("Checkout")">Оформить заказ</a>
+
+@Js("/bin/Content/client/shop")
+
+@JsInline(@<script type="text/javascript">
+    
+    $(function () { onCartLoaded(); })
+
+</script>)

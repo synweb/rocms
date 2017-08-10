@@ -1,0 +1,11 @@
+﻿@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+    ViewBag.Title = "Категории товаров";
+}
+
+<h1>Категории товаров</h1>
+
+@Html.Partial("_CategoriesPage")

@@ -1,0 +1,31 @@
+﻿@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+@{
+    var shopCategoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
+    var cats = shopCategoryService.GetCategories();
+}
+
+<ul>   
+        @helper CatItem(Category item)
+        {
+            string url = "#";
+            <li>
+                <a href="@url">@item.Name</a>
+                @if (item.ChildrenCategories.Any())
+                {
+                    <ul>
+                        @foreach (var subItem in item.ChildrenCategories)
+                        {
+                            @CatItem(subItem);
+                        }
+                    </ul>
+                }
+            </li>
+        }
+
+        @foreach (var cat in cats)
+        {
+            @CatItem(cat);
+        }
+</ul>
+

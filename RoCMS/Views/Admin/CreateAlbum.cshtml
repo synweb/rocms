@@ -1,0 +1,13 @@
+﻿@using Resources
+
+
+<div class="create-album-block">
+    <ul>
+        <li>
+            @Strings.AdminAlbum_Title:&nbsp;
+        </li>
+        <li>
+            @Html.TextBox("title", null, new {@class = "textbox-title", style="width:100%;"})
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,21 @@
+﻿@using RoCMS.Shop.Contract.Services
+@model int
+
+@{
+    var shopCategoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
+    int recommendedCategoryId = 21; //TODO: сделать возможгость передавть через блоки два инта
+    var goods = shopCategoryService.GetCategoryGoods(recommendedCategoryId, Model);
+}
+
+
+<div class="box-product">
+    <ul>
+        @foreach (var goodsItem in goods)
+        {
+            
+            <li @(goodsItem == goods.Last() ? "class=last" : "")>
+                @Html.Partial("_GoodsListItemTile", goodsItem)
+            </li>
+        }
+    </ul>
+</div>

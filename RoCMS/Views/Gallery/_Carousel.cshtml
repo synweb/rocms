@@ -1,0 +1,66 @@
+﻿@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    var albumService = DependencyResolver.Current.GetService<IAlbumService>();
+    var albumImages = albumService.GetAlbumImages(Model);
+}
+
+
+<div style="position: relative; overflow: hidden; clear:both" class="carousel-wrapper carousel-wrapper-@Model">
+    <div class="nivo-directionNav" style="bottom: 60px; width: auto;">
+        <a class="nivo-prevNav carousel-prev">Назад</a>
+    </div>
+    <div class="nivo-directionNav" style="bottom: 60px; width: auto; right: 0;">
+        <a class="nivo-nextNav carousel-next">Вперед</a>
+    </div>
+    <div class="carousel-@Model">
+        @foreach (var img in albumImages)
+        {
+            <div style="display: inline-block;">
+                <a @(String.IsNullOrWhiteSpace(img.DestinationUrl) ? String.Format("data-gallery=carousel-{0} href={1}", Model, Url.Action("Image", new { id = img.ImageId })) : String.Format("href={0}", img.DestinationUrl))>
+                    <img src="@Url.Action("Thumbnail", new { id = img.ImageId })" alt="@img.Title" style="display:none;">
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@Js("Content/client/vendor/bootstrap-image-gallery/js")
+
+<script type="text/javascript">
+    $(window).load(function () {
+        $(".carousel-@Model img").show();
+        $('.carousel-@Model').carouFredSel({
+            circular: true,         // Determines whether the carousel should be circular.
+            infinite: true,         // Determines whether the carousel should be infinite. Note: It is possible to create a non-circular, infinite carousel, but it is not possible to create a circular, non-infinite carousel.
+            responsive: false,      // Determines whether the carousel should be responsive. If true, the items will be resized to fill the carousel.
+            direction: "left",      // The direction to scroll the carousel. Possible values: "right", "left", "up" or "down".
+            width: null,            // The width of the carousel. Can be null (width will be calculated), a number, "variable" (automatically resize the carousel when scrolling items with variable widths), "auto" (measure the widest item) or a percentage like "100%" (only applies on horizontal carousels)
+            height: null,           // The height of the carousel. Can be null (width will be calculated), a number, "variable" (automatically resize the carousel when scrolling items with variable heights), "auto" (measure the tallest item) or a percentage like "100%" (only applies on vertical carousels)
+            align: "center",        // Whether and how to align the items inside a fixed width/height. Possible values: "center", "left", "right" or false.
+            padding: null,          // Padding around the carousel (top, right, bottom and left). For example: [10, 20, 30, 40] (top, right, bottom, left) or [0, 50] (top/bottom, left/right).
+            synchronise: null,      // Selector and options for the carousel to synchronise: [string selector, boolean inheritOptions, boolean sameDirection, number deviation] For example: ["#foo2", true, true, 0]
+            cookie: false,          // Determines whether the carousel should start at its last viewed position. The cookie is stored until the browser is closed. Can be a string to set a specific name for the cookie to prevent multiple carousels from using the same cookie.
+            onCreate: null,          // Function that will be called after the carousel has been created. Receives a map of all data.
+            auto: {
+                play: true,
+                duration: 1000
+            },
+            prev: {
+                button: '.carousel-wrapper-@Model .carousel-prev',
+                items: '-1'
+            },
+            next: {
+                button: '.carousel-wrapper-@Model .carousel-next',
+                items: '-1'
+            },
+            items: {
+                width: 'variable',
+                visible: '+1'
+            }
+        });
+        
+    });
+
+</script>

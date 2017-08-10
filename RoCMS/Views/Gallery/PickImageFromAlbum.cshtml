@@ -1,0 +1,80 @@
+﻿@using Resources
+@using RoCMS.Base.Extentions
+@using RoCMS.Base.Helpers
+@using RoCMS.Web.Contract.Extensions
+@using RoCMS.Web.Contract.Services
+@model IEnumerable<RoCMS.Web.Contract.Models.AlbumImageInfo>
+
+@{
+    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+    var rootUrl = settingsService.GetSettings<string>("RootUrl");
+    var imgs = Model.OrderByDescending(x => x.CreationDate);
+}
+
+<div class="image-picking-buttons picking-buttons">
+    <button type="button" class="btn btn-danger to-albums"><i class="fa fa-backward"></i>&nbsp;@Strings.AdminPickImage_ToAlbums</button>
+
+    <span class="btn btn-success fileinput-button">
+        <i class="fa fa-plus"></i>
+        <span>Добавить файл</span>
+    </span>
+    <input id="fileupload" type="file" name="files[]" data-url="@(rootUrl + "/Upload/UploadHandler.ashx")" style="display: none;">
+</div>
+
+@*<ul class="image-pick-list" data-album-id="@ViewBag.AlbumId">
+    @foreach (var img in Model)
+    {
+        <li class="image-pick-element">
+            <img class="picking-image" data-id="@img.ImageId" title="@img.Title" src="@Url.Action("Thumbnail", "Gallery", new {id = img.ImageId})"/>
+        </li>
+    }
+</ul>*@
+
+<table class="image-pick-table pick-table table table-bordered table-condensed table-hover table-striped" data-album-id="@ViewBag.AlbumId">
+    <thead>
+    <tr>
+        <th>Изображение</th>
+        <th>Размер</th>
+        <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var img in imgs)
+    {
+        var link = Url.Action("Thumbnail", "Gallery", new { id = img.ImageId });
+        <tr>
+            <td class="thumb-td hover-preview-container">
+                <span class="thumb"><img class="picking-image" src="@link" data-id="@img.ImageId"/></span>
+                <span class="hover-preview"><img src="@link"/></span>
+                <span>@img.Title</span>
+            </td>
+            <td>
+                @if (img.Size != null)
+                {
+                    @img.Size.Value.BytesCountToString()
+                }
+            </td>
+            <td>
+                @img.CreationDate.ApplySiteTimezone().ToString("dd.MM.yyyy HH:mm")
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<script id="thumb-pick-template" type="text/x-jquery-tmpl">
+    <tr>
+        <td class="thumb-td hover-preview-container">
+            <span class="thumb"><img class="picking-image" src="/Gallery/Thumbnail/${imageId}" data-id="${imageId}" /></span>
+            <span class="hover-preview"><img src="/Gallery/Thumbnail/${imageId}" /></span>
+            <span>${title}</span>
+        </td>
+        <td>
+            ${size}
+        </td>
+        <td>
+            Загружено только что
+        </td>
+    </tr>
+
+</script>

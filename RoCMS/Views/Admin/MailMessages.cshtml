@@ -1,0 +1,107 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using System.Text.RegularExpressions
+@using RoCMS.Web.Contract.Extensions
+@model IList<RoCMS.Web.Contract.Models.Mail>
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminMail_PageTitle;
+}
+
+@Js("Content/admin/ro/js/rosms.mail.messages.js")
+
+@foreach (var mail in Model)
+{
+    <div class="box mail-mesages-summary" data-block-id="@mail.MailId">
+        @{
+            string mailSentText, mailSentClass;
+            if (mail.Sent)
+            {
+                mailSentClass = "mail-sent";
+                mailSentText = Strings.AdminMail_Sent;
+            }
+            else
+            {
+                mailSentClass = "mail-not-sent";
+                mailSentText = Strings.AdminMail_NotSent;
+            }
+
+            //TODO для теста, пока в теме дата
+            //var regex = new Regex("..[.]..[.].... ..[:]..[:]..");
+            //mail.Subject = regex.Replace(mail.Subject, "");
+
+        }
+
+        <header>
+            <div class="row" data-toggle="collapse" data-target="#collapsed-@mail.MailId.ToString()">
+
+                <div class="mail-title col-xs-2">                    
+                        @mail.Subject                    
+                </div>
+                <div class="col-xs-2">
+                    @mail.Receiver
+                </div>
+                <div class="col-xs-2">
+
+                    @{                        
+                        var creationDate = mail.CreationDate.ApplySiteTimezone();
+                    }
+
+                    @if (creationDate.Date == DateTime.Today)
+                    {
+                       <div title="@creationDate.ToString()">@creationDate.ToShortTimeString()</div>
+                    }
+                    else
+                    {
+                        <div title="@creationDate.ToString()">@creationDate.ToShortDateString()</div>
+                    }
+
+                </div>
+                <div class="col-xs-2">
+                    <span class="sent-mail-result @mailSentClass" title="@mail.ErrorMessage">
+                        @mailSentText
+                        @if (mail.ErrorMessage != null && mail.ErrorMessage.Length > 0)
+                        {
+                            <i class="fa fa-info-circle" title="@mail.ErrorMessage"></i>
+                        }
+                        else
+                        {
+                            @:&nbsp;
+                    }
+                    </span>
+                </div>
+                <div class="col-xs-1">
+                    @if (mail.Attaches != null && mail.Attaches.Length > 0)
+                    {
+                        <i class="fa fa-paperclip" title="@mail.Attaches"></i>
+                    }
+                    else
+                    {
+                        @:&nbsp;
+                    }
+                </div>
+                <div class="col-xs-3 text-right">
+                    <a onclick="true" class="btn btn-info btn-xs button-resend">
+                        <i class="fa fa-mail-reply"></i> @Strings.AdminMail_Resend
+                    </a>
+                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    {
+                        <a onclick="true" class="btn btn-danger btn-xs button-delete" title="@Strings.Message_Delete">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        </header>
+
+        <div class="body collapse" id="collapsed-@mail.MailId.ToString()">
+            <p class="control-label text-left">@Html.Raw(mail.Body)</p>
+        </div>
+    </div>
+
+            }

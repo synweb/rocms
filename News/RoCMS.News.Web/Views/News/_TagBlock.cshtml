@@ -1,0 +1,7 @@
+﻿@model string
+@{
+    ViewBag.NoLayout = true;
+}
+<div>
+    @Html.Action("Tag", "News", new { tag = Model })
+</div>

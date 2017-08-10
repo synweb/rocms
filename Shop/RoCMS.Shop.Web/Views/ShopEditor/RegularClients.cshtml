@@ -1,0 +1,69 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+@{
+    ViewBag.PageTitle = "Скидки постоянным клиентам";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+@Js("/bin/Content/admin/shop")
+<div>
+
+    <h1>Скидки для постоянных покупателей</h1>
+
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createDiscount"><i class="fa fa-plus"></i>&nbsp;Добавить</a>
+    </div>
+
+    <form class="form-horizontal" data-bind="with: selectedItem">
+        <div class="form-group">
+            <label class="control-label col-lg-2">Минимальная сумма</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: minimalSum">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Скидка (%)</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: discount">
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-success" title="Сохранить" data-bind="click: function() {save($root);}">Сохранить</a>
+        </div>
+    </form>
+
+
+    <table class="table" style="margin-top:10px;">
+        <tr>
+            <th>Минимальная сумма</th>
+            <th>Скидка, %</th>
+            <th></th>
+        </tr>
+        <tbody data-bind="template: { name: 'discount-item', foreach: regularClientDiscounts }"></tbody>
+    </table>
+    <script type="text/html" id="discount-item">
+        <tr data-bind="click: function(){ $root.selectItem($data); }">
+            <td data-bind="text: minimalSum"></td>
+            <td data-bind="text: discount"></td>
+            <td>
+@if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+{
+    <a data-bind="click: function () { remove($data, $root); }, clickBubble: false"
+       class="btn btn-danger btn-xs"
+       title="@ShopStrings.Shop_Spec_Delete">
+        <i class="fa fa-times"></i>
+    </a>
+}
+               </td>
+        </tr>
+    </script>
+
+    @JsInline(@<script>
+        $(function () {
+            regularClientsLoaded();
+        });
+    </script>)
+</div>

@@ -1,0 +1,34 @@
+﻿@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Web.Contract.Services
+@model RoCMS.Web.Contract.Models.Page
+
+@{
+    ViewBag.Title = Model.Title;
+    ViewBag.Header = Model.Header;
+
+    ViewBag.Styles = Model.Styles;
+    ViewBag.Scripts = Model.Scripts;
+
+    var pageService = DependencyResolver.Current.GetService<IPageService>();
+    ViewBag.CanonicalUrl = Url.RouteUrl("PageSEF", new { relativeUrl = pageService.GetPageCanonicalUrl(Model.RelativeUrl)});
+
+    if (!String.IsNullOrEmpty(Model.Layout))
+    {
+        ViewBag.Layout = Model.Layout;
+
+        Layout = String.Format("~/Views/Shared/PublicLayouts/_{0}.cshtml", Model.Layout);
+    }
+    else
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+    bool showEditLink = User.IsAuthorizedForResource(RoCmsResources.Pages);
+}
+@if (showEditLink)
+{
+    @Html.Partial("_AdminWidget", Url.Action("EditPage", "Admin", new { relativeUrl = Model.RelativeUrl }))
+}
+    
+@Html.Raw(ContentRenderHelper.RenderContent(Model.Content))

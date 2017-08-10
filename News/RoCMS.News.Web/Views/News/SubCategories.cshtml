@@ -1,0 +1,18 @@
+﻿@model RoCMS.News.Contract.Models.Category
+
+@{
+
+    ViewBag.Title = ViewBag.Header = ViewBag.CategoryName;
+    if (ViewBag.NoLayout != null && (bool)ViewBag.NoLayout)
+    {
+    }
+    else
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+    }
+}
+
+@foreach (var cat in Model.ChildrenCategories)
+{
+    @Html.Partial("_LastRubric", cat.CategoryId)
+}

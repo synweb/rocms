@@ -1,0 +1,10 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@using RoCMS.Helpers
+@using RoCMS.Web.Contract.Services
+@model int
+@{
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+    var block = blockService.GetBlock(Model);
+}
+
+@Html.Raw(ContentRenderHelper.RenderContent(block.Content))

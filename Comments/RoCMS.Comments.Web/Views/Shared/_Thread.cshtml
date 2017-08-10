@@ -1,0 +1,26 @@
+﻿@using RoCMS.Comments.Contract.Services
+@using RoCMS.Comments.Contract.ViewModels
+@model ICollection<CommentVM>
+
+
+
+@Html.Partial("_ThreadInternal", Model)
+
+
+<script id="reply-template" type="text/x-custom-template">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="leave-reply-container comment_form">
+
+        <form class="form-horizontal message-form">
+            @*<input class="col-xs-12 comment-name" type="text" name="name" placeholder="Ваше имя (обязательно)" data-val="true" data-val-required="*">
+            <input class="col-xs-12 comment-email email" type="text" name="email" placeholder="Ваш email (обязательно)" data-val="true" data-val-required="*">
+            <input class="col-xs-12 comment-url url" type="text" name="url" placeholder="Ваш сайт">*@
+            <textarea class="col-xs-12 comment-textarea" name="message" rows="5" cols="25" data-val="true" data-val-required="*" placeholder="Комментарий (обязательно)"></textarea>
+            <button type="button" class="hide-leave-reply-container no-corner">Отмена</button>
+            <button type="button" class="leave-reply btn-black">Отправить</button>
+        </form>
+
+    </div>
+    }
+</script>

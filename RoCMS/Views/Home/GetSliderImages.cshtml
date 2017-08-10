@@ -1,0 +1,10 @@
+﻿@model IEnumerable<string>
+@if (Model != null)
+{
+    <ul>
+        @foreach (var str in Model)
+        {
+            <li><img src="@Url.Action("Thumbnail", "Gallery", new {id = str})"/></li>
+        }
+    </ul>
+}

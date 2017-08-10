@@ -1,0 +1,67 @@
+﻿@model RoCMS.Web.Contract.Models.Block
+@using Resources
+@using RoCMS.Base.ForWeb.Models
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    if (((string)ViewBag.Action) == "Create")
+    {
+        ViewBag.PageTitle = Strings.CreateEditBlock_CreateTitle;
+    }
+    else
+    {
+        ViewBag.PageTitle = Strings.CreateEditBlock_EditTitle + " '" + Model.Title + "'";
+    }
+
+
+}
+
+@Js("Content/admin/ro/js/rocms.block.edit.js")
+
+<div class="block-items-info" data-block-id="@(Model == null ? 0 : Model.BlockId)">
+        <form class="block-info">
+            <ul>
+                <li>
+                    @Html.LabelFor(x => x.Title, Strings.CreateBlock_Title)
+                    @Html.ValidationMessageFor(x => x.Title)
+
+                    @if (Model != null)
+                    {
+                        <span class="block-edit-id"> #@Model.BlockId.ToString()</span>
+                    }
+                </li>
+                <li>@Html.TextBoxFor(x => x.Title , new{@class = "block-title form-control"})
+                    
+                </li>
+                
+                <li>
+                    <div class="content-toggle-container">
+                        <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
+                        @Html.LabelFor(m => m.Content, Strings.CreateBlock_Content)
+                        @Html.ValidationMessageFor(m => m.Content)
+                    </div>
+                </li>
+                <li>
+                    @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "block_content", "block-content", ACEModes.HTML) { ShowCommonButtons = true })
+                    @*@Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Content, "block_content", "block-content", ACEModes.HTML))*@
+
+                    
+                </li>
+            </ul>
+            <div class="fixed-action-menu">
+                @if (((string)ViewBag.Action) == "Create")
+                {
+                    <a id="createBlock" class="button-accept btn btn-success" href="@Url.Action("CreateBlock", "Admin")"><i class="fa fa-check"></i> @Strings.CreateBlock_CreateButton</a>
+                }
+                else
+                {
+                    <a id="acceptBlock" class="button-accept btn btn-success" href="@Url.Action("EditBlock", "Admin")"><i class="fa fa-check"></i> @Strings.EditBlock_AcceptButton</a>
+                }
+                <a class="btn btn-default" href="/Admin/Blocks">@Strings.EditBlock_ReturnToBlocks</a>
+            </div>  
+        </form>
+  
+</div>

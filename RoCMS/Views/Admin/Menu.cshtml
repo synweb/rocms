@@ -1,0 +1,25 @@
+﻿@using Resources
+@model List<RoCMS.Web.Contract.Models.Menu>
+@{
+    ViewBag.Title = "title";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = Strings.AdminMenu_PageTitle;
+}
+<div>
+    <a class="button-add create-menu btn btn-success" href="@Url.Action("MenuCreate")" title="@Strings.Menu_CreateMenu"><i class="fa fa-plus"></i>&nbsp;@Strings.Menu_CreateMenu</a>
+</div>
+<div data-menu-list-url="@Url.Action("MenuList", "Admin")">
+    @Html.Partial("_MenuList", Model)    
+</div>
+
+@Js("Content/admin/ro/js/rocms.menu.edit.js")
+
+@JsInline(@<script type="text/javascript">
+    var reloadMenuPageUrl = '@Url.Action("Menu", "Admin")';
+    $(function () {
+        menuPageLoaded();
+    });
+</script>)

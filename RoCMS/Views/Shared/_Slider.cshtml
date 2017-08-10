@@ -1,0 +1,38 @@
+﻿@using RoCMS.Web.Contract.Services
+@using Slide = RoCMS.Web.Contract.Models.Slide
+@model int
+
+@{
+    var sliderService = DependencyResolver.Current.GetService<ISliderService>();
+
+    var slides = sliderService.GetSlides(Model);
+    var slideList = slides as IList<Slide> ?? slides.ToList();
+}
+
+
+<div class="visible-tablet visible-desktop eslider_content row-fluid clearfix">
+    <div class="ei-slider span12" id="ei-slider">
+        <ul class="ei-slider-large">
+            @foreach (var slide in slideList)
+            {
+                <li>
+                    <img alt="@slide.Title" class="featured_image" src="@Url.Action("Image", "Gallery", new {id = slide.ImageId})" />
+                    <div class="ei-title">
+                        <h2 style="color: rgb(0, 136, 204);"><a href="@slide.Link">@slide.Title</a></h2>
+                        <h3>@slide.Description</h3>
+                    </div>
+                </li>
+            }
+        </ul>
+        <ul class="ei-slider-thumbs">
+            <li class="ei-slider-element">Current</li>
+            @foreach (var slide in slideList)
+            {
+                <li><a href="@slide.Link">@slide.Title</a> <img alt="@slide.Title" class="featured_image" src="@Url.Action("Image", "Gallery", new { id = slide.ImageId })" /></li>
+            }
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">jQuery(function () { jQuery('#ei-slider').eislideshow({ animation: 'center', autoplay: true, slideshow_interval: 5000, titlesFactor: 0, thumbMaxWidth: false, speed: 600, }); });</script>
+
+

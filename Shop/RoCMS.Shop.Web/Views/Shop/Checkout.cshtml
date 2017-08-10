@@ -1,0 +1,350 @@
+﻿@using RoCMS.Shop.Contract.Services
+@using RoCMS.Web.Contract.Services
+@{
+    Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+
+    ViewBag.Header = "Корзина";
+    ViewBag.Title = "Корзина";
+
+    var settingsService = DependencyResolver.Current.GetService<IShopSettingsService>();
+    var shopSettings = settingsService.GetShopSettings();
+
+    var couriesCities = shopSettings.CourierCities.Split(',');
+
+    var shopPickUpService = DependencyResolver.Current.GetService<IShopPickupPointService>();
+    var points = shopPickUpService.GetPickupPoints();
+    var pickUpCities = points.Select(x => x.City).Distinct();
+
+    var blockService = DependencyResolver.Current.GetService<IBlockService>();
+    var noGoodsInCartBlock = blockService.GetBlock(9);
+}
+
+<div data-bind="visible: noGoods">
+    @Block(noGoodsInCartBlock)
+</div>
+<div class="row" style="display: none;" data-bind="visible: hasGoods">
+    <div class="col-lg-8 col-lg-offset-2">
+
+
+
+        <div class="cart">
+
+            @* Список товаров, промокод, сумма *@
+            @Html.Partial("_CartItems")
+            <div class="row">
+                <div class="col-xs-4 promo">
+                    Промокод <a href="#" class="quest"></a>
+                </div>
+                <div class="col-xs-3 promocode">
+                    <input type="text" class="form-control" />
+                </div>
+                <div class="col-md-5 total pull-right text-right" data-bind="with: cart">
+                    Всего:
+                    <span data-bind="text: summary"></span>руб.
+                </div>
+            </div>
+
+            @* Способ доставки *@
+            <h3 class="text-center">Способ доставки</h3>
+            <div class="form-horizontal" data-bind="with: order">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#courier" aria-controls="courier" role="tab" data-toggle="tab" data-bind="click: function(){ shipmentType('courier'); }">Курьер</a></li>
+                    <li><a href="#selfpick" aria-controls="selfpick" role="tab" data-toggle="tab" data-bind="click: function(){ shipmentType('selfPickup'); }">Самовывоз</a></li>
+                    <li><a class="post-link" href="#post" aria-controls="post" role="tab" data-toggle="tab" data-bind="click: function(){ shipmentType('post'); }">Почта</a></li>
+                </ul>
+
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="courier">
+                        <div class="form-group">
+                            <label class="col-xs-2">Город:</label>
+                            <div class="col-xs-6">
+                                <select class="form-control" data-bind="value: courierCity">
+                                    <option value="">Не выбран</option>
+                                    @foreach (var city in couriesCities)
+                                        {
+                                        <option value="@city.Trim()">@city.Trim()</option>
+                                        }
+                                </select>
+                            </div>
+                            <div class="col-xs-4" data-bind="with: $root">
+                                <button class="btn btn-default" data-bind="click: anotherCity">Другой город</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-2">Метро:</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: metro" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12">Улица, дом, квартира:</label>
+                            <div class="col-xs-12">
+                                <textarea type="text" class="form-control" data-bind="value: street"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 delivery-price" data-bind="with: $root.cart">
+                                <div data-bind="style: {display : deliveryString() == 'on' ? 'block': 'none'}">
+                                    Стоимость доставки: <span data-bind="text: $root.order().deliveryPrice"></span><span>&nbsp;<em class="fa fa-rub"></em></span>
+                                </div>
+                                <div data-bind="style: {display : deliveryString() == 'free' ? 'block': 'none'}">
+                                    Стоимость доставки: <span>бесплатно</span>
+                                </div>
+                                <div data-bind="style: {display : deliveryString() == 'depend' ? 'block': 'none'}">
+                                    Стоимость доставки определяется <a target="_blank" class="delivery-info" href="/Page/Города">условиями доставки в Ваш город</a>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="selfpick">
+                        <div class="form-group">
+                            <label class="col-xs-2">Город:</label>
+                            <div class="col-xs-6">
+                                <select class="form-control" data-bind="value: pickUpCity">
+                                    <option value="">Не выбран</option>
+                                    @foreach (var city in pickUpCities)
+                                        {
+                                        <option value="@city.Trim()">@city.Trim()</option>
+                                        }
+                                </select>
+                            </div>
+                            <div class="col-xs-4" data-bind="with: $root">
+                                <button class="btn btn-default" data-bind="click: anotherCity">Другой город</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-5">Самовывоз по адресу:</label>
+                            <div class="col-xs-7">
+                                <select class="form-control" data-bind="options: $root.filterPickUpPoints, optionsText: 'title', optionsValue: 'pickUpPointId', value: pickUpPointId"></select>
+                            </div>
+                        </div>
+                        <div class="row" data-bind="with: $root.cart">
+                            <div class="col-xs-12 delivery-price">
+                                <div data-bind="style: {display : deliveryString() == 'on' ? 'block': 'none'}">
+                                    Стоимость доставки: <span data-bind="text: $root.order().deliveryPrice"></span><span>&nbsp;<em class="fa fa-rub"></em></span>
+                                </div>
+                                <div data-bind="style: {display : deliveryString() == 'free' ? 'block': 'none'}">
+                                    Стоимость доставки: <span>бесплатно</span>
+                                </div>
+                                <div data-bind="style: {display : deliveryString() == 'depend' ? 'block': 'none'}">
+                                    Стоимость доставки определяется <a target="_blank" class="delivery-info" href="/Page/Города">условиями доставки в Ваш город</a>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="post">
+                        <div class="form-group">
+                            <label class="col-xs-2">Город:</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: city" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4">Почтовый индекс</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" data-bind="value: postCode" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-12">Улица, дом, квартира:</label>
+                            <div class="col-xs-12">
+                                <input type="text" class="form-control" data-bind="value: street" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 delivery-price">
+                                <div>
+                                    Стоимость доставки определяется <a target="_blank" class="delivery-info" href="http://www.russianpost.ru/rp/servise/ru/home/postuslug/autotarif" rel="nofollow">тарифами почты России</a>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="process-order">
+                <h3 class="text-center">Оформление заказа</h3>
+
+                <div class="form-horizontal">
+                    <div data-bind="with: client">
+
+                        @*Телефон и мыло, запрашиваем контакты, драфтовый заказ создается сразу после ввода любого контакта*@
+                        <div>
+                            <div class="form-group">
+                                <label class="col-xs-4">Телефон:</label>
+                                <div class="col-xs-8">
+                                    <input type="text" class="form-control phone" placeholder="+7 (903) 555-1212" data-bind="value: phone" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4">Email:</label>
+                                <div class="col-xs-8">
+                                    <input type="text" class="form-control" data-bind="value: email" />
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <a href="#" class="btn btn-dark" data-bind="visible: $root.nextButtonVisible(), click: $root.next">Далее</a>
+                            </div>
+                        </div>
+
+                        @*Инфа о регистрации*@
+                        <div data-bind="with: $root">
+                            <div class="account" data-bind="visible: $root.accountInfoVisible">
+
+                                <div>
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <div class="extra-wrap">
+                                                <label for="register">
+                                                    <input name="account" value="true" id="register" type="radio" data-bind="checked: withRegister">
+                                                    <b>Я заказываю в первый раз, в дальнейшем хочу получить скидку постоянного клиента</b>
+                                                </label>
+                                            </div>
+
+                                            <div class="extra-wrap">
+                                                <label for="oldUser">
+                                                    <input name="account" value="oldUser" id="oldUser" checked="checked" type="radio" data-bind="checked: withRegister">
+                                                    <b>Я уже заказывал ранее</b>
+                                                </label>
+                                            </div>
+
+                                            <div class="extra-wrap">
+                                                <label for="guest">
+                                                    <input name="account" value="false" id="guest" type="radio" data-bind="checked: withRegister">
+                                                    <b>Я заказываю в первый раз, скидку не хочу</b>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div data-bind="visible: authorizeFormVisible">
+                                    <div class="form-group">
+                                        <div class="col-xs-12">
+                                            <div data-bind="with: account">
+                                                <form>
+                                                    <div class="form-group">
+                                                        <label class="col-xs-4">Пароль:</label>
+                                                        <div class="col-xs-8">
+                                                            <input type="password" class="form-control" data-bind="value: password">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="text-align: center;">
+                                                        <a data-bind="click: $root.authorize" class="btn btn-dark">Войти на сайт</a>
+                                                        <a href="@Url.RouteUrl("ForgotPassword")" target="_blank">Забыли пароль?</a>
+                                                    </div>
+                                                    @Html.AntiForgeryToken()
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div data-bind="visible: passwordsForRegisterVisible">
+                                    <div class="form-group">
+                                        <label class="col-xs-4">Пароль:</label>
+                                        <div class="col-xs-8">
+                                            <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-xs-4">Подтвердите пароль:</label>
+                                        <div class="col-xs-8">
+                                            <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().confirmPassword">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        @* ФИО *@
+                        <div data-bind="visible: $root.orderInfoVisible">
+
+                            <div class="form-group">
+                                <label class="col-xs-4">Фамилия:</label>
+                                <div class="col-xs-8">
+                                    <input type="text" class="form-control" data-bind="value: lastName" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4">Имя:</label>
+                                <div class="col-xs-8">
+                                    <input type="text" class="form-control" data-bind="value: name" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-4">Отчество:</label>
+                                <div class="col-xs-8">
+                                    <input type="text" class="form-control" data-bind="value: secondName" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    @*Способ оплаты, комментарий, финальная сумма*@
+                    <div data-bind="visible: $root.orderInfoVisible">
+
+                        <div data-bind="with:order">
+
+                            <div class="order-footer">
+                                <div class="row">
+                                    <label class="col-xs-4">Способы оплаты:</label>
+                                    <div class="col-xs-4 cash">
+                                        <input type="radio" name="paymenttype" class="radiobtn" value="cash" data-bind="checked: paymentType" />Наличными
+                                    </div>
+                                    <div class="col-xs-4 card">
+                                        <input type="radio" name="paymenttype" class="radiobtn" value="card" data-bind="checked: paymentType" />Картой, электронными деньгами
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-xs-4">Комментарии к заказу:</label>
+                                    <div class="col-xs-12">
+                                        <textarea class="form-control" data-bind="value: comment"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-7"></div>
+                            <div class="col-xs-5 total" data-bind="with: cart">
+                                Сумма заказа:
+                                <span data-bind="text: finalSummary()"></span>&nbsp;<em class="fa fa-rub"></em>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <input data-bind="value: termsAccepted" type="checkbox" class="cb" />я соглашаюсь с <a href="#">пользовательским соглашением</a>
+                        </div>
+                        <div class="text-center submit">
+                            <input type="submit" class="green-btn" value="Отправить заказ" data-bind="click: processOrder" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@Js("/bin/Content/client/shop")
+
+@JsInline(@<script type="text/javascript">
+    var deliveryCost = parseFloat('@shopSettings.DeliveryCost');
+    var selfPickUpCost = parseFloat('@shopSettings.SelfPickupCost');
+
+    $(function () {
+        onCartLoaded();
+
+    });
+    </script>)

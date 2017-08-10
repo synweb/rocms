@@ -1,0 +1,117 @@
+﻿@model RoCMS.Web.Contract.Models.DatabaseSettings
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+    ViewBag.PageTitle = "Для разработчиков";
+}
+
+<div class="alert alert-warning">
+    <p class="lead">Будьте осторожны!</p>
+    <span>Любая ошибка может привести сайт в неработоспособное состояние</span>
+</div>
+
+<div class="col-lg-6">
+    <form class="box dbsettings" autocomplete="off">
+        <header>
+            <div class="icons">
+                <i class="fa fa-database"></i>
+            </div>
+            <h5>База данных</h5>
+        </header>
+        <div class="body collapse in" aria-expanded="true">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Сервер</label>
+
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" name="DbDataSource" autocomplete="off" value="@Model.DbDataSource"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">База</label>
+
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" name="DbDatabase" autocomplete="off" value="@Model.DbDatabase"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Пользователь</label>
+
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" name="DbLogin" autocomplete="off" value="@Model.DbLogin"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Пароль</label>
+
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control dbpassword" name="DbPassword" autocomplete="off" value="@Model.DbPassword"/>
+                    </div>
+                </div>
+            </div>
+            <p class="db-ok" style="display:none">Настройки базы указаны верно</p>
+            <p class="db-err" style="display:none">Не удалось подключиться к базе, перепроверьте настройки</p>
+            <button type="button" class="btn btn-warning dbcheck">Проверить</button>
+            <button type="button" disabled="disabled" class="btn btn-success dbsave">Сохранить</button>
+        </div>
+    </form>
+</div>
+
+@JsInline(@<script>
+    $(function () {
+        $("form.dbsettings input").on("change", function() {
+            $(".dbsave").attr("disabled", "disabled");
+            $('.db-err').hide();
+            $('.db-ok').hide();
+        });
+
+        $("button.dbcheck").click(function () {
+            $(".dbcheck").attr("disabled", "disabled");
+            $(".dbsave").attr("disabled", "disabled");
+            var data={
+                DbDataSource: $("input[name=DbDataSource]").val(),
+                DbDatabase: $("input[name=DbDatabase]").val(),
+                DbLogin: $("input[name=DbLogin]").val(),
+                DbPassword: $("input[name=DbPassword]").val(),
+            }
+            postJSON("/api/dev/db/check", data, function (res) {
+                if (res.succeed) {
+                    $('.db-ok').show();
+                    $('.db-err').hide();
+                    $(".dbsave").removeAttr("disabled");
+                } else {
+                    $('.db-err').show();
+                    $('.db-ok').hide();
+                }
+            }).always(function () {
+                $(".dbcheck").removeAttr("disabled");
+            });
+        });
+
+        $("button.dbsave").click(function () {
+            var data = {
+                DbDataSource: $("input[name=DbDataSource]").val(),
+                DbDatabase: $("input[name=DbDatabase]").val(),
+                DbLogin: $("input[name=DbLogin]").val(),
+                DbPassword: $("input[name=DbPassword]").val(),
+            }
+            postJSON("/api/dev/db/update", data, function (res) {
+                if (res.succeed) {
+                    smartAlert("Настройки базы сохранены");
+                } else {
+                    smartAlert("Ошибка при сохранении настроек базы");
+                }
+            });
+        });
+    })
+
+</script>)

@@ -1,0 +1,137 @@
+﻿@using RoCMS.Base.ForWeb.Helpers
+@{
+    var pagingParams = ParamExtractor.ExtractParamsForSEF(Request);
+
+    int page = ViewBag.Page;
+    int pageSize = ViewBag.PageSize;
+    int totalCount = ViewBag.TotalCount;
+
+    string pagingRoute = ViewBag.PagingRoute ?? "PageSEF";
+}
+
+@if (totalCount > pageSize)
+{
+    <text>@Pager(totalCount, pageSize, page, pagingParams, pagingRoute)</text>
+}
+
+@helper Pager(int totalCount, int pageSize, int page, IDictionary<string, object> pagingParams, string routeName)
+{
+
+    <ul class="pagination">
+        @{
+            int pagesCount = totalCount / pageSize;
+            if (totalCount / pageSize * pageSize != totalCount)
+            {
+                pagesCount++;
+            }
+        }
+
+        @if (pagesCount > 1 && page != 1)
+        {
+
+            var args = new RouteValueDictionary(pagingParams);
+            if (page - 1 != 1)
+            {
+                args["page"] = page - 1;
+            }
+            else
+            {
+                args = args.RemoveRouteParam("page");
+            }
+            <li>
+                <a href="@Url.RouteUrl(routeName, args)" class="prev">&larr;</a>
+            </li>
+        }
+
+        @for (int i = 1; i <= pagesCount; i++)
+        {
+            if (pagesCount > 10)
+            {
+                if (page > 4)
+                {
+                    if (i == 2)
+                    {
+                        <li>
+                            <span>...</span>
+                        </li>
+                    }
+                    if (i < page - 2 && i != 1)
+                    {
+                        continue;
+                    }
+
+                }
+                if (page + 3 < pagesCount)
+                {
+                    if (i >= page + 3 && i != pagesCount)
+                    {
+                        if (i == page + 3)
+                        {
+                            <li>
+                                <span>...</span>
+                            </li>
+                        }
+                        continue;
+                    }
+                }
+            }
+
+            if (page == i)
+            {
+                <li>
+                    <span class="selected">@i</span>
+                </li>
+            }
+            else
+            {
+                var args = new RouteValueDictionary(pagingParams);
+                if (args.ContainsKey("id"))
+                {
+                    args.Remove("id");
+                }
+
+
+                if (args.ContainsKey("page"))
+                {
+                    args.Remove("page");
+                }
+                if (i != 1)
+                {
+                    args.Add("page", i);
+                }
+
+                if (args.ContainsKey("pgsize"))
+                {
+                    args.Remove("pgsize");
+                }
+                if (pageSize != 10)
+                {
+                    args.Add("pgsize", pageSize);
+                }
+                <li>
+                    <a href="@Url.RouteUrl(routeName, args)">@i</a>
+                </li>
+            }
+
+        }
+        @{
+            var argsAll = new RouteValueDictionary(pagingParams);
+            var routeValues = argsAll.AddRouteParam("pgsize", "all");
+            routeValues.Remove("page");
+        }
+        @*<a href="@Url.RouteUrl(routeName, routeValues)">все сразу</a>*@
+        @*<a href="@Url.RouteUrl(routeName, routeValues.AddRouteParam("page", 2))">2</a>
+            <a href="@Url.RouteUrl(routeName, routeValues.AddRouteParam("page", 3))">3</a>
+            <a href="@Url.RouteUrl(routeName, routeValues)">4</a>
+            <a href="@Url.RouteUrl(routeName, argsAll)" class="next">Следующая&rarr;</a>*@
+
+        @if (pagesCount > 1 && page != pagesCount)
+        {
+            var args = new RouteValueDictionary(pagingParams);
+            args["page"] = page + 1;
+            <li>
+                <a href="@Url.RouteUrl(routeName, args)" class="next">&rarr;</a>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[InterfaceString]
+(
+	[Key] VARCHAR(200) NOT NULL PRIMARY KEY,
+	[Value] NVARCHAR(MAX) NULL
+)

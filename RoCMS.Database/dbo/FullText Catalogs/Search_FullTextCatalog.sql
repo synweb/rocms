@@ -1,0 +1,2 @@
+﻿CREATE FULLTEXT CATALOG [Search_FullTextCatalog] AUTHORIZATION [dbo]
+GO

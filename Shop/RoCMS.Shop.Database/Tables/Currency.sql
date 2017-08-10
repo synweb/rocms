@@ -1,0 +1,12 @@
+﻿CREATE TABLE [Shop].[Currency]
+(
+	[CurrencyId] VARCHAR(3) NOT NULL PRIMARY KEY NONCLUSTERED,
+	[Name] NVARCHAR(100) NOT NULL,
+	[ShortName] NVARCHAR(20) NOT NULL,
+	[Rate] DECIMAL(18,4) NOT NULL DEFAULT 1,
+	[SortOrder] INT NOT NULL DEFAULT 0,
+	[IsMain] BIT NOT NULL DEFAULT 0
+)
+GO
+
+CREATE CLUSTERED INDEX [IX_Currency_Sort] ON [Shop].[Currency] ([SortOrder] ASC)

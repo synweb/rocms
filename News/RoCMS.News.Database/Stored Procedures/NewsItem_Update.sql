@@ -1,0 +1,35 @@
+﻿CREATE PROCEDURE [News].[NewsItem_Update]
+@Title nvarchar(MAX),
+@Text nvarchar(MAX),
+@PostingDate datetime,
+@Description nvarchar(MAX),
+@MetaDescription nvarchar(MAX),
+@Keywords nvarchar(MAX),
+@ImageId varchar(30),
+@RelativeUrl nvarchar(300),
+@CommentTopicId int,
+@RecordType varchar(20),
+@Filename NVARCHAR(200),
+@VideoId varchar(50),
+@NewsId int,
+@RelatedNewsItemId int,
+@EventDate datetime,
+@AdditionalHeaders nvarchar(MAX)
+AS
+	UPDATE [News].[NewsItem] SET
+		[Title]=@Title,
+		[Text]=@Text,
+		[PostingDate]=@PostingDate,
+		[Description]=@Description,
+		[MetaDescription]=@MetaDescription,
+		[Keywords]=@Keywords,
+		[ImageId]=@ImageId,
+		[RelativeUrl]=@RelativeUrl,
+		[CommentTopicId]=@CommentTopicId,
+		[RecordType]=@RecordType,
+		[Filename]=@Filename,
+		[VideoId]=@VideoId,
+		[RelatedNewsItemId]=@RelatedNewsItemId,
+		[EventDate]=@EventDate,
+		[AdditionalHeaders]=@AdditionalHeaders
+	WHERE [NewsId]=@NewsId

@@ -1,0 +1,43 @@
+﻿@using System.Globalization
+@using RoCMS.Base.Models
+@using RoCMS.News.Contract.Models
+@using RoCMS.News.Contract.Services
+@using RoCMS.Web.Contract.Extensions
+
+@model string
+@{
+    var newsService = DependencyResolver.Current.GetService<INewsItemService>();
+    int total;
+    int count = 10;
+    IEnumerable<NewsItem> news = newsService.GetNewsPage(new NewsFilter()
+    {
+        TagName = Model,
+        OnlyPosted = true,
+        SortBy = NewsItemSortBy.PostingDate,
+        SortOrder = SortOrder.Desc
+    }, 1, count, out total);
+}
+
+
+<ul>
+    @foreach (var item in news)
+    {
+        string imgUrl = Url.Action("Thumbnail", "Gallery", new { id = item.ImageId });
+        <li class="short">
+
+            <div class="short-left">
+                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" title="@item.Title">
+                    <img class="img-responsive" src="@imgUrl" alt="@item.Title">
+                </a>
+            </div>
+            <div class="short-body">
+
+                <a class="heading" href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" title="@item.Title">
+                    @item.Title
+                </a>
+
+                <span>@item.PostingDate.ApplySiteTimezone().ToString("d MMM yyyy", CultureInfo.CurrentUICulture)</span>
+            </div>
+        </li>
+    }
+</ul>

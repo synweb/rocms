@@ -1,0 +1,108 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base.Helpers
+
+<div class="order-container">
+
+
+    <form class="message-container form-horizontal pd-sm">
+        <input class="message-name form-control" id="Name" name="Name" type="text" placeholder="Имя">
+
+        <span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+        <input class="message-email form-control" data-val="true" placeholder="Email" data-val-optrequired="Укажите телефон или email" data-val-regex="Неправильный формат email-адреса" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$" id="Email" name="Email" type="text" value="">
+
+
+        <span class="field-validation-valid" data-valmsg-for="Phone" data-valmsg-replace="true"></span>
+        <input class="message-phone form-control" placeholder="Телефон" data-val-optrequired="Укажите телефон или email" id="Phone" name="Phone" type="text" value="">
+
+        <textarea class="message-text form-control" placeholder="Сообщение" cols="20" data-val="true" data-val-required="Поле обязательно для заполнения" id="Text" name="Text" resize="none" rows="4"></textarea>
+
+        <div class="form-group text-center">
+
+            <button class="send btn btn-lg btn-dark" type="button">Отправить</button>
+            <button class="clear btn btn-lg btn-light" type="button">Очистить</button>
+
+            <div class="message-state">&nbsp;</div>
+
+        </div>
+
+    </form>
+
+
+
+
+
+</div>
+
+@JsInline(
+    @<script type="text/javascript">
+        $.validator.unobtrusive.adapters.addBool("optrequired");
+        $.validator.addMethod("optrequired", function (value, element) {
+            var $container = $(".order-container");
+            var $phone = $container.find(".message-phone");
+            var $email = $container.find(".message-email");
+            return $phone.val() || $email.val();
+        });
+
+        $(function () {
+            var $container = $(".order-container");
+            var $div = $container.find(".message-container");
+            $.validator.unobtrusive.parse($div, true);
+
+            var clearForm = function () {
+                $container.find(".message-text").val("");
+                $container.find(".message-phone").val("");
+                $container.find(".message-email").val("");
+                $container.find(".message-name").val("");
+
+            };
+
+
+            $(".order-container .clear").click(function () {
+                clearForm();
+            });
+
+            $(".order-container .send").click(function () {
+                var form = $("form.message-container");
+                $.validator.unobtrusive.parse(form, true);
+
+                var that = $(this);
+                $container.find('.message-state').html("");
+
+
+                var saveData = function () {
+                    that.attr("disabled", "disabled");
+                    var message = {
+                        Text: form.find(".message-text").val(),
+                        Phone: form.find(".message-phone").val(),
+                        Email: form.find(".message-email").val(),
+                        Name: form.find(".message-name").val()
+                    };
+                    //alert(JSON.stringify(message));
+                    sendMessage(message, "order", function (result) {
+                        var msg;
+                        if (result.succeed === true) {
+                            msg = '<div class="alert alert-success">Ваша заявка принята, мы с вами свяжемся в ближайшее время.</div>';
+                            if (window.yaCounter) {
+                                window.yaCounter.reachGoal("METRIKA_ORDER");
+                            }
+                            clearForm();
+                        } else {
+                            msg = "Произошла ошибка, попробуйте еще раз.";
+                        }
+                        $container.find('.message-state').html(msg);
+                    }, function () { that.removeAttr("disabled"); });
+
+
+
+                }
+                if (form.valid()) {
+                    saveData();
+                } else {
+                    form.validate().focusInvalid();
+                }
+                return false;
+            });
+        });
+    </script>
+)

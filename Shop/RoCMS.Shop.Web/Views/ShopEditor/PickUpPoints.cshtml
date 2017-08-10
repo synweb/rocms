@@ -1,0 +1,137 @@
+﻿@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+@{
+    ViewBag.PageTitle = "Пункты самовывоза";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+
+@Js("/bin/Content/admin/shop")
+
+<div>
+
+    <h1>Пункты самовывоза</h1>
+
+    <div class="row" style="padding-bottom:5px;">
+        <div class="col-xs-4">
+            <a class="button-add btn btn-success" data-bind="click: createPickUpPoint"><i class="fa fa-plus"></i>&nbsp;Добавить</a>
+        </div>
+    </div>
+
+    <form class="form-horizontal" data-bind="with: selectedItem">
+        <div class="form-group">
+            <label class="control-label col-lg-2">Название</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: title">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Партнёр</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: partner">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Город</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: city">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Адрес</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: address">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Телефон</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Метро</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: metro">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">График работы</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: schedule">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Как добраться</label>
+            <div class="col-lg-10">
+                <textarea class="form-control" data-bind="value: howToReach"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Способы оплаты</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: paymentType">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Дополнительное описание</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" data-bind="value: description">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">Изображение</label>
+            <div class="col-lg-10">
+                <img alt="Изображение" data-bind="click: pickImage, thumbnailSrc: imageId" />
+            </div>
+        </div>
+        <div class="form-group text-center">
+            <a class="btn btn-success" title="Сохранить" data-bind="click: function() {save($root);}">Сохранить</a>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-xs-4">
+            <select class="form-control" data-bind="options: cities, value: currentCity"></select>
+        </div>
+        <div class="col-xs-4">
+            @*<input type="text" class="form-control" placeholder="Партнёр" data-bind="value: currentPartner"/>*@
+            <select class="form-control" data-bind="options: partners, value: currentPartner"></select>
+        </div>
+    </div>
+
+    <table class="table" style="margin-top:10px;">
+        <tr>
+            <th>Заголовок</th>
+            <th>Город</th>
+            <th>Адрес</th>
+            <th></th>
+        </tr>
+        <tbody data-bind="template: { name: 'pickup-point-item', foreach: filteredPickUpPoints }"></tbody>
+    </table>
+    <script type="text/html" id="pickup-point-item">
+        <tr data-bind="click: function(){ $root.selectItem($data); }">
+            <td data-bind="text: title"></td>
+            <td data-bind="text: city"></td>
+            <td data-bind="text: address"></td>
+            <td>
+                @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                {
+                    <a data-bind="click: function () { remove($data, $root); }, clickBubble: false"
+                       class="btn btn-danger btn-xs"
+                       title="Удалить пункт выдачи">
+                        <i class="fa fa-times"></i>
+                    </a>
+                }
+            </td>
+        </tr>
+    </script>
+
+    @JsInline(@<script>
+        $(function () {
+            pickUpPointsLoaded();
+        });
+    </script>)
+</div>

@@ -1,0 +1,14 @@
+﻿@using RoCMS.Options.Contract.Services
+@model int
+           
+@{
+    IOptionService optionsService = DependencyResolver.Current.GetService<IOptionService>();
+    var option = optionsService.GetOption(Model);
+}
+
+<select class="form-control chosen-select" data-placeholder="Выберите @option.Name.ToLower()" multiple="">
+    @foreach (var value in option.OptionValues)
+    {
+        <option value="@value.Id">@option.OptionValues</option>
+    }
+</select>

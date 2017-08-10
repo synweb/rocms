@@ -1,0 +1,15 @@
+﻿<div class="authorize" data-bind="style: {display: account().isAuthorized() === true ? 'none' : 'block'}">
+    <h3>Авторизация на сайте</h3>
+
+    <form novalidate="novalidate" data-bind="with: account">
+        <input class="form-control" type="text" data-bind="value: username" /> <input class="form-control" type="password" data-bind="value: password" />
+        <button class="green-btn leaf" type="button" data-bind="click: $root.authorize">Войти на сайт<span class="leaf">&nbsp;</span></button>
+        @Html.AntiForgeryToken()
+    </form>
+</div>
+
+@*<script>
+    $(function() {
+        layoutLoginLoaded();
+    });
+</script>*@

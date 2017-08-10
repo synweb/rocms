@@ -1,0 +1,19 @@
+﻿@font-face {
+    font-family: 'PT Sans';
+    src: url('/Content/base/fonts/PTS55F.ttf');
+}
+
+.rub {
+    font-family: 'PT Sans', serif;
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+}
+
+    .rub:before {
+        content: "\20CE";
+    }

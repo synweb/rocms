@@ -1,0 +1,36 @@
+﻿@using Resources
+@model RoCMS.Web.Contract.Models.Review
+
+<div class="review">
+    <div>
+        <strong>Автор:</strong>&nbsp;@(Model.Author)
+        @if (!String.IsNullOrWhiteSpace(Model.Email))
+        {
+            <a href="mailto:@Model.Email" class="review-author">@Model.Email</a>
+        }
+    </div>
+    
+@*    @if (!String.IsNullOrWhiteSpace(Model.VK))
+    {
+        <li>
+            <a href="http://vk.com/@(Model.VK)" target="_blank">VK</a>
+        </li>
+    }
+    @if (!String.IsNullOrWhiteSpace(Model.Skype))
+    {
+        <li>
+            <a href="#">@Model.Skype</a>
+        </li>
+    }*@
+    <div class="review-text">
+        <strong>Отзыв:</strong><br/>
+        @Html.Raw(Model.Text.Replace("\n", "\n<br>"))
+    </div>
+    @if (!string.IsNullOrEmpty(Model.Response))
+    {
+        <div class="review-text">
+            <strong>Ответ:</strong><br/>
+            @Html.Raw(Model.Response.Replace("\n", "\n<br>"))
+        </div>
+    }
+</div>

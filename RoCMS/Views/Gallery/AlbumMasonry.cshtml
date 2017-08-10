@@ -1,0 +1,50 @@
+﻿@using RoCMS.Web.Contract.Services
+@model int
+
+@{
+    var albumService = DependencyResolver.Current.GetService<IAlbumService>();
+    var albumImages = albumService.GetAlbumImages(Model);
+}
+
+
+
+<div id="gallery-@Model" class="grid">
+    <div class="grid-sizer"></div>
+    @foreach (var img in albumImages)
+    {
+        <div class="grid-item">
+
+            <img class="img-responsive" src="@Url.Action("Image", new { id=img.ImageId})" alt="@(img.Title ?? img.ImageId)"
+                 href="@Url.Action("Image", new { id=img.ImageId})" />
+            <a data-description="@img.Description" data-gallery="gallery-@Model"
+               href="@(img.DestinationUrl ?? Url.Action("Image", new { id=img.ImageId}))" alt="@(img.Title ?? img.ImageId)">
+                <div class="overlay">
+                    <em class="fa fa-plus"></em>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+
+
+@Js("Content/client/vendor/bootstrap-image-gallery/js")
+
+@JsInline(@<script type="text/javascript">
+$(function(){
+
+		var gridGallery = $("#gallery-@Model");
+		var gridItem = $(".grid-item");
+		gridItem.hide();
+
+
+		gridGallery.imagesLoaded(function() {
+			gridItem.fadeIn();
+
+			$('#gallery-@Model').masonry({
+			  itemSelector: '.grid-item',
+			  columnWidth: '.grid-sizer'
+			});
+		});
+    });
+    </script>)

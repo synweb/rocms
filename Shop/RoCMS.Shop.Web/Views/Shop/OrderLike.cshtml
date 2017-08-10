@@ -1,0 +1,16 @@
+﻿@model RoCMS.Shop.Contract.Models.Category
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_newUserLayout.cshtml";
+    }
+    ViewBag.Title = "Оформить заказ";
+}
+
+@foreach(var spec in Model.OrderFormSpecs)
+{
+    <p>
+        @spec.Name
+    </p>
+}

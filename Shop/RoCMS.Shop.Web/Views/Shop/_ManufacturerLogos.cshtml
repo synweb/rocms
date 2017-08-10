@@ -1,0 +1,45 @@
+﻿@using RoCMS.Shop.Contract.Services
+@{
+    var shopManufacturerService = DependencyResolver.Current.GetService<IShopManufacturerService>();
+    var mans = shopManufacturerService.GetManufacturers();
+}
+
+
+<div class="product-grid cats-list">
+    <ul>
+        @for (int i = 0; i < mans.Count; i++)
+        {
+            string cls = "";
+            var man = mans[i];
+            //if (cat.Hidden)
+            //{
+            //    continue;
+            //}
+            if (String.IsNullOrEmpty(man.LogoImageId))
+            {
+                continue;
+            }
+            switch (i % 3)
+            {
+                case 0:
+                    cls = @"class=""first-in-line""";
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    cls = @"class=""last-in-line""";
+                    break;
+            }
+
+
+            <li @cls style="background: none;">
+                <a href="@Url.Action("Manufacturer", new { id = man.ManufacturerId })">
+                    <div class="image">
+                        <img src="@Url.Action("Thumbnail", "Gallery", new { id = man.LogoImageId })" alt="@man.Name">
+                    </div>
+                </a>
+            </li>
+
+        }
+    </ul>
+</div>

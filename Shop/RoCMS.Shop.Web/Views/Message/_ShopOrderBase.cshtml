@@ -1,0 +1,309 @@
+﻿@using RoCMS.Shop.Contract.Models
+@using RoCMS.Shop.Contract.Services
+@using RoCMS.Shop.Web.Helpers
+@using RoCMS.Web.Contract.Extensions
+@model RoCMS.Shop.Contract.Models.Email.ShopOrderEmail
+
+@{
+    Layout = null;
+    var order = Model.Order;
+    var client = Model.Client;
+    var shopService = DependencyResolver.Current.GetService<IShopService>();
+}
+
+
+
+<table class="w640" width="640" cellpadding="0" cellspacing="0" border="0">
+    <tbody>
+        <tr>
+            <td id="header" class="w640" width="640" align="center">
+
+                <div align="center" id="headline">
+                    <p>
+                        <strong><singleline label="Title">Заказ № @Model.Order.OrderId</singleline></strong>
+                    </p>
+                </div>
+
+
+            </td>
+        </tr>
+        <tr id="simple-content-row">
+            <td class="w640" width="640">
+                <table align="left" class="w640" width="640" cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="w30" width="30"></td>
+                            <td class="w580" width="580">
+                                <layout label="Text only">
+                                    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+                                        <tbody>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Дата заказа:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @Model.Order.CreationDate.ApplySiteTimezone().ToString("dd.MM.yyyy HH:mm")
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Имя:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @client.Name @client.SecondName @client.LastName
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Телефон:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        <a href="tel:@client.Phone.Replace(" ", "").Replace("(", "").Replace(")", "")">
+                                                            @client.Phone
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Email:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @client.Email
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Город:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @order.City
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Метро:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @order.Metro
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Адрес:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @String.Format("{0} ул. {1}, дом {2}, корп/стр. {5}, под. {3}, кв. {4}", order.PostCode,
+                                                                        order.Street, order.House, order.FrontNumber, order.Appartment, order.HouseIndex)
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Способ доставки:</singleline></p>
+
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @order.ShipmentType.Description()
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @if (order.PickUpPoint != null && order.ShipmentType == ShipmentType.SelfPickup)
+                                            {
+                                                <tr>
+                                                    <td class="w180" width="180">
+                                                        <p align="left" class="article-title"><singleline label="Title">Пункт самовывоза:</singleline></p>
+
+                                                    </td>
+                                                    <td class="w360" width="360">
+                                                        <div class="article-content">
+                                                            @order.PickUpPoint.Address
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </layout>
+
+                                <layout label="Text only">
+                                    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0" style="font-size:13px;">
+                                        <thead>
+                                            <tr>
+                                                <th>Артикул</th>
+                                                <th width="160">Название</th>
+                                                <th>Цена</th>
+                                                <th>К-во</th>
+                                                <th>Сумма</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in order.GoodsInOrder)
+                                            {
+                                                var goods = shopService.GetGoods(item.GoodsId);
+                                                decimal sum = item.Price * item.Quantity;
+                                                <tr style="padding: 5px 0 5px 0">
+                                                    <td style="text-align: center;">
+                                                        @goods.Article
+                                                    </td>
+                                                    <td width="160" style="text-align: center;">
+                                                        @goods.Name @if (item.PackId.HasValue)
+                                                        {
+                                                            @goods.Packs.First(x => x.PackInfo.PackId == item.PackId).PackInfo.Name
+                                                        }@if (item.Goods.Manufacturer != null && !String.IsNullOrEmpty(item.Goods.Manufacturer.Name))
+                                                        {
+                                                            <text>, @item.Goods.Manufacturer.Name</text>
+                                                        }
+                                                    </td>
+                                                    <td style="text-align: center;">
+
+                                                        @if (goods.Discount > 0)
+                                                        {
+                                                            <span>@item.BasePrice руб.<br /></span>
+                                                                            <span>- @(goods.Discount)%<br /></span>
+                                                                            <span>= @item.Price руб.<br /></span>
+                                                                            @*@String.Format("{0} руб. - {1}% = {2} руб.", item.BasePrice, goods.Discount, item.Price)*@
+
+                                                        }
+                                                        else
+                                                        {
+                                                            @(item.BasePrice.ToString() + " руб.")
+                                                        }
+
+                                                    </td>
+
+                                                    <td style="text-align: center;">
+                                                        @item.Quantity.ToString()
+                                                    </td>
+                                                    <td style="text-align: center;">
+                                                        @sum руб.
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </layout>
+
+                                @{
+
+                                    string st = string.Empty;
+                                    switch (order.ShipmentType)
+                                    {
+                                        case ShipmentType.Courier:
+                                        case ShipmentType.SelfPickup:
+
+                                            if (!order.DeliveryPrice.HasValue)
+                                            {
+                                                st = "бесплатно";
+                                            }
+                                            else
+                                            {
+                                                st = order.DeliveryPrice.ToString() + " руб.";
+                                            }
+
+                                            break;
+                                        case ShipmentType.Post:
+                                            st = "определяется тарифами почты России: http://www.russianpost.ru/rp/servise/ru/home/postuslug/autotarif";
+                                            break;
+                                    }
+                                }
+
+                                <layout label="Text only">
+                                    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Стоимость доставки:</singleline></p>
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @st
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="w180" colspan="2">
+                                                    <p align="left" class="article-title"><singleline label="Title">Комментарий к заказу:</singleline></p>
+                                                </td>
+
+                                            </tr>
+                                            <tr>
+                                                <td class="w580" colspan="2">
+                                                    <div class="article-content">
+                                                        @order.Comment
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </layout>
+                                @if (order.TotalDiscount > 0)
+                                {
+                                    <layout label="Text only">
+                                        <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+                                            <tbody>
+
+                                                <tr>
+                                                    <td class="w180" width="180">
+                                                        <p align="left" class="article-title"><singleline label="Title">Скидка:</singleline></p>
+                                                    </td>
+                                                    <td class="w360" width="360">
+                                                        <div class="article-content">
+                                                            @order.TotalDiscount%
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </layout>
+                                }
+                                <layout label="Text only">
+                                    <table class="w580" width="580" cellpadding="0" cellspacing="0" border="0">
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="w180" width="180">
+                                                    <p align="left" class="article-title"><singleline label="Title">Итоговая стоимость:</singleline></p>
+                                                </td>
+                                                <td class="w360" width="360">
+                                                    <div class="article-content">
+                                                        @order.Summary.ToString() руб.
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </layout>
+                            </td>
+                            <td class="w30" width="30"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

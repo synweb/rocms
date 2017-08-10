@@ -1,0 +1,103 @@
+﻿@using System.Web.Optimization
+@using Resources
+@using RoCMS.Base
+@using RoCMS.Base.ForWeb.Extensions
+
+@{
+    ViewBag.PageTitle = "Характеристики";
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    }
+}
+
+
+@Js("/bin/Content/admin/shop")
+
+<div>
+    <div>
+        <a class="button-add btn btn-success" data-bind="click: createSpec"><i class="fa fa-plus"></i>&nbsp;@ShopStrings.Shop_Spec_Create</a>
+    </div>
+    <div class="shop-spec-list">
+        <ul class="o-sortable" data-bind="template: { name: 'spec-item-template', foreach: specs }"></ul>
+    </div>
+
+    <script type="text/html" id="spec-item-template">
+        <li class="spec" data-bind="click: $root.selectSpec">
+            <div style="float: right">
+                <a data-bind="click: edit" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Spec_Edit"><i class="fa fa-pencil"></i></a>
+                @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                {
+                    <a data-bind="click: function () { remove($data, $parent); }"
+                       class="btn btn-danger btn-xs"
+                       title="@ShopStrings.Shop_Spec_Delete">
+                        <i class="fa fa-times"></i>
+                    </a>
+                }
+            </div>
+            <div>
+                @if (!Request.IsAjaxRequest())
+                {
+                    <span class="sortable-pin"><i class="fa fa-th"></i>&nbsp;</span>
+
+
+                }
+                
+                <label data-bind="text: name"></label>
+            </div>
+        </li>
+    </script>
+
+    <script type="text/html" id="specTemplate">
+        <div class="shop-spec">
+            @* TODO: отправка формы по энтеру (этого не должно быть!) *@
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Характеристика</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Тип</label>
+                    <div class="col-lg-8">
+                        <select class="form-control" data-bind="value: valueType">
+                            <option value="String">Строка</option>
+                            <option value="Number">Число</option>
+                            <option value="Enum">Перечисление</option>
+                            <option value="ImageId">Изображение</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" data-bind="style: {display: valueType() === 'Enum' ? 'block': 'none'}">
+                    <label class="control-label col-lg-4">Допустимые значения</label>
+                    <div class="col-lg-8">
+                        <input id="specVals" class="form-control" data-bind="value: acceptableValues"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Префикс (отображается перед значением)</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" data-bind="value: prefix" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Постфикс (отображается после значения)</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" data-bind="value: postfix" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </script>
+    
+    @if (!Request.IsAjaxRequest())
+    {
+        @JsInline(@<script type="text/javascript">
+            $(function() {
+                specsEditorLoaded();
+            });
+        </script>)
+    }
+</div>

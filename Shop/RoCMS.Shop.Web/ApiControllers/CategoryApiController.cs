@@ -1,0 +1,56 @@
+﻿using System.Collections.Generic;
+using System.Web.Http;
+using RoCMS.Base;
+using RoCMS.Base.ForWeb.Models.Filters;
+using RoCMS.Base.Models;
+using RoCMS.Shop.Contract;
+using RoCMS.Shop.Contract.Models;
+using RoCMS.Shop.Contract.Services;
+
+namespace RoCMS.Shop.Web.ApiControllers
+{
+    [AuthorizeResourcesApi(ShopRoCmsResources.Shop)]
+    public class CategoryApiController : ApiController
+    {
+        private readonly IShopCategoryService _shopCategoryService;
+
+        public CategoryApiController(IShopCategoryService shopCategoryService)
+        {
+            _shopCategoryService = shopCategoryService;
+        }
+
+        [HttpPost]
+        public ResultModel Create(Category category)
+        {
+            int id = _shopCategoryService.CreateCategory(category);
+            return new ResultModel(true, new {id = id});
+        }
+
+        [HttpPost]
+        public ResultModel Update(Category category)
+        {
+            _shopCategoryService.UpdateCategory(category);
+            return ResultModel.Success;
+        }
+
+        [HttpPost]
+        public ResultModel Remove(int categoryId)
+        {
+            _shopCategoryService.DeleteCategory(categoryId);
+            return ResultModel.Success;
+        }
+
+        [HttpGet]
+        public IList<Category> GetCategories()
+        {
+            return _shopCategoryService.GetCategories();
+        }
+
+        [HttpPost]
+        public ResultModel UpdateSortOrder(IList<Category> categories)
+        {
+            _shopCategoryService.UpdateCategoriesSortOrder(categories);
+            return ResultModel.Success;
+        }
+    }
+}

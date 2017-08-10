@@ -1,0 +1,14 @@
+﻿@model IList<RoCMS.Options.Contract.Models.OptionKey>
+
+
+<div class="options-selector">
+    <h2>Характеристики</h2>
+    <div class="row">
+        @foreach (var option in Model)
+        {
+            <div class="col-sm-4">
+                @Html.Partial("_OptionView", option)
+            </div>
+        }
+    </div>
+</div>

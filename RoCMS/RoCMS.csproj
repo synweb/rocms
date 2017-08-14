@@ -628,6 +628,8 @@
     <Content Include="Content\base\vendor\ckeditor\skins\moono-lisa\images\refresh.png" />
     <Content Include="Content\base\vendor\ckeditor\skins\moono-lisa\images\spinner.gif" />
     <Content Include="Content\base\vendor\ckeditor\styles.js" />
+    <Content Include="Content\base\vendor\Font-Awesome\css\font-awesome.css" />
+    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\base\vendor\jquery\core\jquery.mask.js" />
     <Content Include="Content\base\vendor\jquery\ui-short\jquery.blockUI.js" />
     <Content Include="Content\base\vendor\knockout\ru-RU.js" />
@@ -672,8 +674,6 @@
     <Content Include="Content\client\vendor\bootstrap-image-gallery\js\blueimp-gallery.js" />
     <Content Include="Content\client\vendor\bootstrap-image-gallery\js\bootstrap-image-gallery.js" />
     <Content Include="Content\client\ro\css\style.css" />
-    <Content Include="Content\base\vendor\Font-Awesome\css\font-awesome.css" />
-    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\client\vendor\bootstrap-image-gallery\js\jquery.blueimp-gallery.js" />
     <Content Include="Content\client\vendor\bootstrap-image-gallery\js\ro.custom.js" />
     <Content Include="Content\client\vendor\flipclock2\img\digit-lg.png" />
@@ -686,10 +686,6 @@
     <Content Include="Content\base\vendor\moment\moment.js" />
     <Content Include="Content\base\ro\js\message.js" />
     <Content Include="Global.asax" />
-    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.eot" />
-    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.ttf" />
-    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff" />
-    <Content Include="Content\base\vendor\Font-Awesome\fonts\FontAwesome.otf" />
     <Content Include="Content\admin\ro\js\rocms.block.edit.js" />
     <Content Include="Content\admin\vendor\bootstrap\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\admin\vendor\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
@@ -725,6 +721,11 @@
     <Content Include="Content\base\vendor\ckeditor\plugins\wsc\README.md" />
     <Content Include="Content\base\vendor\ckeditor\skins\moono-lisa\readme.md" />
     <Content Include="Content\base\vendor\jquery\core\jquery.validate.ru.js" />
+    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\base\vendor\Font-Awesome\fonts\FontAwesome.otf" />
     <None Include="INSTRUCTIONS.txt" />
     <Content Include="InstallData\RoCMS.Database_Create.sql" />
     <Content Include="Mvc.sitemap" />

@@ -11,6 +11,8 @@
     ViewBag.Styles = Model.Styles;
     ViewBag.Scripts = Model.Scripts;
 
+    ViewBag.DisableIndexation = Model.HideInSitemap;
+
     var pageService = DependencyResolver.Current.GetService<IPageService>();
     ViewBag.CanonicalUrl = Url.RouteUrl("PageSEF", new { relativeUrl = pageService.GetPageCanonicalUrl(Model.RelativeUrl)});
 

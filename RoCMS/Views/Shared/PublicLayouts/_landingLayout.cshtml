@@ -30,6 +30,11 @@
     @Html.Raw(@TempData["AdditionalHeaders"])
     <meta name="keywords" content="@TempData["MetaKeywords"]">
     <meta name="description" content="@TempData["MetaDescription"]">
+    @if (ViewBag.DisableIndexation == true)
+    {
+        <meta name="robots" content="noindex, nofollow" />
+    }
+
     @if (ViewBag.CanonicalUrl != null && Request.Url.AbsolutePath != Url.Action("Index", "Home"))
     {
         <link rel="canonical" href="@rootUrl@ViewBag.CanonicalUrl">

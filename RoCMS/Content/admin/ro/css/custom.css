@@ -1,4 +1,23 @@
-﻿ul#menu li > a > i {
+﻿#adminContent {
+    position: relative;
+}
+
+.rotooltip {
+    font-size: 18px;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.tooltip {
+    font-size: 14px;
+    z-index: 1000;
+}
+
+.tooltip-inner {
+        max-width: 250px;
+}
+
+ul#menu li > a > i {
     width: 1.28571429em;
     text-align: center;
     display: inline-block;
@@ -35,8 +54,9 @@ ul {
 }
 
 label {
-    margin-top: 5px;
+    line-height: 20px;
     margin-bottom: 0;
+    vertical-align: top;
 }
 
 /*Фикс анимации при отображении скрытого меню*/

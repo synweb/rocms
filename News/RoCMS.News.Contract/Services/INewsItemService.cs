@@ -25,7 +25,8 @@ namespace RoCMS.News.Contract.Services
         NewsItem GetNewsItem(string relativeUrl, bool onlyPosted);
 
         void EditNewsItem(NewsItem news);
-        
+
+        bool NewsItemExists(int id);
         bool NewsItemExists(string relativeUrl);
 
         string GetNewsItemCanonicalUrl(int newsItemId);
@@ -40,5 +41,6 @@ namespace RoCMS.News.Contract.Services
         ICollection<RoCMS.News.Contract.Models.TagStat> GetTagStats(int tagCount);
 
         IEnumerable<string> GetTagByPattern(string pattern, int records);
+        void IncreaseViewCount(int newsId);
     }
 }

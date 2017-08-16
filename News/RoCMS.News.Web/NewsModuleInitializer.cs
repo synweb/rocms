@@ -32,6 +32,12 @@ namespace RoCMS.News.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             RegisterSearch();
             InitBreadcrumbs();
+            InitSessionUrls();
+        }
+
+        private void InitSessionUrls()
+        {
+            ActionSessionHelper.RegisterUrlRegex("/api/");
         }
 
         private void RegisterSearch()

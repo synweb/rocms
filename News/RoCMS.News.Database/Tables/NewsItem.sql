@@ -18,6 +18,7 @@
     [RelatedNewsItemId] INT NULL, 
     [EventDate] DATETIME NULL, 
 	[AdditionalHeaders] NVARCHAR (MAX) NULL,
+	[ViewCount] BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT [PK_NewsSet] PRIMARY KEY CLUSTERED ([NewsId] ASC),
     CONSTRAINT [FK_NewsSetImage] FOREIGN KEY ([ImageId]) REFERENCES [dbo].[Image] ([ImageId]) ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT [FK_NewsSetUser] FOREIGN KEY ([AuthorId]) REFERENCES [dbo].[User] ([UserId]),

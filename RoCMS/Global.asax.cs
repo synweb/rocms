@@ -18,6 +18,7 @@ using System.Web.SessionState;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Configuration;
 using RoCMS.App_Start;
+using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Infrastructure;
 using RoCMS.Base.UnityExtensions;
@@ -209,7 +210,7 @@ namespace RoCMS
                 httpContext.User = Thread.CurrentPrincipal = new RoPrincipal(userId, User.Identity);
             }
 
-            if (SessionStateRequired)
+            if (ActionSessionHelper.SessionStateRequired(HttpContext.Current.Request.AppRelativeCurrentExecutionFilePath) || DemoMode)
             {
                 HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
             }
@@ -217,9 +218,7 @@ namespace RoCMS
         }
 
         private bool DemoMode => AppSettingsHelper.RoCMSDemoMode;
-
-        private bool SessionStateRequired => DemoMode || IsCartWebApiRequest();
-
+        
         private int GetUserId()
         {
             HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName]; //.ASPXAUTH

@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\PrincipalExtention.cs" />
+    <Compile Include="Helpers\ActionSessionHelper.cs" />
     <Compile Include="Helpers\AuthenticationHelper.cs" />
     <Compile Include="Helpers\BreadCrumbsHelper.cs" />
     <Compile Include="Helpers\ContentRenderHelper.cs" />

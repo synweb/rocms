@@ -31,11 +31,12 @@ AS
 	[VideoId] varchar(50) NULL,
 	[BlogId] INT NULL,
 	[EventDate]  DATETIME NULL,
-	[AdditionalHeaders] NVARCHAR (MAX) NULL
+	[AdditionalHeaders] NVARCHAR (MAX) NULL,
+	[ViewCount] BIGINT NOT NULL DEFAULT 0
 	)
 	
-		INSERT INTO @news ([NewsId], [Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], [CreationDate], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId],[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders] )
-	SELECT DISTINCT ni.[NewsId], [Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], ni.[CreationDate], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId] ,[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders]
+		INSERT INTO @news ([NewsId], [Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], [CreationDate], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId],[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders], [ViewCount] )
+	SELECT DISTINCT ni.[NewsId], [Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], ni.[CreationDate], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId] ,[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders], [ViewCount]
 		FROM [News].[NewsItem] ni 
 			JOIN @NewsIds ids ON ni.NewsId=ids.Val
 		WHERE 

@@ -221,9 +221,7 @@
     <Build Include="dbo\Stored Procedures\Country_Select.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="localdb.publish.xml" />
     <None Include="ExportImages.sql" />
-    <None Include="test.artplay.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="InitialData.sql" />

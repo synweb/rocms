@@ -116,6 +116,7 @@
     <Build Include="Stored Procedures\Tag_SelectByPattern.sql" />
     <Build Include="Stored Procedures\NewsItem_SelectIdsByTagName.sql" />
     <Build Include="Stored Procedures\NewsItem_SelectFilteredPage.sql" />
+    <Build Include="Stored Procedures\NewsItem_IncreaseViewCount.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">

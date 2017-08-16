@@ -89,14 +89,14 @@ namespace Shop.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/regularClients/update", "RegularClientApi", "Update");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/regularClients/{id}/delete", "RegularClientApi", "Delete");
 
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/{count}/add", "CartApi", "AddItem");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/{count}/change", "CartApi", "ChangeItemCount");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/remove", "CartApi", "RemoveItem");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/clear", "CartApi", "Clear");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/summary", "CartApi", "CartSummary");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/get", "CartApi", "GetCart");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/process", "CartApi", "ProcessOrder");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/user/discount/update", "CartApi", "UpdateUserDiscount");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/{count}/add", "CartApi", "AddItem", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/{count}/change", "CartApi", "ChangeItemCount", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/remove", "CartApi", "RemoveItem", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/clear", "CartApi", "Clear", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/summary", "CartApi", "CartSummary", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/get", "CartApi", "GetCart", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/process", "CartApi", "ProcessOrder", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/user/discount/update", "CartApi", "UpdateUserDiscount", true);
 
 
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/dimensions/get", "DimensionApi", "GetDimensions");

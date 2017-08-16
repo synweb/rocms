@@ -49,6 +49,34 @@ namespace RoCMS.News.Web.ApiControllers
             }
         }
 
+
+
+        [HttpPost]
+        public ResultModel IncreaseViewCount(int id)
+        {
+            try
+            {
+                if (!_newsItemService.NewsItemExists(id))
+                    return new ResultModel(false, "NotExists");
+
+                const string NEWS_COUNTER_SESSION_KEY_FORMAT = "NewsItem_ViewCount_{0}";
+                string sessionKey = string.Format(NEWS_COUNTER_SESSION_KEY_FORMAT, id);
+                var sessionValue = HttpContext.Current.Session[sessionKey];
+                // если значение в сессии существует, считаем, что посетитель уже увеличил счётчик
+                if (sessionValue != null)
+                    return new ResultModel(false, "AlreadyDone");
+
+                _newsItemService.IncreaseViewCount(id);
+                HttpContext.Current.Session[sessionKey] = true;
+                return new ResultModel(true);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
+        }
+
         [HttpPost]
         public ResultModel Create(NewsItem news)
         {

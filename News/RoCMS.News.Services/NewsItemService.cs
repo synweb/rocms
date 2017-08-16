@@ -376,7 +376,13 @@ namespace RoCMS.News.Services
                 ts.Complete();
             }
         }
-        
+
+        public bool NewsItemExists(int id)
+        {
+            // TODO: можно ускорить отдельной хранимкой
+            return _newsItemGateway.SelectOne(id) != null;
+        }
+
         private void FillItem(NewsItem item)
         {
             // tags
@@ -394,6 +400,7 @@ namespace RoCMS.News.Services
 
         public bool NewsItemExists(string relativeUrl)
         {
+            // TODO: можно ускорить отдельной хранимкой
             return _newsItemGateway.SelectByUrl(relativeUrl, false) != null;
         }
 
@@ -530,6 +537,11 @@ namespace RoCMS.News.Services
             });
 
             return rez.Where(x => x.StartsWith(pattern));
+        }
+
+        public void IncreaseViewCount(int newsId)
+        {
+            _newsItemGateway.IncreaseViewCount(newsId);
         }
 
         protected override int CacheExpirationInMinutes { get; }

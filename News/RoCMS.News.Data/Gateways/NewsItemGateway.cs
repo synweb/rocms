@@ -10,7 +10,7 @@ namespace RoCMS.News.Data.Gateways
     {
         protected override string DefaultScheme => "News";
         
-        public Models.NewsItem SelectByUrl(string relativeUrl, bool onlyPosted)
+        public NewsItem SelectByUrl(string relativeUrl, bool onlyPosted)
         {
             return Exec<Models.NewsItem>(GetProcedureString(), new{ relativeUrl, onlyPosted});
         }
@@ -61,6 +61,11 @@ namespace RoCMS.News.Data.Gateways
                 totalCount = Convert.ToInt32(db.GetParameterValue(cmd, "TotalCount"));
             }
             return res;
+        }
+
+        public void IncreaseViewCount(int newsId)
+        {
+            Exec(GetProcedureString(), newsId);
         }
     }
 }

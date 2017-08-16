@@ -55,6 +55,9 @@ namespace RoCMS
             {
                 SearchOption = SearchOption.AllDirectories,
                 Pattern = "*.js"
+            }, bundle =>
+            {
+                bundle.AddReference("~/Content/base/vendor/jquery/core");
             });
 
             bundles.AddPerIndividualFile<ScriptBundle>("Content/client/ro/js");

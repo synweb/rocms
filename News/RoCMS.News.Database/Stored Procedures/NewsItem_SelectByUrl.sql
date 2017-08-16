@@ -2,7 +2,8 @@
 	@RelativeUrl nvarchar(300),
 	@OnlyPosted bit
 AS
-		SELECT *
+		
+	SELECT *
 		FROM [News].[NewsItem]
 	WHERE [RelativeUrl]=@RelativeUrl AND 
 		(@OnlyPosted=0 OR [PostingDate]<=GETUTCDATE())

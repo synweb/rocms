@@ -91,6 +91,8 @@
 
 @JsInline(@<script>
     $(function () {
-        pageLoaded();
+        setTimeout(function () {
+            postJSON("/api/news/"+@Model.NewsId+"/view");
+        }, 4000);
     });
     </script>)

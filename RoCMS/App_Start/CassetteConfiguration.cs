@@ -158,7 +158,7 @@ namespace RoCMS
 
             bundles.Add<StylesheetBundle>("Content/admin/vendor/bootstrap/css/bootstrap.css");
 
-            bundles.Add<StylesheetBundle>("Content/base/vendor/login/css/login.css", bundle => bundle.AddReference("~/Content/admin/vendor/bootstrap/css/bootstrap.css"));
+            bundles.Add<StylesheetBundle>("Content/login/login.css", bundle => bundle.AddReference("~/Content/admin/vendor/bootstrap/css/bootstrap.css"));
 
             bundles.Add<StylesheetBundle>("Content/admin/vendor", new[]
             {

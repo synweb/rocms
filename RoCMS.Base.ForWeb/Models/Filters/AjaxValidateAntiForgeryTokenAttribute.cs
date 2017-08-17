@@ -8,11 +8,9 @@ namespace RoCMS.Base.ForWeb.Models.Filters
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AjaxValidateAntiForgeryTokenAttribute : AuthorizeAttribute
     {
-
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             var request = filterContext.HttpContext.Request;
-
             //  Only validate POSTs
             if (request.HttpMethod == WebRequestMethods.Http.Post)
             {
@@ -21,11 +19,7 @@ namespace RoCMS.Base.ForWeb.Models.Filters
                 if (request.IsAjaxRequest())
                 {
                     var antiForgeryCookie = request.Cookies[AntiForgeryConfig.CookieName];
-
-                    var cookieValue = antiForgeryCookie != null
-                        ? antiForgeryCookie.Value
-                        : null;
-
+                    var cookieValue = antiForgeryCookie?.Value;
                     AntiForgery.Validate(cookieValue, request.Headers["__RequestVerificationToken"]);
                 }
                 else

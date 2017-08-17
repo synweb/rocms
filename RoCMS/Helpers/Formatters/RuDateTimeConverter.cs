@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -18,16 +14,19 @@ namespace RoCMS.Helpers.Formatters
             try
             {
                 DateTime result;
+                // приоритетным делаем российский формат даты-вермени
                 bool succeed = DateTime.TryParseExact(reader.Value.ToString(), "dd.MM.yyyy HH:mm", CultureInfo.InvariantCulture,
                     DateTimeStyles.None, out result);
                 if (!succeed)
                 {
+                    // если времени нет, парсим просто дату
                     result = DateTime.ParseExact(reader.Value.ToString(), "dd.MM.yyyy", CultureInfo.InvariantCulture);
                 }
                 return result;
             }
             catch (Exception e)
             {
+                // если ничего не вышло, пробуем парсить как обычно
                 return _isoDateTimeConverter.ReadJson(reader, objectType, existingValue, serializer);
             }
         }
@@ -35,7 +34,6 @@ namespace RoCMS.Helpers.Formatters
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             _isoDateTimeConverter.WriteJson(writer, value,serializer);
-            //writer.WriteValue(((DateTime)value).ToString("dd.MM.yyyy HH:mm"));
         }
     }
 }

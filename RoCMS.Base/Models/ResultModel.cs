@@ -20,7 +20,7 @@ namespace RoCMS.Base.Models
 
         public static ResultModel Success
         {
-            get { return ResultModel.Success; }
+            get { return new ResultModel(true); }
         }
 
         #endregion

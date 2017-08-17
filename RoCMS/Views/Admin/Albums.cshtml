@@ -26,7 +26,7 @@
                 string username = authService.GetUser(album.OwnerId.Value).Username;
                 <span>Владелец: @username</span>
             }
-            <div class="edit-delete-container">
+            <div class="pull-right">
                 <a class="btn btn-xs btn-warning edit" href="@Url.Action("ConfigureAlbum", "Admin", new {id = album.AlbumId})"><i class="fa fa-pencil"></i>&nbsp;@Resources.Strings.Menu_EditMenu</a>
                 <a class="btn btn-xs btn-danger delete" data-album-id="@album.AlbumId" onclick=" true "><i class="fa fa-trash-o"></i>&nbsp;@Resources.Strings.Menu_DeleteMenu</a>
             </div>
@@ -61,7 +61,7 @@
     </div>
 </div>
 
-@Js("Content/admin/ro/album/rocms.albums.js")
+@Js("Content/admin/ro/js/rocms.albums.js")
 
 @JsInline(@<script>
     $(function () {

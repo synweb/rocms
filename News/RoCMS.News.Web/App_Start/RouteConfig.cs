@@ -111,12 +111,12 @@ namespace RoCMS.News.Web
                 constraints: new { id = @"\d+" }
                 );
 
-            IEnumerable<string> controllerNames = typeof(MvcApplication).Assembly.GetTypes()
+            IEnumerable<string> controllerNames = typeof(RouteConfig).Assembly.GetTypes()
                 .Where(t => t.Name.EndsWith("Controller"))
                 .Where(t => !t.IsAbstract)
-                .Select(t => String.Format("^{0}$", t.Name.Replace("Controller", "")));
+                .Select(t => $"^{t.Name.Replace("Controller", "")}$");
 
-            string constraint = String.Join("|", controllerNames);
+            string constraint = string.Join("|", controllerNames);
 
             routes.MapRoute(
                 name: "DefaultNews",

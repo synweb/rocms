@@ -1,16 +1,11 @@
-﻿using RoCMS.Web.Contract.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RoCMS.Web.Contract.Models;
 using AutoMapper;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Models;
-using RoCMS.Base.Services;
 using RoCMS.Data.Gateways;
-using Block = RoCMS.Data.Models.Block;
+using RoCMS.Web.Contract.Models;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Web.Services
 {
@@ -19,29 +14,28 @@ namespace RoCMS.Web.Services
         private const string BLOCK_CACHE_KEY_TEMPLATE = "Block:{0}";
         private readonly BlockGateway _blockGateway = new BlockGateway();
        
-        protected override int CacheExpirationInMinutes
-        {
-            get
-            {
-                return AppSettingsHelper.HoursToExpireCartCache * 60;
-            }
-        }
+        protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
-        #region реализация IBlockService 
-        public int CreateBlock(RoCMS.Web.Contract.Models.Block block)
+        #region IBlockService 
+        public int CreateBlock(Block block)
         {
-            return _blockGateway.Insert(Mapper.Map<Block>(block));
+            return _blockGateway.Insert(Mapper.Map<Data.Models.Block>(block));
         }
 
         public void DeleteBlock(int blockId)
         {
             _blockGateway.Delete(blockId);
+            RemoveObjectFromCache(GetBlockCacheKey(blockId));
         }
 
-        public RoCMS.Web.Contract.Models.Block GetBlock(int id)
+        public Block GetBlock(int id)
         {
-            var newBlock = _blockGateway.SelectOne(id);
-            return Mapper.Map<RoCMS.Web.Contract.Models.Block>(newBlock);
+            string cacheKey = GetBlockCacheKey(id);
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var newBlock = _blockGateway.SelectOne(id);
+                return Mapper.Map<Block>(newBlock);
+            });
         }
 
         public IEnumerable<IdNamePair<int>> GetBlockIdNames()
@@ -51,16 +45,17 @@ namespace RoCMS.Web.Services
             return list;
         }
 
-        public IList<Contract.Models.Block> GetBlocks()
+        public IList<Block> GetBlocks()
         {
             var blocks = _blockGateway.Select();
-            var list = Mapper.Map<ICollection<RoCMS.Web.Contract.Models.Block>>(blocks);
-            return new List<RoCMS.Web.Contract.Models.Block>(list);
+            var list = Mapper.Map<ICollection<Block>>(blocks);
+            return new List<Block>(list);
         }
 
-        public void UpdateBlock(Contract.Models.Block block)
+        public void UpdateBlock(Block block)
         {
-            _blockGateway.Update(Mapper.Map<Block>(block));
+            _blockGateway.Update(Mapper.Map<Data.Models.Block>(block));
+            RemoveObjectFromCache(GetBlockCacheKey(block.BlockId));
         }
         #endregion
 

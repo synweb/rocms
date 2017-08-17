@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using RoCMS.Base.ForWeb.Models;
 using RoCMS.Web.Contract.Services;
@@ -61,8 +59,8 @@ namespace RoCMS.Base.ForWeb.Helpers
                         res.Add(new BreadCrumb()
                         {
                             IsLast = pageUrl == pageUrls.Last(),
-                            Title = String.IsNullOrEmpty(page.Header) ? page.Title : page.Header,
-                            Url = String.Format("/{0}", page.CannonicalUrl)
+                            Title = string.IsNullOrEmpty(page.Header) ? page.Title : page.Header,
+                            Url = $"/{page.CannonicalUrl}"
                         });
                     }
                 }

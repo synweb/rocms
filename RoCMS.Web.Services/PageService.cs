@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using AutoMapper;
-using RoCMS.Base.Services;
 using RoCMS.Data.Gateways;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;

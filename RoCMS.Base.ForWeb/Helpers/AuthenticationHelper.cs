@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Authentication;
 using System.Web;
 using System.Web.Mvc;
@@ -58,11 +55,6 @@ namespace RoCMS.Helpers
             if (success)
             {
                 User nUser = _securityService.GetUser(user);
-                //FormsAuthentication.SetAuthCookie(username, true);
-                //var cookie = new System.Web.HttpCookie("userId", nUser.UserId.ToString());
-                //cookie.Expires = DateTime.UtcNow.AddYears(20);
-                //httpContext.Response.SetCookie(cookie);
-
                 // "key:val,key:val,..."
                 string userData = string.Format("id:{0}",nUser.UserId);
 
@@ -81,7 +73,7 @@ namespace RoCMS.Helpers
         {
             try
             {
-                RoPrincipal user = (httpContext.User as RoPrincipal);
+                RoPrincipal user = httpContext.User as RoPrincipal;
                 if (user != null)
                 {
                     return user.UserId;
@@ -98,13 +90,9 @@ namespace RoCMS.Helpers
                     }
                 }
             }
-            catch (Exception)
+            catch
             {
-                //if (httpContext.User.Identity.IsAuthenticated && !String.IsNullOrEmpty(httpContext.User.Identity.Name))
-                //{
-                //    var user = _securityService.GetUser(httpContext.User.Identity.Name);
-                //    return user.UserId;
-                //}
+                // ignored
             }
             FormsAuthentication.SignOut();
             throw new AuthenticationException("User not authenticated");
@@ -116,15 +104,16 @@ namespace RoCMS.Helpers
         /// <param name="context"></param>
         /// <param name="username"></param>
         /// <param name="password"></param>
+        /// <param name="email"></param>
         /// <returns>UserId</returns>
-        public int RegisterUser(HttpContext current, string username, string password, string email)
+        public int RegisterUser(HttpContext context, string username, string password, string email=null)
         {
             var usr = username.Trim();
             var pwd = password.Trim();
             var em = email?.Trim();
             _securityService.RegisterUser(usr, pwd, em);
             int id = _securityService.GetUser(usr).UserId;
-            Registered(new RegisteredEventArgs(current, id));
+            Registered(new RegisteredEventArgs(context, id));
             return id;
         }
     }

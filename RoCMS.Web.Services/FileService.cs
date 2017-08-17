@@ -11,17 +11,12 @@ namespace RoCMS.Web.Services
 {
     public class FileService: IFileService
     {
-
-        private string StorageRoot
-        {
-            get { return Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/UploadedFiles/")); } //Path should! always end with '/'
-        }
-
+        private readonly string _storageRoot = Path.Combine(System.Web.HttpContext.Current.Server.MapPath("~/UploadedFiles/"));
 
 
         public FileInfo GetFile(string fileName)
         {
-            var filePath = StorageRoot + fileName;
+            var filePath = _storageRoot + fileName;
 
             if (File.Exists(filePath))
             {
@@ -32,14 +27,14 @@ namespace RoCMS.Web.Services
 
         public List<FileInfo> GetFiles()
         {
-            return new DirectoryInfo(StorageRoot)
+            return new DirectoryInfo(_storageRoot)
                     .GetFiles("*", SearchOption.TopDirectoryOnly)
                     .Where(f => !f.Attributes.HasFlag(FileAttributes.Hidden)).ToList();
         }
 
         public void DeleteFile(string fileName)
         {
-            var filePath = StorageRoot + fileName;
+            var filePath = _storageRoot + fileName;
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);

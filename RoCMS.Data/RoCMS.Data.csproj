@@ -102,7 +102,6 @@
     <Compile Include="Models\UserCMSResource.cs" />
     <Compile Include="Models\VideoAlbum.cs" />
     <Compile Include="Models\VideoInfo.cs" />
-    <Compile Include="OrderFormFieldGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

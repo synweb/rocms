@@ -46,7 +46,7 @@ namespace RoCMS.Base.ForWeb.Models.Filters
                 {
                     if (!currentPrincipal.IsAuthorizedForResource(resource))
                     {
-                        filterContext.Response = new HttpResponseMessage(System.Net.HttpStatusCode.Forbidden);//Result = new HttpUnauthorizedResult();
+                        filterContext.Response = new HttpResponseMessage(System.Net.HttpStatusCode.Forbidden);
                         break;
                     }
                 }

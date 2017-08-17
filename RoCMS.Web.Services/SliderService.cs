@@ -13,13 +13,8 @@ namespace RoCMS.Web.Services
         private readonly SliderGateway _sliderGateway = new SliderGateway();
         private readonly SlideGateway _slideGateway = new SlideGateway();
         
-        protected override int CacheExpirationInMinutes
-        {
-            get
-            {
-                return AppSettingsHelper.HoursToExpireCartCache * 60;
-            }
-        }
+        protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
+
         #region ISliderService
         public int CreateSlide(Contract.Models.Slide slide)
         {

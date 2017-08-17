@@ -10,7 +10,7 @@
             {
                 
                 <li><div><span class="menuName">@menu.Name</span>
-                    <div class="edit-delete-container">
+                    <div class="pull-right">
                         <a class="editLink button-edit btn btn-warning btn-xs" title="@Strings.Menu_EditMenu" data-menu-id="@menu.MenuId" href="@Url.Action("MenuEditor", new {Id = menu.MenuId})"><i class="fa fa-pencil"></i>&nbsp;@Resources.Strings.Menu_EditMenu</a>
                         @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                         {

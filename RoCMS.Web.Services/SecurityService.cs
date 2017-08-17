@@ -25,7 +25,7 @@ namespace RoCMS.Web.Services
 
         public static string CalculateHash(string input)
         {
-            var hashAlg = System.Security.Cryptography.SHA256.Create();
+            var hashAlg = SHA256.Create();
             byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             var hash = hashAlg.ComputeHash(inputBytes);
             int seed = BitConverter.ToInt32(hash, 0);

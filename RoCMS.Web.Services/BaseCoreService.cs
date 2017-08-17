@@ -59,69 +59,69 @@ namespace RoCMS.Web.Services
             });
             _mapper.CreateMap<Contract.Models.Page, Page>();
 
-            Mapper.CreateMap<Block, RoCMS.Web.Contract.Models.Block>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.Block, Block>();
+            Mapper.CreateMap<Block, Contract.Models.Block>();
+            Mapper.CreateMap<Contract.Models.Block, Block>();
             Mapper.CreateMap<Block, IdNamePair<int>>()
                                             .ForMember(x => x.ID, x => x.MapFrom(m => m.BlockId))
                                             .ForMember(x => x.Name, x => x.MapFrom(m => m.Title));
 
-            Mapper.CreateMap<Data.Models.Page, Contract.Models.Page>()
+            Mapper.CreateMap<Page, Contract.Models.Page>()
                 .ForMember(x => x.CannonicalUrl, x => x.Ignore());
-            Mapper.CreateMap<Data.Models.Page, PageInfo>()
+            Mapper.CreateMap<Page, PageInfo>()
                 .ForMember(x => x.CannonicalUrl, x => x.Ignore());
-            Mapper.CreateMap<Contract.Models.Page, Data.Models.Page>();
+            Mapper.CreateMap<Contract.Models.Page, Page>();
 
             _mapper.CreateTwoWayMap<Block, Contract.Models.Block>();
 
             Mapper.CreateMap<Review, Contract.Models.Review>();
             Mapper.CreateMap<Contract.Models.Review, Review>();
 
-            Mapper.CreateMap<RoCMS.Data.Models.Mail, RoCMS.Web.Contract.Models.MailMsg>()
+            Mapper.CreateMap<Data.Models.Mail, MailMsg>()
                 .ForMember(x => x.BccReceiver, x => x.Ignore())
                .ForMember(x => x.AttachIds, x => x.Ignore());
 
 
-            Mapper.CreateMap<RoCMS.Data.Models.Mail, RoCMS.Web.Contract.Models.Mail>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.Mail, RoCMS.Data.Models.Mail>();
+            Mapper.CreateMap<Data.Models.Mail, Mail>();
+            Mapper.CreateMap<Mail, Data.Models.Mail>();
 
-            Mapper.CreateMap<Data.Models.User, Contract.Models.User>()
+            Mapper.CreateMap<User, Contract.Models.User>()
                 .ForMember(x => x.Password, x => x.Ignore());
 
             _mapper.CreateMap<Contract.Models.User, User>();
 
 
 
-            Mapper.CreateMap<Contract.Models.Menu, Data.Models.Menu>();
-            Mapper.CreateMap<Data.Models.Menu, Contract.Models.Menu>()
+            Mapper.CreateMap<Contract.Models.Menu, Menu>();
+            Mapper.CreateMap<Menu, Contract.Models.Menu>()
                 .ForMember(x => x.Items, x => x.Ignore());
-            Mapper.CreateMap<Contract.Models.MenuItem, Data.Models.MenuItem>()
+            Mapper.CreateMap<Contract.Models.MenuItem, MenuItem>()
                 .ForMember(x => x.ParentMenuItemId, x => x.Ignore())
                 .ForMember(x => x.MenuId, x => x.Ignore())
                 .ForMember(x => x.SortOrder, x => x.Ignore());
-            Mapper.CreateMap<Data.Models.MenuItem, Contract.Models.MenuItem>()
+            Mapper.CreateMap<MenuItem, Contract.Models.MenuItem>()
                 .ForMember(x => x.Items, x => x.Ignore());
 
 
 
-            Mapper.CreateMap<Contract.Models.Album, Data.Models.Album>();
-            Mapper.CreateMap<Data.Models.Album, Contract.Models.Album>()
+            Mapper.CreateMap<Contract.Models.Album, Album>();
+            Mapper.CreateMap<Album, Contract.Models.Album>()
                 .ForMember(x => x.ImageCount, x => x.Ignore());
 
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.Slider, Slider>();
-            Mapper.CreateMap<Slider, RoCMS.Web.Contract.Models.Slider>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.Slide, Slide>()
+            Mapper.CreateMap<Contract.Models.Slider, Slider>();
+            Mapper.CreateMap<Slider, Contract.Models.Slider>();
+            Mapper.CreateMap<Contract.Models.Slide, Slide>()
                 .ForMember(x => x.SortOrder, x => x.Ignore());
-            Mapper.CreateMap<Slide, RoCMS.Web.Contract.Models.Slide>();
+            Mapper.CreateMap<Slide, Contract.Models.Slide>();
 
 
-            Mapper.CreateMap<Data.Models.VideoInfo, RoCMS.Web.Contract.Models.VideoInfo>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.VideoInfo, Data.Models.VideoInfo>()
+            Mapper.CreateMap<Data.Models.VideoInfo, VideoInfo>();
+            Mapper.CreateMap<VideoInfo, Data.Models.VideoInfo>()
                 .ForMember(x => x.AlbumId, x => x.Ignore())
                 .ForMember(x => x.SortOrder, x => x.Ignore());
 
-            Mapper.CreateMap<Data.Models.VideoAlbum, RoCMS.Web.Contract.Models.VideoAlbum>()
+            Mapper.CreateMap<VideoAlbum, Contract.Models.VideoAlbum>()
                 .ForMember(x => x.ID, x => x.MapFrom(m => m.AlbumId));
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.VideoAlbum, Data.Models.VideoAlbum>()
+            Mapper.CreateMap<Contract.Models.VideoAlbum, VideoAlbum>()
                 .ForMember(x => x.AlbumId, x => x.MapFrom(m => m.ID))
                 .ForMember(x => x.CreationDate, x => x.Ignore())
                 .ForMember(x => x.OwnerId, x => x.Ignore());
@@ -137,42 +137,42 @@ namespace RoCMS.Web.Services
                 .ForMember(x => x.Relevance, y => y.MapFrom(z => z.Relevance));
 
 
-            Mapper.CreateMap<Review, RoCMS.Web.Contract.Models.Review>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.Review, Review>();
+            Mapper.CreateMap<Review, Contract.Models.Review>();
+            Mapper.CreateMap<Contract.Models.Review, Review>();
 
             Mapper.CreateMap<InterfaceString, Data.Models.InterfaceString>();
             Mapper.CreateMap<Data.Models.InterfaceString, InterfaceString>();
 
 
-            Mapper.CreateMap<RoCMS.Data.Models.FormRequest, RoCMS.Web.Contract.Models.FormRequest>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.FormRequest, RoCMS.Data.Models.FormRequest>();
+            Mapper.CreateMap<Data.Models.FormRequest, FormRequest>();
+            Mapper.CreateMap<FormRequest, Data.Models.FormRequest>();
 
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.FormRequest, RoCMS.Web.Contract.Models.Message>()
+            Mapper.CreateMap<FormRequest, Message>()
                .ForMember(x => x.MessageType, x => x.Ignore())
                .ForMember(x => x.Contact, x => x.Ignore())
                .ForMember(x => x.OrderFormId, x => x.Ignore())
                .ForMember(x => x.Fields, x => x.Ignore())
                .ForMember(x => x.AttachIds, x => x.Ignore());
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.Message, RoCMS.Web.Contract.Models.FormRequest>()
+            Mapper.CreateMap<Message, FormRequest>()
                 .ForMember(x => x.FormRequestId, x => x.Ignore())
                 .ForMember(x => x.CreationDate, x => x.Ignore());
 
 
-            Mapper.CreateMap<string, RoCMS.Web.Contract.Models.OrderFormFieldType>().ConvertUsing((x) =>
+            Mapper.CreateMap<string, OrderFormFieldType>().ConvertUsing((x) =>
             {
                 return (OrderFormFieldType)Enum.Parse(typeof (OrderFormFieldType), x);
             });
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.OrderFormFieldType, string>().ConvertUsing((x) =>
+            Mapper.CreateMap<OrderFormFieldType, string>().ConvertUsing((x) =>
             {
                 return Enum.GetName(typeof(OrderFormFieldType), x);
             });
 
-            Mapper.CreateMap<RoCMS.Data.Models.OrderFormField, RoCMS.Web.Contract.Models.OrderFormField>();
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.OrderFormField, RoCMS.Data.Models.OrderFormField>();
+            Mapper.CreateMap<Data.Models.OrderFormField, OrderFormField>();
+            Mapper.CreateMap<OrderFormField, Data.Models.OrderFormField>();
 
-            Mapper.CreateMap<RoCMS.Data.Models.OrderForm, RoCMS.Web.Contract.Models.OrderForm>()
+            Mapper.CreateMap<Data.Models.OrderForm, OrderForm>()
                 .ForMember(x => x.Fields, x => x.Ignore());
-            Mapper.CreateMap<RoCMS.Web.Contract.Models.OrderForm, RoCMS.Data.Models.OrderForm>();
+            Mapper.CreateMap<OrderForm, Data.Models.OrderForm>();
         }
 
 

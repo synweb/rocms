@@ -90,7 +90,7 @@ namespace RoCMS.Controllers
 
         private ActionResult ImageNotFound()
         {
-            return File(Url.Content("~/Resources/img-not-found.gif"), "image/gif");
+            return File(Url.Content("~/Content/base/ro/img/img-not-found.gif"), "image/gif");
         }
 
         private string GetImageMimetype(string path)

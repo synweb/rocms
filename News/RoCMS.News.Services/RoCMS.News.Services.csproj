@@ -71,11 +71,11 @@
       <Name>RoCMS.Web.Contract</Name>
     </ProjectReference>
     <ProjectReference Include="..\RoCMS.News.Contract\RoCMS.News.Contract.csproj">
-      <Project>{198f1447-a567-480c-800a-2114212ecf9f}</Project>
+      <Project>{198F1447-A567-480C-800A-2114212ECF9F}</Project>
       <Name>RoCMS.News.Contract</Name>
     </ProjectReference>
     <ProjectReference Include="..\RoCMS.News.Data\RoCMS.News.Data.csproj">
-      <Project>{f41f8a31-dc1d-4c46-be8b-e721e0c470ac}</Project>
+      <Project>{F41F8A31-DC1D-4C46-BE8B-E721E0C470AC}</Project>
       <Name>RoCMS.News.Data</Name>
     </ProjectReference>
   </ItemGroup>

@@ -24,8 +24,6 @@ namespace RoCMS.Web.Services
         private readonly ILogService _logService;
         private readonly ISettingsService _settingsService;
 
-        //private const string THUMBNAIL_CACHE_KEY_TEMPLATE = "Thumbnail:{0}:{1}";
-
         private const string MIMETYPE_JPG = "image/jpeg";
         private const string MIMETYPE_PNG = "image/png";
         private const string MIMETYPE_GIF = "image/gif";
@@ -39,7 +37,6 @@ namespace RoCMS.Web.Services
         {
             _logService = logService;
             _settingsService = settingsService;
-            //InitCache("ImageServiceMemoryCache");
         }
         
         /// <summary>
@@ -264,8 +261,7 @@ namespace RoCMS.Web.Services
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             if (!imgPath.Contains(baseDir))
             {
-                //TODO
-                throw new Exception();
+                throw new NotSupportedException("Path does not belong to the site");
             }
             var relativePath = imgPath.Replace(baseDir, "");
 

@@ -1,22 +1,19 @@
-﻿using RoCMS.Base.Helpers;
-using RoCMS.Web.Contract.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using RoCMS.Web.Contract.Models;
-using RoCMS.Data.Gateways;
 using AutoMapper;
-using Newtonsoft.Json;
-using RoCMS.Base.Services;
+using RoCMS.Base.Helpers;
+using RoCMS.Data.Gateways;
 using RoCMS.Web.Contract.Extensions;
+using RoCMS.Web.Contract.Models;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Web.Services
 {
     class FormRequestService : BaseCoreService, IFormRequestService
     {
-        private FormRequestGateway _formRequestGateway;
+        private readonly FormRequestGateway _formRequestGateway;
         private readonly IMailService _mailService;
         private readonly ISettingsService _settingsService;
         private readonly IOrderFormService _orderFormService;
@@ -28,17 +25,11 @@ namespace RoCMS.Web.Services
             _settingsService = settingsService;
             _orderFormService = orderFormService;
         }
-        protected override int CacheExpirationInMinutes
-        {
-            get
-            {
-                return AppSettingsHelper.HoursToExpireCartCache * 60;
-            }
-        }
+        protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
-        public int CreateFormRequest(RoCMS.Web.Contract.Models.FormRequest formRequest)
+        public int CreateFormRequest(FormRequest formRequest)
         {
-            return _formRequestGateway.Insert(Mapper.Map<RoCMS.Data.Models.FormRequest>(formRequest));
+            return _formRequestGateway.Insert(Mapper.Map<Data.Models.FormRequest>(formRequest));
         }
 
         public void DeleteFormRequest(int formRequestId)
@@ -46,20 +37,20 @@ namespace RoCMS.Web.Services
             _formRequestGateway.Delete(formRequestId);
         }
 
-        public RoCMS.Web.Contract.Models.FormRequest GetOneFormRequest(int formRequestId)
+        public FormRequest GetOneFormRequest(int formRequestId)
         {
-            return Mapper.Map<RoCMS.Web.Contract.Models.FormRequest>(_formRequestGateway.SelectOne(formRequestId));
+            return Mapper.Map<FormRequest>(_formRequestGateway.SelectOne(formRequestId));
         }
 
-        public IList<RoCMS.Web.Contract.Models.FormRequest> GetFormRequests()
+        public IList<FormRequest> GetFormRequests()
         {
             var list = _formRequestGateway.Select();
-            return Mapper.Map<IList<RoCMS.Web.Contract.Models.FormRequest>>(list);
+            return Mapper.Map<IList<FormRequest>>(list);
         }
 
-        public void UpdateFormRequest(RoCMS.Web.Contract.Models.FormRequest formRequest)
+        public void UpdateFormRequest(FormRequest formRequest)
         {
-            _formRequestGateway.Update(Mapper.Map<RoCMS.Data.Models.FormRequest>(formRequest));
+            _formRequestGateway.Update(Mapper.Map<Data.Models.FormRequest>(formRequest));
         }
 
         public void ProcessMessage(Message message)
@@ -92,7 +83,7 @@ namespace RoCMS.Web.Services
             }
 
 
-            CreateFormRequest(Mapper.Map<RoCMS.Web.Contract.Models.FormRequest>(message));
+            CreateFormRequest(Mapper.Map<FormRequest>(message));
 
             var msg = CreateMessage(message);
             _mailService.Send(msg);
@@ -106,7 +97,7 @@ namespace RoCMS.Web.Services
         {
             string template = _settingsService.GetSettings<string>("MailTmplOrderAutoReply");
             string body = string.Format(template, name, message);
-            MailMsg reply = new MailMsg()
+            MailMsg reply = new MailMsg
             {
                 Subject = "Ваша заявка принята",
                 Receiver = email,
@@ -138,7 +129,7 @@ namespace RoCMS.Web.Services
                     body = String.IsNullOrWhiteSpace(form.EmailTemplate)
                         ? message.Text
                         : string.Format(form.EmailTemplate, message.Text);
-                    res = new MailMsg()
+                    res = new MailMsg
                     {
                         Subject = subject,
                         Receiver = String.IsNullOrEmpty(form.Email) ? _settingsService.GetSettings<string>("OrderEmailAddress") : form.Email,
@@ -166,7 +157,7 @@ namespace RoCMS.Web.Services
                             break;
                     }
 
-                    res = new MailMsg()
+                    res = new MailMsg
                     {
                         Subject = subject + ": " + DateTime.UtcNow.ApplySiteTimezone(),
                         Receiver = _settingsService.GetSettings<string>("OrderEmailAddress"),

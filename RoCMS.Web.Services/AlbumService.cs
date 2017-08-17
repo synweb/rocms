@@ -69,7 +69,6 @@ namespace RoCMS.Web.Services
         public void RemoveImageFromAlbum(int albumId, string imageId)
         {
             _imageInAlbumGateway.Delete(albumId, imageId);
-
         }
 
         public void RemoveAlbum(int albumId)
@@ -150,7 +149,7 @@ namespace RoCMS.Web.Services
                 }
                 catch (Exception e)
                 {
-                    _logService.LogError(e, "Image not found");
+                    _logService.TraceMessage($"Image unavailable (ID:{img.ImageId})");
                     return new AlbumImageInfo()
                     {
                         ImageId = img.ImageId,
@@ -160,10 +159,7 @@ namespace RoCMS.Web.Services
                     };
                 }
             }).ToList();
-
             return result;
-
-
         }
 
         public void UpdateImageDescription(int albumId, string imageId, string description)

@@ -1,7 +1,6 @@
-﻿@using System.Web.UI.WebControls
-@using Resources
+﻿@using Resources
 @using System.Web.Optimization
-@using RoCMS.Web.Contract.Services
+@using RoCMS.Web.Contract.Extensions
 @model IEnumerable<RoCMS.Web.Contract.Models.VideoInfo>
 
 @{
@@ -78,8 +77,7 @@
                     <ul>
                         <li>
                             <strong>@Strings.AdminVideoGallery_VideoPublishDate</strong>
-                            @*//TODO: захардкожен московский часовой пояс*@
-                            <span>@vid.CreationDate.AddHours(4)</span>
+                            <span>@vid.CreationDate.ApplySiteTimezone()</span>
                         </li>
                     </ul>
                 </div>
@@ -95,7 +93,7 @@
 @* TODO: вместо reload сделать шаблон *@
 
 
-@Js("Content/admin/ro/album/rocms.video.album.editor.js")
+@Js("Content/admin/ro/js/rocms.video.album.editor.js")
 @JsInline(@<script type="text/javascript">
 
     $(function () {

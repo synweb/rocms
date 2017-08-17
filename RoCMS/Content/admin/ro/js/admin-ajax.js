@@ -105,7 +105,7 @@ $(function () {
         var oldpass = $('.old-pass').val();
         var newpass = $('.new-pass').val();
         var repeatpass = $('.repeat-pass').val();
-        if (oldpass && newpass && repeatpass && newpass == repeatpass) {
+        if (oldpass && newpass && repeatpass && newpass === repeatpass) {
             blockUI();
             $.ajax({
                 url: '/Admin/ChangePassword',
@@ -129,23 +129,6 @@ $(function () {
                 alert("Произошла ошибка, проверьте правильность ввода.");
             });
         }
-        return false;
-    });
-
-
-    $('#adminContent').on("click", ".button-preview", function () {
-        var datastr = $('.main-wrapper').val();
-        var url = $(this).attr('href');
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: JSON.stringify({ pre: datastr }),
-            contentType: "application/json",
-            success: function (data) {
-                $('.previewBlock').css("visibility", "visible");
-                $('.previewBlock').html(data);
-            }
-        });
         return false;
     });
 });

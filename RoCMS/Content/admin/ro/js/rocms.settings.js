@@ -1,14 +1,10 @@
 ﻿function onSettingsLoaded() {
-
     $('#adminContent').on("click", ".save-settings", function () {
-
         var $container = $(".setting-container");
-            
         var form = $container.find("form");
         $.validator.unobtrusive.parse(form, true);
-       
-        if (!form.valid())
-        {
+
+        if (!form.valid()) {
             form.validate().focusInvalid();
             return false;
         }
@@ -16,24 +12,20 @@
         var mainmenuid = $('.mainmenu-id').val();
         var mainpageurl = $('.mainpage-id').val();
         var rootBreadcrumbsTitle = $(".root-breadcrumbs-title").val();
-
         var reviews = $('.review-checkbox').is(':checked');
         var gallery = $('.gallery-checkbox').is(':checked');
         var yaId = $('.ya-metrika-id').val();
         var timezone = $('select#timezone').val();
-        
         var rooturl = $('.root-url').val();
         var imagemaxheight = $('.image-max-height').val();
         var imagemaxwidth = $('.image-max-width').val();
         var imagequality = $('.image-quality').val();
-        //var thumbnailheight = $('.thumbnail-height').val();
         var thumbnailSizes = $('.thumbnail-sizes').val();
         var autoemailreplyenabled = $(".auto-email-replyenabled").is(':checked');
-
         var emailsmtpurl = $('.email-smtp-url').val();
         var emailsmtpport = $('.email-smtp-port').val();
         var smtpsslenabled = $(".smtp-ssl-enabled").is(':checked');
-        var emaillogin = $('.email-login').val();        
+        var emaillogin = $('.email-login').val();
         var orderemailaddress = $('.order-email-address').val();
         var systememailaddress = $('.system-email-address').val();
         var systememailsendername = $('.system-email-sender-name').val();
@@ -58,8 +50,6 @@
                 ImageMaxHeight: imagemaxheight,
                 ImageMaxWidth: imagemaxwidth,
                 ImageQuality: imagequality,
-                //ThumbnailHeight: thumbnailheight,
-                //ThumbnailWidth: thumbnailwidth,
                 AutoEmailReplyEnabled: autoemailreplyenabled,
                 EmailSmtpUrl: emailsmtpurl,
                 EmailSmtpPort: emailsmtpport,
@@ -72,7 +62,7 @@
                 RootBreadcrumbsTitle: rootBreadcrumbsTitle,
                 AllowedFileExtensions: allowedFileExtensions,
                 YoutubeAPIKey: youtubeAPIKey,
-                thumbnailSizes: thumbnailSizes
+                ThumbnailSizes: thumbnailSizes
             }),
             contentType: "application/json",
             success: function (data) {
@@ -82,10 +72,10 @@
             smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
         })
             .always(function () {
-            unblockUI();
-            $('.change-pass').hide();
-            $(".change-email-pass-link").show();
-        });
+                unblockUI();
+                $('.change-pass').hide();
+                $(".change-email-pass-link").show();
+            });
         return false;
     });
 
@@ -112,7 +102,7 @@
                     var repeatpass = $('.repeat-email-pass').val("");
                 }).fail(function () {
                     alert("Произошла ошибка, проверьте правильность ввода.");
-                });          
+                });
         }
         else {
             alert("Пароли должны совпадать");
@@ -136,7 +126,6 @@
     });
 
     $("#adminContent").on("click", ".get-ya-auth-key", function () {
-
         window.open("https://oauth.yandex.ru/authorize?response_type=code&client_id=12876332b1104b6695e3c211145a3cd6", '_blank');
         showPromptDialog2({
             title: "Введите код подтверждения",
@@ -150,7 +139,6 @@
                         return;
                     }
                     $(".token-expiration").html("(Истекает: " + (new Date(res2.data.expiration)).format('dd.mm.yyyy') + ")");
-
                 })
                     .fail(function () {
                         smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");

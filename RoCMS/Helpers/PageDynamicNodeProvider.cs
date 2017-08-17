@@ -31,11 +31,12 @@ namespace RoCMS.Helpers
                     nodes.Add(dynamicNode);
                 }
             }
-            catch
+            catch(Exception e)
             {
+                ILogService logService = DependencyResolver.Current.GetService<ILogService>();
+                logService.LogError(e);
                 // что-то пошло не так, но из-за этого не должен падать весь сайт
             }
-
             return nodes;
         }
     }

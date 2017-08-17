@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Transactions;
 using AutoMapper;
-using RoCMS.Base.Services;
 using RoCMS.Data.Gateways;
 using RoCMS.Web.Contract.Services;
 using Menu = RoCMS.Web.Contract.Models.Menu;
@@ -45,12 +39,10 @@ namespace RoCMS.Web.Services
             {
                 var dataMenus = _menuGateway.Select();
                 var res = Mapper.Map<List<Menu>>(dataMenus);
-
                 foreach (var menu in res)
                 {
                     FillMenu(menu);
                 }
-
                 return res;
             }
         }
@@ -85,10 +77,7 @@ namespace RoCMS.Web.Services
 
         public int CreateMenu(Menu menu)
         {
-
             var dataMenu = Mapper.Map<Data.Models.Menu>(menu);
-
-
             int menuId;
             using (var ts = new TransactionScope())
             {
@@ -97,7 +86,6 @@ namespace RoCMS.Web.Services
                 ts.Complete();
             }
             return menuId;
-
         }
 
         private void CreateMenuItems(List<MenuItem> items, int menuId, int? parentMenuItemId = null)
@@ -133,10 +121,7 @@ namespace RoCMS.Web.Services
 
         private void UpdateItems(ICollection<MenuItem> items, int menuId, int? parentMenuItemId = null)
         {
-
             ICollection<Data.Models.MenuItem> allOriginItems = _menuItemGateway.Select(menuId);
-
-
             var originItems = allOriginItems.Where(x => x.ParentMenuItemId == parentMenuItemId);
             //удаление из базы тех, что больше нет в коллекции
             foreach (var origin in originItems)
@@ -178,19 +163,12 @@ namespace RoCMS.Web.Services
                         CreateMenuItems(item.Items, menuId, id);
                     }
                 }
-
-
-
-
             }
         }
 
-
         public void UpdateMenu(Menu menu)
         {
-
             var dataMenu = Mapper.Map<Data.Models.Menu>(menu);
-
             using (var ts = new TransactionScope())
             {
                 _menuGateway.Update(dataMenu);

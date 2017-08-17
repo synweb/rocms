@@ -4,7 +4,6 @@ using System.Web;
 
 namespace RoCMS.Base.ForWeb.Helpers
 {
-    
     public static class ParamExtractor
     {
         /// <summary>

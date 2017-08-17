@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,11 +10,9 @@ using System.Data.Metadata.Edm;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using RoCMS.Base.Exceptions;
 
-namespace RoCMS.Base
+namespace RoCMS.Base.Extentions
 {
     /// <summary>
 
@@ -234,7 +232,7 @@ namespace RoCMS.Base
 
                         if (string.IsNullOrEmpty(returnValue))
                             throw new AttributeException("Could not find Entity Table name for " +
-                                                                    entityType.Name);
+                                                         entityType.Name);
 
                         _TableNameCache.Add(entityType, returnValue);
 
@@ -865,23 +863,5 @@ namespace RoCMS.Base
 
         #endregion
 
-    }
-
-
-}
-
-namespace RoCMS.Base.Exceptions
-{
-    internal class AttributeException : Exception
-    {
-        public AttributeException(string s)
-            : base(s)
-        { }
-    }
-    internal class QueryException : Exception
-    {
-        public QueryException(string s)
-            : base(s)
-        { }
     }
 }

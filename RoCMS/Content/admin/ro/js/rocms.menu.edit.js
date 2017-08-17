@@ -1,4 +1,4 @@
-﻿/// <reference path="../menu/rocms.menu.js" />
+﻿/// <reference path="./rocms.menu.js" />
 
 function pageLoaded() {
     $(".order-link").click(function () {
@@ -8,7 +8,6 @@ function pageLoaded() {
 }
 
 function menuPageLoaded() {
-
     $(".menu-list").on("click", ".deleteLink", function () {
         if (!confirmRemoval()) {
             return false;
@@ -38,18 +37,11 @@ function menuEditorLoaded(menuId) {
             result2.splice(0, 0, { blockId: null, title: 'Выпадающий блок меню...' });
             vm.blocks(result2);
             ko.applyBindings(vm, $menu[0]);
-
-
-
         });
     });
 
     $(".menu-save-button").click(function () {
-        var that = this;
         nmenu.save().done(function () {
-            //var url = $("#adminContent [data-menu-list-url]").data("menuListUrl");
-            //$("#adminContent [data-menu-list-url]").load(url, function () { menuPageLoaded(); });
-            
             if (menuId === undefined) {
                 window.location.href = "/Admin/MenuEditor/" + nmenu.menuId;
             } else {

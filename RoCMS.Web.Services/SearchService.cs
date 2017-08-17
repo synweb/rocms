@@ -13,10 +13,7 @@ namespace RoCMS.Web.Services
     public class SearchService : BaseCoreService, ISearchService
     {
 
-        protected override int CacheExpirationInMinutes
-        {
-            get { return 30; }
-        }
+        protected override int CacheExpirationInMinutes => 30;
 
         private readonly SearchItemGateway _searchItemGateway = new SearchItemGateway();
         
@@ -97,54 +94,6 @@ namespace RoCMS.Web.Services
             var dataRes = items.OrderByDescending(x => x.Relevance).Skip(startIndex - 1).Take(count);
             totalCount = items.Count;
             return Mapper.Map<IEnumerable<SearchResultItem>>(dataRes);
-            
-            //IList<SearchResultItemShort> allItems =
-            //    GetFromCacheOrLoadAndAddToCache(String.Format("SEARCHRESULT:{0}", searchPattern.ToLower()),
-            //        () =>
-            //        {
-            //            int goodsCount;
-            //            var goods = _shopService.GetGoodsIds(searchPattern);
-            //            var articles = _articleService.FindArticles(searchPattern);
-
-            //            List<SearchResultItemShort> allFoundItems = new List<SearchResultItemShort>();
-            //            foreach (int goodsItem in goods)
-            //            {
-            //                allFoundItems.Add(new SearchResultItemShort() { ItemId = goodsItem, ItemType = SearchItemType.Goods });
-            //            }
-            //            foreach (var art in articles)
-            //            {
-            //                allFoundItems.Add(new SearchResultItemShort() { ItemId = art.ArticleId, ItemType = SearchItemType.Article });
-            //            }
-            //            return allFoundItems;
-            //        });
-
-            //var resultIds = allItems.Skip(startIndex - 1).Take(count);
-            //totalCount = allItems.Count;
-            //List<SearchResultItem> result = new List<SearchResultItem>();
-            //foreach (var item in resultIds)
-            //{
-            //    SearchResultItem resItem = new SearchResultItem() { ItemId = item.ItemId, ItemType = item.ItemType };
-            //    switch (item.ItemType)
-            //    {
-            //        case SearchItemType.Article:
-            //            var art = _articleService.GetArticle(item.ItemId);
-            //            resItem.Text = art.Page.Annotation;
-            //            resItem.ImageId = art.ImageId;
-            //            resItem.Title = art.Page.Title;
-            //            resItem.Url = art.Page.RelativeUrl;
-            //            break;
-            //        case SearchItemType.Goods:
-            //            var goodsItem = _shopService.GetGoods(item.ItemId);
-            //            resItem.Text = goodsItem.Description;
-            //            resItem.Title = goodsItem.Name;
-            //            resItem.ImageId = goodsItem.MainImageId;
-            //            break;
-            //        default:
-            //            throw new NotSupportedException();
-            //    }
-            //    result.Add(resItem);
-            //}
-            //return result;
         }
 
     }

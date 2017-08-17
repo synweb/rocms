@@ -116,7 +116,7 @@ namespace RoCMS.Base.ForWeb.Helpers
         public static RouteValueDictionary AddKeyValueRouteParam(this RouteValueDictionary rv, string paramName,
             string key, string value)
         {
-            string keyValueFormat = string.Format("{0}:{1}", key, value);
+            string keyValueFormat = $"{key}:{value}";
             //вид строки: ключ1:значение1,ключ2:значение2,...
             var res = new RouteValueDictionary(rv);
             if (res.ContainsKey(paramName))

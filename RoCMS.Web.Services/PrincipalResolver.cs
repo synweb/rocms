@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using RoCMS.Web.Contract.Models.Security;
 using RoCMS.Web.Contract.Services;
 
@@ -11,7 +6,6 @@ namespace RoCMS.Web.Services
 {
     public class PrincipalResolver : IPrincipalResolver
     {
-
         public RoPrincipal GetCurrentUser()
         {
             return Thread.CurrentPrincipal as RoPrincipal;

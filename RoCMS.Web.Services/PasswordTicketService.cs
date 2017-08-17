@@ -50,7 +50,7 @@ namespace RoCMS.Web.Services
             };
             _passwordTicketGateway.Insert(ticket);
             var url = _settingsService.GetSettings<string>("RootUrl");
-            string link = String.Format("{0}/restorepassword/{1}", url, token);
+            string link = $"{url}/restorepassword/{token}";
             var text = String.Format(
                 "Вы запросили восстановление пароля на сайте {0} <br/>Ваш логин: {2}.<br/>Чтобы восстановить пароль, перейдите по ссылке {1} <br/><br/>Если Вы не запрашивали восстановление пароля, пожалуйста, проигнорируйте это письмо.<br/><br/>С уважением, администрация сайта {0}.",
                 url, link, user.Username);
@@ -58,7 +58,7 @@ namespace RoCMS.Web.Services
             _mailService.Send(new MailMsg()
             {
                 Receiver = email,
-                Subject = String.Format("Восстановление пароля на сайте {0}", url),
+                Subject = $"Восстановление пароля на сайте {url}",
                 Body = text
             });
 

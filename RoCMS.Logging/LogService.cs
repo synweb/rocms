@@ -22,21 +22,23 @@ namespace RoCMS.Logging
         public Guid LogError(Exception e)
         {
             Guid code = Guid.NewGuid();
-            _logger.Error("{0}" + Environment.NewLine + Environment.NewLine, new Exception(String.Format("ErrorCode: {0}", code), e));
+            _logger.Error("{0}" + Environment.NewLine + Environment.NewLine, new Exception($"ErrorCode: {code}", e));
             return code;
         }
 
         public Guid LogError(Exception e, string message)
         {
             Guid code = Guid.NewGuid();
-            _logger.ErrorException(message + Environment.NewLine + Environment.NewLine, new Exception(String.Format("ErrorCode: {0}", code), e));
+            _logger.ErrorException(message + Environment.NewLine + Environment.NewLine, new Exception(
+                $"ErrorCode: {code}", e));
             return code;
         }
 
         public Guid LogAndEmailError(Exception e, string message)
         {
             Guid code = Guid.NewGuid();
-            _logger.FatalException(message + Environment.NewLine + Environment.NewLine, new Exception(String.Format("ErrorCode: {0}", code), e));
+            _logger.FatalException(message + Environment.NewLine + Environment.NewLine, new Exception(
+                $"ErrorCode: {code}", e));
             return code;
         }
     }

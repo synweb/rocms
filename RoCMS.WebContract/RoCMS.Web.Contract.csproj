@@ -154,8 +154,7 @@
     <Compile Include="Services\ISliderService.cs" />
     <Compile Include="Services\ITempFilesService.cs" />
     <Compile Include="Services\IVideoGalleryService.cs" />
-    <Compile Include="SettingStrings.cs" />
-    <Compile Include="Widget.cs" />
+    <Compile Include="Models\Widget.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx">

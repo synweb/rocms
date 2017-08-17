@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using RoCMS.Base.ForWeb.Models;
 using RoCMS.Web.Contract.Infrastructure;
 
 namespace RoCMS.Base.ForWeb.Helpers
@@ -40,7 +37,6 @@ namespace RoCMS.Base.ForWeb.Helpers
             // строка ST_ri-nG
             {@"[a-zA-Z0-9-_]+",typeof(string)},
             {@"[а-яА-Я -]+", typeof(string)}
-
         };
 
         private static readonly Dictionary<string, string> ViewsDictionary = new Dictionary<string, string>();
@@ -90,15 +86,10 @@ namespace RoCMS.Base.ForWeb.Helpers
         {
             // Поиск выражения в тексте
             var contentExpr = Regex.Match(content, expr);
-
-            var embracedParamRule = String.Format(@"(?<=\(){0}(?=\))", rule);
-
+            var embracedParamRule = $@"(?<=\(){rule}(?=\))";
             string param = Regex.Match(contentExpr.Value, embracedParamRule).Value;
             var typedParam = Convert.ChangeType(param, paramType);
-            //var paramExpr = expr.Replace(rule, param.ToString(CultureInfo.InvariantCulture));
-            //var paramExpr = Regex.Replace(rule, replaceExpr, param.ToString(CultureInfo.InvariantCulture));
             string res = content.Replace(contentExpr.Value, RenderPartialRazorView(viewPath, typedParam));
-            //Regex.Replace(content, contentExpr.Value, RenderPartialRazorView(viewPath, typedParam));
             return res;
         }
 
@@ -110,34 +101,20 @@ namespace RoCMS.Base.ForWeb.Helpers
 
                 // Выборка директории, в которой находится вьюха
                 var viewDir = Regex.Match(viewPath, @"(?<=~(/bin)?/Views/)\w+(?=/.*)").Value;
-                if (viewDir == "Shared")
-                {
-                    controllerContext.RouteData.Values.Add("controller", "Home");
-                }
-                else
-                {
-                    controllerContext.RouteData.Values.Add("controller", viewDir);
-                }
-
+                controllerContext.RouteData.Values.Add("controller", viewDir == "Shared" ? "Home" : viewDir);
                 var httpContextWrapper = new HttpContextWrapper(HttpContext.Current);
                 controllerContext.RequestContext.HttpContext = httpContextWrapper;
                 controllerContext.HttpContext = httpContextWrapper;
-
                 RoViewEngine razorViewEngine = ViewEngines.Engines.OfType<RoViewEngine>().First();
-
                 var viewData = new ViewDataDictionary();
                 if (model != null)
                 {
                     viewData.Model = model;
                 }
-
-
                 ViewEngineResult viewResult = razorViewEngine.FindPartialView(controllerContext, viewPath, false);
                 var viewContext = new ViewContext(controllerContext, viewResult.View,
                                                   viewData, new TempDataDictionary(), writer);
-
                 viewResult.View.Render(viewContext, writer);
-
                 return writer.ToString();
             }
         }

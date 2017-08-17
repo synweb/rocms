@@ -1,13 +1,7 @@
 ﻿using RoCMS.Web.Contract.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RoCMS.Web.Contract.Models;
 using RoCMS.Base.Helpers;
 using AutoMapper;
-using RoCMS.Base.Services;
 using RoCMS.Data.Gateways;
 using Review = RoCMS.Data.Models.Review;
 
@@ -15,15 +9,9 @@ namespace RoCMS.Web.Services
 {
     public class ReviewService : BaseCoreService, IReviewService
     {
-        private ReviewGateway _reviewGateway = new ReviewGateway();
+        private readonly ReviewGateway _reviewGateway = new ReviewGateway();
         
-        protected override int CacheExpirationInMinutes
-        {
-            get
-            {
-                return AppSettingsHelper.HoursToExpireCartCache * 60;
-            }
-        }
+        protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
         #region IReviewService
         public int CreateReview(Contract.Models.Review review)
@@ -66,7 +54,7 @@ namespace RoCMS.Web.Services
         public IList<Contract.Models.Review> GetReviews(int? count)
         {
             int tmp;
-            var rez = _reviewGateway.Select(1, count.HasValue ? count.Value : int.MaxValue, out tmp, false);            
+            var rez = _reviewGateway.Select(1, count ?? int.MaxValue, out tmp, false);            
             var list = Mapper.Map<ICollection<Contract.Models.Review>>(rez);           
             return new List<Contract.Models.Review>(list);
         }

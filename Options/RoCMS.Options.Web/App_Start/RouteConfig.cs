@@ -11,7 +11,7 @@ namespace RoCMS.Options.Web
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            IEnumerable<string> controllerNames = typeof(MvcApplication).Assembly.GetTypes()
+            IEnumerable<string> controllerNames = typeof(RouteConfig).Assembly.GetTypes()
                 .Where(t => t.Name.EndsWith("Controller"))
                 .Where(t => !t.IsAbstract)
                 .Select(t => String.Format("^{0}$", t.Name.Replace("Controller", "")));

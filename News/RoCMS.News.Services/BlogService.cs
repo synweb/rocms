@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
@@ -80,10 +77,7 @@ namespace RoCMS.News.Services
 
         public Blog GetUserBlog(int userId)
         {
-            //int? blogId = _blogUserGateway.SelectByUser(userId).FirstOrDefault()?.BlogId;
-
             int? blogId = _blogGateway.SelectByOwner(userId).FirstOrDefault()?.BlogId;
-
             if (blogId == null)
                 return null;
             return GetBlog(blogId.Value);

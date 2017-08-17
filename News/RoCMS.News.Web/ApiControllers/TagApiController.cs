@@ -6,16 +6,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.News.Web.ApiControllers
 {
     public class TagApiController : ApiController
     {
-        private readonly INewsItemService _newsItemService;       
+        private readonly INewsItemService _newsItemService;
+        private readonly ILogService _logService;
 
-        public TagApiController(INewsItemService newsItemService)
-        {           
-            _newsItemService = newsItemService;           
+        public TagApiController(INewsItemService newsItemService, ILogService logService)
+        {
+            _newsItemService = newsItemService;
+            _logService = logService;
         }
 
         [HttpGet]

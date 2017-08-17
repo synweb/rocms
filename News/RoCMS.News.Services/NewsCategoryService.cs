@@ -198,17 +198,11 @@ namespace RoCMS.News.Services
                 }
                 return result;
             });
-
-
-
-
-
-
         }
 
         private string GetCategoryIDCannonicalUrlCacheKey(int categoryId)
         {
-            return String.Format(CATEGORY_ID_CANNONICAL_URL_CACHE_KEY, categoryId);
+            return string.Format(CATEGORY_ID_CANNONICAL_URL_CACHE_KEY, categoryId);
         }
 
         public Category GetCategory(string relativeUrl)

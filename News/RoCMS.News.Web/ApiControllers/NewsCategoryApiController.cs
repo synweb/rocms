@@ -8,6 +8,7 @@ using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
 using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.News.Web.ApiControllers
 {
@@ -15,31 +16,58 @@ namespace RoCMS.News.Web.ApiControllers
     public class NewsCategoryApiController : ApiController
     {
         private readonly INewsCategoryService _categoryService;
+        private readonly ILogService _logService;
 
-        public NewsCategoryApiController(INewsCategoryService categoryService)
+        public NewsCategoryApiController(INewsCategoryService categoryService, ILogService logService)
         {
             _categoryService = categoryService;
+            _logService = logService;
         }
 
         [HttpPost]
         public ResultModel Create(Category category)
         {
-            int id = _categoryService.CreateCategory(category);
-            return new ResultModel(true, new { id = id });
+            try
+            {
+                int id = _categoryService.CreateCategory(category);
+                return new ResultModel(true, new { id = id });
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpPost]
         public ResultModel Update(Category category)
         {
-            _categoryService.UpdateCategory(category);
-            return ResultModel.Success;
+            try
+            {
+                _categoryService.UpdateCategory(category);
+                return ResultModel.Success;
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpPost]
         public ResultModel Remove(int categoryId)
         {
-            _categoryService.DeleteCategory(categoryId);
-            return ResultModel.Success;
+            try
+            {
+
+                _categoryService.DeleteCategory(categoryId);
+                return ResultModel.Success;
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpGet]
@@ -51,8 +79,16 @@ namespace RoCMS.News.Web.ApiControllers
         [HttpPost]
         public ResultModel UpdateSortOrder(ICollection<Category> categories)
         {
-            _categoryService.UpdateCategoriesSortOrder(categories);
-            return ResultModel.Success;
+            try
+            {
+                _categoryService.UpdateCategoriesSortOrder(categories);
+                return ResultModel.Success;
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
     }
 }

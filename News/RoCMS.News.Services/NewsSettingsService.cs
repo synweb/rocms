@@ -11,7 +11,7 @@ namespace RoCMS.News.Services
 {
     public class NewsSettingsService : INewsSettingsService
     {
-        private ISettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
         public NewsSettingsService(ISettingsService settingsService)
         {
             _settingsService = settingsService;

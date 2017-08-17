@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Transactions;
 using AutoMapper;
 using RoCMS.Base.Extentions;
@@ -12,12 +9,9 @@ using RoCMS.Base.Models;
 using RoCMS.Comments.Contract.Models;
 using RoCMS.Comments.Contract.Services;
 using RoCMS.Comments.Contract.ViewModels;
-using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
-using RoCMS.News.Data;
 using RoCMS.News.Data.Gateways;
 using RoCMS.News.Data.Models;
-using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Models.Search;
 using RoCMS.Web.Contract.Services;
 using NewsFilter = RoCMS.News.Contract.Models.NewsFilter;
@@ -50,24 +44,6 @@ namespace RoCMS.News.Services
             InitCache("TagMemoryCache");
             CacheExpirationInMinutes = 30;
         }
-
-
-        //Для генерации урлов в уже существующих новостях
-        //private void GenerateRelativeUrls()
-        //{
-        //    using (var context = Context)
-        //    {
-        //        foreach (var item in context.NewsItems)
-        //        {
-        //            if (String.IsNullOrEmpty(item.RelativeUrl))
-        //            {
-        //                item.RelativeUrl = TranslitHelper.ToTranslitedUrl(item.Title);
-        //            }
-        //        }
-
-        //        context.SaveChanges();
-        //    }
-        //}
 
         public int CreateComment(int targetId, Comment comment)
         {
@@ -412,10 +388,7 @@ namespace RoCMS.News.Services
             {
                 return $"{_categoryService.GetCategoryCannonicalUrl(catsIds.First())}/{newsItem.RelativeUrl}";
             }
-            else
-            {
-                return newsItem.RelativeUrl;
-            }
+            return newsItem.RelativeUrl;
         }
 
         public int CreateClientPost(NewsItem post)
@@ -519,9 +492,9 @@ namespace RoCMS.News.Services
             item.Tags = string.Join(",", tags);
         }
 
-        public ICollection<RoCMS.News.Contract.Models.TagStat> GetTagStats(int tagCount)
+        public ICollection<Contract.Models.TagStat> GetTagStats(int tagCount)
         {
-            return Mapper.Map<ICollection<RoCMS.News.Contract.Models.TagStat>>(_newsItemTagGateway.SelectTagStats(tagCount));
+            return Mapper.Map<ICollection<Contract.Models.TagStat>>(_newsItemTagGateway.SelectTagStats(tagCount));
         }
 
         public IEnumerable<string> GetTagByPattern(string pattern, int records)
@@ -531,10 +504,7 @@ namespace RoCMS.News.Services
                 return new List<string>();
             }           
 
-            var rez = GetFromCacheOrLoadAndAddToCache<IEnumerable<string>>(pattern, () =>
-            {
-                return _tagGateway.SelectByPattern(pattern, records);
-            });
+            var rez = GetFromCacheOrLoadAndAddToCache<IEnumerable<string>>(pattern, () => _tagGateway.SelectByPattern(pattern, records));
 
             return rez.Where(x => x.StartsWith(pattern));
         }

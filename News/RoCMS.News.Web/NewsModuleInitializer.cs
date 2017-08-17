@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
 using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Base.ForWeb.Models;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Infrastructure;
-using RoCMS.Comments.Services;
 using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
 using RoCMS.Web.Contract.Models.Search;
@@ -27,7 +21,6 @@ namespace RoCMS.News.Web
         public void Init()
         {
             WebApiConfig.Register(GlobalConfiguration.Configuration);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
 
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             RegisterSearch();

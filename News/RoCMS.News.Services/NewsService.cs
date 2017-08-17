@@ -2,7 +2,9 @@
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Services;
 using RoCMS.News.Contract.Models;
-using RoCMS.Web.Contract.Services;
+using Category = RoCMS.News.Data.Models.Category;
+using NewsItem = RoCMS.News.Data.Models.NewsItem;
+using TagStat = RoCMS.News.Data.Models.TagStat;
 
 namespace RoCMS.News.Services
 {
@@ -13,10 +15,7 @@ namespace RoCMS.News.Services
             ConfigureMapper();
         }
 
-        protected override int CacheExpirationInMinutes
-        {
-            get { return AppSettingsHelper.HoursToExpireCartCache * 60; }
-        }
+        protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
         private static void ConfigureMapper()
         {
@@ -25,22 +24,22 @@ namespace RoCMS.News.Services
 
             Mapper.CreateMap<RecordType, Data.Models.RecordType>();
             Mapper.CreateMap<Data.Models.RecordType, RecordType>();
-            Mapper.CreateMap<Data.Models.NewsItem, RoCMS.News.Contract.Models.NewsItem>()
+            Mapper.CreateMap<NewsItem, Contract.Models.NewsItem>()
                 .ForMember(x => x.Tags, x => x.Ignore())
                 .ForMember(x => x.CanonicalUrl, x => x.Ignore())
                 .ForMember(x => x.Categories, x => x.Ignore())
                 ;
 
-            Mapper.CreateMap<Contract.Models.NewsItem, Data.Models.NewsItem>();
+            Mapper.CreateMap<Contract.Models.NewsItem, NewsItem>();
 
-            Mapper.CreateMap<Data.Models.Category, RoCMS.News.Contract.Models.Category>()
+            Mapper.CreateMap<Category, Contract.Models.Category>()
                 .ForMember(x => x.ChildrenCategories, x => x.Ignore())
                 .ForMember(x => x.CanonicalUrl, x => x.Ignore())
                 .ForMember(x => x.ParentCategory, x => x.Ignore());
 
-            Mapper.CreateMap<RoCMS.News.Contract.Models.Category, Data.Models.Category>();
+            Mapper.CreateMap<Contract.Models.Category, Category>();
 
-            Mapper.CreateMap<Data.Models.TagStat, RoCMS.News.Contract.Models.TagStat>();
+            Mapper.CreateMap<TagStat, Contract.Models.TagStat>();
 
             Mapper.AssertConfigurationIsValid();
         }

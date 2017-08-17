@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using RoCMS.Base;
@@ -16,7 +15,6 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.News.Web.ApiControllers
 {
-    [Authorize]
     [AuthorizeResourcesApi(RoCmsResources.News)]
     public class NewsApiController : ApiController
     {
@@ -173,6 +171,7 @@ namespace RoCMS.News.Web.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }

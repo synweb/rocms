@@ -7,7 +7,6 @@ using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
-using System.Web.Mvc;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb;
 using RoCMS.Base.ForWeb.Models.Filters;
@@ -35,7 +34,7 @@ namespace RoCMS.ApiControllers
         private const string CONNECTION_STRING_TEMPLATE = "data source={0};initial catalog={1};persist security info=True;user id={2};password={3};multipleactiveresultsets=True;application name=EntityFramework";
 
         [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Database)]
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         public ResultModel CheckDB(DatabaseSettings data)
         {
             var newConnectionString = string.Format(CONNECTION_STRING_TEMPLATE, data.DbDataSource, data.DbDatabase, data.DbLogin, data.DbPassword);
@@ -44,7 +43,7 @@ namespace RoCMS.ApiControllers
         }
 
         [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Database)]
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         public ResultModel UpdateDBConnections(DatabaseSettings data)
         {
             try
@@ -79,7 +78,7 @@ namespace RoCMS.ApiControllers
         }
 
         [AuthorizeResourcesApi(RoCmsResources.Development, RoCmsResources.Dev_Widgets)]
-        [System.Web.Http.HttpGet]
+        [HttpGet]
         public ICollection<Widget> GetWidgets()
         {
             var widgets = new List<Widget>();

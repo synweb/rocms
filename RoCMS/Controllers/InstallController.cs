@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
-using RoCMS.Base.Data;
-using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Controllers
@@ -28,7 +23,6 @@ namespace RoCMS.Controllers
                 return RedirectToAction("Index", "Home");
             return View();
         }
-
 
         [HttpPost]
         public ActionResult Install(InstallSettings data)
@@ -81,8 +75,6 @@ namespace RoCMS.Controllers
                 System.Web.HttpRuntime.UnloadAppDomain();
             }
         }
-
-
 
         private string GetConnectionString(string dbDataSource, string dbDatabase, string dbLogin, string dbPassword)
         {

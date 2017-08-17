@@ -9,20 +9,24 @@ using System.Web.Http;
 
 using Newtonsoft.Json;
 using Resources;
+using RoCMS.Base;
+using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
 using RoCMS.Models;
 using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
+    [AuthorizeResourcesApi(RoCmsResources.CommonSettings)]
     public class SettingsApiController : ApiController
     {
         private readonly ISettingsService _settingsService;
+        private readonly ILogService _logService;
 
-        public SettingsApiController(ISettingsService settingsService)
+        public SettingsApiController(ISettingsService settingsService, ILogService logService)
         {
             _settingsService = settingsService;
+            _logService = logService;
         }
 
         private void UpdateAnalyticsAuthCode(string token, long expires)
@@ -33,21 +37,21 @@ namespace RoCMS.ApiControllers
         [HttpPost]
         public ResultModel RequestYandexOAuth([FromBody] int code)
         {
-            string url = "https://oauth.yandex.ru/token";
-            string appId = "12876332b1104b6695e3c211145a3cd6";
-            string appPassword = "11e0689175bc424ca0dc14bdae132e3c";
-            using (var handler = new HttpClientHandler())
+            try
             {
-                HttpClient client = new HttpClient(handler);
-                try
+                string url = "https://oauth.yandex.ru/token";
+                string appId = "12876332b1104b6695e3c211145a3cd6";
+                string appPassword = "11e0689175bc424ca0dc14bdae132e3c";
+                using (var handler = new HttpClientHandler())
                 {
+                    HttpClient client = new HttpClient(handler);
                     var data = new Dictionary<string, string>
-                                   {
-                                       {"grant_type", "authorization_code"},
-                                       {"code", code.ToString(CultureInfo.InvariantCulture)},
-                                       {"client_id", appId},
-                                       {"client_secret", appPassword},
-                                   };
+                    {
+                        {"grant_type", "authorization_code"},
+                        {"code", code.ToString(CultureInfo.InvariantCulture)},
+                        {"client_id", appId},
+                        {"client_secret", appPassword},
+                    };
 
                     var content = new FormUrlEncodedContent(data);
                     HttpResponseMessage response =
@@ -63,13 +67,13 @@ namespace RoCMS.ApiControllers
                         return new ResultModel(false, Strings.AdminAnalytics_BadAuthCode);
                     }
                 }
-                catch
-                {
-                    throw;
-                }
-
+                return new ResultModel(true, new {expiration = _settingsService.GetAnalyticsAuthKeyExpirationDate()});
             }
-            return new ResultModel(true, new {expiration = _settingsService.GetAnalyticsAuthKeyExpirationDate()});
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         class AuthResponse

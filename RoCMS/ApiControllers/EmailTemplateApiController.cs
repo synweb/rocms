@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
@@ -20,6 +17,7 @@ namespace RoCMS.ApiControllers
             _settingsService = settingsService;
         }
 
+        [HttpPost]
         public ResultModel UpdateTemplate(UpdateTemplateData data, string name)
         {
             try

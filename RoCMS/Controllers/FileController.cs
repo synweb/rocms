@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
-using RoCMS.Base.Models;
 using RoCMS.Models;
 using RoCMS.Web.Contract.Services;
 
@@ -14,8 +11,9 @@ namespace RoCMS.Controllers
 {
     public class FileController : Controller
     {
-        private IFileService _fileService;
-        private ILogService _logService;
+        private readonly IFileService _fileService;
+        private readonly ILogService _logService;
+
         public FileController(IFileService fileService, ILogService logService)
         {
             _fileService = fileService;

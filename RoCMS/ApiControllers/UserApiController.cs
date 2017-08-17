@@ -22,17 +22,13 @@ namespace RoCMS.ApiControllers
     {
         private readonly ISecurityService _securityService;
         private readonly IPasswordTicketService _passwordTicketService;
-        private readonly IMailService _mailService;
-        private readonly ISettingsService _settingsService;
-        private readonly IPrincipalResolver _principalResolver;
+        private readonly ILogService _logService;
 
-        public UserApiController(IPasswordTicketService passwordTicketService, IMailService mailService, ISecurityService securityService, ISettingsService settingsService, IPrincipalResolver principalResolver)
+        public UserApiController(IPasswordTicketService passwordTicketService, ISecurityService securityService, ILogService logService)
         {
             _passwordTicketService = passwordTicketService;
-            _mailService = mailService;
             _securityService = securityService;
-            _settingsService = settingsService;
-            _principalResolver = principalResolver;
+            _logService = logService;
         }
 
         [System.Web.Http.HttpGet]
@@ -48,13 +44,21 @@ namespace RoCMS.ApiControllers
         [System.Web.Http.HttpGet]
         public ResultModel GetUsers()
         {
-            var res = _securityService.GetUsers();
-
-            foreach (var user in res)
+            try
             {
-                user.Password = "***";
+                var res = _securityService.GetUsers();
+
+                foreach (var user in res)
+                {
+                    user.Password = "***";
+                }
+                return new ResultModel(true, res);
             }
-            return new ResultModel(true, res);
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [System.Web.Http.HttpPost]
@@ -76,6 +80,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -95,6 +100,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -119,6 +125,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -127,11 +134,6 @@ namespace RoCMS.ApiControllers
         [System.Web.Http.HttpPost]
         public ResultModel UpdateResources(UpdateResourcesData data)
         {
-            //var user = _securityService.GetUser(data.UserId);
-            //if (User.Identity.Name.ToLower().Equals(user.Username.ToLower()))
-            //{
-            //    return new ResultModel(false, "Нельзя выставлять права себе");
-            //}
             try
             {
                 _securityService.SetResources(data.UserId, data.ResourceIds);
@@ -155,48 +157,15 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
-
-
-        //[System.Web.Mvc.HttpPost]
-        //[AuthorizeResources(RoCmsResources.Users)]
-        //public ResultModel TurnRegOn()
-        //{
-        //    try
-        //    {
-        //        _settingsService.TurnRegOn();
-        //        return ResultModel.Success;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return new ResultModel(false, e.Message);
-        //    }
-        //}
-
-        //[System.Web.Mvc.HttpPost]
-        //[AuthorizeResources(RoCmsResources.Users)]
-        //public ResultModel TurnRegOff()
-        //{
-        //    try
-        //    {
-        //        _settingsService.TurnRegOff();
-        //        return ResultModel.Success;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return new ResultModel(false, e.Message);
-        //    }
-        //}
 
         public class UpdateResourcesData
         {
             public int UserId { get; set; }
             public ICollection<int> ResourceIds { get; set; }
         }
-
-
-
     }
 }

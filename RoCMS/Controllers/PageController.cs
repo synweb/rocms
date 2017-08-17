@@ -44,22 +44,16 @@ namespace RoCMS.Controllers
             try
             {
                 string pageUrl = relativeUrl.Split('/').Last();
-
                 string homepage = _settingsService.GetHomepageUrl();
                 if (pageUrl == homepage)
                 {
                     return RedirectPermanent("/");
                 }
-
-
-
                 var page = _pageService.GetPage(pageUrl);
-
                 if (page.CannonicalUrl != relativeUrl)
                 {
                     return RedirectPermanent(Url.RouteUrl("PageSEF", new { relativeUrl = page.CannonicalUrl }));
                 }
-
                 TempData["MetaKeywords"] = page.Keywords;
                 TempData["MetaDescription"] = page.Annotation;
                 TempData["AdditionalHeaders"] = page.AdditionalHeaders;
@@ -68,6 +62,7 @@ namespace RoCMS.Controllers
             catch (Exception)
             {
                 //return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                // TODO: это не совсем гуд, так как все 404 в итоге спамятся в лог
                 throw new HttpException(404, "Not found");
             }
         }

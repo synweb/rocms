@@ -1,22 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data.Common;
-using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Configuration;
 using System.Web.Mvc;
 using RoCMS.Base;
-using RoCMS.Base.ForWeb;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
-using RoCMS.Models;
-using RoCMS.ViewModels;
-using RoCMS.Web.Contract;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
@@ -43,7 +34,7 @@ namespace RoCMS.Controllers
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "robots.txt");
             var text = System.IO.File.ReadAllText(path);
-            return View((object)text); //View(text);
+            return View((object)text); // иначе он воспринимает строку как название вьюхи
         }
 
         [AuthorizeResources(RoCmsResources.Dev_Database)]
@@ -73,7 +64,7 @@ namespace RoCMS.Controllers
         {
             var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Views"));
             List<FileInfo> views = dir.GetFiles("*.cshtml", SearchOption.AllDirectories).ToList();
-            
+
             dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin/Views"));
             views.AddRange(dir.GetFiles("*.cshtml", SearchOption.AllDirectories));
             views = views.Except(views.Where(x =>
@@ -93,7 +84,6 @@ namespace RoCMS.Controllers
             dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin/Content"));
             scripts.AddRange(dir.GetFiles("*.js", SearchOption.AllDirectories));
             styles.AddRange(dir.GetFiles("*.css", SearchOption.AllDirectories));
-
 
             scripts = scripts.Except(scripts.Where(x =>
                 !string.IsNullOrEmpty(x.DirectoryName)
@@ -124,7 +114,6 @@ namespace RoCMS.Controllers
         {
             var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             var filePath = Path.Combine(dir.FullName, path.TrimStart('\\'));
-
             if (System.IO.File.Exists(filePath))
             {
                 using (var stream = new StreamReader(filePath))
@@ -143,21 +132,16 @@ namespace RoCMS.Controllers
         {
             var dir = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             var filePath = Path.Combine(dir.FullName, path.TrimStart('\\'));
-
             if (System.IO.File.Exists(filePath))
             {
                 using (var stream = new StreamWriter(filePath, false, Encoding.UTF8))
                 {
                     stream.Write(content);
-
                     return Json(ResultModel.Success);
-
                 }
             }
-
             return Json(ResultModel.Error);
         }
-
 
         [AuthorizeResources(RoCmsResources.Dev_InterfaceStrings)]
         public ActionResult InterfaceStrings()
@@ -183,7 +167,7 @@ namespace RoCMS.Controllers
         {
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
             int dirPatchLenght = path.Length + 1;
-                         
+
             var files = new List<FileInfo>(new DirectoryInfo(path).GetFiles("*.log", SearchOption.AllDirectories))
                                         .OrderByDescending(x => x.Name)
                                         .Select(x => x.FullName.Substring(dirPatchLenght));

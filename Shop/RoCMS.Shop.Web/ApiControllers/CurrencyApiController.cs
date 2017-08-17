@@ -48,7 +48,7 @@ namespace RoCMS.Shop.Web.ApiControllers
                 if(!Regex.IsMatch(currency.CurrencyId, "^[A-Z]+$"))
                     return new ResultModel(false, "CurrencyId");
                 _currencyService.CreateCurrency(currency);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {

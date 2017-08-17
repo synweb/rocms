@@ -12,15 +12,16 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
     [AuthorizeResourcesApi(RoCmsResources.Sliders)]
     public class SliderApiController : ApiController
     {
         private readonly ISliderService _sliderService;
+        private readonly ILogService _logService;
 
-        public SliderApiController(ISliderService sliderService)
+        public SliderApiController(ISliderService sliderService, ILogService logService)
         {
             _sliderService = sliderService;
+            _logService = logService;
         }
 
         #region Slider
@@ -28,15 +29,31 @@ namespace RoCMS.ApiControllers
         [HttpGet]
         public ResultModel GetSlider(int id)
         {
-            var res = _sliderService.GetSlider(id);
-            return new ResultModel(true, res);
+            try
+            {
+                var res = _sliderService.GetSlider(id);
+                return new ResultModel(true, res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpGet]
         public ResultModel GetSliders()
         {
-            IEnumerable<Slider> res = _sliderService.GetSliders();
-            return new ResultModel(true, res);
+            try
+            {
+                IEnumerable<Slider> res = _sliderService.GetSliders();
+                return new ResultModel(true, res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpPost]
@@ -49,8 +66,16 @@ namespace RoCMS.ApiControllers
         [HttpPost]
         public ResultModel CreateSlider(Slider slider)
         {
-            int res = _sliderService.CreateSlider(slider.Name);
-            return new ResultModel(true, res);
+            try
+            {
+                int res = _sliderService.CreateSlider(slider.Name);
+                return new ResultModel(true, res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         #endregion
@@ -60,22 +85,47 @@ namespace RoCMS.ApiControllers
         [HttpGet]
         public ResultModel GetSlide(int id)
         {
-            Slide slide = _sliderService.GetSlide(id);
-            return new ResultModel(true, slide);
+            try
+            {
+                Slide slide = _sliderService.GetSlide(id);
+                return new ResultModel(true, slide);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpGet]
         public ResultModel GetSlides(int sliderId)
         {
-            var slides = _sliderService.GetSlides(sliderId);
-            return new ResultModel(true, slides);
+            try
+            {
+                var slides = _sliderService.GetSlides(sliderId);
+                return new ResultModel(true, slides);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
             
         [HttpPost]
         public ResultModel EditSlide(Slide slide)
         {
-            bool res = _sliderService.EditSlide(slide);
-            return new ResultModel(res);
+            try
+            {
+
+                bool res = _sliderService.EditSlide(slide);
+                return new ResultModel(res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         [HttpPost]
@@ -88,17 +138,27 @@ namespace RoCMS.ApiControllers
                 int res = _sliderService.CreateSlide(slide);
                 return res != 0 ? new ResultModel(true, res) : new ResultModel(false);
             }
-            catch
+            catch(Exception e)
             {
-                return new ResultModel(false);
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
 
         [HttpPost]
         public ResultModel RemoveSlide(int id)
         {
-            bool res = _sliderService.RemoveSlide(id);
-            return new ResultModel(true, res);
+            try
+            {
+
+                bool res = _sliderService.RemoveSlide(id);
+                return new ResultModel(true, res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
 
         #endregion

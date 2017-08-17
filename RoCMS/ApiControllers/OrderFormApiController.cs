@@ -11,12 +11,11 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
     [AuthorizeResourcesApi(RoCmsResources.CommonSettings)]
     public class OrderFormApiController : ApiController
     {
-        private IOrderFormService _orderFormService;
-        private ILogService _logService;
+        private readonly IOrderFormService _orderFormService;
+        private readonly ILogService _logService;
 
         public OrderFormApiController(IOrderFormService orderFormService, ILogService logService)
         {
@@ -35,7 +34,7 @@ namespace RoCMS.ApiControllers
             catch (Exception e)
             {
                 _logService.LogError(e);
-                return ResultModel.Error;
+                return new ResultModel(e);
             }
         }
 
@@ -50,7 +49,7 @@ namespace RoCMS.ApiControllers
             catch (Exception e)
             {
                 _logService.LogError(e);
-                return ResultModel.Error;
+                return new ResultModel(e);
             }
         }
 
@@ -65,7 +64,7 @@ namespace RoCMS.ApiControllers
             catch (Exception e)
             {
                 _logService.LogError(e);
-                return ResultModel.Error;
+                return new ResultModel(e);
             }
         }
 
@@ -80,7 +79,7 @@ namespace RoCMS.ApiControllers
             catch (Exception e)
             {
                 _logService.LogError(e);
-                return ResultModel.Error;
+                return new ResultModel(e);
             }
         }
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
@@ -12,7 +8,7 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
+    [Authorize]
     [AuthorizeResourcesApi(RoCmsResources.Blocks)]
     public class BlockApiController : ApiController
     {
@@ -40,7 +36,7 @@ namespace RoCMS.ApiControllers
             }
 
             _blockService.DeleteBlock(id);
-            return new ResultModel(true);
+            return ResultModel.Success;
         }
     }
 }

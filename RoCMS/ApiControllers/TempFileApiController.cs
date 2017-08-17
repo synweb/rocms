@@ -13,17 +13,28 @@ namespace RoCMS.ApiControllers
     public class TempFileApiController : ApiController
     {
         private readonly ITempFilesService _tempService;
+        private readonly ILogService _logService;
 
-        public TempFileApiController(ITempFilesService tempService)
+        public TempFileApiController(ITempFilesService tempService, ILogService logService)
         {
             _tempService = tempService;
+            _logService = logService;
         }
 
         [HttpPost]
         public ResultModel RemoveFile(Guid id)
         {
-            _tempService.RemoveFile(id);
-            return ResultModel.Success;
+            try
+            {
+
+                _tempService.RemoveFile(id);
+                return ResultModel.Success;
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
         }
     }
 }

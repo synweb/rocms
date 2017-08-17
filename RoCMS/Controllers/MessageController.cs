@@ -1,14 +1,10 @@
-﻿using RoCMS.Base.Models;
-using RoCMS.Models;
-using RoCMS.Web.Contract.Models;
-using RoCMS.Web.Contract.Services;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace RoCMS.Controllers
 {
+    /// <summary>
+    /// Контроллер для рендера писем с помощью Razor
+    /// </summary>
     [AllowAnonymous]
-    public class MessageController : Controller
-    {
-       
-    }
+    public class MessageController : Controller {}
 }

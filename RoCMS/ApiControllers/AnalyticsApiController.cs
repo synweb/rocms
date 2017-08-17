@@ -7,7 +7,7 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
+    [Authorize]
     public class AnalyticsApiController : ApiController
     {
         private readonly IAnalyticsService _analyticsService;

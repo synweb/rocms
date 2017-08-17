@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Mvc;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
@@ -14,34 +13,36 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
     [AuthorizeResourcesApi(RoCmsResources.Albums)]
     public class AlbumApiController : ApiController
     {
         private readonly IAlbumService _albumService;
-        private IImageService _imageService;
+        private readonly IImageService _imageService;
+        private readonly ILogService _logService;
 
-        public AlbumApiController(IAlbumService albumService, IImageService imageService)
+        public AlbumApiController(IAlbumService albumService, IImageService imageService, ILogService logService)
         {
             _albumService = albumService;
             _imageService = imageService;
+            _logService = logService;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel AddImageToAlbum(int albumId, string imageId)
         {
             try
             {
                 _albumService.AddImageToAlbum(albumId, imageId);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch(Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel UpdateSortOrder(int albumId, IList<string> imageIds)
         {
             try
@@ -51,11 +52,12 @@ namespace RoCMS.ApiControllers
             }
             catch(Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel UpdateImageTitle(int albumId, string imageId, AlbumImageInfo image)
         {
             try
@@ -65,11 +67,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel UpdateImageDescription(int albumId, string imageId, AlbumImageInfo image)
         {
             try
@@ -79,11 +82,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel UpdateImageDestinationUrl(int albumId, string imageId, AlbumImageInfo image)
         {
             try
@@ -93,11 +97,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel UpdateAlbum(Album album)
         {
             try
@@ -107,17 +112,16 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
         
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel RemoveImageFromAlbum(int albumId, string id)
         {
             try
             {
-                //Изображение удаляется и из альбома, и из базы
-                //_imageService.RemoveImage(id);
                 _albumService.RemoveImageFromAlbum(albumId, id);
                 var imageInfo = _imageService.GetImageInfo(id);
                 if(imageInfo.AlbumCount == 0)
@@ -128,11 +132,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
-                return ResultModel.Error;
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel CreateAlbum([FromBody] string title)
         {
             try
@@ -142,11 +147,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel DeleteAlbum(int albumId)
         {
             try
@@ -156,6 +162,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }

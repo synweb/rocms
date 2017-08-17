@@ -125,16 +125,13 @@ $(function () {
 
     $('#adminContent').on("click", ".admin-reviews .button-edit", function () {
         var reviewId = $(this).parent().data("reviewId");
-        //var container = $(this).closest(".admin-review").find(".review-container");
         var editUrl = "/Admin/EditReview/" + reviewId;
-        //var getUrl = "/Admin/GetReview/" + reviewId;
         var moderated = $(this).closest(".admin-review").find(".switch-on").length > 0;
 
         showReviewDialogObj({
             id: reviewId,
             moderated: moderated,
             doneFunction: function () {
-                //container.load(getUrl);
             },
             url: editUrl
         });

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Http;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
@@ -10,32 +7,32 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-
-    [System.Web.Http.Authorize]
     [AuthorizeResourcesApi(RoCmsResources.Gallery)]
     public class ImageApiController: ApiController
     {
         private readonly IImageService _imageService;
+        private readonly ILogService _logService;
 
-        public ImageApiController(IImageService imageService)
+        public ImageApiController(IImageService imageService, ILogService logService)
         {
             _imageService = imageService;
+            _logService = logService;
         }
 
-        [System.Web.Http.HttpPost]
+        [HttpPost]
         public ResultModel RemoveImage(string id)
         {
-            bool succeed = true;
-                _imageService.RemoveImage(id);
             try
             {
-                //Изображение удаляется из всех альбомов и таблицы с изображениями
+                _imageService.RemoveImage(id);
+                // Изображение удаляется из таблицы с изображениями и каскадно из всех альбомов 
+                return ResultModel.Success;
             }
-            catch
+            catch(Exception e)
             {
-                succeed = false;
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
-            return new ResultModel(succeed);
         }
     }
 }

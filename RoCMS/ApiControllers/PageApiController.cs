@@ -16,15 +16,18 @@ using RoCMS.Web.Contract.Services;
 namespace RoCMS.ApiControllers
 {
 
+    [AuthorizeResourcesApi(RoCmsResources.Pages)]
     public class PageApiController : ApiController
     {
         private readonly IPageService _pageService;
-        public PageApiController(IPageService pageService)
+        private readonly ILogService _logService;
+
+        public PageApiController(IPageService pageService, ILogService logService)
         {
             _pageService = pageService;
+            _logService = logService;
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Pages)]
         [System.Web.Http.HttpGet]
         public IList<PageInfo> Pages()
         {
@@ -32,7 +35,6 @@ namespace RoCMS.ApiControllers
             return pages;
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Pages)]
         [System.Web.Http.HttpPost]
         public ResultModel CreatePage(Page page)
         {
@@ -48,11 +50,11 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Pages)]
         [System.Web.Http.HttpPost]
         public ResultModel CopyPage(int id)
         {
@@ -69,6 +71,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }

@@ -8,6 +8,7 @@ using MvcSiteMapProvider.Caching;
 using MvcSiteMapProvider.Loader;
 using MvcSiteMapProvider.Web.Html;
 using MvcSiteMapProvider.Web.Mvc;
+using RoCMS.Base;
 using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
@@ -27,9 +28,6 @@ namespace RoCMS.Controllers
             _searchService = searchService;
         }
 
-        //
-        // GET: /Home/
-
         [AllowAnonymous]
         public ActionResult Index()
         {
@@ -46,7 +44,6 @@ namespace RoCMS.Controllers
         }
 
         [AllowAnonymous]
-        //[RequireHttps]
         public ActionResult Login(string ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
@@ -56,7 +53,6 @@ namespace RoCMS.Controllers
         [HttpPost]
         [AllowAnonymous]
         [AjaxValidateAntiForgeryToken]
-        //[RequireHttps]
         public JsonResult Login(User user, string ReturnUrl)
         {
             ViewBag.ReturnUrl = ReturnUrl;
@@ -77,15 +73,20 @@ namespace RoCMS.Controllers
             return Json(new ResultModel(false));
         }
 
-        //[RequireHttps]
+        [AllowAnonymous]
         public ActionResult Logout()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new RedirectResult("/");
+            }
             FormsAuthentication.SignOut();
             var cookie = new System.Web.HttpCookie("userId") {Expires = DateTime.UtcNow.AddYears(-1)};
             System.Web.HttpContext.Current.Response.SetCookie(cookie);
             return new RedirectResult("/");
         }
 
+        [AllowAnonymous]
         public ActionResult LogoutWithoutRedirect()
         {
             Logout();
@@ -93,7 +94,6 @@ namespace RoCMS.Controllers
         }
 
         [AllowAnonymous]
-        //[RequireHttps]
         public ActionResult Register()
         {
             return View();
@@ -101,22 +101,16 @@ namespace RoCMS.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        //[RequireHttps]
         public ActionResult Register(User user)
         {
-            if (user == null ||
-                string.IsNullOrEmpty(user.Username) 
-                || string.IsNullOrEmpty(user.Password)
-                //|| string.IsNullOrEmpty(user.Email)
-                )
-            {
+            if (user == null 
+                || string.IsNullOrEmpty(user.Username) 
+                || string.IsNullOrEmpty(user.Password))
                 return null;
-            }
             AuthenticationHelper.GetInstance()
                 .RegisterUser(System.Web.HttpContext.Current, user.Username, user.Password, user.Email);
             if (!User.Identity.IsAuthenticated)
             {
-                //FormsAuthentication.RedirectFromLoginPage(user.Username, true);
                 AuthenticationHelper.GetInstance().Login(System.Web.HttpContext.Current, user.Username, user.Password);
             }
             if (Request.IsAjaxRequest())
@@ -150,9 +144,8 @@ namespace RoCMS.Controllers
         [HttpPost]
         public ActionResult LoginAndRedirect(User user, string ReturnUrl)
         {
-            //TODO: сделать нормальную верификацию!
-            if (String.IsNullOrEmpty(user.Username) ||
-                String.IsNullOrEmpty(user.Password))
+            if (string.IsNullOrEmpty(user.Username) 
+                || string.IsNullOrEmpty(user.Password))
             {
                 return RedirectToAction("Login", "Home", new { ReturnUrl });
             }
@@ -193,8 +186,6 @@ namespace RoCMS.Controllers
         [AllowAnonymous]
         public ActionResult Sitemap()
         {
-            //MvcSiteMapProvider.SiteMapPluginProviderFactory f = new SiteMapPluginProviderFactory();
-            //XmlSiteMapController.RegisterRoutes();
             XmlSiteMapProvider x = new XmlSiteMapProvider();
             return new EmptyResult();
         }
@@ -206,20 +197,16 @@ namespace RoCMS.Controllers
             ViewBag.BreadCrumbs = BreadCrumbsHelper.ForSearch();
             int totalCount;
             int startIndex = (page - 1) * pgsize + 1;
-
             var results = _searchService.Search(new SearchParams(query), out totalCount, startIndex, pgsize);
-            
-
             ViewBag.TotalCount = totalCount;
             ViewBag.PagingRoute = "Search";
-
             return PartialView("SearchResult", results);
         }
 
-        
+        [AuthorizeResources(RoCmsResources.AdminPanel)]
         public ActionResult Restart()
         {
-            System.Web.HttpRuntime.UnloadAppDomain();
+            HttpRuntime.UnloadAppDomain();
             return RedirectToAction("Index", "Admin");
         }
     }

@@ -68,7 +68,7 @@ namespace RoCMS.News.Web.ApiControllers
 
                 _newsItemService.IncreaseViewCount(id);
                 HttpContext.Current.Session[sessionKey] = true;
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
@@ -132,7 +132,7 @@ namespace RoCMS.News.Web.ApiControllers
                 }
                 _newsItemService.EditNewsItem(news);
                 
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
@@ -148,7 +148,7 @@ namespace RoCMS.News.Web.ApiControllers
             {
                 _newsItemService.RemoveNewsItem(id);
                 
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {

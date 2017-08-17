@@ -13,21 +13,32 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
     [AuthorizeResourcesApi(RoCmsResources.Menus)]
     public class MenuApiController : ApiController
     {
         private readonly IMenuService _menuService;
+        private readonly ILogService _logService;
 
-        public MenuApiController(IMenuService menuService)
+        public MenuApiController(IMenuService menuService, ILogService logService)
         {
             _menuService = menuService;
+            _logService = logService;
         }
+
+        // TODO: переписать методы на ResultModel
 
         [HttpGet]
         public Menu Get(int id)
         {
-            return _menuService.GetMenu(id);
+            try
+            {
+                return _menuService.GetMenu(id);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                throw;
+            }
         }
 
         [HttpPost]
@@ -39,20 +50,36 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
-                throw;
+                _logService.LogError(e);
             }
         }
 
         [HttpPost]
         public int Create(Menu menu)
         {
-            return _menuService.CreateMenu(menu);
+            try
+            {
+                return _menuService.CreateMenu(menu);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                throw;
+            }
         }
 
         [HttpPost]
         public void Delete(int id)
         {
-            _menuService.DeleteMenu(id);
+            try
+            {
+                _menuService.DeleteMenu(id);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                throw;
+            }
         }
 
     }

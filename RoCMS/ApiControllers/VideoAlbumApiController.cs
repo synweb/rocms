@@ -9,15 +9,16 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.ApiControllers
 {
-    [System.Web.Http.Authorize]
     [AuthorizeResourcesApi(RoCmsResources.VideoGallery)]
     public class VideoAlbumApiController : ApiController
     {
         private readonly IVideoGalleryService _videoGalleryService;
+        private readonly ILogService _logService;
 
-        public VideoAlbumApiController(IVideoGalleryService videoGalleryService)
+        public VideoAlbumApiController(IVideoGalleryService videoGalleryService, ILogService logService)
         {
             _videoGalleryService = videoGalleryService;
+            _logService = logService;
         }
 
         [HttpPost]
@@ -30,6 +31,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -44,11 +46,12 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
-        [System.Web.Mvc.HttpPost]
+        [HttpPost]
         public ResultModel UpdateSortOrder(int albumId, IList<string> videoIds)
         {
             try
@@ -58,6 +61,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -78,6 +82,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -92,6 +97,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -106,6 +112,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -120,6 +127,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -134,6 +142,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }

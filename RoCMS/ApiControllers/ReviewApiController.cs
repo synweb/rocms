@@ -17,10 +17,12 @@ namespace RoCMS.ApiControllers
     public class ReviewApiController : ApiController
     {
         private readonly IReviewService _reviewService;
+        private readonly ILogService _logService;
 
-        public ReviewApiController(IReviewService reviewService)
+        public ReviewApiController(IReviewService reviewService, ILogService logService)
         {
             _reviewService = reviewService;
+            _logService = logService;
         }
 
         [AllowAnonymous]
@@ -34,67 +36,68 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
-                return new ResultModel(false, e.Message);
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Reviews)]
         [HttpPost]
         public ResultModel Update(Review review)
         {
             try
             {
                 _reviewService.UpdateReview(review);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
-                return new ResultModel(false, e.Message);
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Reviews)]
         [HttpPost]
         public ResultModel Accept(int id)
         {
             try
             {
                 _reviewService.ModerateReview(id, true);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
-                return new ResultModel(false, e.Message);
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Reviews)]
         [HttpPost]
         public ResultModel Hide(int id)
         {
             try
             {
                 _reviewService.ModerateReview(id, false);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
-                return new ResultModel(false, e.Message);
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
 
-        [AuthorizeResourcesApi(RoCmsResources.Reviews)]
         [HttpPost]
         public ResultModel Delete(int id)
         {
             try
             {
                 _reviewService.DeleteReview(id);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
-                return new ResultModel(false, e.Message);
+                _logService.LogError(e);
+                return new ResultModel(e);
             }
         }
     }

@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Mail;
-using System.Text;
 using System.Web.Http;
-using System.Web.UI;
-using Newtonsoft.Json;
-using RoCMS.Base.ForWeb.Extensions;
-using RoCMS.Base.Helpers;
 using RoCMS.Base.Models;
-using RoCMS.Models;
-using RoCMS.Web.Contract.Extensions;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
@@ -43,7 +30,7 @@ namespace RoCMS.ApiControllers
             catch (Exception e)
             {
                 _logService.LogError(e);
-                return ResultModel.Error;
+                return new ResultModel(e);
             }
         }
 
@@ -59,16 +46,8 @@ namespace RoCMS.ApiControllers
             catch (Exception e)
             {
                 _logService.LogError(e);
-                return ResultModel.Error;
+                return new ResultModel(e);
             }
         }
-
-        //[HttpPost]
-        //public ResultModel Question(Message message)
-        //{
-        //    message.MessageType = MessageType.Question;
-        //    _formRequestService.ProcessMessage(message);
-        //    return ResultModel.Success;
-        //}
     }
 }

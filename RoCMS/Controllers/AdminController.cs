@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Web.Mvc;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
-using RoCMS.Helpers;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
@@ -65,35 +63,12 @@ namespace RoCMS.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult ChangePassword()
-        {
-            return PartialView("_ChangePassword");
-        }
-        
-        [HttpPost]
-        public ActionResult ChangePassword(string oldPassword, string newPassword, string repeatPassword)
-        {
-            if (!string.IsNullOrEmpty(oldPassword) &&
-                !string.IsNullOrEmpty(newPassword) &&
-                !string.IsNullOrEmpty(repeatPassword))
-            {
-                if (newPassword != repeatPassword)
-                {
-                    throw new InvalidDataException();
-                }
-                _securityService.ChangePassword(User.Identity.Name, oldPassword, newPassword);
-                return Json(new ResultModel(true));
-            }
-            return Json(new ResultModel(false));
 
-        }
 
         #region Pages
         [AuthorizeResources(RoCmsResources.Pages)]
         public ActionResult Pages()
         {
-            //var pages = _pageService.GetPages();
             var pages = _pageService.GetPagesInfo();
             return PartialView(pages);
         }
@@ -115,11 +90,8 @@ namespace RoCMS.Controllers
             {
                 return Json(new ResultModel(false));
             }
-            ////Особенность Kendo Editor
-            // У нас больше нет кендо!
-            //page.Content = Server.HtmlDecode(page.Content);
             _pageService.CreatePage(page);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [HttpGet]
@@ -142,7 +114,7 @@ namespace RoCMS.Controllers
             }
 
             _pageService.UpdatePage(page);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [HttpPost]
@@ -150,7 +122,7 @@ namespace RoCMS.Controllers
         public ActionResult DeletePage(int pageId)
         {
             _pageService.DeletePage(pageId);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [HttpPost]
@@ -176,19 +148,34 @@ namespace RoCMS.Controllers
         public ActionResult DeleteFormRequest(int formRequestId)
         {
             _formRequestService.DeleteFormRequest(formRequestId);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         #endregion
 
-        #region MailMessages
+        #region Emails
         [AuthorizeResources(RoCmsResources.Emails)]
         public ActionResult MailMessages()
         {
             var messages = _mailService.GetMessages();
             return PartialView(messages);
         }
+        
+        [AuthorizeResources(RoCmsResources.Emails)]
+        public ActionResult EmailTemplates()
+        {
+            var templateList = _settingsService.GetEmailTemplateNames();
+            return View(templateList);
+        }
 
+        [AuthorizeResources(RoCmsResources.Emails)]
+        public ActionResult EditEmailTemplate(string id)
+        {
+            string settingName = "MailTmpl" + id;
+            var content = _settingsService.GetSettings<string>(settingName);
+            ViewBag.TemplateName = id;
+            return View("EditEmailTemplate", (object)content); //(content);
+        }
 
 
 
@@ -243,7 +230,7 @@ namespace RoCMS.Controllers
         public ActionResult UpdateMenu(Menu menu)
         {
             _menuService.UpdateMenu(menu);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [HttpPost]
@@ -251,7 +238,7 @@ namespace RoCMS.Controllers
         public ActionResult DeleteMenu(int menuId)
         {
             _menuService.DeleteMenu(menuId);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [HttpGet]
@@ -329,7 +316,7 @@ namespace RoCMS.Controllers
             //Особенность Kendo Editor
             //block.Content = Server.HtmlDecode(block.Content);
             _blockService.UpdateBlock(block);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [AuthorizeResources(RoCmsResources.Blocks)]
@@ -341,7 +328,7 @@ namespace RoCMS.Controllers
             }
 
             _blockService.DeleteBlock(id);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         #endregion
@@ -359,7 +346,7 @@ namespace RoCMS.Controllers
         public ActionResult SaveSettings(Setting model)
         {
             _settingsService.UpdateSettings(model);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         public class ChangePasswordData { public string EmailPassword { get; set; } }
@@ -369,12 +356,35 @@ namespace RoCMS.Controllers
         public ActionResult UpdateEmailPassword(ChangePasswordData model)
         {
             _settingsService.UpdateEmailPassword(model.EmailPassword);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
         #endregion
 
-
         #region Users
+
+        [HttpGet]
+        public ActionResult ChangePassword()
+        {
+            return PartialView("_ChangePassword");
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(string oldPassword, string newPassword, string repeatPassword)
+        {
+            if (!string.IsNullOrEmpty(oldPassword) &&
+                !string.IsNullOrEmpty(newPassword) &&
+                !string.IsNullOrEmpty(repeatPassword))
+            {
+                if (newPassword != repeatPassword)
+                {
+                    throw new InvalidDataException();
+                }
+                _securityService.ChangePassword(User.Identity.Name, oldPassword, newPassword);
+                return Json(ResultModel.Success);
+            }
+            return Json(new ResultModel(false));
+        }
+
         [AuthorizeResources(RoCmsResources.Users)]
         public ActionResult Users()
         {
@@ -382,6 +392,7 @@ namespace RoCMS.Controllers
             return PartialView(users);
         }
 
+        [AuthorizeResources(RoCmsResources.Users)]
         public ActionResult EditUser(int id)
         {
             var user = _securityService.GetUser(id);
@@ -423,7 +434,7 @@ namespace RoCMS.Controllers
         public ActionResult EditUserPassword(ChangeUserPasswordData model)
         {
             _securityService.SetPassword(model.UserId, model.Password);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         #endregion
@@ -457,7 +468,7 @@ namespace RoCMS.Controllers
         public JsonResult RemoveSlider(int id)
         {
             _sliderService.RemoveSlider(id);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [AuthorizeResources(RoCmsResources.Sliders)]
@@ -472,7 +483,7 @@ namespace RoCMS.Controllers
         public JsonResult CreateSlide(Slide slide)
         {
             _sliderService.CreateSlide(slide);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [AuthorizeResources(RoCmsResources.Sliders)]
@@ -487,7 +498,7 @@ namespace RoCMS.Controllers
         public JsonResult EditSlide(Slide slide)
         {
             _sliderService.EditSlide(slide);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         #endregion
@@ -553,14 +564,11 @@ namespace RoCMS.Controllers
 
         #endregion
 
-
-
-
+        #region Analytics
 
         [AuthorizeResources(RoCmsResources.Analytics)]
         public ActionResult Analytics()
         {
-            //TrafficSummaryContainer analytics = _analyticsService.GetTrafficSummary(null, null);
             return View();
         }
 
@@ -569,10 +577,9 @@ namespace RoCMS.Controllers
             return View("_AnalyticsRangeSelect");
         }
 
-        //public ActionResult GetAnalyticsVerificationCode()
-        //{
-        //    return View("_AnalyticsEnterCode");
-        //}
+        #endregion
+
+        #region Pick Dialogs
 
         public ActionResult PickBlock()
         {
@@ -592,6 +599,10 @@ namespace RoCMS.Controllers
             return View("_PickAlbum", albums);
         }
 
+            #endregion
+
+        #region Videos
+
         [AuthorizeResources(RoCmsResources.VideoGallery)]
         public ActionResult VideoGallery()
         {
@@ -607,25 +618,10 @@ namespace RoCMS.Controllers
             var model = _videoGalleryService.GetAlbumVideos(id);
             return PartialView("_VideoAlbumEditor", model);
         }
-        
-        [AuthorizeResources(RoCmsResources.Emails)]
-        public ActionResult EmailTemplates()
-        {
-            var templateList = _settingsService.GetEmailTemplateNames();
-            return View(templateList);
-        }
 
-        [AuthorizeResources(RoCmsResources.Emails)]
-        public ActionResult EditEmailTemplate(string id)
-        {
-            string settingName = "MailTmpl" + id;
-            var content = _settingsService.GetSettings<string>(settingName);
-            ViewBag.TemplateName = id;
-            return View("EditEmailTemplate", (object)content); //(content);
-        }
+        #endregion
         
-
-        #region reviews
+        #region Reviews
         public ActionResult GetReviews(int page = 1, int pgsize = 20)
         {
             int startIndex = (page - 1) * pgsize + 1;
@@ -651,7 +647,7 @@ namespace RoCMS.Controllers
         public ActionResult EditReview(Review review)
         {
             _reviewService.UpdateReview(review);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
 
         [AuthorizeResources(RoCmsResources.Reviews)]
@@ -692,7 +688,7 @@ namespace RoCMS.Controllers
         public ActionResult AddReview(Review review)
         {
             _reviewService.CreateReview(review);
-            return Json(new ResultModel(true));
+            return Json(ResultModel.Success);
         }
         #endregion
 
@@ -702,6 +698,8 @@ namespace RoCMS.Controllers
             return View("RedirectToPageRoutes");
         }
 
+        #region OrderForms
+
         [AuthorizeResourcesApi(RoCmsResources.CommonSettings)]
         public ActionResult OrderForms()
         {
@@ -710,23 +708,23 @@ namespace RoCMS.Controllers
         }
 
         [HttpGet]
-        [AuthorizeResources(RoCmsResources.Pages)]
+        [AuthorizeResources(RoCmsResources.CommonSettings)]
         public ActionResult CreateOrderForm()
         {
             ViewBag.Action = "Create";
-
             return PartialView("_OrderFormEditor");
         }
 
         [HttpGet]
-        [AuthorizeResources(RoCmsResources.Pages)]
+        [AuthorizeResources(RoCmsResources.CommonSettings)]
         public ActionResult EditOrderForm(int id)
         {
             ViewBag.Action = "Edit";
-
             var form = _orderFormService.GetOrderForm(id);
             return PartialView("_OrderFormEditor", form);
         }
+
+        #endregion
 
 
     }

@@ -9,13 +9,9 @@ namespace RoCMS.Controllers
     [AllowAnonymous]
     public class RedirectController : Controller
     {
-        //
-        // GET: /Redirect/
-
         public ActionResult Index(string relativeUrl)
         {
             return RedirectPermanent(Url.RouteUrl("PageSEF", new { relativeUrl = relativeUrl }));
         }
-
     }
 }

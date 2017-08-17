@@ -15,11 +15,13 @@ namespace RoCMS.ApiControllers
     {
         private readonly IAlbumService _albumService;
         private readonly ISecurityService _securityService;
+        private readonly ILogService _logService;
 
-        public UserAlbumApiController(IAlbumService albumService, ISecurityService securityService)
+        public UserAlbumApiController(IAlbumService albumService, ISecurityService securityService, ILogService logService)
         {
             _albumService = albumService;
             _securityService = securityService;
+            _logService = logService;
         }
         
         public ResultModel GetUserAlbumId()
@@ -30,6 +32,7 @@ namespace RoCMS.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
@@ -39,33 +42,27 @@ namespace RoCMS.ApiControllers
             {
                 int albumId = GetAlbumId();
                 _albumService.AddImageToAlbum(albumId, imageId);
-                return new ResultModel(true);
+                return ResultModel.Success;
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
         }
 
         private int GetAlbumId()
         {
-            var album = _albumService.GetUserAlbums(UserId).FirstOrDefault();
+            int userId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
+            var album = _albumService.GetUserAlbums(userId).FirstOrDefault();
             if (album != null) 
                 return album.AlbumId;
-            string username = _securityService.GetUser(UserId).Username;
-            string albumName = string.Format("Альбом пользователя {0} ({1})", username, UserId);
-            int id = _albumService.CreateAlbum(albumName, UserId);
+            string username = _securityService.GetUser(userId).Username;
+            string albumName = string.Format("Альбом пользователя {0} ({1})", username, userId);
+            int id = _albumService.CreateAlbum(albumName, userId);
             return id;
         }
-
-
-        private int UserId
-        {
-            get
-            {
-                return AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
-            }
-        }
+        
 
     }
 }

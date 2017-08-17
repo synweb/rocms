@@ -18,9 +18,6 @@ namespace RoCMS.App_Start
         public static void Configure(HttpConfiguration config, IUnityContainer unityContainer)
         {
             config.DependencyResolver = new UnityDependencyResolver(unityContainer);
-
-
-            // Replace the default JsonFormatter with our custom one
             var index = config.Formatters.IndexOf(config.Formatters.JsonFormatter);
             config.Formatters[index] = new JsonCamelCaseFormatter();
 
@@ -28,30 +25,24 @@ namespace RoCMS.App_Start
 
         public static void Register(HttpConfiguration config)
         {
-            
-
             WebApiConfigHelper.ApiRoute(config.Routes, "user/current/info/get", "UserApi", "GetCurrentUserInfo");
             WebApiConfigHelper.ApiRoute(config.Routes, "user/password/createTicket/{email}", "UserApi", "CreateTicket");
             WebApiConfigHelper.ApiRoute(config.Routes, "user/password/set", "UserApi", "SetPassword");
             WebApiConfigHelper.ApiRoute(config.Routes, "users/get", "UserApi", "GetUsers");
             WebApiConfigHelper.ApiRoute(config.Routes, "user/{name}/delete", "UserApi", "DeleteUser");
             WebApiConfigHelper.ApiRoute(config.Routes, "user/resources/update", "UserApi", "UpdateResources");
-            //WebApiConfigHelper.ApiRoute(config.Routes, "users/reg/on", "UserApi", "TurnRegOn");
-            //WebApiConfigHelper.ApiRoute(config.Routes, "users/reg/off", "UserApi", "TurnRegOff");
             WebApiConfigHelper.ApiRoute(config.Routes, "user/profile/update", "UserApi", "UpdateProfile");
 
             WebApiConfigHelper.ApiRoute(config.Routes, "menu/{id}/get", "MenuApi", "Get");
             WebApiConfigHelper.ApiRoute(config.Routes, "menu/{id}/delete", "MenuApi", "Delete");
             WebApiConfigHelper.ApiRoute(config.Routes, "menu/create", "MenuApi", "Create");
             WebApiConfigHelper.ApiRoute(config.Routes, "menu/update", "MenuApi", "Update");
-
             
             WebApiConfigHelper.ApiRoute(config.Routes, "review/{id}/delete", "ReviewApi", "Delete");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/create", "ReviewApi", "Create");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/update", "ReviewApi", "Update");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/{id}/accept", "ReviewApi", "Accept");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/{id}/hide", "ReviewApi", "Hide");
-
 
             WebApiConfigHelper.ApiRoute(config.Routes, "block/{id}/delete", "BlockApi", "Delete");
             WebApiConfigHelper.ApiRoute(config.Routes, "block/blocks/get", "BlockApi", "Blocks");
@@ -71,7 +62,6 @@ namespace RoCMS.App_Start
             WebApiConfigHelper.ApiRoute(config.Routes, "slide/create", "SliderApi", "CreateSlide");
             
             WebApiConfigHelper.ApiRoute(config.Routes, "message/send/order", "MessageApi", "Order");
-            //WebApiConfigHelper.ApiRoute(config.Routes, "message/send/question", "MessageApi", "Question");
             WebApiConfigHelper.ApiRoute(config.Routes, "message/send/callback", "MessageApi", "Callback");
             
             WebApiConfigHelper.ApiRoute(config.Routes, "image/remove/{id}", "ImageApi", "RemoveImage");
@@ -102,8 +92,6 @@ namespace RoCMS.App_Start
             WebApiConfigHelper.ApiRoute(config.Routes, "analytics/traffic/summary/default", "AnalyticsApi", "GetDefaultTrafficSummary");
             WebApiConfigHelper.ApiRoute(config.Routes, "analytics/sources/summary", "AnalyticsApi", "GetSourcesSummary");
             WebApiConfigHelper.ApiRoute(config.Routes, "analytics/sources/summary/default", "AnalyticsApi", "GetDefaultSourcesSummary");
-            WebApiConfigHelper.ApiRoute(config.Routes, "analytics/sources/phrases", "AnalyticsApi", "GetPhrases");
-            WebApiConfigHelper.ApiRoute(config.Routes, "analytics/sources/phrases/default", "AnalyticsApi", "GetDefaultPhrases");
             
             WebApiConfigHelper.ApiRoute(config.Routes, "settings/yandex/auth", "SettingsApi", "RequestYandexOAuth");
 

@@ -16,6 +16,11 @@ namespace RoCMS.Web.Services
        
         protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
+        public BlockService()
+        {
+            InitCache("BlockServiceMemoryCache");
+        }
+
         #region IBlockService 
         public int CreateBlock(Block block)
         {

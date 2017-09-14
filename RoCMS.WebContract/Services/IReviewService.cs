@@ -5,7 +5,7 @@ namespace RoCMS.Web.Contract.Services
 {
     public interface IReviewService
     {
-        int CreateReview(Review review);
+        int CreateReview(Review review, bool notify);
         Review GetReview(int id);
         void UpdateReview(Review review);
         void ModerateReview(int reviewId, bool accept);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using RoCMS.Base.Helpers;
 using AutoMapper;
 using RoCMS.Data.Gateways;
+using RoCMS.Web.Contract.Models;
 using Review = RoCMS.Data.Models.Review;
 
 namespace RoCMS.Web.Services
@@ -10,13 +11,27 @@ namespace RoCMS.Web.Services
     public class ReviewService : BaseCoreService, IReviewService
     {
         private readonly ReviewGateway _reviewGateway = new ReviewGateway();
-        
+        private readonly ISettingsService _settingsService;
+        private readonly IMailService _mailService;
+
+        public ReviewService(ISettingsService settingsService, IMailService mailService)
+        {
+            _settingsService = settingsService;
+            _mailService = mailService;
+        }
+
         protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
         #region IReviewService
-        public int CreateReview(Contract.Models.Review review)
-        {            
-           return _reviewGateway.Insert(Mapper.Map<Review>(review));
+
+        public int CreateReview(Contract.Models.Review review, bool notify)
+        {
+            int id = _reviewGateway.Insert(Mapper.Map<Review>(review));
+            if (notify)
+            {
+                SendReviewNotification(review.Author, review.Email, review.Text);
+            }
+            return id;
         }
 
         public void DeleteReview(int reviewId)
@@ -70,6 +85,19 @@ namespace RoCMS.Web.Services
         public void UpdateReview(Contract.Models.Review review)
         {
             _reviewGateway.Update(Mapper.Map<Review>(review));
+        }
+
+        private void SendReviewNotification(string author, string authorEmail, string text)
+        {   
+            string template = _settingsService.GetSettings<string>("MailTmplReviewCreated");
+            string body = string.Format(template, author, authorEmail, text);
+            MailMsg reply = new MailMsg
+            {
+                Subject = "Кто-то оставил отзыв на сайте",
+                Receiver = _settingsService.GetSettings<string>(nameof(Setting.OrderEmailAddress)),
+                Body = body
+            };
+            _mailService.Send(reply);
         }
         #endregion
     }

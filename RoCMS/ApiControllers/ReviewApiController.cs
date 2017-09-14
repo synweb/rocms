@@ -18,11 +18,13 @@ namespace RoCMS.ApiControllers
     {
         private readonly IReviewService _reviewService;
         private readonly ILogService _logService;
+        private readonly ISettingsService _settingsService;
 
-        public ReviewApiController(IReviewService reviewService, ILogService logService)
+        public ReviewApiController(IReviewService reviewService, ILogService logService, ISettingsService settingsService)
         {
             _reviewService = reviewService;
             _logService = logService;
+            _settingsService = settingsService;
         }
 
         [AllowAnonymous]
@@ -31,7 +33,22 @@ namespace RoCMS.ApiControllers
         {
             try
             {
-                int id = _reviewService.CreateReview(review);
+                int id = _reviewService.CreateReview(review, _settingsService.GetSettings<bool>(nameof(Setting.ReviewCreatedNotification)));
+                return new ResultModel(true, id);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
+        }
+        
+        [HttpPost]
+        public ResultModel CreateByAdmin(Review review)
+        {
+            try
+            {
+                int id = _reviewService.CreateReview(review, false);
                 return new ResultModel(true, id);
             }
             catch (Exception e)

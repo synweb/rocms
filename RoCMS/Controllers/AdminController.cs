@@ -687,7 +687,7 @@ namespace RoCMS.Controllers
         [AuthorizeResources(RoCmsResources.Reviews)]
         public ActionResult AddReview(Review review)
         {
-            _reviewService.CreateReview(review);
+            _reviewService.CreateReview(review, false);
             return Json(ResultModel.Success);
         }
         #endregion

@@ -96,6 +96,7 @@
     <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Models\RazorEmailTemplate.cs" />
     <Compile Include="Models\RedirectToPageRouters.cs" />
+    <Compile Include="Models\ReviewSort.cs" />
     <Compile Include="Models\Search\IndexingRule.cs" />
     <Compile Include="Models\Search\ISearchable.cs" />
     <Compile Include="Models\Search\SearchItem.cs" />

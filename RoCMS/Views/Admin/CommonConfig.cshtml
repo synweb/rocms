@@ -1,5 +1,6 @@
 ﻿@using System.Web.Optimization
 @using Resources
+@using RoCMS.Web.Contract.Models
 @using RoCMS.Web.Contract.Services
 @model RoCMS.Web.Contract.Models.Setting
 
@@ -337,10 +338,10 @@
                     </div>
                     <h5>Прочие настройки</h5>
                 </header>
-
+                
                 <div class="body collapse in" aria-expanded="true">
                     <div class="form-horizontal">
-                        @* Метрика *@
+                        <i>Видеогалерея</i>
                         <div class="form-group">
                             @Html.LabelFor(x => x.YoutubeAPIKey, "YouTube API Key", new { @class = "control-label col-lg-4" })
                             <div class="col-lg-8">
@@ -353,6 +354,28 @@
                                        id="YoutubeAPIKey" name="YoutubeAPIKey" type="text" value="@Model.YoutubeAPIKey">
                             </div>
                         </div>
+                        <hr/>
+                        <i>Отзывы</i>
+                        <div class="form-group">
+                            @Html.LabelFor(x => x.ReviewCreatedNotification, "Оповещать о новых отзывах", new { @class = "control-label col-lg-4" })
+                            <div class="col-lg-8">
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(x => x.ReviewCreatedNotification, new { @class = "review-created-notificaton form-control" })
+                                    <label for="ReviewCreatedNotification"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-lg-4" for="reviewSort">Сортировка отзывов</label>
+                            <div class="col-lg-8">
+                                <select class="form-control reviewsort" id="reviewSort">
+                                    <option @(Model.ReviewSort == ReviewSort.CreationDateAsc ? "selected='selected'" : "") value="@ReviewSort.CreationDateAsc">Дата создания (возр.)</option>
+                                    <option @(Model.ReviewSort == ReviewSort.CreationDateDesc ? "selected='selected'" : "") value="@ReviewSort.CreationDateDesc">Дата создания (убыв.)</option>
+                                    <option @(Model.ReviewSort == ReviewSort.Random ? "selected='selected'" : "") value="@ReviewSort.Random">Случайная</option>
+                                </select>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

@@ -40,6 +40,7 @@ namespace RoCMS.App_Start
             
             WebApiConfigHelper.ApiRoute(config.Routes, "review/{id}/delete", "ReviewApi", "Delete");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/create", "ReviewApi", "Create");
+            WebApiConfigHelper.ApiRoute(config.Routes, "review/createbyadmin", "ReviewApi", "CreateByAdmin");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/update", "ReviewApi", "Update");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/{id}/accept", "ReviewApi", "Accept");
             WebApiConfigHelper.ApiRoute(config.Routes, "review/{id}/hide", "ReviewApi", "Hide");

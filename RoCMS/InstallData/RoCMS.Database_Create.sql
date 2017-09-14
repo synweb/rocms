@@ -3975,6 +3975,11 @@ BEGIN
 <p><strong>Имя клиента: </strong>{0}</p>
 <p><strong>Телефон: </strong>{1}</p>
 <p><strong>Удобное время: </strong>{2}</p>')
+		INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplReviewCreated', N'<h1>Новый отзыв</h1>
+<p><strong>Имя: </strong>{0}</p>
+<p><strong>Email: </strong>{1}</p>
+<p><strong>Текст отзыва:</strong></p>
+<p>{2}</p>')
 	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'RootUrl', N'http://localhost:4014')
 	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageMaxHeight', 1080)
 	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageMaxWidth', 1920)
@@ -3994,6 +3999,8 @@ BEGIN
 	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'AllowedFileExtensions', N'.doc,.docx,.xls,.xlsx,.pdf,.txt')
 	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'YoutubeAPIKey', N'AIzaSyCQgKGPuIQwKvZvFLHjZ_sjr3ZB8ijQ4rA')
 	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailSizes', N'400w,200h')
+	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ReviewCreatedNotification', N'False')
+	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ReviewSort', N'CreationDateDesc')
 	--SET IDENTITY_INSERT [dbo].[Setting] OFF
 END
 GO

@@ -120,6 +120,8 @@ namespace RoCMS.Web.Services
 
 
             UpdateOneSetting(nameof(Setting.ThumbnailSizes), model.ThumbnailSizes);
+            UpdateOneSetting(nameof(Setting.ReviewCreatedNotification), model.ReviewCreatedNotification);
+            UpdateOneSetting(nameof(Setting.ReviewSort), model.ReviewSort);
             var imageService = DependencyResolver.Current.GetService<IImageService>();
             imageService.ClearUnusedThumbnailDirectories();
 
@@ -169,7 +171,8 @@ namespace RoCMS.Web.Services
                 yaMetrikaAuthKeyExpires = GetSettingDateTime("AnalyticsAuthKeyExpires");
             }
             catch
-            { }
+            {
+            }
 
             string rootUrl = GetSettingString("RootUrl");
             int imageMaxHeight = GetSettingInt("ImageMaxHeight");
@@ -190,8 +193,19 @@ namespace RoCMS.Web.Services
             string youtubeAPIKey = GetSettingString("YoutubeAPIKey");
             string thumbnailSizes = GetSettingString(nameof(Setting.ThumbnailSizes));
 
+            var reviewSortStr = GetSettingString(nameof(Setting.ReviewSort));
+            ReviewSort reviewSort;
+            if (!string.IsNullOrEmpty(reviewSortStr))
+            {
+                reviewSort = (ReviewSort) Enum.Parse(typeof(ReviewSort), reviewSortStr);
+            }
+            else
+            {
+                reviewSort = ReviewSort.CreationDateDesc;
+            }
+        
 
-            return new Setting()
+        return new Setting()
             {
                 MainMenuId = mainMenuId,
                 MainPageUrl = mainPageUrl,
@@ -217,7 +231,9 @@ namespace RoCMS.Web.Services
                 RootBreadcrumbsTitle = rootBreadcrumbsTitle,
                 AllowedFileExtensions = allowedFileExtensions,
                 YoutubeAPIKey = youtubeAPIKey,
-                ThumbnailSizes = thumbnailSizes
+                ThumbnailSizes = thumbnailSizes,
+                ReviewCreatedNotification = GetSettingBool(nameof(Setting.ReviewCreatedNotification)),
+                ReviewSort = reviewSort,
             };
 
 

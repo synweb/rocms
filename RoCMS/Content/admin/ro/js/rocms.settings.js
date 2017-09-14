@@ -32,6 +32,8 @@
         var translitEnabled = ($(".translit-enabled:checked").val() === "translit");
         var allowedFileExtensions = $(".allowed-files").val().replace(/ /g, '');
         var youtubeAPIKey = $('#YoutubeAPIKey').val();
+        var reviewSort = $('#reviewSort').val();
+        var reviewCreatedNotification = $('.review-created-notificaton').is(':checked');
 
 
         blockUI();
@@ -62,7 +64,9 @@
                 RootBreadcrumbsTitle: rootBreadcrumbsTitle,
                 AllowedFileExtensions: allowedFileExtensions,
                 YoutubeAPIKey: youtubeAPIKey,
-                ThumbnailSizes: thumbnailSizes
+                ThumbnailSizes: thumbnailSizes,
+                ReviewSort: reviewSort,
+                ReviewCreatedNotification: reviewCreatedNotification,
             }),
             contentType: "application/json",
             success: function (data) {

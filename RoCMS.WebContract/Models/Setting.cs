@@ -29,5 +29,7 @@ namespace RoCMS.Web.Contract.Models
         public string AllowedFileExtensions { get; set; }
         public string YoutubeAPIKey { get; set; }
         public string ThumbnailSizes { get; set; }
+        public bool ReviewCreatedNotification { get; set; }
+        public ReviewSort ReviewSort { get; set; }
     }
 }

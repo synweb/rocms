@@ -22,62 +22,73 @@
 @Js("Content/admin/ro/js/rocms.block.edit.js")
 
 <div class="block-items-info" data-block-id="@(Model == null ? 0 : Model.BlockId)">
-        <form class="block-info">
-            <ul>
-                <li>
-                    @Html.LabelFor(x => x.Name, "Текстовый ID")
-                    
+    <form class="block-info">
+        <ul>
+            <li>
+                @Html.LabelFor(x => x.Title, Strings.CreateBlock_Title)
+                <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                      data-original-title="Краткое описание блока, которое показывается в списке блоков в админке.">
+                    <em class="fa fa-question-circle"></em>
+                </span>
+                @Html.ValidationMessageFor(x => x.Title)
+            </li>
+            <li>@Html.TextBoxFor(x => x.Title, new { @class = "block-title form-control" })
+
+            <li>
+                @Html.LabelFor(x => x.Name, "Текстовый ID")
+
+                <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
+                      data-original-title="Название, по которому блок можно вставлять на страницу в виде [[BLOCK(Восьмой)]]. Рекомендуемая длина - не более 70 символов.">
+                    <em class="fa fa-question-circle"></em>
+                </span>
+
+                @Html.ValidationMessageFor(x => x.Name)
+
+                @if (Model != null)
+                {
+                    <span class="block-edit-id"> #@Model.BlockId.ToString()</span>
                     <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
-                          data-original-title="Название, по которому блок можно вставлять на страницу в виде [[BLOCK(Восьмой)]]. Рекомендуемая длина - не более 70 символов.">
+                          data-original-title="ID, по которому блок можно вставлять на страницу в виде [[BLOCK(8)]].">
                         <em class="fa fa-question-circle"></em>
                     </span>
-
-                    @Html.ValidationMessageFor(x => x.Name)
-
-                    @if (Model != null)
-                    {
-                        <span class="block-edit-id"> #@Model.BlockId.ToString()</span>
-                        <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
-                              data-original-title="ID, по которому блок можно вставлять на страницу в виде [[BLOCK(8)]].">
-                            <em class="fa fa-question-circle"></em>
-                        </span>
-                    }
-                </li>
-                <li>@Html.TextBoxFor(x => x.Name, new { @class = "block-name form-control" })
-                <li>
-                    @Html.LabelFor(x => x.Title, Strings.CreateBlock_Title)
-                    <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                            data-original-title="Краткое описание блока, которое показывается в списке блоков в соответствующем разделе админки. Рекомендуемая длина - не более 100 символов.">
-                        <em class="fa fa-question-circle"></em>
-                    </span>
-                    @Html.ValidationMessageFor(x => x.Title)
-                </li>
-                <li>@Html.TextBoxFor(x => x.Title , new{@class = "block-title form-control"})
-                    
-                </li>
-                
-                <li>
-                    <div class="content-toggle-container">
-                        <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
-                        @Html.LabelFor(m => m.Content, Strings.CreateBlock_Content)
-                        @Html.ValidationMessageFor(m => m.Content)
-                    </div>
-                </li>
-                <li>
-                    @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "block_content", "block-content", ACEModes.HTML) { ShowCommonButtons = true })
-                </li>
-            </ul>
-            <div class="fixed-action-menu">
-                @if (((string)ViewBag.Action) == "Create")
-                {
-                    <a id="createBlock" class="button-accept btn btn-success" href="@Url.Action("CreateBlock", "Admin")"><i class="fa fa-check"></i> @Strings.CreateBlock_CreateButton</a>
                 }
-                else
-                {
-                    <a id="acceptBlock" class="button-accept btn btn-success" href="@Url.Action("EditBlock", "Admin")"><i class="fa fa-check"></i> @Strings.EditBlock_AcceptButton</a>
-                }
-                <a class="btn btn-default" href="/Admin/Blocks">@Strings.EditBlock_ReturnToBlocks</a>
-            </div>  
-        </form>
-  
+            </li>
+            <li>
+                @Html.TextBoxFor(x => x.Name, new { @class = "block-name form-control" })
+
+        </li>
+
+        <li>
+            <div class="content-toggle-container">
+                <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
+                @Html.LabelFor(m => m.Content, Strings.CreateBlock_Content)
+                @Html.ValidationMessageFor(m => m.Content)
+            </div>
+        </li>
+        <li>
+            @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "block_content", "block-content", ACEModes.HTML) { ShowCommonButtons = true })
+        </li>
+    </ul>
+    <div class="fixed-action-menu">
+        @if (((string)ViewBag.Action) == "Create")
+            {
+            <a id="createBlock" class="button-accept btn btn-success" href="@Url.Action("CreateBlock", "Admin")"><i class="fa fa-check"></i> @Strings.CreateBlock_CreateButton</a>
+        }
+        else
+        {
+            <a id="acceptBlock" class="button-accept btn btn-success" href="@Url.Action("EditBlock", "Admin")"><i class="fa fa-check"></i> @Strings.EditBlock_AcceptButton</a>
+        }
+        <a class="btn btn-default" href="/Admin/Blocks">@Strings.EditBlock_ReturnToBlocks</a>
+    </div>
+</form>
+
 </div>
+
+@Js("Content/admin/ro/js/rocms.block.edit.js")
+@JsInline(@<script type="text/javascript">
+
+    $(function () {
+        blockEditorLoaded();
+    });
+
+    </script>)

@@ -99,9 +99,9 @@ namespace RoCMS
             //            foreach (var t in pluginTypes)
             //                container.RegisterType(typeof(IPlugin), t);
 
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
             ConfigureModules(BundleTable.Bundles, GlobalConfiguration.Configuration, GlobalFilters.Filters, RouteTable.Routes);
 
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
 
 
             RegisterSearch();

@@ -93,6 +93,15 @@ namespace RoCMS.Demo.Services.Core
             return res;
         }
 
+        public Block GetBlock(string name)
+        {
+            InitSessionDataIfEmpty(HttpContext.Current);
+            var res =
+                GetSessionBlocks(HttpContext.Current)
+                    .FirstOrDefault(x => x.Name.Equals(name, StringComparison.InvariantCulture));
+            return res;
+        }
+
         public IList<Block> GetBlocks()
         {
             InitSessionDataIfEmpty(HttpContext.Current);

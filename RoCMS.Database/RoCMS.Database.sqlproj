@@ -219,6 +219,7 @@
     <Build Include="dbo\Stored Procedures\OrderFormField_SelectOne.sql" />
     <Build Include="dbo\Stored Procedures\Country_SelectOne.sql" />
     <Build Include="dbo\Stored Procedures\Country_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Block_SelectByName.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExportImages.sql" />

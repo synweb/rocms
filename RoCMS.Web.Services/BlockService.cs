@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AutoMapper;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Models;
@@ -24,13 +25,29 @@ namespace RoCMS.Web.Services
         #region IBlockService 
         public int CreateBlock(Block block)
         {
+            GuardCheck(block);
             return _blockGateway.Insert(Mapper.Map<Data.Models.Block>(block));
+        }
+
+        private void GuardCheck(Block block)
+        {
+            if (!string.IsNullOrEmpty(block.Name))
+            {
+                const string NAME_REGEX =
+                    @"^(([a-zA-Zа-яА-ЯёЁ]{1})|([a-zA-Zа-яА-ЯёЁ]{1}[a-zA-Zа-яА-ЯёЁ]{1})|([a-zA-Zа-яА-ЯёЁ]{1}[0-9]{1})|([0-9]{1}[a-zA-Zа-яА-ЯёЁ]{1})|([a-zA-Zа-яА-ЯёЁ0-9][a-zA-Zа-яА-ЯёЁ0-9-_]{1,195}[a-zA-Zа-яА-ЯёЁ0-9]))$";
+                if (!Regex.IsMatch(block.Name, NAME_REGEX))
+                {
+                    throw new ArgumentException(nameof(block.Name));
+                }
+            }
         }
 
         public void DeleteBlock(int blockId)
         {
+            var block = _blockGateway.SelectOne(blockId);
             _blockGateway.Delete(blockId);
             RemoveObjectFromCache(GetBlockCacheKey(blockId));
+            RemoveObjectFromCache(GetBlockCacheKey(block.Name));
         }
 
         public Block GetBlock(int id)
@@ -39,6 +56,16 @@ namespace RoCMS.Web.Services
             return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
             {
                 var newBlock = _blockGateway.SelectOne(id);
+                return Mapper.Map<Block>(newBlock);
+            });
+        }
+
+        public Block GetBlock(string name)
+        {
+            string cacheKey = GetBlockCacheKey(name);
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var newBlock = _blockGateway.SelectByName(name);
                 return Mapper.Map<Block>(newBlock);
             });
         }
@@ -59,14 +86,21 @@ namespace RoCMS.Web.Services
 
         public void UpdateBlock(Block block)
         {
+            GuardCheck(block);
             _blockGateway.Update(Mapper.Map<Data.Models.Block>(block));
             RemoveObjectFromCache(GetBlockCacheKey(block.BlockId));
+            RemoveObjectFromCache(GetBlockCacheKey(block.Name));
         }
         #endregion
 
         private string GetBlockCacheKey(int blockId)
         {
             return String.Format(BLOCK_CACHE_KEY_TEMPLATE, blockId);
+        }
+
+        private string GetBlockCacheKey(string blockName)
+        {
+            return String.Format(BLOCK_CACHE_KEY_TEMPLATE, blockName);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace RoCMS.Web.Contract.Services
         int CreateBlock(Block block);
 
         Block GetBlock(int id);
+        Block GetBlock(string name);
 
         IList<Block> GetBlocks();
 

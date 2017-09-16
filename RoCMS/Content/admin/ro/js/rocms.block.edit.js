@@ -8,10 +8,11 @@ $(function () {
             var title = $('.block-title').val();
             
             var content = getTextFromEditor('block_content');
+            var name = $('.block-name').val();
             
             
             var blockId = $('.block-items-info').data('blockId');
-            postJSON(url, { Title: title, Content: content, BlockId: blockId }, function (result) {
+            postJSON(url, { Title: title, Content: content, BlockId: blockId, Name: name }, function (result) {
                 if (result.Succeed === true) {
                     if (onSuccess) {
                         onSuccess(result.Data);

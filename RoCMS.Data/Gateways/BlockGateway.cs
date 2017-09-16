@@ -4,32 +4,11 @@ using RoCMS.Data.Models;
 
 namespace RoCMS.Data.Gateways
 {
-    public class BlockGateway: BaseGateway
+    public class BlockGateway: BasicGateway<Block>
     {
-        public int Insert(Block block)
+        public object SelectByName(string name)
         {
-            return Exec<int>("[dbo].[Block_Insert]", block);
-        }
-
-        public void Delete(int id)
-        {
-            Exec("[dbo].[Block_Delete]", id);
-        }
-
-        public Block SelectOne(int id)
-        {
-            return Exec<Block>("[dbo].[Block_SelectOne]", id);
-        }
-
-        public ICollection<Block> Select()
-        {
-            return ExecSelect<Block>("[dbo].[Block_Select]");
-
-        }
-
-        public void Update(Block block)
-        {
-            Exec("[dbo].[Block_Update]", block);
+            return Exec<Block>(GetProcedureString(), name);
         }
     }
 }

@@ -25,13 +25,32 @@
         <form class="block-info">
             <ul>
                 <li>
-                    @Html.LabelFor(x => x.Title, Strings.CreateBlock_Title)
-                    @Html.ValidationMessageFor(x => x.Title)
+                    @Html.LabelFor(x => x.Name, "Текстовый ID")
+                    
+                    <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
+                          data-original-title="Название, по которому блок можно вставлять на страницу в виде [[BLOCK(Восьмой)]]. Рекомендуемая длина - не более 70 символов.">
+                        <em class="fa fa-question-circle"></em>
+                    </span>
+
+                    @Html.ValidationMessageFor(x => x.Name)
 
                     @if (Model != null)
                     {
                         <span class="block-edit-id"> #@Model.BlockId.ToString()</span>
+                        <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
+                              data-original-title="ID, по которому блок можно вставлять на страницу в виде [[BLOCK(8)]].">
+                            <em class="fa fa-question-circle"></em>
+                        </span>
                     }
+                </li>
+                <li>@Html.TextBoxFor(x => x.Name, new { @class = "block-name form-control" })
+                <li>
+                    @Html.LabelFor(x => x.Title, Strings.CreateBlock_Title)
+                    <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                            data-original-title="Краткое описание блока, которое показывается в списке блоков в соответствующем разделе админки. Рекомендуемая длина - не более 100 символов.">
+                        <em class="fa fa-question-circle"></em>
+                    </span>
+                    @Html.ValidationMessageFor(x => x.Title)
                 </li>
                 <li>@Html.TextBoxFor(x => x.Title , new{@class = "block-title form-control"})
                     
@@ -46,9 +65,6 @@
                 </li>
                 <li>
                     @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "block_content", "block-content", ACEModes.HTML) { ShowCommonButtons = true })
-                    @*@Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Content, "block_content", "block-content", ACEModes.HTML))*@
-
-                    
                 </li>
             </ul>
             <div class="fixed-action-menu">

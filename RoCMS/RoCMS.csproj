@@ -791,6 +791,7 @@
     <Content Include="Views\Shared\WYSIWYG_Dialog.cshtml" />
     <Content Include="Views\Shared\_NextDateTime.cshtml" />
     <Content Include="Views\Developer\MagicButton.cshtml" />
+    <Content Include="Views\Shared\_BlockByName.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

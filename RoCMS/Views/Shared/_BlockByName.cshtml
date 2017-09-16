@@ -1,5 +1,5 @@
 ﻿@using RoCMS.Web.Contract.Services
-@model int
+@model string
 @{
     var blockService = DependencyResolver.Current.GetService<IBlockService>();
     var block = blockService.GetBlock(Model);

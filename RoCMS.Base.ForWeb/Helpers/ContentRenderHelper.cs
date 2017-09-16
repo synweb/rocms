@@ -36,6 +36,7 @@ namespace RoCMS.Base.ForWeb.Helpers
             {@"[A-Z]+",typeof(string)},
             // строка ST_ri-nG
             {@"[a-zA-Z0-9-_]+",typeof(string)},
+            {@"[а-яА-Яa-zA-Z0-9_-]+",typeof(string)},
             {@"[а-яА-Я -]+", typeof(string)}
         };
 
@@ -58,7 +59,7 @@ namespace RoCMS.Base.ForWeb.Helpers
                     bool parametrized = false;
                     foreach (var rule in ParseRules)
                     {
-                        if (expr.Contains(string.Format(@"\({0}\)", rule.Key)))
+                        if (expr.Contains($@"\({rule.Key}\)"))
                         {
                             parametrized = true;
                             content = Replace(content, expr, rule.Key, rule.Value, pair.Value);

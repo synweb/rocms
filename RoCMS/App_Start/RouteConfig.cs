@@ -43,8 +43,6 @@ namespace RoCMS
             routes.IgnoreRoute("favicon.ico");
             XmlSiteMapController.RegisterRoutes(routes);
 
-            ConfigureRedirectToPageRoutes(routes);
-
             //ConfigureSEFRoutes(routes);
 
             routes.MapRoute(
@@ -137,8 +135,7 @@ namespace RoCMS
         //    }
         //}
 
-
-        private static void ConfigureRedirectToPageRoutes(RouteCollection routes)
+        public static void RegisterRedirects(RouteCollection routes)
         {
             foreach (var redirect in _redirectUrlsMapping)
             {

@@ -106,9 +106,11 @@
 
             <div class="text-center">
 
-                <button class="send btn btn-lg btn-dark" type="button">Отправить</button>
-                <button class="clear btn btn-lg btn-light" type="button">Очистить</button>
-
+                <button class="send btn btn-lg btn-dark" type="button">@(form.SendButtonText?? "Отправить")</button>
+                @if (!form.HideClearButton)
+                {
+                    <button class="clear btn btn-lg btn-light" type="button">@(form.ClearButtonText ?? "Очистить")</button>
+                }
                 <div class="message-state">&nbsp;</div>
 
             </div>

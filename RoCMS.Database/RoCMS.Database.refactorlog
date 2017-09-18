@@ -42,4 +42,25 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="OrderFormFieldId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="e3508c30-eb54-4ca9-9767-b3752e950a9b" ChangeDateTime="09/18/2017 13:07:16">
+    <Property Name="ElementName" Value="[dbo].[OrderForm].[Email]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[OrderForm]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SendButtonText" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="5400161e-3cf7-41ac-b5b3-c487cad3e70e" ChangeDateTime="09/18/2017 13:07:18">
+    <Property Name="ElementName" Value="[dbo].[OrderForm].[Email]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[OrderForm]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ClearButtonText" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="695a5789-7416-4738-8a6c-2362543024b0" ChangeDateTime="09/18/2017 13:07:24">
+    <Property Name="ElementName" Value="[dbo].[OrderForm].[Email]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[OrderForm]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HideClearButton" />
+  </Operation>
 </Operations>

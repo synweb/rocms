@@ -11,7 +11,10 @@
 @MaxFileAttachmentsCount int,
 @OrderFormId int,
 @Title NVARCHAR(200),
-@EmailTemplate nvarchar(MAX)
+@EmailTemplate nvarchar(MAX),
+@SendButtonText nvarchar(100),
+@ClearButtonText nvarchar(100),
+@HideClearButton BIT
 AS
 	UPDATE [dbo].[OrderForm] SET
 		[EmailSubject]=@EmailSubject,
@@ -25,5 +28,8 @@ AS
 		[FileAttachmentEnabled]=@FileAttachmentEnabled,
 		[MaxFileAttachmentsCount]=@MaxFileAttachmentsCount,
 		[Title]=@Title,
-		[EmailTemplate]=@EmailTemplate
+		[EmailTemplate]=@EmailTemplate,
+		[SendButtonText]=@SendButtonText,
+		[ClearButtonText]=@ClearButtonText,
+		[HideClearButton]=@HideClearButton
 	WHERE [OrderFormId]=@OrderFormId

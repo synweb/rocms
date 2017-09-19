@@ -12,6 +12,10 @@
 	[FileAttachmentEnabled] bit NOT NULL DEFAULT 0,
 	[MaxFileAttachmentsCount] int NOT NULL DEFAULT 0, 
     [Title] NVARCHAR(200) NOT NULL, 
-    [EmailTemplate] NVARCHAR(MAX) NULL
+    [EmailTemplate] NVARCHAR(MAX) NULL,
+	[SendButtonText] nvarchar(100),
+	[ClearButtonText] nvarchar(100),
+	[HideClearButton] BIT NOT NULL default 0,
+
 
 )

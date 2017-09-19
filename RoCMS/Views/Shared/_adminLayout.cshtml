@@ -76,6 +76,11 @@
                 {
                     <li><a href="@Url.Action("Menu", "Admin")"><i class="fa fa-angle-right"></i><span>@Strings.AdminMenu_Menus</span></a></li>
                 }
+
+                @if (User.IsAuthorizedForResource(RoCmsResources.CommonSettings))
+                {
+                    <li><a href="@Url.Action("OrderForms", "Admin")"><i class="fa fa-angle-right"></i><span>Формы</span></a></li>
+                }
             </ul>
         </li>
 
@@ -114,7 +119,6 @@
         @if (User.IsAuthorizedForResource(RoCmsResources.CommonSettings))
         {
             <li><a href="@Url.Action("CommonConfig", "Admin")"><i class="fa fa-wrench"></i><span>@Strings.AdminMenu_Settings</span></a></li>
-            <li><a href="@Url.Action("OrderForms", "Admin")"><i class="fa fa-list"></i><span>Формы</span></a></li>
         }
         @if (User.IsAuthorizedForResource(RoCmsResources.Emails))
         {

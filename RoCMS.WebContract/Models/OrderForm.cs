@@ -34,7 +34,8 @@ namespace RoCMS.Web.Contract.Models
         public string Title { get; set; }
 
         public string EmailTemplate { get; set; }
-
-        
+        public string SendButtonText { get; set; }
+        public string ClearButtonText { get; set; }
+        public bool HideClearButton { get; set; }
     }
 }

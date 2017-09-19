@@ -14,8 +14,13 @@ function toggleHideMenuCookie() {
     }
 }
 
+$(document).on("click", '[data-toggle=tooltip]',
+    function () {
+        $('[data-toggle=tooltip]').tooltip();
+        $(this).tooltip("show");
+    });
+
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip();
     $(".menu-toggle-button").click(function() {
         $("body").toggleClass("menu-hidden");
         toggleHideMenuCookie();

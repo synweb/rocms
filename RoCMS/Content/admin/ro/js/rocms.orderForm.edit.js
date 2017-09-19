@@ -62,6 +62,8 @@ function onOrderFormEditorLoad(orderFormId) {
                 });
                 vm.orderForm(form);
             }
+
+            // 
         });
     }
 
@@ -87,6 +89,9 @@ App.Admin.OrderForm = function () {
     self.fields = ko.observableArray();
     self.title = ko.observable().extend({ required: true });
     self.emailTemplate = ko.observable();
+    self.sendButtonText = ko.observable("Отправить");
+    self.clearButtonText = ko.observable("Очистить");
+    self.hideClearButton = ko.observable();
 }
 
 App.Admin.OrderFormField = function () {

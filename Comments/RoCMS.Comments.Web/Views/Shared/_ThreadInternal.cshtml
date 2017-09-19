@@ -29,16 +29,14 @@ string classNesing = "nesting" + (nesting > 9 ? 9 : nesting);
                     }
                     @if (!String.IsNullOrWhiteSpace(thread.Url))
                     {
-                        <h3><a href="@url" rel="nofollow">@thread.Name</a></h3>
+                        <p><a href="@url" rel="nofollow">@thread.Name</a></p>
                     }
                     else
                     {
-                        <h3>@thread.Name</h3>
+                        <p>@thread.Name</p>
                     }
 
-
-
-                    <h4>@thread.CreationDate.ApplySiteTimezone().ToShortDateString()</h4>
+                    <small><em class="fa fa-calendar"></em> @thread.CreationDate.ApplySiteTimezone().ToShortDateString()</small>
                     <p>
                         @Html.Raw(Html.Encode(thread.Text).Replace("\n", "\n<br/>"))
                     </p>

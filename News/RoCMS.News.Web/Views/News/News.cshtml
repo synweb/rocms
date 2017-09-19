@@ -6,6 +6,7 @@
 @using RoCMS.Web.Contract.Models
 @using RoCMS.Web.Contract.Services
 @using RoCMS.Web.Contract.Extensions
+@using RoCMS.Comments.Contract.ViewModels
 @model RoCMS.News.Contract.Models.NewsItem
 @{
     ViewBag.Title = ViewBag.Header = Model.Title;
@@ -73,12 +74,10 @@
         </div>
 
 
-        @*@Html.Action("TopicThread", "Comments", new { id = Model.CommentTopicId })
-            @if (Model.CommentTopicId.HasValue)
-            {
-                @Html.Partial("_Thread", Model.CommentTopicId.Value)
-            }
-            @Html.Partial("_LeaveComment")*@
+        @*            @Html.Partial("_CommentsBlock", new CommentsBlockVM(Model.CommentTopicId,
+    "/api/news/" + Model.NewsId + "/comment/create",
+    "Комментировать",
+    "Комментарии"))*@
 
         @Block(shareBlock)
     </div>

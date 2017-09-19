@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
+using System.Web.Mvc;
 using AutoMapper;
 using RoCMS.Data.Gateways;
 using RoCMS.Web.Contract.Models;
@@ -136,7 +137,9 @@ namespace RoCMS.Web.Services
 
         public IList<PageInfo> GetSitemapPagesInfo()
         {
-            return GetPagesInfo().Where(x => !x.HideInSitemap).ToList();
+            var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+            string mainPage = settingsService.GetHomepageUrl();
+            return GetPagesInfo().Where(x => !x.HideInSitemap && x.RelativeUrl != mainPage).ToList();
         }
 
         public string GetNextAvailableRelativeUrl(string relativeUrl)

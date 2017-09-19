@@ -1,12 +1,13 @@
 ﻿
 
 <div class="leave-comment-container comment-form">
-    <form class="message-form">
-        @*<input class="col-xs-12 comment-name" type="text" name="name" placeholder="Ваше имя (обязательно)" data-val="true" data-val-required="*">
-        <input class="col-xs-12 comment-email email" type="text" name="email" placeholder="Ваш email (обязательно)" data-val="true" data-val-required="*">
-        <input class="col-xs-12 comment-url url" type="text" name="url" placeholder="Ваш сайт">*@
-        <textarea class="comment-textarea" name="message" rows="5" cols="25" data-val="true" data-val-required="*" placeholder="Комментарий (обязательно)"></textarea>
-        <button type="button" class="leave-comment btn btn-black">Отправить</button>
+    <form class="message-form form-horizontal">
+        <input class="comment-name form-control" type="text" name="name" placeholder="Ваше имя (обязательно)" data-val="true" data-val-required="*">
+        <input class="comment-email email form-control" type="text" name="email" placeholder="Ваш email (обязательно)" data-val="true" data-val-required="*">
+        @*<input class="comment-url url form-control" type="text" name="url" placeholder="Ваш сайт">*@
+        <textarea class="comment-textarea form-control" name="message" rows="5" cols="25" data-val="true" data-val-required="*" placeholder="Комментарий (обязательно)"></textarea>
+        <button type="button" class="leave-comment btn btn-dark">Отправить</button>
+        <p class="agreement">Нажимая на кнопку, вы соглашаетесь на обработку персональных данных в соответствии с <a target="_blank" href="/politika-konfidencialnosti">Политикой конфиденциальности</a>.</p>
     </form>
-    
+
 </div>

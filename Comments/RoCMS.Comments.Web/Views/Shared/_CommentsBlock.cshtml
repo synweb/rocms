@@ -3,27 +3,26 @@
 @model RoCMS.Comments.Contract.ViewModels.CommentsBlockVM
 
 <div class="comments single_post_comment_area">
-
-
     @if (Model.TopicId.HasValue)
     {
         var commentService = DependencyResolver.Current.GetService<ICommentService>();
         ICollection<CommentVM> threads = commentService.GetThreadsByTopic(Model.TopicId.Value, false);
         if (threads.Any())
         {
-            <h2 class="comments-title">@Model.SectionHeader</h2>
-            @Html.Partial("_Thread", threads)
+            <div class="section-heading">
+                <p class="comments-title">@Model.SectionHeader</p>
+            </div>
+            <div class="mg-sm">
+                @Html.Partial("_Thread", threads)
+            </div>
         }
     }
-    <h2 class="comments-title">@Model.LeaveCommentHeader</h2>
-    @if (User.Identity.IsAuthenticated)
-    {
+    <div class="section-heading">
+        <p class="comments-title">@Model.LeaveCommentHeader</p>
+    </div>
+    <div class="mg-sm">
         @Html.Partial("_LeaveComment")
-    }
-    else
-    {
-        <p class="text-center">Авторизуйтесь, чтобы оставить комментарий</p>
-    }
+    </div>
 </div>
 
 
@@ -32,4 +31,5 @@
     $(function () {
         commentsLoaded("@(Model.AddCommentApiUrl)");
     });
-</script>)
+    </script>)
+

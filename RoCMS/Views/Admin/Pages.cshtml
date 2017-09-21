@@ -2,7 +2,7 @@
 @using RoCMS.Base
 @using RoCMS.Base.ForWeb.Extensions
 @using RoCMS.Web.Contract.Extensions
-@model IList<RoCMS.Web.Contract.Models.PageInfo>
+@model IList<RoCMS.Web.Contract.Models.Page>
 
 @{
     if (!Request.IsAjaxRequest())
@@ -26,11 +26,11 @@
 
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active" id="hierarchical">
-            @if (Model.Any(p => (p.ParentPageId == null)))
+            @if (Model.Any(p => (p.ParentHeartId == null)))
             {
                 <ul>
 
-                    @foreach (var page in Model.Where(p => (p.ParentPageId == null)))
+                    @foreach (var page in Model.Where(p => (p.ParentHeartId == null)))
                     {
                         @HierarchicalPageBlock(page)
                     }
@@ -56,14 +56,14 @@
 </div>
 <a class="btn btn-success" href="@Url.Action("CreatePage")"><i class="fa fa-file-o"></i>&nbsp;@Strings.Page_CreatePage</a>
 
-@helper HierarchicalPageBlock(RoCMS.Web.Contract.Models.PageInfo page)
+@helper HierarchicalPageBlock(RoCMS.Web.Contract.Models.Page page)
 {
-    <li class="page-summary page-list-item" data-page-url="@page.RelativeUrl" data-page-id="@page.PageId">
+    <li class="page-summary page-list-item" data-page-url="@page.RelativeUrl" data-page-id="@page.HeartId">
         <div class="row">
             <div class="text-right float-left collapser-block">
-                @if (Model.Any(p => (p.ParentPageId == page.PageId)))
+                @if (Model.Any(p => (p.ParentHeartId == page.HeartId)))
                 {
-                    <span class="no-underline collapser collapsed" role="button" data-toggle="collapse" data-target="#page-collapsed-@page.PageId.ToString()">
+                    <span class="no-underline collapser collapsed" role="button" data-toggle="collapse" data-target="#page-collapsed-@page.HeartId.ToString()">
                         <span class="large"></span>
                     </span>
                 }
@@ -96,7 +96,7 @@
                         </a>
                         @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                         {
-                            <a href="@Url.Action("DeletePage", "Admin", new {pageId = page.PageId})" class="btn btn-danger btn-xs button-delete">
+                            <a href="@Url.Action("DeletePage", "Admin", new {pageId = page.HeartId})" class="btn btn-danger btn-xs button-delete">
                                 <i class="fa fa-times"></i> @Strings.Pages_DeletePage
                             </a>
                         }
@@ -104,12 +104,12 @@
                 </div>
             </div>
         </div>
-        <div class="collapse" id="page-collapsed-@page.PageId.ToString()">
+        <div class="collapse" id="page-collapsed-@page.HeartId.ToString()">
 
-            @if (Model.Any(p => p.ParentPageId == page.PageId))
+            @if (Model.Any(p => p.ParentHeartId == page.HeartId))
             {
                 <ul>
-                    @foreach (var childPage in Model.Where(p => (p.ParentPageId == page.PageId)))
+                    @foreach (var childPage in Model.Where(p => (p.ParentHeartId == page.HeartId)))
                     {
                         @HierarchicalPageBlock(childPage)
                     }
@@ -120,9 +120,9 @@
 }
 
 
-@helper FlatPageBlock(RoCMS.Web.Contract.Models.PageInfo page)
+@helper FlatPageBlock(RoCMS.Web.Contract.Models.Page page)
 {
-    <li class="page-summary page-list-item" data-page-url="@page.RelativeUrl" data-page-id="@page.PageId">
+    <li class="page-summary page-list-item" data-page-url="@page.RelativeUrl" data-page-id="@page.HeartId">
         <div class="row">
             <div class="box page-block">
                 <div class="row">
@@ -146,7 +146,7 @@
                     <div class="toolbar col-xs-3 text-right">
                         @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                         {
-                            <a href="@Url.Action("DeletePage", "Admin", new {pageId = page.PageId})" class="btn btn-danger btn-xs button-delete">
+                            <a href="@Url.Action("DeletePage", "Admin", new {pageId = page.HeartId})" class="btn btn-danger btn-xs button-delete">
                                 <i class="fa fa-times"></i> @Strings.Pages_DeletePage
                             </a>
                         }

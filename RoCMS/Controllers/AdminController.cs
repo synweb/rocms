@@ -69,7 +69,7 @@ namespace RoCMS.Controllers
         [AuthorizeResources(RoCmsResources.Pages)]
         public ActionResult Pages()
         {
-            var pages = _pageService.GetPagesInfo();
+            var pages = _pageService.GetPages();
             return PartialView(pages);
         }
 
@@ -78,7 +78,7 @@ namespace RoCMS.Controllers
         public ActionResult CreatePage()
         {
             ViewBag.Action = "Create";
-            ViewBag.Pages = _pageService.GetPagesInfo();
+            ViewBag.Pages = _pageService.GetPages();
             return PartialView("_PageEditor");
         }
 
@@ -99,7 +99,7 @@ namespace RoCMS.Controllers
         public ActionResult EditPage(string relativeUrl)
         {
             ViewBag.Action = "Edit";
-            ViewBag.Pages = _pageService.GetPagesInfo();
+            ViewBag.Pages = _pageService.GetPages();
             var page = _pageService.GetPage(relativeUrl);
             return PartialView("_PageEditor", page);
         }

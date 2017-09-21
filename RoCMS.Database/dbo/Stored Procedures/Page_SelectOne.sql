@@ -1,4 +1,4 @@
 ﻿CREATE PROCEDURE [dbo].[Page_SelectOne]
-	@PageId int
+	@HeartId int
 AS
-	SELECT * FROM Page WHERE [PageId]=@PageId
+	SELECT * FROM [Page] WHERE [HeartId]=@HeartId

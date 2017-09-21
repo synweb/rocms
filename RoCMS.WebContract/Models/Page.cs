@@ -5,7 +5,7 @@ using RoCMS.Web.Contract.Models.Search;
 
 namespace RoCMS.Web.Contract.Models
 {
-    public class Page: PageInfo, ISearchable
+    public class Page: Heart, ISearchable
     {
         [AllowHtml]
         [Required(ErrorMessageResourceType = typeof(Resources.Strings), ErrorMessageResourceName = "Validation_Reqiured")]

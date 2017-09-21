@@ -19,14 +19,16 @@ namespace RoCMS.Controllers
             _pageService = pageService;
             _settingsService = settingsService;
         }
-        
+
         [AllowAnonymous]
         public ActionResult MainPage()
         {
             string homepageUrl = _settingsService.GetHomepageUrl();
             var page = _pageService.GetPage(homepageUrl);
-            TempData["MetaKeywords"] = page.Keywords;
-            TempData["MetaDescription"] = page.Annotation;
+            if (page == null)
+                throw new HttpException(404, "Not found");
+            TempData["MetaKeywords"] = page.MetaKeywords;
+            TempData["MetaDescription"] = page.MetaDescription;
             TempData["AdditionalHeaders"] = page.AdditionalHeaders;
             return PartialView("Index", page);
         }
@@ -54,8 +56,8 @@ namespace RoCMS.Controllers
                 {
                     return RedirectPermanent(Url.RouteUrl("PageSEF", new { relativeUrl = page.CannonicalUrl }));
                 }
-                TempData["MetaKeywords"] = page.Keywords;
-                TempData["MetaDescription"] = page.Annotation;
+                TempData["MetaKeywords"] = page.MetaKeywords;
+                TempData["MetaDescription"] = page.MetaDescription;
                 TempData["AdditionalHeaders"] = page.AdditionalHeaders;
                 return View("Index", page);
             }

@@ -21,7 +21,7 @@ namespace RoCMS.Helpers
                 {
                     DynamicNode dynamicNode = new DynamicNode();
                     // ключ должен быть уникальным для каждой ноды
-                    dynamicNode.Key = "page_" + page.PageId;
+                    dynamicNode.Key = "page_" + page.HeartId;
                     dynamicNode.RouteValues.Add("relativeUrl", page.CannonicalUrl);
                     dynamicNode.Route = "PageSEF";
                     dynamicNode.Title = page.Title;

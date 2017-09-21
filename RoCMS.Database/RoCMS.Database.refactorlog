@@ -63,4 +63,11 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="HideClearButton" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="57eb56cd-6197-40c6-bfdd-eb08e3be8bc1" ChangeDateTime="09/19/2017 14:02:36">
+    <Property Name="ElementName" Value="[dbo].[Heart].[ParentPageId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[Heart]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ParentHeartId" />
+  </Operation>
 </Operations>

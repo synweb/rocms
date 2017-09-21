@@ -75,14 +75,14 @@ END
 GO
 
 -- Если нет страниц
-IF (SELECT COUNT(*) FROM [dbo].[Page]) = 0
-BEGIN
-	SET IDENTITY_INSERT [dbo].[Page] ON
-	INSERT INTO [dbo].[Page] ([Title], [Annotation], [Content], [CreationDate], [RelativeUrl], [Keywords], [PageId]) VALUES (N'Главная', N'Главная страница', N'<p>Главная страница</p>
-	', GETUTCDATE(), N'Главная', NULL, 1)
-	SET IDENTITY_INSERT [dbo].[Page] OFF
-END
-GO
+--IF (SELECT COUNT(*) FROM [dbo].[Page]) = 0
+--BEGIN
+--	SET IDENTITY_INSERT [dbo].[Page] ON
+--	INSERT INTO [dbo].[Page] ([Title], [Annotation], [Content], [CreationDate], [RelativeUrl], [Keywords], [PageId]) VALUES (N'Главная', N'Главная страница', N'<p>Главная страница</p>
+--	', GETUTCDATE(), N'Главная', NULL, 1)
+--	SET IDENTITY_INSERT [dbo].[Page] OFF
+--END
+--GO
 
 -- Если нет блоков
 IF (SELECT COUNT(*) FROM [dbo].[Block]) = 0
@@ -106,13 +106,13 @@ END
 GO
 
 -- Если нет элементов меню
-IF (SELECT COUNT(*) FROM [dbo].MenuItem) = 0
-BEGIN
-	SET IDENTITY_INSERT [dbo].[MenuItem] ON
-	INSERT INTO [dbo].[MenuItem] ([MenuItemId], [Name], [MenuId], [ParentMenuItemId], [PageUrl], [SortOrder]) VALUES (1, N'Главная', 1, NULL, N'Главная', 0)
-	SET IDENTITY_INSERT [dbo].[MenuItem] OFF
-END
-GO
+--IF (SELECT COUNT(*) FROM [dbo].MenuItem) = 0
+--BEGIN
+--	SET IDENTITY_INSERT [dbo].[MenuItem] ON
+--	INSERT INTO [dbo].[MenuItem] ([MenuItemId], [Name], [MenuId], [ParentMenuItemId], [PageUrl], [SortOrder]) VALUES (1, N'Главная', 1, NULL, N'Главная', 0)
+--	SET IDENTITY_INSERT [dbo].[MenuItem] OFF
+--END
+--GO
 
 -- Если нет настроек
 IF (SELECT COUNT(*) FROM [dbo].Setting) = 0

@@ -148,8 +148,8 @@
     <Build Include="dbo\Stored Procedures\Page_Delete.sql" />
     <Build Include="dbo\Stored Procedures\Page_Update.sql" />
     <Build Include="dbo\Stored Procedures\Page_Insert.sql" />
-    <Build Include="dbo\Stored Procedures\Page_SelectByRelativeUrl.sql" />
-    <Build Include="dbo\Stored Procedures\Page_SelectChildren.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_SelectByRelativeUrl.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_SelectChildren.sql" />
     <Build Include="dbo\Stored Procedures\Album_Delete.sql" />
     <Build Include="dbo\Stored Procedures\Album_Insert.sql" />
     <Build Include="dbo\Stored Procedures\Album_Select.sql" />
@@ -220,6 +220,12 @@
     <Build Include="dbo\Stored Procedures\Country_SelectOne.sql" />
     <Build Include="dbo\Stored Procedures\Country_Select.sql" />
     <Build Include="dbo\Stored Procedures\Block_SelectByName.sql" />
+    <Build Include="dbo\Tables\Heart.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_Insert.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_Select.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_SelectOne.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExportImages.sql" />

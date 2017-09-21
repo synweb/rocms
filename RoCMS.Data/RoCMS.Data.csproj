@@ -55,6 +55,7 @@
     <Compile Include="Gateways\AlbumGateway.cs" />
     <Compile Include="Gateways\BlockGateway.cs" />
     <Compile Include="Gateways\CMSResourceGateway.cs" />
+    <Compile Include="Gateways\HeartGateway.cs" />
     <Compile Include="Gateways\OrderFormFieldGateway.cs" />
     <Compile Include="Gateways\OrderFormGateway.cs" />
     <Compile Include="Gateways\CountryGateway.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Models\CMSResource.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\FormRequest.cs" />
+    <Compile Include="Models\Heart.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\ImageInAlbum.cs" />
     <Compile Include="Models\Mail.cs" />

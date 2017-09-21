@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
 using AutoMapper;
 using RoCMS.Base.Models;
 using RoCMS.Base.Services;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Models.Search;
-using RoCMS.Web.Contract.Services;
 using Album = RoCMS.Data.Models.Album;
 using Block = RoCMS.Data.Models.Block;
 using Menu = RoCMS.Data.Models.Menu;
@@ -27,38 +24,13 @@ namespace RoCMS.Web.Services
             get { return 10; }
         }
 
-        protected static readonly IMapperService _mapper;
-
         static BaseCoreService()
         {
-            _mapper = DependencyResolver.Current.GetService<IMapperService>();
             ConfigureMapper();
         }
 
         private static void ConfigureMapper()
         {
-            _mapper.CreateMap<Page, Contract.Models.Page>((page) =>
-            {
-                return new Contract.Models.Page()
-                {
-                    PageId = page.PageId,
-                    Annotation = page.Annotation,
-                    Content = page.Content,
-                    CreationDate = page.CreationDate,
-                    ParentPageId = page.ParentPageId,
-                    Keywords = page.Keywords,
-                    RelativeUrl = page.RelativeUrl,
-                    Title = page.Title,
-                    HideInSitemap = page.HideInSitemap,
-                    Header = page.Header,
-                    Scripts = page.Scripts,
-                    Styles = page.Styles,
-                    Layout = page.Layout,
-                    AdditionalHeaders = page.AdditionalHeaders
-                };
-            });
-            _mapper.CreateMap<Contract.Models.Page, Page>();
-
             Mapper.CreateMap<Block, Contract.Models.Block>();
             Mapper.CreateMap<Contract.Models.Block, Block>();
             Mapper.CreateMap<Block, IdNamePair<int>>()
@@ -67,11 +39,8 @@ namespace RoCMS.Web.Services
 
             Mapper.CreateMap<Page, Contract.Models.Page>()
                 .ForMember(x => x.CannonicalUrl, x => x.Ignore());
-            Mapper.CreateMap<Page, PageInfo>()
-                .ForMember(x => x.CannonicalUrl, x => x.Ignore());
             Mapper.CreateMap<Contract.Models.Page, Page>();
-
-            _mapper.CreateTwoWayMap<Block, Contract.Models.Block>();
+            
 
             Mapper.CreateMap<Review, Contract.Models.Review>();
             Mapper.CreateMap<Contract.Models.Review, Review>();
@@ -87,7 +56,7 @@ namespace RoCMS.Web.Services
             Mapper.CreateMap<User, Contract.Models.User>()
                 .ForMember(x => x.Password, x => x.Ignore());
 
-            _mapper.CreateMap<Contract.Models.User, User>();
+            Mapper.CreateMap<Contract.Models.User, User>();
 
 
 

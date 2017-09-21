@@ -94,6 +94,7 @@
   <ItemGroup>
     <Compile Include="AlbumService.cs" />
     <Compile Include="DevelopmentService.cs" />
+    <Compile Include="HeartService.cs" />
     <Compile Include="InstallService.cs" />
     <Compile Include="OrderFormService.cs" />
     <Compile Include="SecurityService.cs" />

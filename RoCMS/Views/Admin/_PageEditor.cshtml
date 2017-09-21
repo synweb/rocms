@@ -2,6 +2,7 @@
 @using Resources
 @using RoCMS.Base.ForWeb.Models
 @using RoCMS.Web.Contract.Models
+@using Page = RoCMS.Web.Contract.Models.Page
 
 @{
     if (!Request.IsAjaxRequest())
@@ -18,12 +19,12 @@
         ViewBag.PageTitle = Strings.CreateEditPage_EditTitle + " '" + Model.Title + "'";
     }
 
-    IList<PageInfo> pages = ViewBag.Pages;
+    IList<Page> pages = ViewBag.Pages;
 }
 
 <div class="page-items-info">
 
-    <form class="page-info" data-page-id="@(Model != null ? Model.PageId : 0)">
+    <form class="page-info" data-page-id="@(Model != null ? Model.HeartId : 0)">
         <ul>
             <li>
                 <div style="float: right">Длина заголовка: <span class="title-length">@(Model != null && !String.IsNullOrEmpty(Model.Title) ? Model.Title.Length : 0)</span></div>
@@ -41,16 +42,16 @@
             </li>
 
             <li>
-                <div style="float: right">Длина заголовка: <span class="header-length">@(Model != null && !String.IsNullOrEmpty(Model.Header) ? Model.Header.Length : 0)</span></div>
-                <label>Заголовок (H1)</label>
+                <div style="float: right">Длина заголовка: <span class="header-length">@(Model != null && !String.IsNullOrEmpty(Model.BreadcrumbsTitle) ? Model.BreadcrumbsTitle.Length : 0)</span></div>
+                <label>Заголовок</label>
                 <span class="rotooltip" data-toggle="tooltip" data-placement="right"
                       data-original-title="Это главный заголовок страницы. Он отображается автоматически рядом с хлебными крошками, если шаблон предусматривает это. Если нет - поле можно не заполнять.">
                     <em class="fa fa-question-circle"></em>
                 </span>
-                @Html.ValidationMessageFor(m => m.Header)
+                @Html.ValidationMessageFor(m => m.BreadcrumbsTitle)
             </li>
             <li>
-                @Html.TextBoxFor(x => x.Header, new {@class = "page-h1 form-control"})
+                @Html.TextBoxFor(x => x.BreadcrumbsTitle, new {@class = "page-h1 form-control"})
             </li>
 
             <li>
@@ -78,12 +79,12 @@
             </li>
             <li>
                 <select class="form-control parent-page-id" name="ParentPageId">
-                    <option value="" @(Model == null || !Model.ParentPageId.HasValue ? "selected=selected" : "")>Нет</option>
+                    <option value="" @(Model == null || !Model.ParentHeartId.HasValue ? "selected=selected" : "")>Нет</option>
                     @foreach (var page in pages.OrderBy(x => x.Title))
                     {
-                        if (Model == null || Model != null && page.PageId != Model.PageId)
+                        if (Model == null || Model != null && page.HeartId != Model.HeartId)
                         {
-                            <option value="@page.PageId" @(Model != null && page.PageId == Model.ParentPageId ? "selected=selected" : "")>@page.Title</option>
+                            <option value="@page.HeartId" @(Model != null && page.HeartId == Model.ParentHeartId ? "selected=selected" : "")>@page.Title</option>
                         }
                     }
                 </select>
@@ -101,16 +102,16 @@
                 @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "page_content", "page-content", ACEModes.HTML) {ShowCommonButtons = true})
             </li>
             <li>
-                <div style="float: right">Длина аннотации: <span class="annotation-length">@(Model != null && !String.IsNullOrEmpty(Model.Annotation) ? Model.Annotation.Length : 0)</span></div>
+                <div style="float: right">Длина аннотации: <span class="annotation-length">@(Model != null && !String.IsNullOrEmpty(Model.MetaDescription) ? Model.MetaDescription.Length : 0)</span></div>
                 <label>Meta description</label>
                 <span class="rotooltip" data-toggle="tooltip" data-placement="right"
                       data-original-title="Описание страницы для поисковых систем. Может использоваться поисковиками для формирования описания сайта в поисковой выдаче. Должно быть длиной не более 130 символов.">
                     <em class="fa fa-question-circle"></em>
                 </span>
-                @Html.ValidationMessageFor(m => m.Annotation)
+                @Html.ValidationMessageFor(m => m.MetaDescription)
             </li>
             <li>
-                @Html.TextAreaFor(m => m.Annotation, new {@class = "page-annotation form-control"})
+                @Html.TextAreaFor(m => m.MetaDescription, new {@class = "page-annotation form-control"})
 
             </li>
             <li>
@@ -119,7 +120,7 @@
                       data-original-title="Ключевые словосочетания, отражающие содержимое страницы. Не указывайте более 3 словосочетаний - это может привести к санкциям со стороны поисковых систем!">
                     <em class="fa fa-question-circle"></em>
                 </span>
-                @Html.TextBoxFor(m => m.Keywords, new {@class = "page-keywords form-control"})
+                @Html.TextBoxFor(m => m.MetaKeywords, new {@class = "page-keywords form-control"})
             </li>
             <li>
                 <div class="row" style="padding-top: 10px;">
@@ -148,7 +149,7 @@
                 </div>
             </li>
             <li>
-                <input type="checkbox" @(Model != null && Model.HideInSitemap ? "checked" : "") id="sitemapHide"/>&nbsp;
+                <input type="checkbox" @(Model != null && Model.Noindex ? "checked" : "") id="sitemapHide"/>&nbsp;
                 <label for="sitemapHide">Скрывать в Sitemap и запретить индексацию страницы</label>
             </li>
             <li>

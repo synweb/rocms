@@ -1,4 +1,4 @@
 ﻿CREATE PROCEDURE [dbo].[Page_Delete]
-	@PageId int
+	@HeartId int
 AS
-	DELETE FROM [Page] WHERE [PageId]=@PageId
+	DELETE FROM [Page] WHERE [HeartId]=@HeartId

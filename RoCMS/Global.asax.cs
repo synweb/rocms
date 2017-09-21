@@ -163,12 +163,12 @@ namespace RoCMS
                     {
                         SearchItemKey = item.SeachKeyTitle,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.PageId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Title),
                         Title = item.Title,
                         Weight = 2,
                         Url = item.CannonicalUrl,
-                        Text = item.Annotation,
+                        Text = item.MetaDescription,
                     };
                 },
                 x =>
@@ -178,12 +178,12 @@ namespace RoCMS
                     {
                         SearchItemKey = item.SeachKeyContent,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.PageId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Content),
                         Title = item.Title,
                         Weight = 1,
                         Url = item.CannonicalUrl,
-                        Text = item.Annotation
+                        Text = item.MetaDescription
                     };
                 }
             });

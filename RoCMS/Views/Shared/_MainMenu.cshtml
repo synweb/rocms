@@ -9,6 +9,7 @@
     var pageService = DependencyResolver.Current.GetService<IPageService>();
 
     string curPath = HttpUtility.UrlDecode(Request.Url.AbsolutePath);
+    var heartService = DependencyResolver.Current.GetService<IHeartService>();
 }
 
 
@@ -23,7 +24,7 @@
         if (!String.IsNullOrEmpty(menuItem.PageUrl))
         {
 
-            url = String.Format("/{0}", pageService.GetPageCanonicalUrl(menuItem.PageUrl));
+            url = String.Format("/{0}", heartService.GetCanonicalUrl(menuItem.PageUrl));
         }
         <li class="@((curPath == url || curPath.Contains(String.Format("{0}/", url))) ? "active" : "") @(showCaret ? "dropdown" : "" )">
             <a href="@url" @(showCaret ? "class=dropdown-toggle data-toggle=dropdown aria-haspopup=true aria-expanded=false role=button" : "")>
@@ -54,7 +55,7 @@
                         string suburl = "#";
                         if (!String.IsNullOrEmpty(subItem.PageUrl))
                         {
-                            suburl = String.Format("/{0}", pageService.GetPageCanonicalUrl(subItem.PageUrl));
+                            suburl = String.Format("/{0}", heartService.GetCanonicalUrl(subItem.PageUrl));
                         }
                         <li class="@((curPath == suburl || curPath.Contains(String.Format("{0}/", suburl))) ? "active" : "")">
                             <a href="@suburl">@subItem.Name</a>

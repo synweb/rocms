@@ -6,15 +6,15 @@
 
 @{
     ViewBag.Title = Model.Title;
-    ViewBag.Header = Model.Header;
+    ViewBag.Header = Model.BreadcrumbsTitle;
 
     ViewBag.Styles = Model.Styles;
     ViewBag.Scripts = Model.Scripts;
 
-    ViewBag.DisableIndexation = Model.HideInSitemap;
+    ViewBag.DisableIndexation = Model.Noindex;
 
-    var pageService = DependencyResolver.Current.GetService<IPageService>();
-    ViewBag.CanonicalUrl = Url.RouteUrl("PageSEF", new { relativeUrl = pageService.GetPageCanonicalUrl(Model.RelativeUrl)});
+    var heartService = DependencyResolver.Current.GetService<IHeartService>();
+    ViewBag.CanonicalUrl = Url.RouteUrl("PageSEF", new { relativeUrl = heartService.GetCanonicalUrl(Model.RelativeUrl)});
 
     if (!String.IsNullOrEmpty(Model.Layout))
     {

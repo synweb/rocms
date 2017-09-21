@@ -84,6 +84,7 @@
     <Compile Include="Models\CMSResource.cs" />
     <Compile Include="Models\DatabaseSettings.cs" />
     <Compile Include="Models\FormRequest.cs" />
+    <Compile Include="Models\Heart.cs" />
     <Compile Include="Models\ImageInfo.cs" />
     <Compile Include="Models\ImageSide.cs" />
     <Compile Include="Models\Mail.cs" />
@@ -93,7 +94,6 @@
     <Compile Include="Models\OrderForm.cs" />
     <Compile Include="Models\OrderFormField.cs" />
     <Compile Include="Models\OrderFormFieldType.cs" />
-    <Compile Include="Models\PageInfo.cs" />
     <Compile Include="Models\RazorEmailTemplate.cs" />
     <Compile Include="Models\RedirectToPageRouters.cs" />
     <Compile Include="Models\ReviewSort.cs" />
@@ -113,6 +113,7 @@
     <Compile Include="Models\VideoInfo.cs" />
     <Compile Include="Services\IAlbumService.cs" />
     <Compile Include="Services\IAnalyticsService.cs" />
+    <Compile Include="Services\IHeartService.cs" />
     <Compile Include="Services\IInstallService.cs" />
     <Compile Include="Services\IDevelopmentService.cs" />
     <Compile Include="Services\IOrderFormService.cs" />

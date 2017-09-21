@@ -907,10 +907,6 @@
       <Project>{5fe8e738-9ee6-4eee-b66d-95a76f36478a}</Project>
       <Name>RoCMS.Data.Mapping</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RoCMS.Demo.Services\RoCMS.Demo.Services.csproj">
-      <Project>{b2160ebe-22cd-494a-8ae6-c2bc4cec34cf}</Project>
-      <Name>RoCMS.Demo.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RoCMS.Logging\RoCMS.Logging.csproj">
       <Project>{074e61fd-9e09-45ef-95b3-66175f234eb4}</Project>
       <Name>RoCMS.Logging</Name>

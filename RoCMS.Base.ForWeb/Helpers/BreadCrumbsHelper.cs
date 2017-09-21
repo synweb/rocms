@@ -59,7 +59,7 @@ namespace RoCMS.Base.ForWeb.Helpers
                         res.Add(new BreadCrumb()
                         {
                             IsLast = pageUrl == pageUrls.Last(),
-                            Title = string.IsNullOrEmpty(page.Header) ? page.Title : page.Header,
+                            Title = string.IsNullOrEmpty(page.BreadcrumbsTitle) ? page.Title : page.BreadcrumbsTitle,
                             Url = $"/{page.CannonicalUrl}"
                         });
                     }

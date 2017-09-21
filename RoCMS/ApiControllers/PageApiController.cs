@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Mvc;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
@@ -20,19 +19,20 @@ namespace RoCMS.ApiControllers
     public class PageApiController : ApiController
     {
         private readonly IPageService _pageService;
+        private readonly IHeartService _heartService;
         private readonly ILogService _logService;
 
-        public PageApiController(IPageService pageService, ILogService logService)
+        public PageApiController(IPageService pageService, ILogService logService, IHeartService heartService)
         {
             _pageService = pageService;
             _logService = logService;
+            _heartService = heartService;
         }
 
         [System.Web.Http.HttpGet]
-        public IList<PageInfo> Pages()
+        public IList<Page> Pages()
         {
-            IList<PageInfo> pages = _pageService.GetPagesInfo();
-            return pages;
+            return _pageService.GetPages();
         }
 
         [System.Web.Http.HttpPost]
@@ -65,7 +65,7 @@ namespace RoCMS.ApiControllers
                     return new ResultModel(false);
                 }
                 var page = _pageService.GetPage(id);
-                page.RelativeUrl = _pageService.GetNextAvailableRelativeUrl(page.RelativeUrl);
+                page.RelativeUrl = _heartService.GetNextAvailableRelativeUrl(page.RelativeUrl);
                 int newId = _pageService.CreatePage(page);
                 return new ResultModel(true, new {id=newId, relativeUrl = page.RelativeUrl});
             }

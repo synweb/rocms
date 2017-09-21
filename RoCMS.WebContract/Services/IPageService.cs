@@ -14,10 +14,9 @@ namespace RoCMS.Web.Contract.Services
 
         void DeletePage(int pageId);
 
-        IList<PageInfo> GetPagesInfo();
-
-        string GetPageCanonicalUrl(string relativeUrl);
-        IList<PageInfo> GetSitemapPagesInfo();
-        string GetNextAvailableRelativeUrl(string relativeUrl);
+        IList<Page> GetPages();
+        
+        IList<Page> GetSitemapPagesInfo();
+        
     }
 }

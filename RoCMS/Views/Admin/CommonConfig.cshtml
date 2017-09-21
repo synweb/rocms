@@ -23,7 +23,7 @@
     {}
     try
     {
-        p = new SelectList(from page in pageService.GetPagesInfo() select page, "RelativeUrl", "Title");
+        p = new SelectList(from page in pageService.GetPages() select page, "RelativeUrl", "Title");
     }
     catch (InvalidOperationException)
     {}

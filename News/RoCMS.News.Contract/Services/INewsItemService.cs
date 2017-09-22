@@ -16,7 +16,7 @@ namespace RoCMS.News.Contract.Services
         /// </summary>
         /// <param name="news"></param>
         /// <returns>Идентификатор добавленной новости</returns>
-        int AddNewsItem(NewsItem news);
+        int CreateNewsItem(NewsItem news);
 
         void RemoveNewsItem(int id);
 
@@ -24,7 +24,7 @@ namespace RoCMS.News.Contract.Services
 
         NewsItem GetNewsItem(string relativeUrl, bool onlyPosted);
 
-        void EditNewsItem(NewsItem news);
+        void UpdateNewsItem(NewsItem news);
 
         bool NewsItemExists(int id);
         bool NewsItemExists(string relativeUrl);

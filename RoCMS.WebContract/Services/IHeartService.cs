@@ -12,8 +12,13 @@ namespace RoCMS.Web.Contract.Services
         string GetCanonicalUrl(string relativeUrl);
         string GetNextAvailableRelativeUrl(string relativeUrl);
         void DeleteHeart(int id);
+        string GetCanonicalUrl(int id);
         void UpdateHeart(Heart heart);
         int CreateHeart(Heart heart);
         void Fill(Heart heart);
+        Heart GetHeart(string relativeUrl);
+        Heart GetHeart(int heartId);
+        ICollection<Heart> GetHearts();
+        bool CheckIfUrlExists(string relativeUrl);
     }
 }

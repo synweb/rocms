@@ -9,11 +9,6 @@ namespace RoCMS.News.Data.Gateways
     public class NewsItemGateway : BasicGateway<Models.NewsItem>
     {
         protected override string DefaultScheme => "News";
-        
-        public NewsItem SelectByUrl(string relativeUrl, bool onlyPosted)
-        {
-            return Exec<Models.NewsItem>(GetProcedureString(), new{ relativeUrl, onlyPosted});
-        }
 
         public ICollection<int> SelectRelated(int newsId, bool withSubnews, int count, bool onlyPosted = false)
         {

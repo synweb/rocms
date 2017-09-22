@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RoCMS.Web.Contract.Models
 {
-    public abstract class Heart
+    public class Heart
     {
         public int HeartId { get; set; }
         public DateTime CreationDate { get; set; }
@@ -28,5 +28,6 @@ namespace RoCMS.Web.Contract.Models
         public string Layout { get; set; }
         public string AdditionalHeaders { get; set; }
         public string CannonicalUrl { get; set; }
+        public string Type { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using RoCMS.Comments.Contract.ViewModels;
 using RoCMS.News.Contract.Services;
 using RoCMS.News.Data.Gateways;
 using RoCMS.News.Data.Models;
+using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Models.Search;
 using RoCMS.Web.Contract.Services;
 using NewsFilter = RoCMS.News.Contract.Models.NewsFilter;
@@ -30,16 +31,18 @@ namespace RoCMS.News.Services
         private readonly NewsItemGateway _newsItemGateway = new NewsItemGateway();
         private readonly TagGateway _tagGateway = new TagGateway();
         private readonly NewsItemTagGateway _newsItemTagGateway = new NewsItemTagGateway();
-
+        
         private readonly INewsCategoryService _categoryService;
+        private readonly IHeartService _heartService;
         private readonly IBlogService _blogService;
 
-        public NewsItemService(ICommentService commentService, ISearchService searchService, INewsCategoryService categoryService, IBlogService blogService)
+        public NewsItemService(ICommentService commentService, ISearchService searchService, INewsCategoryService categoryService, IBlogService blogService, IHeartService heartService)
         {
             _commentService = commentService;
             _searchService = searchService;
             _categoryService = categoryService;
             _blogService = blogService;
+            _heartService = heartService;
 
             InitCache("TagMemoryCache");
             CacheExpirationInMinutes = 30;
@@ -205,47 +208,36 @@ namespace RoCMS.News.Services
             return res;
         }
 
-        public int AddNewsItem(NewsItem news)
+        public int CreateNewsItem(NewsItem news)
         {
             var dataRec = Mapper.Map<Data.Models.NewsItem>(news);
             using (var ts = new TransactionScope())
             {
-                bool relativeUrlExists = _newsItemGateway.SelectByUrl(news.RelativeUrl, false) != null;
-                int relativeUrlCounter = 2;
-                while (relativeUrlExists)
-                {
-                    string newRelativeUrl = $"{news.RelativeUrl}-{relativeUrlCounter}";
-                    relativeUrlCounter++;
-                    relativeUrlExists = _newsItemGateway.SelectByUrl(newRelativeUrl, false) != null;
-                    if (!relativeUrlExists)
-                    {
-                        news.RelativeUrl = newRelativeUrl;
-                    }
-                }
-
-                news.NewsId = _newsItemGateway.Insert(dataRec);
-                var tags = news.Tags.Split(',').Select(x => x.Trim().ToLower());
+                news.RelativeUrl = _heartService.GetNextAvailableRelativeUrl(news.RelativeUrl);
+                news.HeartId = _heartService.CreateHeart(news);
+                 _newsItemGateway.Insert(dataRec);
+                var tags = news.Tags.Split(',').Select(x => x.Trim().ToLower()).ToArray();
 
                 var existingTags = _tagGateway.Select();
                 var existingTagNames = existingTags.Select(x => x.Name).ToArray();
                 foreach (var tag in tags.Except(existingTagNames))
                 {
                     int tagId = _tagGateway.Insert(tag);
-                    _newsItemTagGateway.Insert(news.NewsId, tagId);
+                    _newsItemTagGateway.Insert(news.HeartId, tagId);
                 }
                 foreach (var tag in existingTags.Where(x => tags.Contains(x.Name)))
                 {
-                    _newsItemTagGateway.Insert(news.NewsId, tag.TagId);
+                    _newsItemTagGateway.Insert(news.HeartId, tag.TagId);
                 }
 
                 var catIds = news.Categories.Select(x => x.ID);
                 foreach (var catId in catIds)
                 {
-                    _newsItemCategoryGateway.Insert(news.NewsId, catId);
+                    _newsItemCategoryGateway.Insert(news.HeartId, catId);
                 }
                 _searchService.UpdateIndex(news);
                 ts.Complete();
-                return news.NewsId;
+                return news.HeartId;
             }
         }
 
@@ -270,51 +262,36 @@ namespace RoCMS.News.Services
 
         public NewsItem GetNewsItem(string relativeUrl, bool onlyPosted)
         {
-            var dataRes = _newsItemGateway.SelectByUrl(relativeUrl, true);
-            if (dataRes == null)
+            var heart = _heartService.GetHeart(relativeUrl);
+            if (heart == null)
                 return null;
+            var dataRes = _newsItemGateway.SelectOne(heart.HeartId);
             var res = Mapper.Map<NewsItem>(dataRes);
+            Mapper.Map(heart, res);
             FillItem(res);
             return res;
         }
 
-        public void EditNewsItem(NewsItem news)
+        public void UpdateNewsItem(NewsItem news)
         {
-            //функциональность чревата дублями, если не обновлять страницу после сохранения
-            //var originNewsItem = _newsItemGateway.SelectOne(news.NewsId);
-            //if (news.RelativeUrl != originNewsItem.RelativeUrl)
-            //{
-            //    bool relativeUrlExists = _newsItemGateway.SelectByUrl(news.RelativeUrl) != null;
-            //    int relativeUrlCounter = 2;
-            //    while (relativeUrlExists)
-            //    {
-            //        string newRelativeUrl = $"{news.RelativeUrl}-{relativeUrlCounter}";
-            //        relativeUrlCounter++;
-            //        relativeUrlExists = _newsItemGateway.SelectByUrl(newRelativeUrl) != null;
-            //        if (!relativeUrlExists)
-            //        {
-            //            news.RelativeUrl = newRelativeUrl;
-            //        }
-            //    }
-            //}
-
-            var originNewsItem = _newsItemGateway.SelectOne(news.NewsId);
+            var originNewsItem = _newsItemGateway.SelectOne(news.HeartId);
             if (news.RelativeUrl != originNewsItem.RelativeUrl)
             {
-                bool relativeUrlExists = _newsItemGateway.SelectByUrl(news.RelativeUrl, false) != null;
+
+                bool relativeUrlExists = _heartService.CheckIfUrlExists(news.RelativeUrl);
                 if (relativeUrlExists)
                 {
-                    throw new ArgumentException("Запись с таким адресом уже существует");
+                    throw new ArgumentException("Этот адрес уже занят");
                 }
             }
 
             var dataRec = Mapper.Map<Data.Models.NewsItem>(news);
             var tags = !string.IsNullOrEmpty(news.Tags) ? news.Tags.Split(',').Select(x => x.Trim().ToLower()).ToList() : new List<string>();
-            var originalTags = _tagGateway.SelectByNews(news.NewsId);
+            var originalTags = _tagGateway.SelectByNews(news.HeartId);
             var existingTags = _tagGateway.Select();
             var existingTagNames = existingTags.Select(x => x.Name).ToArray();
 
-            var existingCatIds = _newsItemCategoryGateway.SelectCategoryIdsByNews(news.NewsId);
+            var existingCatIds = _newsItemCategoryGateway.SelectCategoryIdsByNews(news.HeartId);
             var catIds = news.Categories.Select(x => x.ID).ToArray();
 
             using (var ts = new TransactionScope())
@@ -324,29 +301,29 @@ namespace RoCMS.News.Services
                 foreach (var tag in tags.Except(existingTagNames))
                 {
                     int tagId = _tagGateway.Insert(tag);
-                    _newsItemTagGateway.Insert(news.NewsId, tagId);
+                    _newsItemTagGateway.Insert(news.HeartId, tagId);
                 }
                 foreach (var tag in existingTags.Where(x => tags.Contains(x.Name) && originalTags.All(y => y.TagId != x.TagId)))
                 {
-                    _newsItemTagGateway.Insert(news.NewsId, tag.TagId);
+                    _newsItemTagGateway.Insert(news.HeartId, tag.TagId);
                 }
 
                 if (originalTags.Any(x => !tags.Contains(x.Name)))
                 {
                     foreach (var tag in originalTags.Where(x => !tags.Contains(x.Name)))
                     {
-                        _newsItemTagGateway.Delete(news.NewsId, tag.TagId);
+                        _newsItemTagGateway.Delete(news.HeartId, tag.TagId);
                     }
                     _tagGateway.DeleteUnassociated();
                 }
 
                 foreach (var catId in catIds.Except(existingCatIds))
                 {
-                    _newsItemCategoryGateway.Insert(news.NewsId, catId);
+                    _newsItemCategoryGateway.Insert(news.HeartId, catId);
                 }
                 foreach (var catId in existingCatIds.Except(catIds))
                 {
-                    _newsItemCategoryGateway.Delete(news.NewsId, catId);
+                    _newsItemCategoryGateway.Delete(news.HeartId, catId);
                 }
                 _searchService.UpdateIndex(news);
                 ts.Complete();
@@ -365,19 +342,17 @@ namespace RoCMS.News.Services
             FillTags(item);
 
             // cats
-            var catsIds = _newsItemCategoryGateway.SelectCategoryIdsByNews(item.NewsId);
+            var catsIds = _newsItemCategoryGateway.SelectCategoryIdsByNews(item.HeartId);
             var cats = catsIds.Select(x => _categoryGateway.SelectOne(x));
             foreach (var category in cats)
             {
                 item.Categories.Add(new IdNamePair<int>(category.CategoryId, category.Name));
             }
-            item.CanonicalUrl = GetNewsItemCanonicalUrl(item.NewsId);
         }
 
         public bool NewsItemExists(string relativeUrl)
         {
-            // TODO: можно ускорить отдельной хранимкой
-            return _newsItemGateway.SelectByUrl(relativeUrl, false) != null;
+            return _heartService.CheckIfUrlExists(relativeUrl);
         }
 
         public string GetNewsItemCanonicalUrl(int newsItemId)
@@ -393,41 +368,43 @@ namespace RoCMS.News.Services
 
         public int CreateClientPost(NewsItem post)
         {
-            if(string.IsNullOrEmpty(post.Title)
-                || string.IsNullOrEmpty(post.Text)
-                || string.IsNullOrEmpty(post.Description))
-            {
-                throw new ArgumentException();
-            }
-            if (!_blogService.CheckIfUserHasAccess(post.AuthorId, post.BlogId))
-            {
-                throw new UnauthorizedAccessException();
-            }
-            post.CreationDate = post.PostingDate = DateTime.UtcNow;
-            post.Text = FormattingHelper.AddRelNofollowToAnchors(post.Text);
-            post.RecordType = RecordType.Default;
-            post.RelativeUrl = TranslitHelper.ToTranslitedUrl(post.Title);
+            throw new NotImplementedException();
+            //if(string.IsNullOrEmpty(post.Title)
+            //    || string.IsNullOrEmpty(post.Text)
+            //    || string.IsNullOrEmpty(post.Description))
+            //{
+            //    throw new ArgumentException();
+            //}
+            //if (!_blogService.CheckIfUserHasAccess(post.AuthorId, post.BlogId))
+            //{
+            //    throw new UnauthorizedAccessException();
+            //}
+            //post.CreationDate = post.PostingDate = DateTime.UtcNow;
+            //post.Text = FormattingHelper.AddRelNofollowToAnchors(post.Text);
+            //post.RecordType = RecordType.Default;
+            //post.RelativeUrl = TranslitHelper.ToTranslitedUrl(post.Title);
             
-            var dataRec = Mapper.Map<Data.Models.NewsItem>(post);
-            int id = _newsItemGateway.Insert(dataRec);
-            post.NewsId = id;
-            _searchService.UpdateIndex(post);
-            return id;
+            //var dataRec = Mapper.Map<Data.Models.NewsItem>(post);
+            //int id = _newsItemGateway.Insert(dataRec);
+            //post.HeartId = id;
+            //_searchService.UpdateIndex(post);
+            //return id;
         }
 
         public void UpdateClientPost(NewsItem post)
         {
-            if (string.IsNullOrEmpty(post.Title)
-                || string.IsNullOrEmpty(post.Text)
-                || string.IsNullOrEmpty(post.Description))
-            {
-                throw new ArgumentException();
-            }
-            post.Text = FormattingHelper.AddRelNofollowToAnchors(post.Text);
-            post.RelativeUrl = TranslitHelper.ToTranslitedUrl(post.Title);
-            var dataRec = Mapper.Map<Data.Models.NewsItem>(post);
-            _newsItemGateway.Update(dataRec);
-            _searchService.UpdateIndex(post);
+            throw new NotImplementedException();
+            //if (string.IsNullOrEmpty(post.Title)
+            //    || string.IsNullOrEmpty(post.Text)
+            //    || string.IsNullOrEmpty(post.Description))
+            //{
+            //    throw new ArgumentException();
+            //}
+            //post.Text = FormattingHelper.AddRelNofollowToAnchors(post.Text);
+            //post.RelativeUrl = TranslitHelper.ToTranslitedUrl(post.Title);
+            //var dataRec = Mapper.Map<Data.Models.NewsItem>(post);
+            //_newsItemGateway.Update(dataRec);
+            //_searchService.UpdateIndex(post);
         }
 
         /// <summary>
@@ -488,7 +465,7 @@ namespace RoCMS.News.Services
 
         private void FillTags(NewsItem item)
         {
-            var tags = _tagGateway.SelectByNews(item.NewsId).Select(x => x.Name);
+            var tags = _tagGateway.SelectByNews(item.HeartId).Select(x => x.Name);
             item.Tags = string.Join(",", tags);
         }
 

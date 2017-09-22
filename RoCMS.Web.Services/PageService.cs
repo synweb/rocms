@@ -19,7 +19,6 @@ namespace RoCMS.Web.Services
         private const string PAGE_CACHE_KEY_TEMPLATE = "Page:{0}";
 
         private readonly PageGateway _pageGateway = new PageGateway();
-        private readonly HeartGateway _heartGateway = new HeartGateway();
         
 
 
@@ -55,13 +54,13 @@ namespace RoCMS.Web.Services
             string cacheKey = GetPageCacheKey(url);
             return GetFromCacheOrLoadAndAddToCache<Page>(cacheKey, () =>
             {
-                var heart = _heartGateway.SelectByRelativeUrl(url);
+                var heart = _heartService.GetHeart(url);
                 if (heart == null)
                     return null;
                 var page = _pageGateway.SelectOne(heart.HeartId);
-                page.Fill(heart);
                 var res = Mapper.Map<Page>(page);
-                res.CannonicalUrl = _heartService.GetCanonicalUrl(res.RelativeUrl);
+                Mapper.DynamicMap(heart, res);
+                //Mapper.DynamicMap();
                 return res;
             });
             
@@ -72,15 +71,14 @@ namespace RoCMS.Web.Services
             var page = _pageGateway.SelectOne(id);
             if (page == null)
                 return null;
-            page.Fill(_heartGateway.SelectOne(id));
             var res = Mapper.Map<Page>(page);
-            res.CannonicalUrl = _heartService.GetCanonicalUrl(res.RelativeUrl);
+            var heart = _heartService.GetHeart(id);
+            Mapper.Map(res, heart);
             return res;
         }
         
         public void UpdatePage(Page page)
         {
-            
             var original = _pageGateway.SelectOne(page.HeartId);
             using (var ts = new TransactionScope())
             {
@@ -96,9 +94,9 @@ namespace RoCMS.Web.Services
 
         public void DeletePage(int pageId)
         {
-            var page = _heartGateway.SelectOne(pageId);
+            var heart = _heartService.GetHeart(pageId);
             _heartService.DeleteHeart(pageId);
-            RemoveObjectFromCache(GetPageCacheKey(page.RelativeUrl));
+            RemoveObjectFromCache(GetPageCacheKey(heart.RelativeUrl));
             _searchService.RemoveFromIndex(typeof (Page), pageId);
         }
 

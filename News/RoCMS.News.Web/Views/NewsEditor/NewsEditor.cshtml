@@ -47,7 +47,7 @@
     var allNews = newsItemService.GetNewsPage(new NewsFilter() {OnlyPosted = false, BlogId = 1}, 1, int.MaxValue, out total);
     if (Model != null)
     {
-        var current = allNews.FirstOrDefault(x => x.NewsId == Model.NewsId);
+        var current = allNews.FirstOrDefault(x => x.HeartId == Model.HeartId);
         if (current != null)
         {
             allNews.Remove(current);
@@ -55,7 +55,7 @@
     }
 }
 
-<div class="news-items-info" data-news-id="@((Model == null) ? 0 : Model.NewsId)">
+<div class="news-items-info" data-news-id="@((Model == null) ? 0 : Model.HeartId)">
     <form class="news-info row">
         <input type="hidden" class="news-blog-id" value="@((Model == null) ? 1 : Model.BlogId)" />
         <div class="col-md-8 col-lg-9">
@@ -125,22 +125,22 @@
 
                 </li>
                 <li>
-                    @Html.LabelFor(m => m.Keywords, "Meta Keywords")
-                    @Html.ValidationMessageFor(m => m.Keywords)
+                    @Html.LabelFor(m => m.MetaKeywords, "Meta Keywords")
+                    @Html.ValidationMessageFor(m => m.MetaKeywords)
                 </li>
                 <li>
-                    @Html.TextBoxFor(m => m.Keywords, new { @class = "news-keywords form-control" })
+                    @Html.TextBoxFor(m => m.MetaKeywords, new { @class = "news-keywords form-control" })
 
                 </li>
                 <li>
-                    @Html.LabelFor(m => m.RelatedNewsItemId, "Родительская запись")
+                    @Html.LabelFor(m => m.ParentHeartId, "Родительская запись")
                 </li>
                 <li>
                     <select class="form-control news-related-item" name="RelatedNewsItemId">
-                        <option value="" @(Model == null || !Model.RelatedNewsItemId.HasValue ? "selected=selected" : "")>Нет</option>
+                        <option value="" @(Model == null || !Model.ParentHeartId.HasValue ? "selected=selected" : "")>Нет</option>
                         @foreach (var news in allNews)
                         {
-                            <option value="@news.NewsId" @(Model != null && news.NewsId == Model.RelatedNewsItemId ? "selected=selected" : "")>@news.Title</option>
+                            <option value="@news.HeartId" @(Model != null && news.HeartId == Model.ParentHeartId ? "selected=selected" : "")>@news.Title</option>
                         }
                     </select>
 
@@ -290,7 +290,7 @@
         {
             <a id="acceptNews" class="button-accept btn btn-success" onclick="true" data-bind="click: update"><i class="fa fa-check"></i> @Strings.EditNews_AcceptButton</a>
             <a class="btn btn-warning" href="@Url.RouteUrl("BlogItem", new {relativeUrl = Model.RelativeUrl})"><i class="fa fa-share"></i> Перейти</a>
-            <a onclick="true" class="btn btn-danger button-delete" data-news-id="@Model.NewsId"><i class="fa fa-times"></i> Удалить</a>
+            <a onclick="true" class="btn btn-danger button-delete" data-news-id="@Model.HeartId"><i class="fa fa-times"></i> Удалить</a>
         }
         <a class="btn btn-default" href="/NewsEditor/News">@Strings.EditNews_ReturnToNews</a>
     </div>

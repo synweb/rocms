@@ -94,7 +94,6 @@
     <Compile Include="Models\OrderForm.cs" />
     <Compile Include="Models\OrderFormField.cs" />
     <Compile Include="Models\OrderFormFieldType.cs" />
-    <Compile Include="Models\RazorEmailTemplate.cs" />
     <Compile Include="Models\RedirectToPageRouters.cs" />
     <Compile Include="Models\ReviewSort.cs" />
     <Compile Include="Models\Search\IndexingRule.cs" />

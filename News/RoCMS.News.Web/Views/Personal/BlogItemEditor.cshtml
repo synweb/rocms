@@ -44,7 +44,7 @@
 <div class="row">
     <div class="col-md-8">
         <form class="post-editor">
-            <input type="hidden" value="@Model.NewsId" name="newsId" />
+            <input type="hidden" value="@Model.HeartId" name="newsId" />
             <input type="hidden" value="@Model.ImageId" name="imageId" />
             <input type="hidden" value="" name="fileData" />
             <ul>
@@ -102,10 +102,10 @@
                                     </a>
                                 </li>
                             }
-                            @if (Model.NewsId > 0 && !disabled)
+                            @if (Model.HeartId > 0 && !disabled)
                             {
                                 <li>
-                                    <a href="#" data-news-id="@Model.NewsId" class="delete-post">
+                                    <a href="#" data-news-id="@Model.HeartId" class="delete-post">
                                         <em class="fa fa-trash-o"></em>Удалить запись
                                     </a>
                                 </li>

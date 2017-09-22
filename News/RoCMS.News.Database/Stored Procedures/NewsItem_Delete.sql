@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [News].[NewsItem_Delete]
-@NewsId int
+@HeartId int
 AS
 	DELETE FROM [News].[NewsItem]
-	WHERE [NewsId]=@NewsId
+	WHERE [HeartId]=@HeartId

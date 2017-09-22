@@ -16,7 +16,7 @@
         ViewBag.CanonicalUrl = Url.RouteUrl("BlogItem",
             new
             {
-                relativeUrl = Model.CanonicalUrl
+                relativeUrl = Model.CannonicalUrl
             });
     }
     var userService = DependencyResolver.Current.GetService<ISecurityService>();
@@ -39,12 +39,12 @@
 
 @if (showEditLink)
 {
-    @Html.Partial("_AdminWidget", Url.Action("EditNews", "NewsEditor", new { id = Model.NewsId }))
+    @Html.Partial("_AdminWidget", Url.Action("EditNews", "NewsEditor", new { id = Model.HeartId }))
 }
 
 <div class="row">
     <div class="col-md-9">
-        <div class="blog-item news-item" data-news-id="@Model.NewsId">
+        <div class="blog-item news-item" data-news-id="@Model.HeartId">
             @if (!string.IsNullOrEmpty(Model.ImageId))
             {
 
@@ -91,7 +91,7 @@
 @JsInline(@<script>
     $(function () {
         setTimeout(function () {
-            postJSON("/api/news/"+@Model.NewsId+"/view");
+            postJSON("/api/news/"+@Model.HeartId+"/view");
         }, 4000);
     });
     </script>)

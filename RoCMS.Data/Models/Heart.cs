@@ -21,6 +21,8 @@ namespace RoCMS.Data.Models
         public string Scripts { get; set; }
         public string Layout { get; set; }
         public string AdditionalHeaders { get; set; }
+        public string Type { get; set; }
+
 
         public void Fill(Heart anotherHeart)
         {
@@ -37,6 +39,7 @@ namespace RoCMS.Data.Models
             this.Scripts = anotherHeart.Scripts;
             this.Layout = anotherHeart.Layout;
             this.AdditionalHeaders = anotherHeart.AdditionalHeaders;
+            this.Type = anotherHeart.Type;
         }
     }
 }

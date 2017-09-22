@@ -81,7 +81,6 @@
     <Build Include="Stored Procedures\Tag_Insert.sql" />
     <Build Include="Stored Procedures\Tag_Select.sql" />
     <Build Include="Stored Procedures\Tag_SelectOne.sql" />
-    <Build Include="Stored Procedures\NewsItem_SelectByUrl.sql" />
     <Build Include="Stored Procedures\Tag_SelectByNews.sql" />
     <Build Include="Stored Procedures\Tag_DeleteUnassociated.sql" />
     <Build Include="Tables\Category.sql" />

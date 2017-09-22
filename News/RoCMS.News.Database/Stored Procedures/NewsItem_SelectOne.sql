@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [News].[NewsItem_SelectOne]
-@NewsId int
+@HeartId int
 AS
 	SELECT *
 	FROM [News].[NewsItem]
-	WHERE [NewsId]=@NewsId
+	WHERE [HeartId]=@HeartId

@@ -9,6 +9,8 @@ using MvcSiteMapProvider.Web.Mvc;
 using RoCMS.Web.Contract.Services;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Base.ForWeb;
+using RoCMS.Base.ForWeb.Routing;
+using RoCMS.Web.Contract.Infrastructure;
 
 namespace RoCMS
 {
@@ -45,31 +47,29 @@ namespace RoCMS
 
             //ConfigureSEFRoutes(routes);
 
-            routes.MapRoute(
-                name: "EditPage",
-                url: "Admin/EditPage/{relativeUrl}",
-                defaults: new { controller = "Admin", action = "EditPage" });
-            routes.MapRoute(
-                name: "Search",
-                url: "search",
-                defaults: new { controller = "Home", action = "Search" });
-            routes.MapRoute(
-                name: "ForgotPassword",
-                url: "forgotpassword",
-                defaults: new { controller = "Home", action = "ForgotPassword" });
-            routes.MapRoute(
-                name: "RestorePassword",
-                url: "restorepassword/{token}",
-                defaults: new { controller = "Home", action = "RestorePassword" });
-            routes.MapRoute(
-                name: "Pages",
-                url: "Page/{relativeUrl}",
-                defaults: new { controller = "Page", action = "GetPage", relativeUrl = UrlParameter.Optional });
-            
+            //routes.MapRoute(
+            //    name: "Pages",
+            //    url: "Page/{relativeUrl}",
+            //    defaults: new { controller = "Page", action = "GetPage", relativeUrl = UrlParameter.Optional });
+
+
+
+
+
+            //routes.MapRoute(
+            //    name: "PageSEF",
+            //    url: "{*relativeUrl}",
+            //    defaults: new { controller = "Page", action = "PageSEF" }
+            //    );
+
+            RegisterHeartRoute(routes, typeof(Page));
+            RegisterIndexRoute(routes);
+
+
             routes.MapRoute(
                 name: "Thumbnail",
                 url: "Thumbnail/{id}",
-                defaults: new { controller = "Image", action = "Thumbnail"});
+                defaults: new { controller = "Image", action = "Thumbnail" });
             routes.MapRoute(
                 name: "Image",
                 url: "Image/{id}",
@@ -91,49 +91,55 @@ namespace RoCMS
                 url: "register",
                 defaults: new { controller = "Home", action = "Register" });
 
+            routes.MapRoute(
+                name: "EditPage",
+                url: "Admin/EditPage/{relativeUrl}",
+                defaults: new { controller = "Admin", action = "EditPage" });
+            routes.MapRoute(
+                name: "Search",
+                url: "search",
+                defaults: new { controller = "Home", action = "Search" });
+            routes.MapRoute(
+                name: "ForgotPassword",
+                url: "forgotpassword",
+                defaults: new { controller = "Home", action = "ForgotPassword" });
+            routes.MapRoute(
+                name: "RestorePassword",
+                url: "restorepassword/{token}",
+                defaults: new { controller = "Home", action = "RestorePassword" });
 
-            IEnumerable<string> controllerNames = typeof (MvcApplication).Assembly.GetTypes()
+            IEnumerable<string> controllerNames = typeof(MvcApplication).Assembly.GetTypes()
                 .Where(t => t.Name.EndsWith("Controller"))
                 .Where(t => !t.IsAbstract)
                 .Select(t => String.Format("^{0}$", t.Name.Replace("Controller", "")));
-
             string constraint = String.Join("|", controllerNames);
-            
             routes.MapRoute(
                 name: "DefaultCore",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 constraints: new { controller = constraint }
             );
-
-            routes.MapRoute(
-                name: "PageSEF",
-                url: "{*relativeUrl}",
-                defaults: new { controller = "Page", action = "PageSEF" }
-                );
-
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-
-            
-
         }
 
-        //private static void ConfigureSEFRoutes(RouteCollection routes)
-        //{
-        //    IPageService pageService = DependencyResolver.Current.GetService<IPageService>();
-        //    var pages = pageService.GetPagesInfo();
-        //    foreach (var page in pages)
-        //    {
-        //        routes.MapRoute(
-        //            name: page.RelativeUrl,
-        //            url: page.RelativeUrl,
-        //            defaults: new { controller = "Page", action = "PageSEF", relativeUrl = page.RelativeUrl });
-        //    }
-        //}
+        private static void RegisterIndexRoute(RouteCollection routes)
+        {
+            // если в урле ничего нет, то это главная
+            var route = new HeartRoute(new List<UrlPair>() {new UrlPair("", "")}, "Page", "MainPage");
+            routes.Add("Index", route);
+        }
+
+        private static void RegisterHeartRoute(RouteCollection routes, Type type)
+        {
+            var heartService = DependencyResolver.Current.GetService<IHeartService>();
+            var urls = heartService.GetHeartUrls(type);
+            var route = new HeartRoute(urls, "Page", "PageSEF");
+            routes.Add(type.FullName, route);
+        }
 
         public static void RegisterRedirects(RouteCollection routes)
         {

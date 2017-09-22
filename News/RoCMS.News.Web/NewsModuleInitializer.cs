@@ -45,7 +45,7 @@ namespace RoCMS.News.Web
                     {
                         SearchItemKey = item.SearchKeyTitle,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.NewsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Title),
                         ImageId = item.ImageId,
                         Title = item.Title,
@@ -61,7 +61,7 @@ namespace RoCMS.News.Web
                     {
                         SearchItemKey = item.SearchKeyDescription,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.NewsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Description),
                         ImageId = item.ImageId,
                         Title = item.Title,
@@ -77,7 +77,7 @@ namespace RoCMS.News.Web
                     {
                         SearchItemKey = item.SearchKeyText,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.NewsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Text),
                         ImageId = item.ImageId,
                         Title = item.Title,

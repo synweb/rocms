@@ -1,24 +1,20 @@
 ﻿CREATE PROCEDURE [News].[NewsItem_Insert]
-@Title nvarchar(MAX),
+@HeartId int,
 @Text nvarchar(MAX),
 @PostingDate datetime,
 @Description nvarchar(MAX),
-@MetaDescription nvarchar(MAX),
-@Keywords nvarchar(MAX),
 @AuthorId int,
 @ImageId varchar(30),
-@RelativeUrl nvarchar(300),
 @CommentTopicId int,
 @RecordType varchar(20),
 @Filename NVARCHAR(200),
 @VideoId varchar(50),
 @BlogId int,
 @RelatedNewsItemId int,
-@EventDate datetime,
-@AdditionalHeaders nvarchar(MAX)
+@EventDate datetime
 AS
-	INSERT INTO [News].[NewsItem] ([Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId], [RecordType]
-	, [Filename], [VideoId], [BlogId], [RelatedNewsItemId], [EventDate], [AdditionalHeaders])
-	VALUES (@Title, @Text, @PostingDate, @Description, @MetaDescription, @Keywords, @AuthorId, @ImageId, @RelativeUrl, 
-	@CommentTopicId, @RecordType, @Filename, @VideoId, @BlogId, @RelatedNewsItemId, @EventDate, @AdditionalHeaders)
-	SELECT @@IDENTITY
+	INSERT INTO [News].[NewsItem] ([HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId],  [CommentTopicId], [RecordType]
+	, [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders])
+	VALUES (@HeartId, @Text, @PostingDate, @Description, @AuthorId, @ImageId,  
+	@CommentTopicId, @RecordType, @Filename, @VideoId, @BlogId, @RelatedNewsItemId, @EventDate)
+	SELECT @HeartId

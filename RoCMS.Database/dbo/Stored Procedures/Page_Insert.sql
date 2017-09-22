@@ -4,4 +4,4 @@
 AS
 	INSERT INTO [dbo].[Page] ([HeartId], [Content])
 	VALUES (@HeartId, @Content)
-	SELECT @@IDENTITY
+	SELECT @HeartId

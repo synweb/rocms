@@ -32,11 +32,11 @@
     @foreach (var newsItem in Model.News)
     {
         string username = userService.GetUser(newsItem.AuthorId).Username;
-        <div class="box news-summary" data-news-id="@newsItem.NewsId">
+        <div class="box news-summary" data-news-id="@newsItem.HeartId">
             <header>
 
                 <div class="toolbar">
-                    <a href="@Url.Action("EditNews", new {id = newsItem.NewsId})" class="btn btn-warning btn-xs">
+                    <a href="@Url.Action("EditNews", new {id = newsItem.HeartId})" class="btn btn-warning btn-xs">
                         <i class="fa fa-pencil"></i> @Strings.News_EditNews
                     </a>
                     <a onclick="true" class="btn btn-danger btn-xs button-delete">

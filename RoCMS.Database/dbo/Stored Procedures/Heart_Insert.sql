@@ -9,8 +9,9 @@
 @Styles nvarchar(MAX),
 @Scripts nvarchar(MAX),
 @Layout varchar(300),
-@AdditionalHeaders nvarchar(MAX)
+@AdditionalHeaders nvarchar(MAX),
+@Type varchar(300)
 AS
-	INSERT INTO [dbo].[Heart] ([RelativeUrl], [ParentHeartId], [BreadcrumbsTitle], [Noindex], [Title], [MetaDescription], [MetaKeywords], [Styles], [Scripts], [Layout], [AdditionalHeaders])
-	VALUES (@RelativeUrl, @ParentHeartId, @BreadcrumbsTitle, @Noindex, @Title, @MetaDescription, @MetaKeywords, @Styles, @Scripts, @Layout, @AdditionalHeaders)
+	INSERT INTO [dbo].[Heart] ([RelativeUrl], [ParentHeartId], [BreadcrumbsTitle], [Noindex], [Title], [MetaDescription], [MetaKeywords], [Styles], [Scripts], [Layout], [AdditionalHeaders], [Type])
+	VALUES (@RelativeUrl, @ParentHeartId, @BreadcrumbsTitle, @Noindex, @Title, @MetaDescription, @MetaKeywords, @Styles, @Scripts, @Layout, @AdditionalHeaders, @Type)
 	SELECT @@IDENTITY

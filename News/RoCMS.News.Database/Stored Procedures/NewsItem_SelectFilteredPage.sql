@@ -11,34 +11,30 @@
 	@SortBy VARCHAR(20),
 	@SortOrder VARCHAR(4)
 
+
 AS
 
 	DECLARE @news TABLE(
-	[NewsId]       INT             NOT NULL,
-	[Title]        NVARCHAR (MAX) NOT NULL,
-	[Text]         NVARCHAR (MAX) NOT NULL,
-	[PostingDate]  DATETIME       NOT NULL,
-	[Description]  NVARCHAR (MAX) NOT NULL,
-	[MetaDescription]  NVARCHAR (MAX) NULL,
-	[Keywords]     NVARCHAR (MAX) NULL,
-	[CreationDate] DATETIME       NOT NULL,
-	[AuthorId]     INT            NOT NULL,
-	[ImageId]      VARCHAR (30)   NULL,
-	[RelativeUrl]  NVARCHAR (300)  NOT NULL,
-	[CommentTopicId] INT NULL,	
-	[RecordType] VARCHAR(20) NULL,
+    [HeartId]       INT   NOT NULL,
+    [Text]         NVARCHAR (MAX) NOT NULL,
+    [PostingDate]  DATETIME       NOT NULL,
+    [Description]  NVARCHAR (MAX) NOT NULL,
+    [AuthorId]     INT            NOT NULL,
+    [ImageId]      VARCHAR (30)   NULL,
+	[CommentTopicId] INT NULL,
+	[RecordType] VARCHAR(20) NOT NULL DEFAULT 'Default',
 	[Filename] NVARCHAR(200) NULL,
 	[VideoId] varchar(50) NULL,
-	[BlogId] INT NULL,
-	[EventDate]  DATETIME NULL,
-	[AdditionalHeaders] NVARCHAR (MAX) NULL,
-	[ViewCount] BIGINT NOT NULL DEFAULT 0
+    [BlogId] INT NULL, 
+    [EventDate] DATETIME NULL, 
+	[ViewCount] BIGINT NOT NULL DEFAULT 0,
+	[CreationDate] DATETIME NOT NULL
 	)
 	
-		INSERT INTO @news ([NewsId], [Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], [CreationDate], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId],[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders], [ViewCount] )
-	SELECT DISTINCT ni.[NewsId], [Title], [Text], [PostingDate], [Description], [MetaDescription], [Keywords], ni.[CreationDate], [AuthorId], [ImageId], [RelativeUrl], [CommentTopicId] ,[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [AdditionalHeaders], [ViewCount]
-		FROM [News].[NewsItem] ni 
-			JOIN @NewsIds ids ON ni.NewsId=ids.Val
+		INSERT INTO @news ([HeartId],  [Text], [PostingDate], [Description], [AuthorId], [ImageId], [CommentTopicId],[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], [CreationDate] )
+	SELECT DISTINCT ni.[HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId], [CommentTopicId] ,[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], h.[CreationDate]
+		FROM [News].[NewsItem] ni join [dbo].[Heart] h on ni.HeartId=h.HeartId
+			JOIN @NewsIds ids ON ni.[HeartId]=ids.Val
 		WHERE 
 		
 		(@OnlyPosted=0 OR [PostingDate]<=GETUTCDATE())

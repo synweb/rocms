@@ -31,6 +31,11 @@ namespace RoCMS.Web.Services
 
         private static void ConfigureMapper()
         {
+            Mapper.CreateMap<Data.Models.Heart, Contract.Models.Heart>()
+                .ForMember(x => x.CannonicalUrl, x => x.Ignore());
+            Mapper.CreateMap<Contract.Models.Heart, Data.Models.Heart>()
+                .ForMember(x => x.Type, x => x.MapFrom(y => y.GetType().FullName));
+
             Mapper.CreateMap<Block, Contract.Models.Block>();
             Mapper.CreateMap<Contract.Models.Block, Block>();
             Mapper.CreateMap<Block, IdNamePair<int>>()
@@ -142,6 +147,8 @@ namespace RoCMS.Web.Services
             Mapper.CreateMap<Data.Models.OrderForm, OrderForm>()
                 .ForMember(x => x.Fields, x => x.Ignore());
             Mapper.CreateMap<OrderForm, Data.Models.OrderForm>();
+
+            Mapper.AssertConfigurationIsValid();
         }
 
 

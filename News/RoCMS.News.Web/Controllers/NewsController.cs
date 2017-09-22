@@ -79,13 +79,13 @@ namespace RoCMS.News.Web.Controllers
                 string pageUrl = relativeUrl.Split('/').Last();
                 NewsItem news = _newsItemService.GetNewsItem(pageUrl, true);
 
-                if (news.CanonicalUrl != relativeUrl)
+                if (news.CannonicalUrl != relativeUrl)
                 {
-                    return RedirectPermanent(Url.RouteUrl("BlogModuleSEF", new { relativeUrl = news.CanonicalUrl }));
+                    return RedirectPermanent(Url.RouteUrl("BlogModuleSEF", new { relativeUrl = news.CannonicalUrl }));
                 }
 
-                TempData["MetaKeywords"] = news.Keywords;
-                TempData["MetaDescription"] = news.Description;
+                TempData["MetaKeywords"] = news.MetaKeywords;
+                TempData["MetaDescription"] = news.MetaDescription;
                 return View("News", news);
             }
             catch (Exception)
@@ -211,8 +211,8 @@ namespace RoCMS.News.Web.Controllers
 
             NewsItem news = _newsItemService.GetNewsItem(newsUrl, true);
 
-            TempData["MetaKeywords"] = news.Keywords;
-            TempData["MetaDescription"] = news.Description;
+            TempData["MetaKeywords"] = news.MetaKeywords;
+            TempData["MetaDescription"] = news.MetaDescription;
 
             return View("News", news);
         }

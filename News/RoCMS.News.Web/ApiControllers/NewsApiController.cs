@@ -96,8 +96,8 @@ namespace RoCMS.News.Web.ApiControllers
                 {
                     news.ImageId = null;
                 }
-                int id = _newsItemService.AddNewsItem(news);
-                news.NewsId = id;
+                int id = _newsItemService.CreateNewsItem(news);
+                news.HeartId = id;
                 return new ResultModel(true, id);
             }
             catch (Exception e)
@@ -128,7 +128,7 @@ namespace RoCMS.News.Web.ApiControllers
                 {
                     news.ImageId = null;
                 }
-                _newsItemService.EditNewsItem(news);
+                _newsItemService.UpdateNewsItem(news);
                 
                 return ResultModel.Success;
             }
@@ -222,7 +222,7 @@ namespace RoCMS.News.Web.ApiControllers
             {
                 int count;
                 var news = _newsItemService.GetNewsPage(new NewsFilter() {CategoryQuery = cats, TextQuery = query}, page, pgsize, out count);
-                var resultIds = news.Select(x => x.NewsId);
+                var resultIds = news.Select(x => x.HeartId);
                 return new ResultModel(true, new { resultIds, count });
             }
             catch (Exception e)

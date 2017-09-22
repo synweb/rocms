@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
+using RoCMS.Web.Contract.Infrastructure;
 using RoCMS.Web.Contract.Models;
 
 namespace RoCMS.Web.Contract.Services
@@ -18,7 +20,9 @@ namespace RoCMS.Web.Contract.Services
         void Fill(Heart heart);
         Heart GetHeart(string relativeUrl);
         Heart GetHeart(int heartId);
+        ICollection<UrlPair> GetHeartUrls(Type type);
         ICollection<Heart> GetHearts();
         bool CheckIfUrlExists(string relativeUrl);
+
     }
 }

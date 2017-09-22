@@ -22,24 +22,5 @@ namespace RoCMS.Data.Models
         public string Layout { get; set; }
         public string AdditionalHeaders { get; set; }
         public string Type { get; set; }
-
-
-        public void Fill(Heart anotherHeart)
-        {
-            this.HeartId = anotherHeart.HeartId;
-            this.CreationDate = anotherHeart.CreationDate;
-            this.RelativeUrl = anotherHeart.RelativeUrl;
-            this.ParentHeartId = anotherHeart.ParentHeartId;
-            this.BreadcrumbsTitle = anotherHeart.BreadcrumbsTitle;
-            this.Noindex = anotherHeart.Noindex;
-            this.Title = anotherHeart.Title;
-            this.MetaDescription = anotherHeart.MetaDescription;
-            this.MetaKeywords = anotherHeart.MetaKeywords;
-            this.Styles = anotherHeart.Styles;
-            this.Scripts = anotherHeart.Scripts;
-            this.Layout = anotherHeart.Layout;
-            this.AdditionalHeaders = anotherHeart.AdditionalHeaders;
-            this.Type = anotherHeart.Type;
-        }
     }
 }

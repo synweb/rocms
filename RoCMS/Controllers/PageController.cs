@@ -3,8 +3,10 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using MvcSiteMapProvider;
 using RoCMS.Helpers;
+using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Controllers
@@ -41,20 +43,22 @@ namespace RoCMS.Controllers
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "PageSEF", DynamicNodeProvider = "RoCMS.Helpers.PageDynamicNodeProvider, RoCMS")]
         [AllowAnonymous]
-        public ActionResult PageSEF(string relativeUrl)
+        public ActionResult PageSEF(string url)
         {
             try
             {
-                string pageUrl = relativeUrl.Split('/').Last();
                 string homepage = _settingsService.GetHomepageUrl();
-                if (pageUrl == homepage)
+                if (url == homepage)
                 {
                     return RedirectPermanent("/");
                 }
-                var page = _pageService.GetPage(pageUrl);
-                if (page.CannonicalUrl != relativeUrl)
+                var page = _pageService.GetPage(url);
+                // Trim the leading slash
+                var requestPath = Request.Path.Substring(1);
+                if (!page.CannonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return RedirectPermanent(Url.RouteUrl("PageSEF", new { relativeUrl = page.CannonicalUrl }));
+                    // отправляем запрос искать нужный путь. найдётся.
+                    return RedirectPermanent(Url.RouteUrl(typeof(Page).FullName, new { relativeUrl = page.RelativeUrl }));
                 }
                 TempData["MetaKeywords"] = page.MetaKeywords;
                 TempData["MetaDescription"] = page.MetaDescription;

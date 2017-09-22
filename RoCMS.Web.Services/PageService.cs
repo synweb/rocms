@@ -59,8 +59,7 @@ namespace RoCMS.Web.Services
                     return null;
                 var page = _pageGateway.SelectOne(heart.HeartId);
                 var res = Mapper.Map<Page>(page);
-                Mapper.DynamicMap(heart, res);
-                //Mapper.DynamicMap();
+                res.FillHeart(heart);
                 return res;
             });
             

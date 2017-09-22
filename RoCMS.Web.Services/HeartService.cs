@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Transactions;
 using AutoMapper;
 using RoCMS.Data.Gateways;
+using RoCMS.Web.Contract.Infrastructure;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
 
@@ -22,7 +23,13 @@ namespace RoCMS.Web.Services
         private void RenewCanonicalUrlTable()
         {
             var hearts = _heartGateway.Select();
-            _heartCanonicalUrls = hearts.ToDictionary(x => x.HeartId, x => GetUncachedCanonicalUrl(x.RelativeUrl));
+            var groups = hearts.GroupBy(x => x.Type);
+            _heartUrlPairs = new Dictionary<string, List<UrlPair>>();
+            foreach (var @group in groups)
+            {
+                _heartUrlPairs.Add(group.Key,
+                    group.Select(x => new UrlPair(x.RelativeUrl, GetCanonicalUrl(x.RelativeUrl))).ToList());
+            }
         }
 
         private string GetUncachedCanonicalUrl(string relativeUrl)
@@ -31,7 +38,7 @@ namespace RoCMS.Web.Services
             return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
         }
 
-        private IDictionary<int, string> _heartCanonicalUrls;
+        private IDictionary<string, List<UrlPair>> _heartUrlPairs;
 
         private readonly HeartGateway _heartGateway = new HeartGateway();
         public string GetCanonicalUrl(string relativeUrl)
@@ -60,10 +67,11 @@ namespace RoCMS.Web.Services
 
         public void DeleteHeart(int id)
         {
-            var page = _heartGateway.SelectOne(id);
+            var heart = _heartGateway.SelectOne(id);
             var children = _heartGateway.SelectChildren(id);
             using (var ts = new TransactionScope())
             {
+                DeleteRoute(heart);
                 foreach (var child in children)
                 {
                     child.ParentHeartId = null;
@@ -72,7 +80,8 @@ namespace RoCMS.Web.Services
                 _heartGateway.Delete(id);
                 ts.Complete();
             }
-            RemoveObjectFromCache(GetCanonicalUrlCacheKey(page.RelativeUrl));
+            RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
+            
         }
 
         public string GetCanonicalUrl(int heartId)
@@ -94,6 +103,25 @@ namespace RoCMS.Web.Services
             res.CannonicalUrl = GetCanonicalUrl(res.RelativeUrl);
             return res;
         }
+
+        public ICollection<UrlPair> GetHeartUrls(Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentException(nameof(type));
+            }
+            string typeName = type.FullName;
+            if (string.IsNullOrEmpty(typeName))
+            {
+                throw new ArgumentException(nameof(type));
+            }
+            if (_heartUrlPairs.ContainsKey(typeName))
+            {
+                return _heartUrlPairs[typeName];
+            }
+            return new List<UrlPair>();
+        }
+
 
         public ICollection<Heart> GetHearts()
         {
@@ -124,15 +152,34 @@ namespace RoCMS.Web.Services
 
         public void UpdateHeart(Heart heart)
         {
+            var originalHeart = _heartGateway.SelectOne(heart.HeartId);
             var dataHeart = Mapper.Map<Data.Models.Heart>(heart);
             _heartGateway.Update(dataHeart);
             RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
+            // удаляем маршрут старого heart
+            DeleteRoute(originalHeart);
+            // добавляем новый
+            CreateRoute(heart);
+        }
+
+        private void CreateRoute(Heart heart)
+        {
+            var typeRoutes = _heartUrlPairs[heart.Type];
+            typeRoutes.Add(new UrlPair(heart.RelativeUrl.ToLower(), GetUncachedCanonicalUrl(heart.RelativeUrl)));
+        }
+
+        private void DeleteRoute(Data.Models.Heart heart)
+        {
+            var typeRoutes = _heartUrlPairs[heart.Type];
+            typeRoutes.RemoveAll(x => x.RelativeUrl.Equals(heart.RelativeUrl,
+                StringComparison.InvariantCultureIgnoreCase));
         }
 
         public int CreateHeart(Heart heart)
         {
             var dataHeart = Mapper.Map<Data.Models.Heart>(heart);
             int heartId = _heartGateway.Insert(dataHeart);
+            CreateRoute(heart);
             return heartId;
         }
 
@@ -162,7 +209,7 @@ namespace RoCMS.Web.Services
                 return res;
             }
 
-            return String.Format("{0}/{1}", GetCanonicalUrlPrefix(res), res);
+            return $"{GetCanonicalUrlPrefix(res)}/{res}";
         }
 
         private const string CANONICAL_URL_CACHE_KEY = "Cannonical:{0}";

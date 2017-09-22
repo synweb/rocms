@@ -14,7 +14,7 @@
     ViewBag.DisableIndexation = Model.Noindex;
 
     var heartService = DependencyResolver.Current.GetService<IHeartService>();
-    ViewBag.CanonicalUrl = Url.RouteUrl("PageSEF", new { relativeUrl = heartService.GetCanonicalUrl(Model.RelativeUrl)});
+    //ViewBag.CanonicalUrl = Url.RouteUrl("PageSEF", new { url = heartService.GetCanonicalUrl(Model.RelativeUrl)});
 
     if (!String.IsNullOrEmpty(Model.Layout))
     {

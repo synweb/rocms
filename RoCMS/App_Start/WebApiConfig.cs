@@ -50,6 +50,9 @@ namespace RoCMS.App_Start
 
             WebApiConfigHelper.ApiRoute(config.Routes, "page/pages/get", "PageApi", "Pages");
             WebApiConfigHelper.ApiRoute(config.Routes, "page/{id}/copy", "PageApi", "CopyPage");
+            WebApiConfigHelper.ApiRoute(config.Routes, "page/{relativeUrl}/get", "PageApi", "GetPage");
+            WebApiConfigHelper.ApiRoute(config.Routes, "page/create", "PageApi", "CreatePage");
+            WebApiConfigHelper.ApiRoute(config.Routes, "page/update", "PageApi", "UpdatePage");
 
             WebApiConfigHelper.ApiRoute(config.Routes, "slider/sliders/get", "SliderApi", "GetSliders");
             WebApiConfigHelper.ApiRoute(config.Routes, "slider/{id}/get", "SliderApi", "GetSlider");

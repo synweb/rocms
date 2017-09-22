@@ -129,11 +129,7 @@ namespace RoCMS.Web.Services
             return String.Format(PAGE_CACHE_KEY_TEMPLATE, url);
         }
 
-        IList<Page> IPageService.GetSitemapPagesInfo()
-        {
-            throw new NotImplementedException();
-        }
-
+        //TODO: здесь хватит Heart, не нужно возвращать Page
         public IList<Page> GetSitemapPagesInfo()
         {
             return GetPages().Where(x => !x.Noindex).ToList();

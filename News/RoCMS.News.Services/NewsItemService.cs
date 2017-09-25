@@ -57,7 +57,7 @@ namespace RoCMS.News.Services
                 {
                     var commentTopic = new CommentTopic()
                     {
-                        TargetId = item.NewsId,
+                        TargetId = item.HeartId,
                         TargetUrl = "/News/" + targetId,
                         TargetTitle = item.Title,
                         TargetType = "News"
@@ -267,7 +267,7 @@ namespace RoCMS.News.Services
                 return null;
             var dataRes = _newsItemGateway.SelectOne(heart.HeartId);
             var res = Mapper.Map<NewsItem>(dataRes);
-            Mapper.Map(heart, res);
+            res.FillHeart(heart);
             FillItem(res);
             return res;
         }

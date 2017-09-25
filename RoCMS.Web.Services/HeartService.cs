@@ -35,7 +35,7 @@ namespace RoCMS.Web.Services
         private string GetUncachedCanonicalUrl(string relativeUrl)
         {
             string prefix = GetCanonicalUrlPrefix(relativeUrl);
-            return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
+            return String.IsNullOrEmpty(prefix) ? relativeUrl : $"{prefix}/{relativeUrl}";
         }
 
         private IDictionary<string, List<UrlPair>> _heartUrlPairs;
@@ -187,7 +187,7 @@ namespace RoCMS.Web.Services
         {
             if (heart.HeartId == 0)
             {
-                throw new Exception();
+                throw new ArgumentException(nameof(Heart.HeartId));
             }
             var dataHeart = _heartGateway.SelectOne(heart.HeartId);
             Mapper.Map(dataHeart, heart);

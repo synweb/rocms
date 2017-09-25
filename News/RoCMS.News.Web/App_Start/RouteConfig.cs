@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using RoCMS.Base.ForWeb.Helpers;
+using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
 using RoCMS.Web.Contract.Services;
 
@@ -29,8 +31,7 @@ namespace RoCMS.News.Web
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-            var heartService = DependencyResolver.Current.GetService<IHeartService>();
-
+            RoutingHelper.RegisterHeartRoute(routes, typeof(NewsItem), "News", "BlogSEF");
             //routes.MapRoute(
             //    name: "NewsItem",
             //    url: "News/{id}",
@@ -55,7 +56,7 @@ namespace RoCMS.News.Web
             //    defaults: new { controller = "News", action = "UserBlogItem" },
             //    constraints: new { blogUrl = @"\S+", newsUrl = @"\S+" }
             //    );
-            
+
             //routes.MapRoute(
             //    name: "BlogModuleSEF",
             //    url: BlogUrl + "/{*relativeUrl}",
@@ -118,19 +119,19 @@ namespace RoCMS.News.Web
 
             // *****
 
-            //IEnumerable<string> controllerNames = typeof(RouteConfig).Assembly.GetTypes()
-            //    .Where(t => t.Name.EndsWith("Controller"))
-            //    .Where(t => !t.IsAbstract)
-            //    .Select(t => $"^{t.Name.Replace("Controller", "")}$");
+            IEnumerable<string> controllerNames = typeof(RouteConfig).Assembly.GetTypes()
+                .Where(t => t.Name.EndsWith("Controller"))
+                .Where(t => !t.IsAbstract)
+                .Select(t => $"^{t.Name.Replace("Controller", "")}$");
 
-            //string constraint = string.Join("|", controllerNames);
+            string constraint = string.Join("|", controllerNames);
 
-            //routes.MapRoute(
-            //    name: "DefaultNews",
-            //    url: "{controller}/{action}/{id}",
-            //    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-            //    constraints: new { controller = constraint }
-            //);
+            routes.MapRoute(
+                name: "DefaultNews",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                constraints: new { controller = constraint }
+            );
         }
     }
 }

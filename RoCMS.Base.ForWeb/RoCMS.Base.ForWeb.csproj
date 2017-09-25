@@ -102,6 +102,7 @@
     <Compile Include="Helpers\HTML\InterfaceStringHelper.cs" />
     <Compile Include="Helpers\ParamExtractor.cs" />
     <Compile Include="Helpers\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Helpers\RoutingHelper.cs" />
     <Compile Include="Models\ACEModes.cs" />
     <Compile Include="Models\AuthenticatedEventArgs.cs" />
     <Compile Include="Models\BreadCrumb.cs" />

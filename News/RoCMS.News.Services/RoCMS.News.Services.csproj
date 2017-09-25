@@ -66,6 +66,10 @@
       <Project>{83422666-7277-47C6-8CD1-D2B9721596DA}</Project>
       <Name>RoCMS.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RoCMS.Data\RoCMS.Data.csproj">
+      <Project>{AE493D69-0FF4-4153-B7AF-23513D8D914F}</Project>
+      <Name>RoCMS.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\RoCms.WebContract\RoCMS.Web.Contract.csproj">
       <Project>{5BB656E0-BFEB-42A2-B308-52AB78AF8D38}</Project>
       <Name>RoCMS.Web.Contract</Name>

@@ -79,9 +79,11 @@ namespace RoCMS.News.Web.Controllers
                 string pageUrl = relativeUrl.Split('/').Last();
                 NewsItem news = _newsItemService.GetNewsItem(pageUrl, true);
 
-                if (news.CannonicalUrl != relativeUrl)
+                var requestPath = Request.Path.Substring(1);
+                if (!news.CannonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    return RedirectPermanent(Url.RouteUrl("BlogModuleSEF", new { relativeUrl = news.CannonicalUrl }));
+                    // отправляем запрос искать нужный путь. найдётся.
+                    return RedirectPermanent(Url.RouteUrl(typeof(NewsItem).FullName, new { relativeUrl = news.RelativeUrl }));
                 }
 
                 TempData["MetaKeywords"] = news.MetaKeywords;

@@ -27,9 +27,9 @@ namespace RoCMS.News.Services
             Mapper.CreateMap<NewsItem, Contract.Models.NewsItem>()
                 .ForMember(x => x.Tags, x => x.Ignore())
                 .ForMember(x => x.Categories, x => x.Ignore())
-                ;
-
-            Mapper.CreateMap<Contract.Models.NewsItem, NewsItem>();
+                .ForMember(x => x.CannonicalUrl, x => x.Ignore());
+            Mapper.CreateMap<Contract.Models.NewsItem, NewsItem>()
+                .ForMember(x => x.Keywords, x => x.Ignore());
 
             Mapper.CreateMap<Category, Contract.Models.Category>()
                 .ForMember(x => x.ChildrenCategories, x => x.Ignore())

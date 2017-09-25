@@ -9,6 +9,7 @@ using MvcSiteMapProvider.Web.Mvc;
 using RoCMS.Web.Contract.Services;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Base.ForWeb;
+using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Base.ForWeb.Routing;
 using RoCMS.Web.Contract.Infrastructure;
 
@@ -48,21 +49,12 @@ namespace RoCMS
             //ConfigureSEFRoutes(routes);
 
             //routes.MapRoute(
-            //    name: "Pages",
-            //    url: "Page/{relativeUrl}",
-            //    defaults: new { controller = "Page", action = "GetPage", relativeUrl = UrlParameter.Optional });
-
-
-
-
-
-            //routes.MapRoute(
             //    name: "PageSEF",
             //    url: "{*relativeUrl}",
             //    defaults: new { controller = "Page", action = "PageSEF" }
             //    );
 
-            RegisterHeartRoute(routes, typeof(Page));
+            RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
             RegisterIndexRoute(routes);
 
 
@@ -111,7 +103,7 @@ namespace RoCMS
             IEnumerable<string> controllerNames = typeof(MvcApplication).Assembly.GetTypes()
                 .Where(t => t.Name.EndsWith("Controller"))
                 .Where(t => !t.IsAbstract)
-                .Select(t => String.Format("^{0}$", t.Name.Replace("Controller", "")));
+                .Select(t => $"^{t.Name.Replace("Controller", "")}$");
             string constraint = String.Join("|", controllerNames);
             routes.MapRoute(
                 name: "DefaultCore",
@@ -131,14 +123,6 @@ namespace RoCMS
             // если в урле ничего нет, то это главная
             var route = new HeartRoute(new List<UrlPair>() {new UrlPair("", "")}, "Page", "MainPage");
             routes.Add("Index", route);
-        }
-
-        private static void RegisterHeartRoute(RouteCollection routes, Type type)
-        {
-            var heartService = DependencyResolver.Current.GetService<IHeartService>();
-            var urls = heartService.GetHeartUrls(type);
-            var route = new HeartRoute(urls, "Page", "PageSEF");
-            routes.Add(type.FullName, route);
         }
 
         public static void RegisterRedirects(RouteCollection routes)

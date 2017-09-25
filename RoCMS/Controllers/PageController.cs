@@ -43,16 +43,16 @@ namespace RoCMS.Controllers
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "PageSEF", DynamicNodeProvider = "RoCMS.Helpers.PageDynamicNodeProvider, RoCMS")]
         [AllowAnonymous]
-        public ActionResult PageSEF(string url)
+        public ActionResult PageSEF(string relativeUrl)
         {
             try
             {
                 string homepage = _settingsService.GetHomepageUrl();
-                if (url == homepage)
+                if (relativeUrl == homepage)
                 {
                     return RedirectPermanent("/");
                 }
-                var page = _pageService.GetPage(url);
+                var page = _pageService.GetPage(relativeUrl);
                 // Trim the leading slash
                 var requestPath = Request.Path.Substring(1);
                 if (!page.CannonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))

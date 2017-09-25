@@ -52,7 +52,7 @@ namespace RoCMS.Base.ForWeb.Routing
             this.AddQueryStringParametersToRouteData(result, httpContext);
             result.Values["controller"] = _controller;
             result.Values["action"] = _action;
-            result.Values["url"] = urlPair.RelativeUrl;
+            result.Values["relativeUrl"] = urlPair.RelativeUrl;
             return result;
         }
 

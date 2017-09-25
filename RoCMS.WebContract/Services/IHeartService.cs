@@ -22,6 +22,8 @@ namespace RoCMS.Web.Contract.Services
         Heart GetHeart(int heartId);
         ICollection<UrlPair> GetHeartUrls(Type type);
         ICollection<Heart> GetHearts();
+
+        ICollection<Heart> GetHearts(IEnumerable<int> heartIds);
         bool CheckIfUrlExists(string relativeUrl);
 
     }

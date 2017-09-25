@@ -47,7 +47,20 @@ namespace RoCMS.News.Web.ApiControllers
             }
         }
 
-
+        [HttpGet]
+        public ResultModel GetNewsItems()
+        {
+            try
+            {
+                var res = _newsItemService.GetAllNews();
+                return new ResultModel(true, res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
+        }
 
         [HttpPost]
         public ResultModel IncreaseViewCount(int id)

@@ -19,14 +19,13 @@
         ViewBag.PageTitle = Strings.CreateEditPage_EditTitle + " '" + Model.Title + "'";
     }
 
-    IList<Page> pages = ViewBag.Pages;
 }
 
 <div class="page-items-info" data-bind="with: page">
 
     <div class="row">
         <div class="col-md-6">
-            <form class="page-info" data-page-id="@(Model != null ? Model.HeartId : 0)">
+            <form class="page-info">
                 <div class="form-group">
                     <div class="content-toggle-container">
                         <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
@@ -36,7 +35,7 @@
 
                 </div>
                 <div class="form-group">
-                    @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "page_content", "page-content", ACEModes.HTML) { ShowCommonButtons = true })
+                    @Html.Partial("WYSIWYG", new EditorVM(null, "page_content", "page-content", ACEModes.HTML) { ShowCommonButtons = true })
                 </div>
             </form>
         </div>
@@ -59,22 +58,9 @@
 <div class="fixed-action-menu">
     <a data-bind="click: save" class="button-accept btn btn-success" title="@Strings.EditPage_AcceptButton" href="#"><i class="fa fa-check"></i> @Strings.EditPage_AcceptButton</a>
 
-    @*<a class="btn btn-warning" href="/@Model.CannonicalUrl"><i class="fa fa-share"></i> Перейти</a>*@
+    <a data-bind="visible: page().editMode, attr: {href: '/'+page().canonicalUrl()}" class="btn btn-warning"><i class="fa fa-share"></i> Перейти</a>
     <a class="btn btn-default" href="/Admin/Pages">@Strings.EditPage_ReturnToPages</a>
 </div>
 
-
-@*<div class="fixed-action-menu">
-    @if (((string) ViewBag.Action) == "Create")
-    {
-        <a id="createPage" class="button-accept btn btn-success" title="@Strings.CreatePage_CreateButton" href="@Url.Action("CreatePage", "Admin")"><i class="fa fa-check"></i> @Strings.CreatePage_CreateButton</a>
-    }
-    else
-    {
-        <a id="acceptPage" class="button-accept btn btn-success" title="@Strings.EditPage_AcceptButton" href="@Url.Action("EditPage", "Admin")"><i class="fa fa-check"></i> @Strings.EditPage_AcceptButton</a>
-        <a class="btn btn-warning" href="/@Model.CannonicalUrl"><i class="fa fa-share"></i> Перейти</a>
-    }
-    <a class="btn btn-default" href="/Admin/Pages">@Strings.EditPage_ReturnToPages</a>
-</div>*@
 
 

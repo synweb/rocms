@@ -55,7 +55,7 @@ namespace RoCMS.Controllers
                 var page = _pageService.GetPage(relativeUrl);
                 // Trim the leading slash
                 var requestPath = Request.Path.Substring(1);
-                if (!page.CannonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
+                if (!page.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
                 {
                     // отправляем запрос искать нужный путь. найдётся.
                     return RedirectPermanent(Url.RouteUrl(typeof(Page).FullName, new { relativeUrl = page.RelativeUrl }));

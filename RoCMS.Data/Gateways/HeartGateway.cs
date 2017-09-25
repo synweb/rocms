@@ -24,5 +24,11 @@ namespace RoCMS.Data.Gateways
         {
             return ExecSelect<Heart>(GetProcedureString(), type);
         }
+
+        public ICollection<Heart> SelectByIds(IEnumerable<int> heartIds)
+        {
+            return ExecSelect<Heart>(GetProcedureString(), heartIds);
+        }
+
     }
 }

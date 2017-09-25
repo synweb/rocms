@@ -32,7 +32,7 @@ namespace RoCMS.Web.Services
         private static void ConfigureMapper()
         {
             Mapper.CreateMap<Data.Models.Heart, Contract.Models.Heart>()
-                .ForMember(x => x.CannonicalUrl, x => x.Ignore());
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore());
             Mapper.CreateMap<Contract.Models.Heart, Data.Models.Heart>()
                 .ForMember(x => x.Type, x => x.MapFrom(y => y.GetType().FullName));
 
@@ -43,7 +43,7 @@ namespace RoCMS.Web.Services
                                             .ForMember(x => x.Name, x => x.MapFrom(m => m.Title));
 
             Mapper.CreateMap<Page, Contract.Models.Page>()
-                .ForMember(x => x.CannonicalUrl, x => x.Ignore());
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore());
             Mapper.CreateMap<Contract.Models.Page, Page>();
             
 

@@ -18,6 +18,7 @@ namespace RoCMS.News.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "news/news/{id}/update", "NewsApi", "Update");
             WebApiConfigHelper.ApiRoute(config.Routes, "news/news/{id}/delete", "NewsApi", "Delete");
             WebApiConfigHelper.ApiRoute(config.Routes, "news/news/{id}/get", "NewsApi", "Get");
+            WebApiConfigHelper.ApiRoute(config.Routes, "news/news/get", "NewsApi", "GetNewsItems");
             WebApiConfigHelper.ApiRoute(config.Routes, "news/news/filter", "NewsApi", "Filter");
             WebApiConfigHelper.ApiRoute(config.Routes, "news/{id}/view", "NewsApi", "IncreaseViewCount", true);
 

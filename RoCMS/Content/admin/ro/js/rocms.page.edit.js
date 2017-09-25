@@ -4,7 +4,7 @@
 
 App.Admin.Page = function () {
     var self = this;
-    $.extend(self, new App.Admin.Heart());
+    $.extend(self,  new App.Admin.Heart());
     self.content = ko.observable().extend({ required: true });
 }
 
@@ -16,12 +16,14 @@ App.Admin.PageValidationMapping = {
     }
 }
 
+$.extend(App.Admin.PageValidationMapping, App.Admin.HeartValidationMapping);
+
 App.Admin.PageFunctions = {
     initPage: function () {
         var self = this;
         self.initHeart();
 
-        if (self.scripts()) {
+        if (self.content()) {
             setTextToEditor("page_content", self.content());
         }
     },
@@ -54,17 +56,16 @@ App.Admin.PageFunctions = {
 
     update: function (onSuccess) {
         var self = this;
-        self.save("/Admin/EditPage", function () {
+        self.save("/api/page/update", function () {
             if (onSuccess) {
                 onSuccess();
             }
         });
     },
 
-
     create: function (onSuccess) {
         var self = this;
-        self.save("/Admin/CreatePage", function (result) {
+        self.save("/api/page/create", function (result) {
             if (onSuccess) {
                 onSuccess(result);
             }
@@ -72,40 +73,9 @@ App.Admin.PageFunctions = {
     },
 }
 
+$.extend(App.Admin.PageFunctions, App.Admin.HeartFunctions);
+
 function pageEditorLoad(relativeUrl) {
-    //$('.layout').val($('.layout').data("selectedValue"));
-
-    //$(".page-title").change(function () {
-    //    var val = $(this).val();
-
-    //    if (val && !$('.page-relativeurl').val()) {
-    //        $('.page-relativeurl').val(textToUrl(val));
-    //    };
-
-    //    if (val && !$('.page-h1').val()) {
-    //        $('.page-h1').val(val);
-    //        $('.page-h1').change();
-    //    };
-
-    //    if(val && !$(".page-annotation").val()) {
-    //        $('.page-annotation').val(val);
-    //        $('.page-annotation').change();
-    //    }
-
-    //    $(".title-length").text(val.length);
-    //});
-
-    //$(".page-h1").change(function () {
-    //    var val = $(this).val();
-    //    $(".header-length").text(val.length);
-    //});
-
-    //$(".page-annotation").change(function () {
-    //    var val = $(this).val();
-    //    $(".annotation-length").text(val.length);
-    //});
-
-
     var vm = {
         page: ko.validatedObservable($.extend(new App.Admin.Page(), App.Admin.PageFunctions)),
         parents: ko.observableArray(),
@@ -128,6 +98,8 @@ function pageEditorLoad(relativeUrl) {
         }
     };
 
+    vm.parents.push({ title: "Нет", heartId: null });
+
     vm.errors = ko.computed(function () {
         return ko.validation.group(vm.page(), { deep: true });
     });
@@ -136,18 +108,21 @@ function pageEditorLoad(relativeUrl) {
     $.when(
             getJSON("/api/page/pages/get", "", function (res) {
                 $(res).each(function () {
-                    vm.parent.push(this);
+                    vm.parents.push(this);
                 });
             }),
             getJSON("/api/page/" + relativeUrl + "/get", "", function (res) {
-                if (res.succeed) {
+                if (res.succeed && res.data) {
                     var page = $.extend(ko.mapping.fromJS(res.data, App.Admin.PageValidationMapping), App.Admin.PageFunctions);
                     vm.page(page);
                 }
+                vm.page().initPage();
             })
 
     ).then(
         function () {
+            vm.parents.remove(function(item) { return item.heartId === vm.page().heartId() });
+
             ko.applyBindings(vm);
         },
         function() {
@@ -157,23 +132,6 @@ function pageEditorLoad(relativeUrl) {
         unblockUI();
     });
 
-    //getJSON("/api/page/pages/get", "", function (res) {
-    //    $(res).each(function () {
-    //        vm.parent.push(this);
-    //    });
-    //});
-
-    //if (relativeUrl) {
-    //    blockUI();
-    //    getJSON("/api/page/" + relativeUrl + "/get", "", function (res) {
-    //        if (res.succeed) {
-    //            var page = $.extend(ko.mapping.fromJS(res.data, App.Admin.PageValidationMapping), App.Admin.PageFunctions);
-    //            vm.page(page);
-    //        }
-    //    });
-    //}
-
-    //ko.applyBindings(vm);
 }
 
 $(function () {
@@ -220,86 +178,6 @@ $(function () {
             });
         return false;
     });
-
-
-
-    //function updatePage(url, context, onSuccess) {
-    //    var $form = context.find("form");
-    //    $.validator.unobtrusive.parse($form, true);
-
-    //    if ($form.valid()) {
-    //        var title = $('.page-title').val();
-    //        var header = $('.page-h1').val();
-
-    //        var relativeUrl = $('.page-relativeurl').val();
-    //        var annot = $('.page-annotation').val();
-
-    //        var content = getTextFromEditor('page_content');
-    //        var keywords = $('.page-keywords').val();
-    //        var layout = $('.layout').val();
-
-    //        var pageId = $form.data("pageId");
-    //        var parentPageId = $('.parent-page-id').val();
-    //        var hideInSitemap = $('#sitemapHide').is(':checked');
-    //        var scripts = getTextFromEditor('page_scripts');
-    //        var styles = getTextFromEditor('page_styles');
-    //        var additionalHeaders = getTextFromEditor('page_headers');
-
-
-    //        var data = {
-    //            Title: title,
-    //            Header: header,
-    //            RelativeUrl: relativeUrl,
-    //            Annotation: annot,
-    //            Content: content,
-    //            Keywords: keywords,
-    //            ParentPageId: parentPageId,
-    //            Layout: layout,
-    //            PageId: pageId,
-    //            HideInSitemap: hideInSitemap,
-    //            Styles: styles,
-    //            Scripts: scripts,
-    //            AdditionalHeaders: additionalHeaders
-    //        };
-
-    //        blockUI();
-    //        $.ajax({
-    //            url: url,
-    //            type: 'POST',
-    //            data: JSON.stringify(data),
-    //            contentType: "application/json",
-    //            success: function (result) {
-    //                if (result.Succeed === true) {
-    //                    if (onSuccess) {
-    //                        onSuccess(data);
-    //                    }
-    //                }
-    //            }
-    //        }).fail(function () {
-    //            smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
-    //        })
-    //        .always(function () {
-    //            unblockUI();
-    //        });
-    //    } else {
-    //        $form.validate().focusInvalid();
-    //    }
-    //}
-
-    //$('#adminContent').on("click", "#createPage", function () {
-    //    var url = $(this).attr('href');
-    //    updatePage(url, $(this).closest(".page-items-info"), function (data) {
-    //        blockUI();
-    //        window.location.href = "/Admin/EditPage/" + data.RelativeUrl;
-    //    });
-    //    return false;
-    //});
-
-    //$('#adminContent').on("click", "#acceptPage", function () {
-    //    var url = $(this).attr('href');
-    //    updatePage(url, $(this).closest(".page-items-info"));
-    //    return false;
-    //});
 
     $('#adminContent').on("click", ".editPageLink", function () {
         var url = $(this).attr("href");

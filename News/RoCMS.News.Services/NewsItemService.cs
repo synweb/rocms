@@ -201,8 +201,12 @@ namespace RoCMS.News.Services
             var dataRes = _newsItemGateway.SelectFilteredPage(dataFilter, pageNumber, pageSize, out totalCount);
             var res = Mapper.Map<ICollection<NewsItem>>(dataRes);
 
+            var hearts = _heartService.GetHearts(res.Select(x => x.HeartId));
+
             foreach (var newsItem in res)
             {
+                var heart = hearts.Single(x => x.HeartId == newsItem.HeartId);
+                newsItem.FillHeart(heart);
                 FillItem(newsItem);
             }
             return res;
@@ -210,6 +214,7 @@ namespace RoCMS.News.Services
 
         public int CreateNewsItem(NewsItem news)
         {
+            news.Type = news.GetType().FullName;
             var dataRec = Mapper.Map<Data.Models.NewsItem>(news);
             using (var ts = new TransactionScope())
             {
@@ -254,8 +259,12 @@ namespace RoCMS.News.Services
 
         public NewsItem GetNewsItem(int id)
         {
-            var dataRes = _newsItemGateway.SelectOne(id);
+            var heart = _heartService.GetHeart(id);
+            if (heart == null)
+                return null;
+            var dataRes = _newsItemGateway.SelectOne(heart.HeartId);
             var res = Mapper.Map<NewsItem>(dataRes);
+            res.FillHeart(heart);
             FillItem(res);
             return res;
         }

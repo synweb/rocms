@@ -19,13 +19,13 @@
         <li class="short">
 
             <div class="short-left">
-                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CannonicalUrl})" title="@item.Title">
+                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" title="@item.Title">
                     <img class="img-responsive" src="@imgUrl" alt="@item.Title">
                 </a>
             </div>
             <div class="short-body">
 
-                <a class="heading" href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CannonicalUrl})" title="@item.Title">
+                <a class="heading" href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" title="@item.Title">
                     @item.Title
                 </a>
 

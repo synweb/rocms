@@ -11,10 +11,11 @@ App.Admin.Heart = function () {
     self.parentHeartId = ko.observable(null);
     self.layout = ko.observable("clientLayout");
     self.heartId = ko.observable();
-    self.noIndex = ko.observable(false);
+    self.noindex = ko.observable(false);
     self.styles = ko.observable();
     self.scripts = ko.observable();
     self.additionalHeaders = ko.observable();
+    self.canonicalUrl = ko.observable();
 
     $.extend(self, App.Admin.HeartFunctions);
 }
@@ -35,6 +36,35 @@ App.Admin.HeartValidationMapping = {
 App.Admin.HeartFunctions = {
     initHeart: function () {
         var self = this;
+
+        self.metaDescriptionLength = ko.computed(function () {
+            return self.metaDescription() ? self.metaDescription().length : 0;
+        });
+
+        self.breadcrumbsTitleLength = ko.computed(function () {
+            return self.breadcrumbsTitle() ? self.breadcrumbsTitle().length : 0;
+        });
+
+        self.titleLength = ko.computed(function () {
+            return self.title() ? self.title().length : 0;
+        });
+
+        self.editMode = ko.computed(function() {
+            return self.canonicalUrl && typeof(self.canonicalUrl()) != "undefined";
+        });
+
+        self.title.subscribe(function (val) {
+            if (!self.relativeUrl()) {
+                self.relativeUrl(textToUrl(val));
+            }
+            if (!self.breadcrumbsTitle()) {
+                self.breadcrumbsTitle(val);
+            }
+            if (!self.metaDescription()) {
+                self.metaDescription(val);
+            }
+        });
+
         if (self.scripts()) {
             setTextToEditor("page_scripts", self.scripts());
         }

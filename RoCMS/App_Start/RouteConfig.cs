@@ -54,8 +54,7 @@ namespace RoCMS
             //    defaults: new { controller = "Page", action = "PageSEF" }
             //    );
 
-            RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
-            RegisterIndexRoute(routes);
+
 
 
             routes.MapRoute(
@@ -111,11 +110,19 @@ namespace RoCMS
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 constraints: new { controller = constraint }
             );
+
+
+
+            RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
+            RegisterIndexRoute(routes);
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+
         }
 
         private static void RegisterIndexRoute(RouteCollection routes)

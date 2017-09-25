@@ -80,7 +80,7 @@ namespace RoCMS.News.Web.Controllers
                 NewsItem news = _newsItemService.GetNewsItem(pageUrl, true);
 
                 var requestPath = Request.Path.Substring(1);
-                if (!news.CannonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
+                if (!news.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
                 {
                     // отправляем запрос искать нужный путь. найдётся.
                     return RedirectPermanent(Url.RouteUrl(typeof(NewsItem).FullName, new { relativeUrl = news.RelativeUrl }));

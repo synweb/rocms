@@ -227,6 +227,7 @@
     <Build Include="dbo\Stored Procedures\Heart_SelectOne.sql" />
     <Build Include="dbo\Stored Procedures\Heart_Update.sql" />
     <Build Include="dbo\Stored Procedures\Heart_SelectByType.sql" />
+    <Build Include="dbo\Stored Procedures\Heart_SelectByIds.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExportImages.sql" />

@@ -13,7 +13,7 @@
 <form class="form-horizontal">
 
     <div class="form-group">
-        <div style="float: right">Длина заголовка: <span class="title-length">@(Model != null && !String.IsNullOrEmpty(Model.Title) ? Model.Title.Length : 0)</span></div>
+        <div style="float: right">Длина заголовка: <span class="title-length" data-bind="text: titleLength"></span></div>
         <label>
             Заголовок (title)
         </label>
@@ -25,13 +25,12 @@
 
     </div>
     <div class="form-group">
-        @*@Html.TextBoxFor(x => x.Title, new {@class = "page-title form-control"})*@
         <input type="text" id="Title" name="Title" data-bind="value: title" class="page-title form-control"
                data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" />
     </div>
 
     <div class="form-group">
-        <div style="float: right">Длина заголовка: <span class="header-length">@(Model != null && !String.IsNullOrEmpty(Model.BreadcrumbsTitle) ? Model.BreadcrumbsTitle.Length : 0)</span></div>
+        <div style="float: right">Длина заголовка: <span class="header-length" data-bind="text: breadcrumbsTitleLength"></span></div>
         <label>Заголовок</label>
         <span class="rotooltip" data-toggle="tooltip" data-placement="right"
               data-original-title="Это главный заголовок страницы. Он отображается автоматически рядом с хлебными крошками, если шаблон предусматривает это. Если нет - поле можно не заполнять.">
@@ -40,26 +39,21 @@
         <span class="field-validation-valid" data-valmsg-for="BreadcrumbsTitle" data-valmsg-replace="true"></span>
     </div>
     <div class="form-group">
-        @*@Html.TextBoxFor(x => x.BreadcrumbsTitle, new {@class = "page-h1 form-control"})*@
         <input type="text" id="BreadcrumbsTitle" name="BreadcrumbsTitle" data-bind="value: breadcrumbsTitle" class="page-h1 form-control"
                data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" />
     </div>
 
     <div class="form-group">
-        @*@Html.LabelFor(m => m.RelativeUrl, Strings.CreatePage_RelativeUrl)*@
         <label for="RelativeUrl">@Strings.CreatePage_RelativeUrl</label>
         <span class="rotooltip" data-toggle="tooltip" data-placement="right"
               data-original-title="Это адрес, по которому будет отображаться страница. Например, http://domain.com/sample-page - здесь 'sample-page' является относительным адресом.">
             <em class="fa fa-question-circle"></em>
         </span>
         <span class="field-validation-valid" data-valmsg-for="RelativeUrl" data-valmsg-replace="true"></span>
-        @if (Model != null && !String.IsNullOrEmpty(Model.CannonicalUrl))
-        {
-            <a href="/@Model.CannonicalUrl">@Strings.CreatePage_OpenPage</a>
-        }
+        <a data-bind="visible: editMode, attr: {href: '/' + canonicalUrl()}">@Strings.CreatePage_OpenPage</a>
+
     </div>
     <div class="form-group">
-        @*@Html.TextBoxFor(m => m.RelativeUrl, new {@class = "page-relativeurl form-control"})*@
         <input type="text" id="RelativeUrl" name="RelativeUrl" data-bind="value: relativeUrl" class="page-relativeurl form-control"
                data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured"
                data-val-regex="@RoCMS.Web.Contract.Resources.Strings.Validation_LettersNumbersUnderscoreDash" data-val-regex-pattern="[a-zA-Zа-яА-Я0-9_-]+" />
@@ -73,20 +67,12 @@
     </div>
     <div class="form-group">
         <select class="form-control parent-page-id" name="ParentHeartId" data-bind="options: $root.parents, optionsText: 'title', optionsValue: 'heartId', value: parentHeartId">
-            @*<option value="" @(Model == null || !Model.ParentHeartId.HasValue ? "selected=selected" : "")>Нет</option>
-                @foreach (var page in pages.OrderBy(x => x.Title))
-                {
-                    if (Model == null || Model != null && page.HeartId != Model.HeartId)
-                    {
-                        <option value="@page.HeartId" @(Model != null && page.HeartId == Model.ParentHeartId ? "selected=selected" : "")>@page.Title</option>
-                    }
-                }*@
         </select>
     </div>
 
 
     <div class="form-group">
-        <div style="float: right">Длина: <span class="annotation-length">@(Model != null && !String.IsNullOrEmpty(Model.MetaDescription) ? Model.MetaDescription.Length : 0)</span></div>
+        <div style="float: right">Длина: <span class="annotation-length" data-bind="text: metaDescriptionLength"></span></div>
         <label>Meta description</label>
         <span class="rotooltip" data-toggle="tooltip" data-placement="right"
               data-original-title="Описание страницы для поисковых систем. Может использоваться поисковиками для формирования описания сайта в поисковой выдаче. Должно быть длиной не более 130 символов.">
@@ -96,7 +82,6 @@
     </div>
     <div class="form-group">
         <textarea name="MetaDescription" id="MetaDescription" class="page-annotation form-control" data-bind="value: metaDescription"></textarea>
-        @*@Html.TextAreaFor(m => m.MetaDescription, new {@class = "page-annotation form-control"})*@
 
     </div>
     <div class="form-group">
@@ -105,7 +90,6 @@
               data-original-title="Ключевые словосочетания, отражающие содержимое страницы. Не указывайте более 3 словосочетаний - это может привести к санкциям со стороны поисковых систем!">
             <em class="fa fa-question-circle"></em>
         </span>
-        @*@Html.TextBoxFor(m => m.MetaKeywords, new {@class = "page-keywords form-control"})*@
         <input type="text" id="MetaKeywords" name="MetaKeywords" data-bind="value: metaKeywords" class="page-keywords form-control" />
     </div>
     <div class="form-group">
@@ -136,12 +120,12 @@
         </div>
     </div>
     <div class="form-group">
-        <input type="checkbox" data-bind="checked: noIndex" id="SitemapHide" />
+        <input type="checkbox" data-bind="checked: noindex" id="SitemapHide" />
         <label for="sitemapHide">Запретить индексацию страницы</label>
     </div>
     <div class="form-group">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <label>Стили</label>
                 <span class="rotooltip" data-toggle="tooltip" data-placement="right"
                       data-original-title="Дополнительные стили, которые будут добавлены в начале страницы. Тэг <style> не требуется.">
@@ -149,7 +133,7 @@
                 </span>
                 @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Styles, "page_styles", "page-styles", ACEModes.CSS))
             </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <label>Скрипты</label>
                 <span class="rotooltip" data-toggle="tooltip" data-placement="right"
                       data-original-title="Дополнительные скрипты, которые будут добавлены в конце страницы. Тэг <script> не требуется.">
@@ -157,7 +141,7 @@
                 </span>
                 @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Scripts, "page_scripts", "page-scripts", ACEModes.JavaScript))
             </div>
-            <div class="col-md-4">
+            <div class="col-md-12">
                 <label>Доп. meta-заголовки</label>
                 <span class="rotooltip" data-toggle="tooltip" data-placement="right"
                       data-original-title="Дополнительные meta-заголовки страницы.">

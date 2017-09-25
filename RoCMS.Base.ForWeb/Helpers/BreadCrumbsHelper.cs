@@ -60,7 +60,7 @@ namespace RoCMS.Base.ForWeb.Helpers
                         {
                             IsLast = pageUrl == pageUrls.Last(),
                             Title = string.IsNullOrEmpty(page.BreadcrumbsTitle) ? page.Title : page.BreadcrumbsTitle,
-                            Url = $"/{page.CannonicalUrl}"
+                            Url = $"/{page.CanonicalUrl}"
                         });
                     }
                 }

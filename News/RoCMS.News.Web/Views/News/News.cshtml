@@ -9,7 +9,7 @@
 
     if (Model.Categories.Any())
     {
-        ViewBag.CanonicalUrl = Url.RouteUrl(typeof(NewsItem).FullName, new {relativeUrl = Model.CannonicalUrl});
+        ViewBag.CanonicalUrl = Url.RouteUrl(typeof(NewsItem).FullName, new {relativeUrl = Model.CanonicalUrl});
     }
     var userService = DependencyResolver.Current.GetService<ISecurityService>();
     var author = userService.GetUser(Model.AuthorId).Username;

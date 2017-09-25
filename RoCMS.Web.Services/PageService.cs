@@ -33,6 +33,7 @@ namespace RoCMS.Web.Services
 
         public int CreatePage(Page page)
         {
+            page.Type = page.GetType().FullName;
             using (var ts = new TransactionScope())
             {
                 int heartId = _heartService.CreateHeart(page);
@@ -41,8 +42,8 @@ namespace RoCMS.Web.Services
                 _pageGateway.Insert(newPage);
                 var np = Mapper.Map<Page>(newPage);
                 np.CreationDate = DateTime.UtcNow;
-                np.CannonicalUrl = _heartService.GetCanonicalUrl(np.RelativeUrl);
-                AddOrUpdateCacheObject(GetPageCacheKey(newPage.RelativeUrl), np);
+                np.CanonicalUrl = _heartService.GetCanonicalUrl(np.RelativeUrl);
+                AddOrUpdateCacheObject(GetPageCacheKey(page.RelativeUrl), np);
                 _searchService.UpdateIndex(np);
                 ts.Complete();
                 return heartId;
@@ -78,13 +79,13 @@ namespace RoCMS.Web.Services
         
         public void UpdatePage(Page page)
         {
-            var original = _pageGateway.SelectOne(page.HeartId);
+            var original = _heartService.GetHeart(page.HeartId);
             using (var ts = new TransactionScope())
             {
                 _heartService.UpdateHeart(page);
                 var dataPage = Mapper.Map<Data.Models.Page>(page);
                 _pageGateway.Update(dataPage);
-                page.CannonicalUrl = _heartService.GetCanonicalUrl(page.RelativeUrl);
+                page.CanonicalUrl = _heartService.GetCanonicalUrl(page.RelativeUrl);
                 _searchService.UpdateIndex(page);
                 ts.Complete();
             }
@@ -109,7 +110,7 @@ namespace RoCMS.Web.Services
                 foreach (var page in res)
                 {
                     _heartService.Fill(page);
-                    page.CannonicalUrl = _heartService.GetCanonicalUrl(page.RelativeUrl);
+                    page.CanonicalUrl = _heartService.GetCanonicalUrl(page.RelativeUrl);
                 }
                 return res;
             }

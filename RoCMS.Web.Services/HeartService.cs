@@ -100,7 +100,7 @@ namespace RoCMS.Web.Services
             if (dataRes == null)
                 return null;
             var res = Mapper.Map<Heart>(dataRes);
-            res.CannonicalUrl = GetCanonicalUrl(res.RelativeUrl);
+            res.CanonicalUrl = GetCanonicalUrl(res.RelativeUrl);
             return res;
         }
 
@@ -129,7 +129,18 @@ namespace RoCMS.Web.Services
             var res = Mapper.Map<ICollection<Heart>>(dataRes);
             foreach (var heart in res)
             {
-                heart.CannonicalUrl = GetCanonicalUrl(heart.HeartId);
+                heart.CanonicalUrl = GetCanonicalUrl(heart.HeartId);
+            }
+            return res;
+        }
+
+        public ICollection<Heart> GetHearts(IEnumerable<int> heartIds)
+        {
+            var dataRes = _heartGateway.SelectByIds(heartIds);
+            var res = Mapper.Map<ICollection<Heart>>(dataRes);
+            foreach (var heart in res)
+            {
+                heart.CanonicalUrl = GetCanonicalUrl(heart.HeartId);
             }
             return res;
         }
@@ -146,7 +157,7 @@ namespace RoCMS.Web.Services
             if (dataRes == null)
                 return null;
             var res = Mapper.Map<Heart>(dataRes);
-            res.CannonicalUrl = GetCanonicalUrl(res.RelativeUrl);
+            res.CanonicalUrl = GetCanonicalUrl(res.RelativeUrl);
             return res;
         }
 

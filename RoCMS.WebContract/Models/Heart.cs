@@ -27,7 +27,7 @@ namespace RoCMS.Web.Contract.Models
         public string Scripts { get; set; }
         public string Layout { get; set; }
         public string AdditionalHeaders { get; set; }
-        public string CannonicalUrl { get; set; }
+        public string CanonicalUrl { get; set; }
         public string Type { get; set; }
 
         public void FillHeart(Heart anotherHeart)
@@ -45,7 +45,7 @@ namespace RoCMS.Web.Contract.Models
             this.Scripts = anotherHeart.Scripts;
             this.Layout = anotherHeart.Layout;
             this.AdditionalHeaders = anotherHeart.AdditionalHeaders;
-            this.CannonicalUrl = anotherHeart.CannonicalUrl;
+            this.CanonicalUrl = anotherHeart.CanonicalUrl;
             this.Type = anotherHeart.Type;
         }
     }

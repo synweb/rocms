@@ -1,172 +1,234 @@
-﻿//App.Admin.News.NewsItem = function () {
-//    var self = this;
-//    self.newsId = ko.observable();
-//    self.title = ko.observable();
-//    self.relativeUrl = ko.observable();
-//    self.text = ko.observable();
-//    self.postingDate = ko.observable();
-//    self.description = ko.observable();
-//    self.metaDescription = ko.observable();
-//    self.keywords = ko.observable();
-//    self.creationDate = ko.observable();
-//    self.authorId = ko.observable();
-//    self.imageId = ko.observable();
-//    self.commentTopicId = ko.observable();
-//    self.tags = ko.observable();
-//    self.recordType = ko.observable();
-//    self.filename = ko.observable();
-//    self.videoId = ko.observable();
-//    self.categories = ko.observableArray();
-//}
+﻿/// <reference path="/Content/admin/ro/js/rocms.heart.js" />
 
-//App.Admin.News.NewsItemFunctions = {
 
-//    addCategory: function () {
-//        var self = this;
-//        showNewsCategoriesDialog(function (category) {
-//            var result = $.grep(self.categories(), function (e) {
-//                return e.id() == category.id;
-//            });
-//            if (result.length == 0) {
-//                self.categories.push(ko.mapping.fromJS(category));
-//            }
-//        });
-//    },
-//    removeCategory: function (category, parent) {
-//        parent.categories.remove(function (item) {
-//            return item.id() == category.id();
-//        });
-//    },
-//}
 
-function initNewsEditorKo(context, newsId) {
+App.Admin.News.NewsItem = function () {
+    var self = this;
 
-    var vm = {
-        categories: ko.observableArray(),
-        addCategory: function () {
-            var self = this;
-            showNewsCategoriesDialog(function (category) {
-                var result = $.grep(self.categories(), function (e) {
-                    return e.id() == category.id;
-                });
-                if (result.length == 0) {
-                    self.categories.push(ko.mapping.fromJS(category));
-                }
-            });
-        },
-        removeCategory: function (category, parent) {
-            parent.categories.remove(function (item) {
-                return item.id() == category.id();
-            });
-        },
-        save: function (url, context, onSuccess) {
-            
-            var $form = context.find("form");
-            $.validator.unobtrusive.parse($form, true);
-            if ($form.valid()) {
-                blockUI();
-                var title = $('.news-title').val();
-                var relUrl = $('.news-relative-url').val();
-                var text = getTextFromEditor('news_content');
-                var tags = $('.news-tags').val();
-                var keywords = $('.news-keywords').val();
-                var description = $('.news-description').val();
-                var metaDescription = $('.news-meta-description').val();
-                var recType = $('.rectype input[type = "radio"]:checked').val();
-                var postingDate = $('.news-publish-date').datepicker("getDate");
-                var eventDate = $('.news-event-date').datepicker("getDate");
-                var relatedNewsItem = $('.news-related-item').val();
-                postingDate.setHours($('.news-publish-time').data('timepicker').hour);
-                postingDate.setMinutes($('.news-publish-time').data('timepicker').minute);
-                if (eventDate) {
-                    eventDate.setHours($('.news-event-time').data('timepicker').hour);
-                    eventDate.setMinutes($('.news-event-time').data('timepicker').minute);
-                }
-                var id = $(".news-items-info").data("newsId");
-                var imageId = $(".news-img").data("id");
-                var filename = $(".picked-file").data("filename");
-                var videoId = $(".video-picked .video-thumb").data("videoId");
+    $.extend(self, new App.Admin.Heart());
 
-                var blogId = $(".news-blog-id").val();
+    self.text = ko.observable();
+    self.postingDate = ko.observable();
+    self.eventDate = ko.observable();
 
-                var cats = ko.toJS(vm.categories());
+    self.description = ko.observable();
 
-                postJSON(url, {
-                    Title: title,
-                    Text: text,
-                    Keywords: keywords,
-                    Description: description,
-                    MetaDescription: metaDescription,
-                    PostingDate: postingDate,
-                    NewsId: id,
-                    ImageId: imageId,
-                    RelativeUrl: relUrl,
-                    Tags: tags,
-                    RecordType: recType,
-                    Filename: filename,
-                    VideoId: videoId,
-                    Categories: cats,
-                    EventDate: eventDate,
-                    BlogId: blogId,
+    self.creationDate = ko.observable();
+    self.authorId = ko.observable();
+    self.imageId = ko.observable();
+    self.commentTopicId = ko.observable();
+    self.tags = ko.observable();
+    self.recordType = ko.observable();
+    self.filename = ko.observable();
+    self.videoId = ko.observable();
+    self.categories = ko.observableArray();
 
-                    RelatedNewsItemId: relatedNewsItem
-                }, function (result) {
-                    onSuccess(result);
-                }).fail(function () {
-                    smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
-                })
-                    .always(function () {
-                        unblockUI();
-                    });
-            } else {
-                $form.validate().focusInvalid();
-            }
-        },
-        update: function () {
-            var id = $(".news-items-info").data("newsId");
-            var url = "/api/news/news/" + id + "/update";
-            vm.save(url, $(".news-items-info"), function(res) {
-                if (res.succeed) {
-                    smartAlert("Новость обновлена", 3);
-                } else {
-                    smartAlert("Произошла ошибка");
-                }
+    self.blogId = ko.observable(1);
 
-            });
-            return false;
-        },
-        create: function () {
-            var url = "/api/news/news/create";
-            vm.save(url, $(".news-items-info"), function (res) {
-                if (res.succeed) {
-                    window.location.href = "/NewsEditor/EditNews/" + res.data;
-                }
-                else {
-                    smartAlert("Произошла ошибка");
-                }
-            });
-            return false;
+}
+
+App.Admin.News.NewsItemValidationMapping = {
+
+}
+
+$.extend(App.Admin.News.NewsItemValidationMapping, App.Admin.HeartValidationMapping);
+
+App.Admin.News.NewsItemFunctions = {
+    initNewsItem: function () {
+        var self = this;
+        self.initHeart();
+
+        if (self.text()) {
+            setTextToEditor("news_content", self.text());
         }
-    };
-    if (newsId) {
-        getJSON("/api/news/news/" + newsId + "/get", null, function (res) {
-            if (res.succeed) {
-                $(res.data.categories).each(function () {
-                    vm.categories.push(ko.mapping.fromJS(this));
-                });
+
+
+        $('.news-publish-date').datepicker("setDate", self.postingDate());
+        $('.news-publish-time').timepicker('setTime', self.postingDate());
+
+        if (self.eventDate()) {
+            $('.news-event-date').datepicker("setDate", self.eventDate());
+            $('.news-event-time').timepicker('setTime', self.eventDate());
+        }
+
+
+    },
+
+    prepareNewsItemForUpdate: function () {
+        var self = this;
+        self.prepareHeartForUpdate();
+
+        var content = getTextFromEditor('news_content');
+        self.text(content);
+
+
+        var postingDate = $('.news-publish-date').datepicker("getDate");
+        var eventDate = $('.news-event-date').datepicker("getDate");
+
+        postingDate.setHours($('.news-publish-time').data('timepicker').hour);
+        postingDate.setMinutes($('.news-publish-time').data('timepicker').minute);
+
+        self.postingDate(postingDate);
+
+        if (eventDate) {
+            eventDate.setHours($('.news-event-time').data('timepicker').hour);
+            eventDate.setMinutes($('.news-event-time').data('timepicker').minute);
+        }
+
+        self.eventDate(eventDate);
+
+        var imageId = $(".news-img").data("id");
+
+        self.imageId(imageId);
+
+        var filename = $(".picked-file").data("filename");
+
+        self.filename(filename);
+
+        var videoId = $(".video-picked .video-thumb").data("videoId");
+
+        self.videoId(videoId);
+
+    },
+    addCategory: function () {
+        var self = this;
+        showNewsCategoriesDialog(function (category) {
+            var result = $.grep(self.categories(), function (e) {
+                return e.id() == category.id;
+            });
+            if (result.length == 0) {
+                self.categories.push(ko.mapping.fromJS(category));
             }
         });
-    }
-    if (context) {
-        ko.applyBindings(vm, context[0]);
-    } else {
-        ko.applyBindings(vm);
+    },
+    removeCategory: function (category, parent) {
+        parent.categories.remove(function (item) {
+            return item.id() == category.id();
+        });
+    },
+    save: function (url, onSuccess) {
+        var self = this;
+        postJSON(url, ko.toJS(self), function (result) {
+            if (result.succeed === true) {
+                if (onSuccess) {
+                    onSuccess(result.data);
+                }
+            }
+        })
+            .fail(function () {
+                smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+            })
+            .always(function () {
+                unblockUI();
+            });
+    },
+
+
+
+    update: function () {
+        var self = this;
+        var url = "/api/news/news/" + self.heartId() + "/update";
+        self.save(url, function (res) {
+
+            if (res.succeed) {
+                smartAlert("Новость обновлена", 3);
+            } else {
+                smartAlert("Произошла ошибка");
+            }
+
+        });
+        return false;
+    },
+    create: function () {
+        var self = this;
+        var url = "/api/news/news/create";
+        self.save(url, function (res) {
+            if (res.succeed) {
+                blockUI();
+                window.location.href = "/NewsEditor/EditNews/" + res.data;
+            }
+            else {
+                smartAlert("Произошла ошибка");
+            }
+        });
+        return false;
     }
 }
 
-function newsEditorLoaded(onSelected, context) {
-    var newsId = $(".news-items-info").data("newsId");
-    initNewsEditorKo(context, newsId);
+$.extend(App.Admin.News.NewsItemFunctions, App.Admin.HeartFunctions);
+
+function initNewsEditorKo(newsId) {
+
+    var vm = {
+
+        newsItem: ko.validatedObservable($.extend(new App.Admin.News.NewsItem(), App.Admin.News.NewsItemFunctions)),
+
+        parents: ko.observableArray(),
+
+        save: function () {
+
+            vm.newsItem().prepareNewsItemForUpdate();
+            if (vm.errors()().length) {
+                vm.errors().showAllMessages();
+                return false;
+            }
+
+            if (vm.newsItem().heartId()) {
+                vm.newsItem().update();
+            } else {
+                vm.newsItem().create();
+            }
+            return false;
+        }
+
+
+    };
+
+    vm.parents.push({ title: "Нет", heartId: null });
+
+    vm.errors = ko.computed(function () {
+        return ko.validation.group(vm.newsItem(), { deep: true });
+    });
+
+
+    blockUI();
+    $.when(
+            getJSON("/api/news/news/get", "", function (res) {
+                $(res.data).each(function () {
+                    vm.parents.push(this);
+                });
+            }),
+            getJSON("/api/news/news/" + newsId + "/get", "", function (res) {
+                if (res.succeed && res.data) {
+                    var newsItem = $.extend(ko.mapping.fromJS(res.data, App.Admin.News.NewsItemValidationMapping), App.Admin.News.NewsItemFunctions);
+                    vm.newsItem(newsItem);
+
+                    //$(res.data.categories).each(function () {
+                    //    vm.newsItem().categories.removeAll(); 
+                    //    vm.newsItem().categories.push(ko.mapping.fromJS(this));
+                    //});
+                }
+
+                vm.newsItem().initNewsItem();
+            })
+
+    ).then(
+        function () {
+            vm.parents.remove(function (item) { return item.heartId === vm.newsItem().heartId() });
+
+            ko.applyBindings(vm);
+        },
+        function () {
+            smartAlert("Произошла ошибка");
+        }
+    ).always(function () {
+        unblockUI();
+    });
+}
+
+function newsEditorLoaded(newsId) {
+
+    initNewsEditorKo(newsId);
     $('#adminContent').on("click", ".news-img", function () {
         pickImage(this, function () {
             $(".removeNewsImage").show();
@@ -189,19 +251,7 @@ function newsEditorLoaded(onSelected, context) {
         $(".description-length").text(val.length);
     });
 
-    var saveNews = function () {
 
-        
-    };
-
-    $('#adminContent').on("click", "#acceptNews", function () {
-        
-    });
-
-    $('#adminContent').on("click", "#createNews", function () {
-        
-    });
-    
     $('#adminContent').on("click", ".news-summary .button-delete", function () {
         if (!confirmRemoval()) {
             return false;
@@ -210,7 +260,7 @@ function newsEditorLoaded(onSelected, context) {
         var container = $(this).parents(".news-summary");
         var id = container.data("newsId");
         var url = "/api/news/news/" + id + "/delete";
-        postJSON(url, "", function () {            
+        postJSON(url, "", function () {
             container.hide(1000, function () { container.remove(); });
         })
             .fail(function () {
@@ -221,14 +271,14 @@ function newsEditorLoaded(onSelected, context) {
             });
         return false;
     });
-    
+
     $('#adminContent').on("click", ".admin-news-pages a", function () {
-        
+
         var pageurl = $(this).attr('href');
         blockUI();
         $.ajax({
             url: pageurl,
-            success: function(data) {
+            success: function (data) {
                 $('#adminContent').html(data);
             }
         }).fail(function () {
@@ -252,7 +302,7 @@ function newsEditorLoaded(onSelected, context) {
         //stop refreshing to the page given in
         return false;
     });
-    
+
     $('#adminContent').on("change", ".admin-news #admin-news-on-page-select", function () {
         blockUI();
         var count = $(this).val();
@@ -260,8 +310,8 @@ function newsEditorLoaded(onSelected, context) {
             var url = '/NewsEditor/News';
             $.ajax({
                 url: url,
-                success: function(data) {
-                    $('#adminContent').html(data);                   
+                success: function (data) {
+                    $('#adminContent').html(data);
                 }
             });
         })
@@ -339,8 +389,8 @@ function newsEditorLoaded(onSelected, context) {
         return false;
     });
 
-    $(".pick-video").click(function() {
-        showPromptDialog("Добавление видео", "Скопируйте в поле ссылку на видео", "", "Добавить", "Отмена", function(data) {
+    $(".pick-video").click(function () {
+        showPromptDialog("Добавление видео", "Скопируйте в поле ссылку на видео", "", "Добавить", "Отмена", function (data) {
             var id = parseYoutubeVideo(data.promptValue);
             if (id) {
                 $(".video-picked .video-thumb").attr("src", "http://img.youtube.com/vi/" + id + "/default.jpg");
@@ -356,7 +406,7 @@ function newsEditorLoaded(onSelected, context) {
         }, null, null, null, 170);
     });
 
-    $(".picked-video-remove").click(function() {
+    $(".picked-video-remove").click(function () {
 
         $(".video-picked .video-thumb").attr("src", emptyImg);
         $(".video-picked .video-thumb").data("videoId", "");

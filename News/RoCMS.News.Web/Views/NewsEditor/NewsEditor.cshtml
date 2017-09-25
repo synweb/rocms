@@ -8,7 +8,6 @@
 @using RoCMS.Web.Contract.Extensions
 @model RoCMS.News.Contract.Models.NewsItem
 
-
 @{
     if (!Request.IsAjaxRequest())
     {
@@ -41,247 +40,178 @@
                         Model.EventDate.Value.ApplySiteTimezone() :
                         (DateTime?)null;
 
-    INewsItemService newsItemService = DependencyResolver.Current.GetService<INewsItemService>();
 
-    int total;
-    var allNews = newsItemService.GetNewsPage(new NewsFilter() {OnlyPosted = false, BlogId = 1}, 1, int.MaxValue, out total);
-    if (Model != null)
-    {
-        var current = allNews.FirstOrDefault(x => x.HeartId == Model.HeartId);
-        if (current != null)
-        {
-            allNews.Remove(current);
-        }
-    }
 }
 
-<div class="news-items-info" data-news-id="@((Model == null) ? 0 : Model.HeartId)">
-    <form class="news-info row">
-        <input type="hidden" class="news-blog-id" value="@((Model == null) ? 1 : Model.BlogId)" />
-        <div class="col-md-8 col-lg-9">
-            <ul>
-                <li>
-                    <div style="float: right">Длина заголовка: <span class="title-length">@(Model != null && !String.IsNullOrEmpty(Model.Title) ? Model.Title.Length : 0)</span></div>
-                    @Html.LabelFor(x => x.Title, Strings.CreateNews_Title)
-                    @Html.ValidationMessageFor(m => m.Title)
-                </li>
-                <li>
-                    @Html.TextBoxFor(x => x.Title, new { @class = "news-title form-control" })
 
-                </li>
-                <li>
-                    @Html.LabelFor(x => x.RelativeUrl, Strings.CreateNews_RelativeUrl)
-                    @Html.ValidationMessageFor(m => m.RelativeUrl)
-                    @if (Model != null && !String.IsNullOrEmpty(Model.RelativeUrl))
-            {
-                        <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = Model.RelativeUrl})">Перейти к новости</a>
-                    }
-                </li>
-                <li>
-                    @Html.TextBoxFor(x => x.RelativeUrl, new { @class = "news-relative-url form-control" })
+<div class="news-items-info" data-bind="with: newsItem">
 
-                </li>
-                <li>
-                    <div class="content-toggle-container">
-                        <button type="button" class=" btn btn-info btn-xs" id="toggle-ck"></button>
-                        @Html.LabelFor(m => m.Text, Strings.CreateNews_Text)
+    <div class="col-md-6">
+        <form class="news-info">
+            <div class="form-group">
+                <div class="content-toggle-container">
+                    <button type="button" class=" btn btn-info btn-xs" id="toggle-ck"></button>
+                    @Html.LabelFor(m => m.Text, Strings.CreateNews_Text)
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Partial("WYSIWYG", new EditorVM(null, "news_content", "news-content", ACEModes.HTML) { ShowCommonButtons = true })
+                @Html.ValidationMessageFor(m => m.Text)
+            </div>
+            <div class="form-group">
+                <div style="float: right">Длина описания: <span class="description-length">@(Model != null && !String.IsNullOrEmpty(Model.Description) ? Model.Description.Length : 0)</span></div>
+                @Html.LabelFor(m => m.Description, Strings.CreateNews_Description)
+                @Html.ValidationMessageFor(m => m.Description)
+            </div>
+            <div class="form-group">
+                <textarea name="Description" data-bind="value: description" class="news-description form-control"></textarea>
+            </div>
+            <div class="form-group"><label>Рубрики</label></div>
+            <div class="form-group">
+                <script type="text/x-jquery-tmpl" id="category-item-template">
+                    <span class="category-item">
+                        <span data-bind="text: name"></span>
+                        <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeCategory($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+                    </span>
+                </script>
+                <div>
+                    <div class="categories-row news-item-categories" data-bind="template: { name: 'category-item-template', foreach: $root.parents }">
                     </div>
-
-                </li>
-                <li>
-                    @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Text, "news_content", "news-content", ACEModes.HTML) { ShowCommonButtons = true })
-                    @Html.ValidationMessageFor(m => m.Text)
-                </li>
-                <li>
-                    <div style="float: right">Длина описания: <span class="description-length">@(Model != null && !String.IsNullOrEmpty(Model.Description) ? Model.Description.Length : 0)</span></div>
-                    @Html.LabelFor(m => m.Description, Strings.CreateNews_Description)
-                    @Html.ValidationMessageFor(m => m.Description)
-                </li>
-                <li>
-                    @Html.TextAreaFor(m => m.Description, new { @class = "news-description form-control" })
-
-                </li>
-                <li><label>Рубрики</label></li>
-                <li>
-                    <script type="text/x-jquery-tmpl" id="category-item-template">
-                        <span class="category-item">
-                            <span data-bind="text: name"></span>
-                            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeCategory($data, $parent);}"><em class="fa fa-trash-o"></em></a>
-                        </span>
-                    </script>
-                    <div>
-                        <div class="categories-row news-item-categories" data-bind="template: { name: 'category-item-template', foreach: categories }">
-                        </div>
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
-                    </div>
-
-                </li>
-                <li>
-                    @Html.LabelFor(m => m.MetaDescription, "Meta Description")
-                    @Html.ValidationMessageFor(m => m.MetaDescription)
-                </li>
-                <li>
-                    @Html.TextAreaFor(m => m.MetaDescription, new { @class = "news-meta-description form-control" })
-
-                </li>
-                <li>
-                    @Html.LabelFor(m => m.MetaKeywords, "Meta Keywords")
-                    @Html.ValidationMessageFor(m => m.MetaKeywords)
-                </li>
-                <li>
-                    @Html.TextBoxFor(m => m.MetaKeywords, new { @class = "news-keywords form-control" })
-
-                </li>
-                <li>
-                    @Html.LabelFor(m => m.ParentHeartId, "Родительская запись")
-                </li>
-                <li>
-                    <select class="form-control news-related-item" name="RelatedNewsItemId">
-                        <option value="" @(Model == null || !Model.ParentHeartId.HasValue ? "selected=selected" : "")>Нет</option>
-                        @foreach (var news in allNews)
-                        {
-                            <option value="@news.HeartId" @(Model != null && news.HeartId == Model.ParentHeartId ? "selected=selected" : "")>@news.Title</option>
-                        }
-                    </select>
-
-                </li>
-
-
-            </ul>
-        </div>
-        <div class="col-md-4 col-lg-3">
-            <ul>
-                <li>
-                    @Html.LabelFor(m => m.PostingDate, Strings.CreateNews_PostingDateTime)
-                </li>
-                <li>
-                    <input type="text" class="news-publish-date form-control"
-                           data-date-format="dd-mm-yyyy" value="@string.Format("{0:00}.{1:00}.{2}", postingDate.Value.Day, postingDate.Value.Month, postingDate.Value.Year)" />
-                    <input type="text" class="news-publish-time form-control" value="@string.Format("{0:00}:{1:00}", postingDate.Value.Hour, postingDate.Value.Minute)" />
-                </li>
-                <li><label>Тип записи</label></li>
-                <li>
-                    @{
-                        RecordType type = Model != null ? Model.RecordType : RecordType.Default;
-                    }
-                    <fieldset class="rectype">
-                        <div>
-                            <input type="radio" @(type == RecordType.Default ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_default" value="Default">
-                            <label for="rectype_default" class="post-format-icon">
-                                <i class="fa fa-newspaper-o fa-lg fa-fw"></i>&nbsp;Стандартный
-                            </label>
-
-                        </div>
-                        <div>
-                            <input type="radio" @(type == RecordType.Link ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_link" value="Link">
-                            <label for="rectype_link" class="post-format-icon">
-                                <i class="fa fa-external-link fa-lg fa-fw"></i>&nbsp;Ссылка
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" @(type == RecordType.Image ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_image" value="Image">
-                            <label for="rectype_image" class="post-format-icon">
-                                <i class="fa fa-picture-o fa-lg fa-fw"></i>&nbsp;Картинка
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" @(type == RecordType.Quote ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_quote" value="Quote">
-                            <label for="rectype_quote" class="post-format-icon">
-                                <i class="fa fa-quote-left fa-lg fa-fw"></i>&nbsp;Цитата
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" @(type == RecordType.Video ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_video" value="Video">
-                            <label for="rectype_video" class="post-format-icon">
-                                <i class="fa fa-video-camera fa-lg fa-fw"></i>&nbsp;Видео
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" @(type == RecordType.File ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_file" value="File">
-                            <label for="rectype_file" class="post-format-icon">
-                                <i class="fa fa-file-zip-o fa-lg fa-fw"></i>&nbsp;Файл
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" @(type == RecordType.Event ? "checked=checked" : "") name="post_format" class="post-format" id="rectype_event" value="Event">
-                            <label for="rectype_event" class="post-format-icon">
-                                <i class="fa fa-flash fa-lg fa-fw"></i>&nbsp;Мероприятие
-                            </label>
-                        </div>
-
-            </fieldset>
-        </li>
-        <li>
-            @Html.LabelFor(m => m.EventDate, "Дата и время мероприятия")
-        </li>
-        <li>
-            <input type="text" class="news-event-date form-control"
-                   data-date-format="dd-mm-yyyy" value="@(eventDate != null ? string.Format("{0:00}.{1:00}.{2}", eventDate.Value.Day, eventDate.Value.Month, eventDate.Value.Year) : "")"/>
-            <input type="text" class="news-event-time form-control" value="@(eventDate != null ? string.Format("{0:00}:{1:00}", eventDate.Value.Hour, eventDate.Value.Minute) : "")"/>
-        </li>
-        <li>
-            @Html.LabelFor(m => m.ImageId, Strings.CreateNews_Image)
-        </li>
-        <li>
-            @{
-                string imageId = String.Empty;
-                if (Model != null)
-                {
-                    imageId = Model.ImageId;
+                    <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.PostingDate, Strings.CreateNews_PostingDateTime)
+            </div>
+            <div class="form-group">
+                <input type="text" class="news-publish-date form-control"
+                       data-date-format="dd-mm-yyyy" value="@string.Format("{0:00}.{1:00}.{2}", postingDate.Value.Day, postingDate.Value.Month, postingDate.Value.Year)" />
+                <input type="text" class="news-publish-time form-control" value="@string.Format("{0:00}:{1:00}", postingDate.Value.Hour, postingDate.Value.Minute)" />
+            </div>
+            <div class="form-group"><label>Тип записи</label></div>
+            <div class="form-group">
+                @{
+                    RecordType type = Model != null ? Model.RecordType : RecordType.Default;
                 }
-                <img class="news-img pointer img-responsive" src="@imgSrc" data-id="@imageId"/>
+                <fieldset class="rectype">
+                    <div>
+                        <input type="radio" data-bind="checked: recordType" name="post_format" class="post-format" id="rectype_default" value="Default">
+                        <label for="rectype_default" class="post-format-icon">
+                            <i class="fa fa-newspaper-o fa-lg fa-fw"></i>&nbsp;Стандартный
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" data-bind="checked: recordType" name="post_format" class="post-format" id="rectype_link" value="Link">
+                        <label for="rectype_link" class="post-format-icon">
+                            <i class="fa fa-external-link fa-lg fa-fw"></i>&nbsp;Ссылка
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" data-bind="checked: recordType"  name="post_format" class="post-format" id="rectype_image" value="Image">
+                        <label for="rectype_image" class="post-format-icon">
+                            <i class="fa fa-picture-o fa-lg fa-fw"></i>&nbsp;Картинка
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" data-bind="checked: recordType"  name="post_format" class="post-format" id="rectype_quote" value="Quote">
+                        <label for="rectype_quote" class="post-format-icon">
+                            <i class="fa fa-quote-left fa-lg fa-fw"></i>&nbsp;Цитата
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" data-bind="checked: recordType"  name="post_format" class="post-format" id="rectype_video" value="Video">
+                        <label for="rectype_video" class="post-format-icon">
+                            <i class="fa fa-video-camera fa-lg fa-fw"></i>&nbsp;Видео
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" data-bind="checked: recordType" name="post_format" class="post-format" id="rectype_file" value="File">
+                        <label for="rectype_file" class="post-format-icon">
+                            <i class="fa fa-file-zip-o fa-lg fa-fw"></i>&nbsp;Файл
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" data-bind="checked: recordType" name="post_format" class="post-format" id="rectype_event" value="Event">
+                        <label for="rectype_event" class="post-format-icon">
+                            <i class="fa fa-flash fa-lg fa-fw"></i>&nbsp;Мероприятие
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.EventDate, "Дата и время мероприятия")
+            </div>
+            <div class="form-group">
+                <input type="text" class="news-event-date form-control"
+                       data-date-format="dd-mm-yyyy" @*value="@(eventDate != null ? string.Format("{0:00}.{1:00}.{2}", eventDate.Value.Day, eventDate.Value.Month, eventDate.Value.Year) : "")"*@ />
+                <input type="text" class="news-event-time form-control" @*value="@(eventDate != null ? string.Format("{0:00}:{1:00}", eventDate.Value.Hour, eventDate.Value.Minute) : "")"*@ />
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ImageId, Strings.CreateNews_Image)
+            </div>
+            <div class="form-group">
+                @{
+                    string imageId = String.Empty;
+                    if (Model != null)
+                    {
+                        imageId = Model.ImageId;
+                    }
+                    <img class="news-img pointer img-responsive" src="@imgSrc" data-id="@imageId" />
 
                         <input type="button" class="btn btn-danger btn-xs removeNewsImage" value="Убрать картинку" style="vertical-align: top; @(String.IsNullOrWhiteSpace(imageId) ? "display:none;" : "")" />
 
-                    }
-                </li>
-                <li>
-                    <label for="newsTags">Теги</label>
-                </li>
-                <li>
-                    <input id="newsTags" class="form-control news-tags form-control" value="@(Model != null && !String.IsNullOrEmpty(Model.Tags) ? Model.Tags : "")" />
-                </li>
-                <li>
-                    <label>Прикреплённый файл</label>
-                </li>
-                <li>
-                    @{
-                        string file = Model != null ? Model.Filename : null;
-                        bool filePicked = !string.IsNullOrEmpty(file);
-                    }
-                    <div class="file-not-picked" style="@(filePicked ? "display:none" : "")">
-                        <a href="#" class="pick-file"><i class="fa fa-file-zip-o"></i>&nbsp;Выбрать</a>
-                    </div>
-                    <div class="file-picked" style="@(filePicked ? "" : "display:none")">
-                        <span class="picked-file" data-filename="@file">@file</span>
-                        <a class="picked-file-remove" href="#"><i class="fa fa-times"></i></a>
-                        <a class="picked-file-download" target="_blank" download="@file" href="@(filePicked ? "/File/Get/" + file + "/" : "/")"><i class="fa fa-download"></i></a>
-                    </div>
-                </li>
-                <li>
-                    <label>Видео</label>
-                </li>
-                <li>
-                    @{
-                        string videoId = Model != null ? Model.VideoId : null;
-                        bool videoPicked = !string.IsNullOrEmpty(videoId);
-                    }
-                    <div class="video-not-picked" style="@(videoPicked ? "display:none" : "")">
-                        <a href="#" class="pick-video"><i class="fa fa-file-video-o"></i>&nbsp;Выбрать</a>
-                    </div>
-                    <div class="video-picked" style="@(videoPicked ? "" : "display:none")">
-                        <img class="video-thumb" src="@(videoPicked ? "http://img.youtube.com/vi/" + videoId + "/default.jpg" : emptyImg)" data-video-id="@videoId" />
-                        <a class="picked-video-remove" href="#"><i class="fa fa-times"></i></a>
-                        <a class="picked-video-watch" target="_blank" href="https://youtu.be/@videoId"><i class="fa fa-eye"></i></a>
-                    </div>
-                </li>
-            </ul>
-        </div>
+                }
+            </div>
+            <div class="form-group">
+                <label for="newsTags">Теги</label>
+            </div>
+            <div class="form-group">
+                <input id="newsTags" data-bind="value: tags" class="form-control news-tags form-control" />
+            </div>
+            <div class="form-group">
+                <label>Прикреплённый файл</label>
+            </div>
+            <div class="form-group">
+                @{
+                    string file = Model != null ? Model.Filename : null;
+                    bool filePicked = !string.IsNullOrEmpty(file);
+                }
+                <div class="file-not-picked" style="@(filePicked ? "display:none" : "")">
+                    <a href="#" class="pick-file"><i class="fa fa-file-zip-o"></i>&nbsp;Выбрать</a>
+                </div>
+                <div class="file-picked" style="@(filePicked ? "" : "display:none")">
+                    <span class="picked-file" data-filename="@file">@file</span>
+                    <a class="picked-file-remove" href="#"><i class="fa fa-times"></i></a>
+                    <a class="picked-file-download" target="_blank" download="@file" href="@(filePicked ? "/File/Get/" + file + "/" : "/")"><i class="fa fa-download"></i></a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Видео</label>
+            </div>
+            <div class="form-group">
+                @{
+                    string videoId = Model != null ? Model.VideoId : null;
+                    bool videoPicked = !string.IsNullOrEmpty(videoId);
+                }
+                <div class="video-not-picked" style="@(videoPicked ? "display:none" : "")">
+                    <a href="#" class="pick-video"><i class="fa fa-file-video-o"></i>&nbsp;Выбрать</a>
+                </div>
+                <div class="video-picked" style="@(videoPicked ? "" : "display:none")">
+                    <img class="video-thumb" src="@(videoPicked ? "http://img.youtube.com/vi/" + videoId + "/default.jpg" : emptyImg)" data-video-id="@videoId" />
+                    <a class="picked-video-remove" href="#"><i class="fa fa-times"></i></a>
+                    <a class="picked-video-watch" target="_blank" href="https://youtu.be/@videoId"><i class="fa fa-eye"></i></a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6">
+        @Html.Partial("~/Views/Admin/_HeartEditor.cshtml")
+    </div>
 
-    </form>
 
 
-    <div class="fixed-action-menu">
+
+    @*<div class="fixed-action-menu">
         @if ((string)ViewBag.Action == "Create")
         {
             <a id="createNews" class="button-accept btn btn-success" onclick="true" data-bind="click: create"><i class="fa fa-check"></i> @Strings.CreateNews_CreateButton</a>
@@ -293,17 +223,23 @@
             <a onclick="true" class="btn btn-danger button-delete" data-news-id="@Model.HeartId"><i class="fa fa-times"></i> Удалить</a>
         }
         <a class="btn btn-default" href="/NewsEditor/News">@Strings.EditNews_ReturnToNews</a>
-    </div>
+    </div>*@
+</div>
+
+<div class="fixed-action-menu">
+    <a data-bind="click: save" class="button-accept btn btn-success" title="@Strings.EditNews_AcceptButton" href="#"><i class="fa fa-check"></i> @Strings.EditNews_AcceptButton</a>
+
+    <a data-bind="visible: newsItem().editMode, attr: {href: '/' + newsItem().canonicalUrl()}" class="btn btn-warning"><i class="fa fa-share"></i> Перейти</a>
+    <a class="btn btn-default" href="/Admin/Pages">@Strings.EditNews_ReturnToNews</a>
 </div>
 
 
-    @Js("/bin/Content/admin/news/js/edit.js")
-    @Css("/bin/Content/admin/news/css/style.css")
-
-    @JsInline(
+@Js("/bin/Content/admin/news/js/edit.js")
+@Css("/bin/Content/admin/news/css/style.css")
+@JsInline(
     @<script type="text/javascript">
         $(function () {
-            newsEditorLoaded();
+            newsEditorLoaded("@(Model != null ? Model.HeartId : -1)");
 
             $(".button-delete").click(function () {
                 if (!confirmRemoval()) {

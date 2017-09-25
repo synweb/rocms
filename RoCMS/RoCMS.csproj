@@ -224,6 +224,7 @@
     <Content Include="Content\adminTemplate\css\style.css" />
     <Content Include="Content\adminTemplate\js\main.js" />
     <Content Include="Content\admin\ro\js\rocms.albums.js" />
+    <Content Include="Content\admin\ro\js\rocms.heart.js" />
     <Content Include="Content\admin\ro\js\rocms.video.album.edit.js" />
     <Content Include="Content\admin\ro\js\rocms.video.albums.js" />
     <Content Include="Content\admin\ro\css\custom.css" />
@@ -792,6 +793,7 @@
     <Content Include="Views\Shared\_NextDateTime.cshtml" />
     <Content Include="Views\Developer\MagicButton.cshtml" />
     <Content Include="Views\Shared\_BlockByName.cshtml" />
+    <Content Include="Views\Admin\_HeartEditor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

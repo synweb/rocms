@@ -35,6 +35,20 @@ namespace RoCMS.ApiControllers
             return _pageService.GetPages();
         }
 
+        public ResultModel GetPage(string relativeUrl)
+        {
+            try
+            {
+                var page = _pageService.GetPage(relativeUrl);
+                return new ResultModel(true, page);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
+        }
+
         [System.Web.Http.HttpPost]
         public ResultModel CreatePage(Page page)
         {
@@ -46,6 +60,26 @@ namespace RoCMS.ApiControllers
                 }
 
                 _pageService.CreatePage(page);
+                return ResultModel.Success;
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
+        }
+
+        [System.Web.Http.HttpPost]
+        public ResultModel UpdatePage(Page page)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return new ResultModel(false);
+                }
+
+                _pageService.UpdatePage(page);
                 return ResultModel.Success;
             }
             catch (Exception e)

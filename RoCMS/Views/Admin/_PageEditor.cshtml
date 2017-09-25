@@ -22,183 +22,49 @@
     IList<Page> pages = ViewBag.Pages;
 }
 
-<div class="page-items-info">
+<div class="page-items-info" data-bind="with: page">
 
-    <form class="page-info" data-page-id="@(Model != null ? Model.HeartId : 0)">
-        <ul>
-            <li>
-                <div style="float: right">Длина заголовка: <span class="title-length">@(Model != null && !String.IsNullOrEmpty(Model.Title) ? Model.Title.Length : 0)</span></div>
-                <label>
-                    Заголовок (title)
-                </label>
-                <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
-                      data-original-title="Этот заголовок отображается во вкладке браузера и также может использоваться поисковиками при формировании заголовка в результатах поиска. Рекомендуемая длина - не более 70 символов.">
-                    <em class="fa fa-question-circle"></em>
-                </span>
-                @Html.ValidationMessageFor(m => m.Title)
-            </li>
-            <li>
-                @Html.TextBoxFor(x => x.Title, new {@class = "page-title form-control"})
-            </li>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="page-info" data-page-id="@(Model != null ? Model.HeartId : 0)">
+                <div class="form-group">
+                    <div class="content-toggle-container">
+                        <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
+                        @Html.LabelFor(m => m.Content, Strings.CreatePage_Content)
+                        @Html.ValidationMessageFor(m => m.Content)
+                    </div>
 
-            <li>
-                <div style="float: right">Длина заголовка: <span class="header-length">@(Model != null && !String.IsNullOrEmpty(Model.BreadcrumbsTitle) ? Model.BreadcrumbsTitle.Length : 0)</span></div>
-                <label>Заголовок</label>
-                <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                      data-original-title="Это главный заголовок страницы. Он отображается автоматически рядом с хлебными крошками, если шаблон предусматривает это. Если нет - поле можно не заполнять.">
-                    <em class="fa fa-question-circle"></em>
-                </span>
-                @Html.ValidationMessageFor(m => m.BreadcrumbsTitle)
-            </li>
-            <li>
-                @Html.TextBoxFor(x => x.BreadcrumbsTitle, new {@class = "page-h1 form-control"})
-            </li>
-
-            <li>
-                @Html.LabelFor(m => m.RelativeUrl, Strings.CreatePage_RelativeUrl)
-                <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                      data-original-title="Это адрес, по которому будет отображаться страница. Например, http://domain.com/sample-page - здесь 'sample-page' является относительным адресом.">
-                    <em class="fa fa-question-circle"></em>
-                </span>
-                @Html.ValidationMessageFor(m => m.RelativeUrl)
-                @if (Model != null && !String.IsNullOrEmpty(Model.CannonicalUrl))
-                {
-                    <a href="/@Model.CannonicalUrl">@Strings.CreatePage_OpenPage</a>
-                }
-            </li>
-            <li>
-                @Html.TextBoxFor(m => m.RelativeUrl, new {@class = "page-relativeurl form-control"})
-
-            </li>
-            <li>
-                <label>Родительская страница</label>
-                <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                      data-original-title="Относительный адрес родительской страницы подставляется в относительный адрес текущей страницы. Например, http://domain.com/parent-page/sample-page - здесь 'parent-page' - это относительный адрес родительской страницы, если 'sample-page' - относительный адрес текущей страницы">
-                    <em class="fa fa-question-circle"></em>
-                </span>
-            </li>
-            <li>
-                <select class="form-control parent-page-id" name="ParentPageId">
-                    <option value="" @(Model == null || !Model.ParentHeartId.HasValue ? "selected=selected" : "")>Нет</option>
-                    @foreach (var page in pages.OrderBy(x => x.Title))
-                    {
-                        if (Model == null || Model != null && page.HeartId != Model.HeartId)
-                        {
-                            <option value="@page.HeartId" @(Model != null && page.HeartId == Model.ParentHeartId ? "selected=selected" : "")>@page.Title</option>
-                        }
-                    }
-                </select>
-            </li>
-
-            <li>
-                <div class="content-toggle-container">
-                    <button type="button" class="btn btn-info btn-xs" id="toggle-ck"></button>
-                    @Html.LabelFor(m => m.Content, Strings.CreatePage_Content)
-                    @Html.ValidationMessageFor(m => m.Content)
                 </div>
-
-            </li>
-            <li>
-                @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "page_content", "page-content", ACEModes.HTML) {ShowCommonButtons = true})
-            </li>
-            <li>
-                <div style="float: right">Длина аннотации: <span class="annotation-length">@(Model != null && !String.IsNullOrEmpty(Model.MetaDescription) ? Model.MetaDescription.Length : 0)</span></div>
-                <label>Meta description</label>
-                <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                      data-original-title="Описание страницы для поисковых систем. Может использоваться поисковиками для формирования описания сайта в поисковой выдаче. Должно быть длиной не более 130 символов.">
-                    <em class="fa fa-question-circle"></em>
-                </span>
-                @Html.ValidationMessageFor(m => m.MetaDescription)
-            </li>
-            <li>
-                @Html.TextAreaFor(m => m.MetaDescription, new {@class = "page-annotation form-control"})
-
-            </li>
-            <li>
-                <label>Meta keywords</label>&nbsp;
-                <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                      data-original-title="Ключевые словосочетания, отражающие содержимое страницы. Не указывайте более 3 словосочетаний - это может привести к санкциям со стороны поисковых систем!">
-                    <em class="fa fa-question-circle"></em>
-                </span>
-                @Html.TextBoxFor(m => m.MetaKeywords, new {@class = "page-keywords form-control"})
-            </li>
-            <li>
-                <div class="row" style="padding-top: 10px;">
-                    <div class="col-lg-6">
-                        <div class="col-lg-4" style="padding: 6px 10px 0 0">
-                            <label>@Strings.CreatePage_Layout</label>
-                            <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                                  data-original-title="Шаблон, который используется для отображения страницы. По умолчанию их два: для главной страницы (landingLayout) и для внутренних страниц сайта (clientLayout).">
-                                <em class="fa fa-question-circle"></em>
-                            </span>
-                        </div>
-                        <div class="col-lg-8" style="padding: 0 !important;">
-                            <select class="layout form-control" data-selected-value="@(Model != null && Model.Layout != null ? Model.Layout : "clientLayout")">
-                                @{
-                                    var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Views\\Shared\\PublicLayouts"));
-                                    var files = dir.GetFiles();
-                                }
-                                @foreach (var file in files)
-                                {
-                                    string name = file.Name.TrimStart('_').Replace(".cshtml", "");
-                                    <option value="@name">@name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    @Html.Partial("WYSIWYG", new EditorVM(Model == null ? null : Model.Content, "page_content", "page-content", ACEModes.HTML) { ShowCommonButtons = true })
                 </div>
-            </li>
-            <li>
-                <input type="checkbox" @(Model != null && Model.Noindex ? "checked" : "") id="sitemapHide"/>&nbsp;
-                <label for="sitemapHide">Скрывать в Sitemap и запретить индексацию страницы</label>
-            </li>
-            <li>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label>Стили</label>
-                        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                              data-original-title="Дополнительные стили, которые будут добавлены в начале страницы. Тэг <style> не требуется.">
-                            <em class="fa fa-question-circle"></em>
-                        </span>
-                        @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Styles, "page_styles", "page-styles", ACEModes.CSS))
-                    </div>
-                    <div class="col-md-4">
-                        <label>Скрипты</label>
-                        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                              data-original-title="Дополнительные скрипты, которые будут добавлены в конце страницы. Тэг <script> не требуется.">
-                            <em class="fa fa-question-circle"></em>
-                        </span>
-                        @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Scripts, "page_scripts", "page-scripts", ACEModes.JavaScript))
-                    </div>
-                    <div class="col-md-4">
-                        <label>Доп. meta-заголовки</label>
-                        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-                              data-original-title="Дополнительные meta-заголовки страницы.">
-                            <em class="fa fa-question-circle"></em>
-                        </span>
-                        @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.AdditionalHeaders, "page_headers", "page-headers", ACEModes.XML))
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </form>
-
-
-
-    <div class="clear-both"/>
+            </form>
+        </div>
+        <div class="col-md-6">
+            @Html.Partial("_HeartEditor")
+        </div>
+    </div>
 
 
     @Js("Content/admin/ro/js/rocms.page.edit.js")
     @JsInline(@<script type="text/javascript">
 
                    $(function() {
-                       pageEditorLoad();
+                       pageEditorLoad("@(Model != null ? Model.RelativeUrl : "null")");
                    });
 
                </script>)
 </div>
 
 <div class="fixed-action-menu">
+    <a data-bind="click: save" class="button-accept btn btn-success" title="@Strings.EditPage_AcceptButton" href="#"><i class="fa fa-check"></i> @Strings.EditPage_AcceptButton</a>
+
+    @*<a class="btn btn-warning" href="/@Model.CannonicalUrl"><i class="fa fa-share"></i> Перейти</a>*@
+    <a class="btn btn-default" href="/Admin/Pages">@Strings.EditPage_ReturnToPages</a>
+</div>
+
+
+@*<div class="fixed-action-menu">
     @if (((string) ViewBag.Action) == "Create")
     {
         <a id="createPage" class="button-accept btn btn-success" title="@Strings.CreatePage_CreateButton" href="@Url.Action("CreatePage", "Admin")"><i class="fa fa-check"></i> @Strings.CreatePage_CreateButton</a>
@@ -209,6 +75,6 @@
         <a class="btn btn-warning" href="/@Model.CannonicalUrl"><i class="fa fa-share"></i> Перейти</a>
     }
     <a class="btn btn-default" href="/Admin/Pages">@Strings.EditPage_ReturnToPages</a>
-</div>
+</div>*@
 
 

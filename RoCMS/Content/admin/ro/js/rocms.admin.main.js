@@ -27,7 +27,26 @@ function getTextFromEditor(id) {
         }
     }
 	return $("#"+id).val();
-	
+}
+
+function setTextToEditor(id, text) {
+    if (typeof (CKEDITOR) != "undefined") {
+        var e = CKEDITOR.instances[id];
+        if (e) {
+            e.setData(text);
+            return false;
+        }
+    }
+
+    if (typeof (ace) != "undefined") {
+        if ($("#" + id).data("ace")) {
+            var aceEditor = ace.edit("ace_" + id);
+            aceEditor.setValue(text);
+            return false;
+        }
+    }
+    $("#" + id).val(text);
+    return false;
 }
 
 $.j = function (item) {

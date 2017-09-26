@@ -23,28 +23,13 @@
         ViewBag.PageTitle = Strings.CreateNews_EditTitle + " '" + Model.Title + "'";
     }
     string emptyImg = Url.Content("~/Content/admin/ro/img/no-image.png");
-    string imgSrc;
-    if (Model != null && !String.IsNullOrEmpty(Model.ImageId))
-    {
-        imgSrc = Url.Action("Thumbnail", "Gallery", new { id = Model.ImageId });
-    }
-    else
-    {
-        imgSrc = emptyImg;
-    }
-    DateTime? postingDate = Model != null ?
-                            Model.PostingDate.ApplySiteTimezone() :
-                            DateTime.UtcNow.ApplySiteTimezone();
 
-    DateTime? eventDate = Model != null && Model.EventDate.HasValue ?
-                        Model.EventDate.Value.ApplySiteTimezone() :
-                        (DateTime?)null;
 
 
 }
 
 
-<div class="news-items-info" data-bind="with: newsItem">
+<div class="news-items-info row" data-bind="with: newsItem">
 
     <div class="col-md-6">
         <form class="news-info">
@@ -75,7 +60,7 @@
                     </span>
                 </script>
                 <div>
-                    <div class="categories-row news-item-categories" data-bind="template: { name: 'category-item-template', foreach: $root.parents }">
+                    <div class="categories-row news-item-categories" data-bind="template: { name: 'category-item-template', foreach: categories }">
                     </div>
                     <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
                 </div>
@@ -85,14 +70,32 @@
             </div>
             <div class="form-group">
                 <input type="text" class="news-publish-date form-control"
-                       data-date-format="dd-mm-yyyy" value="@string.Format("{0:00}.{1:00}.{2}", postingDate.Value.Day, postingDate.Value.Month, postingDate.Value.Year)" />
-                <input type="text" class="news-publish-time form-control" value="@string.Format("{0:00}:{1:00}", postingDate.Value.Hour, postingDate.Value.Minute)" />
+                       data-date-format="dd-mm-yyyy"/>
+                <input type="text" class="news-publish-time form-control"/>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ImageId, Strings.CreateNews_Image)
+            </div>
+            <div class="form-group">
+                @{
+
+                    <img alt="Изображение" data-bind="click: pickImage, thumbnailSrc: imageId"/>
+
+                    <input type="button" class="btn btn-danger btn-xs removeNewsImage"
+                           data-bind="visible: hasImage, click: clearImage"
+                           value="Убрать картинку"/>
+
+                }
+            </div>
+            <div class="form-group">
+                <label for="newsTags">Теги</label>
+            </div>
+            <div class="form-group">
+                <input id="newsTags" data-bind="value: tags" class="form-control news-tags form-control" />
             </div>
             <div class="form-group"><label>Тип записи</label></div>
             <div class="form-group">
-                @{
-                    RecordType type = Model != null ? Model.RecordType : RecordType.Default;
-                }
+
                 <fieldset class="rectype">
                     <div>
                         <input type="radio" data-bind="checked: recordType" name="post_format" class="post-format" id="rectype_default" value="Default">
@@ -100,7 +103,7 @@
                             <i class="fa fa-newspaper-o fa-lg fa-fw"></i>&nbsp;Стандартный
                         </label>
                     </div>
-                    <div>
+                    @*<div>
                         <input type="radio" data-bind="checked: recordType" name="post_format" class="post-format" id="rectype_link" value="Link">
                         <label for="rectype_link" class="post-format-icon">
                             <i class="fa fa-external-link fa-lg fa-fw"></i>&nbsp;Ссылка
@@ -117,7 +120,7 @@
                         <label for="rectype_quote" class="post-format-icon">
                             <i class="fa fa-quote-left fa-lg fa-fw"></i>&nbsp;Цитата
                         </label>
-                    </div>
+                    </div>*@
                     <div>
                         <input type="radio" data-bind="checked: recordType"  name="post_format" class="post-format" id="rectype_video" value="Video">
                         <label for="rectype_video" class="post-format-icon">
@@ -138,40 +141,20 @@
                     </div>
                 </fieldset>
             </div>
-            <div class="form-group">
+            <div class="form-group" data-bind="visible: recordType() == 'Event'">
                 @Html.LabelFor(m => m.EventDate, "Дата и время мероприятия")
             </div>
-            <div class="form-group">
+            <div class="form-group" data-bind="visible: recordType() == 'Event'">
                 <input type="text" class="news-event-date form-control"
-                       data-date-format="dd-mm-yyyy" @*value="@(eventDate != null ? string.Format("{0:00}.{1:00}.{2}", eventDate.Value.Day, eventDate.Value.Month, eventDate.Value.Year) : "")"*@ />
-                <input type="text" class="news-event-time form-control" @*value="@(eventDate != null ? string.Format("{0:00}:{1:00}", eventDate.Value.Hour, eventDate.Value.Minute) : "")"*@ />
+                       data-date-format="dd-mm-yyyy" />
+                <input type="text" class="news-event-time form-control"/>
             </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.ImageId, Strings.CreateNews_Image)
-            </div>
-            <div class="form-group">
-                @{
-                    string imageId = String.Empty;
-                    if (Model != null)
-                    {
-                        imageId = Model.ImageId;
-                    }
-                    <img class="news-img pointer img-responsive" src="@imgSrc" data-id="@imageId" />
 
-                        <input type="button" class="btn btn-danger btn-xs removeNewsImage" value="Убрать картинку" style="vertical-align: top; @(String.IsNullOrWhiteSpace(imageId) ? "display:none;" : "")" />
 
-                }
-            </div>
-            <div class="form-group">
-                <label for="newsTags">Теги</label>
-            </div>
-            <div class="form-group">
-                <input id="newsTags" data-bind="value: tags" class="form-control news-tags form-control" />
-            </div>
-            <div class="form-group">
+            <div class="form-group" data-bind="visible: recordType() === 'File'">
                 <label>Прикреплённый файл</label>
             </div>
-            <div class="form-group">
+            <div class="form-group" data-bind="visible: recordType() === 'File'">
                 @{
                     string file = Model != null ? Model.Filename : null;
                     bool filePicked = !string.IsNullOrEmpty(file);
@@ -185,10 +168,10 @@
                     <a class="picked-file-download" target="_blank" download="@file" href="@(filePicked ? "/File/Get/" + file + "/" : "/")"><i class="fa fa-download"></i></a>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" data-bind="visible: recordType() === 'Video'">
                 <label>Видео</label>
             </div>
-            <div class="form-group">
+            <div class="form-group" data-bind="visible: recordType() === 'Video'">
                 @{
                     string videoId = Model != null ? Model.VideoId : null;
                     bool videoPicked = !string.IsNullOrEmpty(videoId);
@@ -207,23 +190,6 @@
     <div class="col-md-6">
         @Html.Partial("~/Views/Admin/_HeartEditor.cshtml")
     </div>
-
-
-
-
-    @*<div class="fixed-action-menu">
-        @if ((string)ViewBag.Action == "Create")
-        {
-            <a id="createNews" class="button-accept btn btn-success" onclick="true" data-bind="click: create"><i class="fa fa-check"></i> @Strings.CreateNews_CreateButton</a>
-        }
-        else
-        {
-            <a id="acceptNews" class="button-accept btn btn-success" onclick="true" data-bind="click: update"><i class="fa fa-check"></i> @Strings.EditNews_AcceptButton</a>
-            <a class="btn btn-warning" href="@Url.RouteUrl("BlogItem", new {relativeUrl = Model.RelativeUrl})"><i class="fa fa-share"></i> Перейти</a>
-            <a onclick="true" class="btn btn-danger button-delete" data-news-id="@Model.HeartId"><i class="fa fa-times"></i> Удалить</a>
-        }
-        <a class="btn btn-default" href="/NewsEditor/News">@Strings.EditNews_ReturnToNews</a>
-    </div>*@
 </div>
 
 <div class="fixed-action-menu">

@@ -37,14 +37,14 @@
                 @if (!string.IsNullOrEmpty(item.ImageId))
                 {
                     <div class="blog-image">
-                        <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})">
+                        <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})">
                             <img src="@Url.Action("Image", "Gallery", new {id = item.ImageId})" class="img-responsive" alt="@item.Title">
                         </a>
                     </div>
                 }
-                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
+                <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
                 <p>@item.Description</p>
-                <a class="btn btn-dark" href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})">Читать далее...</a>
+                <a class="btn btn-dark" href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})">Читать далее...</a>
             </div>
         </div>
     }

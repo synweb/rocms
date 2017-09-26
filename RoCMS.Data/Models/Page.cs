@@ -2,8 +2,9 @@
 
 namespace RoCMS.Data.Models
 {
-    public class Page: Heart
+    public class Page
     {
+        public int HeartId { get; set; }
         public string Content { get; set; }
     }
 }

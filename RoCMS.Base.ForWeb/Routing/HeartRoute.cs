@@ -58,6 +58,7 @@ namespace RoCMS.Base.ForWeb.Routing
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
+
             string relativeUrl;
             if (values.ContainsKey("relativeUrl"))
             {
@@ -65,13 +66,34 @@ namespace RoCMS.Base.ForWeb.Routing
             }
             else
             {
-                relativeUrl = requestContext.HttpContext.Request.Path.Split('/').Last().ToLower();
+                relativeUrl = requestContext.HttpContext.Request.Path;
             }
+
+            relativeUrl = relativeUrl.Split('/').Last().ToLower();
+
             var urlPair =
                 _urls.FirstOrDefault(x => x.RelativeUrl.Equals(relativeUrl, StringComparison.InvariantCultureIgnoreCase));
             if (urlPair == null)
                 return null;
-            return new VirtualPathData(this, urlPair.CanonicalUrl);
+
+            
+            StringBuilder otherParams = new StringBuilder();
+            if (values.Count > 1)
+            {
+                otherParams.Append("?");
+            }
+            foreach (var token in values.Where(x => x.Key != "relativeUrl"))
+            {
+                otherParams.Append($"{token.Key}={token.Value}");
+                if (token.Key != values.Last(x => x.Key != "relativeUrl").Key)
+                {
+                    otherParams.Append("&");
+                }
+            }
+
+            var result = new VirtualPathData(this, $"{urlPair.CanonicalUrl}{otherParams}");
+
+            return result;
         }
 
         private void AddQueryStringParametersToRouteData(RouteData routeData, HttpContextBase httpContext)

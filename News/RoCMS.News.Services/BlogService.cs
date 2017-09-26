@@ -91,9 +91,13 @@ namespace RoCMS.News.Services
             return res;
         }
 
-        public bool CheckIfUserHasAccess(int userId, int blogId)
+        public bool CheckIfUserHasAccess(int userId, int? blogId)
         {
-            return _blogUserGateway.SelectByBlog(blogId).Any(x => x.UserId == userId);
+            if (blogId.HasValue)
+            {
+                return _blogUserGateway.SelectByBlog(blogId.Value).Any(x => x.UserId == userId);
+            }
+            return false;
         }
 
         public void UpdateBlogByClient(Blog blog)

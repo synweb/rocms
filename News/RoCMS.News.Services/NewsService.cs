@@ -8,7 +8,7 @@ using TagStat = RoCMS.News.Data.Models.TagStat;
 
 namespace RoCMS.News.Services
 {
-    public abstract class NewsService: BaseCacheService
+    public abstract class NewsService : BaseCacheService
     {
         static NewsService()
         {
@@ -25,6 +25,18 @@ namespace RoCMS.News.Services
             Mapper.CreateMap<RecordType, Data.Models.RecordType>();
             Mapper.CreateMap<Data.Models.RecordType, RecordType>();
             Mapper.CreateMap<NewsItem, Contract.Models.NewsItem>()
+                .ForMember(x => x.CreationDate, x => x.Ignore())
+                .ForMember(x => x.RelativeUrl, x => x.Ignore())
+                .ForMember(x => x.ParentHeartId, x => x.Ignore())
+                .ForMember(x => x.BreadcrumbsTitle, x => x.Ignore())
+                .ForMember(x => x.Noindex, x => x.Ignore())
+                .ForMember(x => x.Title, x => x.Ignore())
+                .ForMember(x => x.MetaDescription, x => x.Ignore())
+                .ForMember(x => x.MetaKeywords, x => x.Ignore())
+                .ForMember(x => x.Styles, x => x.Ignore())
+                .ForMember(x => x.Scripts, x => x.Ignore())
+                .ForMember(x => x.Layout, x => x.Ignore())
+                .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
                 .ForMember(x => x.Tags, x => x.Ignore())
                 .ForMember(x => x.Categories, x => x.Ignore())
                 .ForMember(x => x.CanonicalUrl, x => x.Ignore());

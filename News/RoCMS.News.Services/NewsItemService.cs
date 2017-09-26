@@ -51,6 +51,7 @@ namespace RoCMS.News.Services
         public int CreateComment(int targetId, Comment comment)
         {
             var item = _newsItemGateway.SelectOne(targetId);
+            var heart = _heartService.GetHeart(targetId);
             using (var ts = new TransactionScope())
             {
                 if (item.CommentTopicId == null)
@@ -59,7 +60,7 @@ namespace RoCMS.News.Services
                     {
                         TargetId = item.HeartId,
                         TargetUrl = "/News/" + targetId,
-                        TargetTitle = item.Title,
+                        TargetTitle = heart.Title,
                         TargetType = "News"
                     };
                     int commentTopicId = _commentService.CreateTopic(commentTopic);
@@ -105,10 +106,14 @@ namespace RoCMS.News.Services
         {
             var dataRes = _newsItemGateway.Select();
             var res = Mapper.Map<ICollection<NewsItem>>(dataRes);
+
+            var hearts = _heartService.GetHearts(res.Select(x => x.HeartId));
+
             foreach (var newsItem in res)
             {
+                var heart = hearts.Single(x => x.HeartId == newsItem.HeartId);
+                newsItem.FillHeart(heart);
                 FillItem(newsItem);
-
             }
             return res;
         }
@@ -207,6 +212,7 @@ namespace RoCMS.News.Services
             {
                 var heart = hearts.Single(x => x.HeartId == newsItem.HeartId);
                 newsItem.FillHeart(heart);
+                newsItem.CanonicalUrl = _heartService.GetCanonicalUrl(heart.HeartId);
                 FillItem(newsItem);
             }
             return res;
@@ -219,7 +225,7 @@ namespace RoCMS.News.Services
             using (var ts = new TransactionScope())
             {
                 news.RelativeUrl = _heartService.GetNextAvailableRelativeUrl(news.RelativeUrl);
-                news.HeartId = _heartService.CreateHeart(news);
+                news.HeartId = dataRec.HeartId = _heartService.CreateHeart(news);
                  _newsItemGateway.Insert(dataRec);
                 var tags = news.Tags.Split(',').Select(x => x.Trim().ToLower()).ToArray();
 
@@ -283,8 +289,8 @@ namespace RoCMS.News.Services
 
         public void UpdateNewsItem(NewsItem news)
         {
-            var originNewsItem = _newsItemGateway.SelectOne(news.HeartId);
-            if (news.RelativeUrl != originNewsItem.RelativeUrl)
+            var originHeart = _heartService.GetHeart(news.HeartId);
+            if (news.RelativeUrl != originHeart.RelativeUrl)
             {
 
                 bool relativeUrlExists = _heartService.CheckIfUrlExists(news.RelativeUrl);
@@ -305,6 +311,9 @@ namespace RoCMS.News.Services
 
             using (var ts = new TransactionScope())
             {
+
+                _heartService.UpdateHeart(news);
+
                 _newsItemGateway.Update(dataRec);
 
                 foreach (var tag in tags.Except(existingTagNames))
@@ -362,17 +371,6 @@ namespace RoCMS.News.Services
         public bool NewsItemExists(string relativeUrl)
         {
             return _heartService.CheckIfUrlExists(relativeUrl);
-        }
-
-        public string GetNewsItemCanonicalUrl(int newsItemId)
-        {
-            var newsItem = _newsItemGateway.SelectOne(newsItemId);
-            var catsIds = _newsItemCategoryGateway.SelectCategoryIdsByNews(newsItemId);
-            if (catsIds.Any())
-            {
-                return $"{_categoryService.GetCategoryCannonicalUrl(catsIds.First())}/{newsItem.RelativeUrl}";
-            }
-            return newsItem.RelativeUrl;
         }
 
         public int CreateClientPost(NewsItem post)

@@ -44,11 +44,11 @@ namespace RoCMS.News.Web
             //    defaults: new { controller = "Redirect", action = "Index", relativeUrl = "blog" });
 
 
-            //routes.MapRoute(
-            //    name: "BlogTagSearch",
-            //    url: BlogUrl + "/tag/{tag}",
-            //    defaults: new { controller = "News", action = "TagSearch" }
-            //    );
+            routes.MapRoute(
+                name: "BlogTagSearch",
+                url: BlogUrl + "/tag/{tag}",
+                defaults: new { controller = "News", action = "TagSearch" }
+                );
 
             //routes.MapRoute(
             //    name: "UserBlogItem",

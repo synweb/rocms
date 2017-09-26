@@ -18,13 +18,13 @@ namespace RoCMS.News.Web.Helpers
             {
                 IBlogService blogService = DependencyResolver.Current.GetService<IBlogService>();
                 var news = newsItemService.GetAllNews();
-                foreach (var newsItem in news.Where(x => x.BlogId != 1 && !x.Categories.Any()))
+                foreach (var newsItem in news.Where(x => x.BlogId.HasValue && x.BlogId != 1 && !x.Categories.Any()))
                 {
                     DynamicNode dynamicNode = new DynamicNode();
                     // ключ должен быть уникальным для каждой ноды
                     dynamicNode.Key = "news_" + newsItem.HeartId;
 
-                    var blog = blogService.GetBlog(newsItem.BlogId);
+                    var blog = blogService.GetBlog(newsItem.BlogId.Value);
                     dynamicNode.RouteValues.Add("newsUrl", newsItem.RelativeUrl);
                     dynamicNode.RouteValues.Add("blogUrl", blog.RelativeUrl);
                     dynamicNode.Route = "UserBlogItem";

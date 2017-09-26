@@ -44,7 +44,7 @@ namespace RoCMS.News.Contract.Models
         public string SearchKeyDescription => nameof(Description);
         public string SearchKeyText => nameof(Text);
 
-        public int BlogId { get; set; }
+        public int? BlogId { get; set; }
 
         public DateTime? EventDate { get; set; }
     }

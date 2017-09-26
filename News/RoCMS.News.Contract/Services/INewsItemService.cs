@@ -29,8 +29,6 @@ namespace RoCMS.News.Contract.Services
         bool NewsItemExists(int id);
         bool NewsItemExists(string relativeUrl);
 
-        string GetNewsItemCanonicalUrl(int newsItemId);
-
         ICollection<int> GetRelatedNewsIds(int newsId, bool withSubnews, int count, bool onlyPosted, int? excludeId);
 
         ICollection<NewsItem> GetRelatedNews(int newsId, bool withSubnews, int count, bool onlyPosted, int? excludeId);

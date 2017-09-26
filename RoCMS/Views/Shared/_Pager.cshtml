@@ -6,7 +6,7 @@
     int pageSize = ViewBag.PageSize;
     int totalCount = ViewBag.TotalCount;
 
-    string pagingRoute = ViewBag.PagingRoute ?? "PageSEF";
+    string pagingRoute = ViewBag.PagingRoute ?? typeof(RoCMS.Web.Contract.Models.Page).FullName;
 }
 
 @if (totalCount > pageSize)

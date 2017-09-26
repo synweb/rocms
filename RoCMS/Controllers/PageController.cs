@@ -38,7 +38,7 @@ namespace RoCMS.Controllers
         [AllowAnonymous]
         public ActionResult GetPage(string relativeUrl)
         {
-            return RedirectPermanent(Url.RouteUrl("PageSEF", new {relativeUrl = relativeUrl}));
+            return RedirectPermanent(Url.RouteUrl(typeof(RoCMS.Web.Contract.Models.Page).FullName, new {relativeUrl = relativeUrl}));
         }
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "PageSEF", DynamicNodeProvider = "RoCMS.Helpers.PageDynamicNodeProvider, RoCMS")]

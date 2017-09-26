@@ -13,11 +13,11 @@
     <div class="col-sm-4">
         <div class="image-box" style="background-image:url(/Gallery/Image/@item.ImageId);">
             <div class="title">
-                <a href="@Url.RouteUrl("BlogItem", new { relativeUrl = item.RelativeUrl })">
+                <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new { relativeUrl = item.RelativeUrl })">
                     <h4>@item.Title</h4>
                 </a>
                 <p>
-                    <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.RelativeUrl})">@item.PostingDate.ApplySiteTimezone().ToString("d MMMM yyyy HH:mm", CultureInfo.CurrentUICulture)</a>
+                    <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.RelativeUrl})">@item.PostingDate.ApplySiteTimezone().ToString("d MMMM yyyy HH:mm", CultureInfo.CurrentUICulture)</a>
                     @if (!string.IsNullOrEmpty(item.Tags))
                     {
                         <text> / </text>

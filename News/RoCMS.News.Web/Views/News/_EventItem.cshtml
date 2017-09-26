@@ -16,7 +16,7 @@
     <div class="blog_post_txt">
         <div class="blog_post_heading text-center">
             <h2>
-                <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" rel="bookmark" title="@item.Title">@item.Title</a>
+                <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" rel="bookmark" title="@item.Title">@item.Title</a>
             </h2>
         </div>
     </div>

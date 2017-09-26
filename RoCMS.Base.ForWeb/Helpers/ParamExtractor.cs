@@ -31,6 +31,7 @@ namespace RoCMS.Base.ForWeb.Helpers
             var res = ExtractUrlParams(request);
             foreach (var kvp in request.RequestContext.RouteData.Values)
             {
+                if(res.ContainsKey(kvp.Key)) continue;
                 res.Add(kvp);
             }
             return res;

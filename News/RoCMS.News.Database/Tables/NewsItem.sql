@@ -11,7 +11,6 @@
 	[VideoId] varchar(50) NULL,
     [BlogId] INT NULL, 
     [EventDate] DATETIME NULL, 
-	[AdditionalHeaders] NVARCHAR (MAX) NULL,
 	[ViewCount] BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT [PK_NewsSet] PRIMARY KEY CLUSTERED ([HeartId] ASC),
     CONSTRAINT [FK_NewsSetImage] FOREIGN KEY ([ImageId]) REFERENCES [dbo].[Image] ([ImageId]) ON UPDATE CASCADE ON DELETE SET NULL,

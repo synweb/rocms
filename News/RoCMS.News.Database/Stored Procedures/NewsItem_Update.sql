@@ -3,7 +3,6 @@
 @PostingDate datetime,
 @Description nvarchar(MAX),
 @ImageId varchar(30),
-@RelativeUrl nvarchar(300),
 @CommentTopicId int,
 @RecordType varchar(20),
 @Filename NVARCHAR(200),

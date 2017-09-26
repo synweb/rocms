@@ -7,8 +7,9 @@ using RoCMS.Data.Models;
 
 namespace RoCMS.News.Data.Models
 {
-    public class NewsItem: Heart
+    public class NewsItem
     {
+        public int HeartId { get; set; }
         public string Text { get; set; }
         public System.DateTime PostingDate { get; set; }
         public string Description { get; set; }
@@ -20,7 +21,7 @@ namespace RoCMS.News.Data.Models
         public string Filename { get; set; }
         public string VideoId { get; set; }
 
-        public int BlogId { get; set; }
+        public int? BlogId { get; set; }
 
         public DateTime? EventDate { get; set; }
     }

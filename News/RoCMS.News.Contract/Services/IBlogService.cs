@@ -19,7 +19,7 @@ namespace RoCMS.News.Contract.Services
         IList<Blog> GetBlogs();
         Blog GetUserBlog(int userId);
         bool CheckIfExists(string relativeUrl);
-        bool CheckIfUserHasAccess(int userId, int blogId);
+        bool CheckIfUserHasAccess(int userId, int? blogId);
         void UpdateBlogByClient(Blog blog);
         void DeleteBlog(int blogId);
     }

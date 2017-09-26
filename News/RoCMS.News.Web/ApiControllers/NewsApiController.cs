@@ -11,6 +11,7 @@ using RoCMS.Comments.Contract.Models;
 using RoCMS.Helpers;
 using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
+using RoCMS.Web.Contract.Extensions;
 using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.News.Web.ApiControllers
@@ -38,6 +39,10 @@ namespace RoCMS.News.Web.ApiControllers
             try
             {
                 var res = _newsItemService.GetNewsItem(id);
+
+                res.PostingDate =  res.PostingDate.ApplySiteTimezone();
+                res.EventDate = res.EventDate?.ApplySiteTimezone();
+
                 return new ResultModel(true, res);
             }
             catch (Exception e)

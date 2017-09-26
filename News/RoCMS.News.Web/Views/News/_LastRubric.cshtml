@@ -38,13 +38,13 @@
                     <div class="blog-item">
                         @if (!string.IsNullOrEmpty(item.ImageId))
                         {
-                            <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})">
+                            <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})">
                                 <img src="@Url.Action("Image", "Gallery", new {id = item.ImageId})" class="img-responsive" alt="@item.Title">
                             </a>
                         }
                         <div class="date-post">@item.PostingDate.ToString("d MMM yyyy HH:mm", CultureInfo.CurrentUICulture)</div>
                         <div class="post-meta">Автор: @author </div>
-                        <a href="@Url.RouteUrl("BlogItem", new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
+                        <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
                         <p>@item.Description</p>
 
                     </div>

@@ -11,7 +11,7 @@ namespace RoCMS.Controllers
     {
         public ActionResult Index(string relativeUrl)
         {
-            return RedirectPermanent(Url.RouteUrl("PageSEF", new { relativeUrl = relativeUrl }));
+            return RedirectPermanent(Url.RouteUrl(typeof(RoCMS.Web.Contract.Models.Page).FullName, new { relativeUrl = relativeUrl }));
         }
     }
 }

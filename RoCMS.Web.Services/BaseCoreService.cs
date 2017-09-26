@@ -43,9 +43,21 @@ namespace RoCMS.Web.Services
                                             .ForMember(x => x.Name, x => x.MapFrom(m => m.Title));
 
             Mapper.CreateMap<Page, Contract.Models.Page>()
+                .ForMember(x => x.CreationDate, x => x.Ignore())
+                .ForMember(x => x.RelativeUrl, x => x.Ignore())
+                .ForMember(x => x.ParentHeartId, x => x.Ignore())
+                .ForMember(x => x.BreadcrumbsTitle, x => x.Ignore())
+                .ForMember(x => x.Noindex, x => x.Ignore())
+                .ForMember(x => x.Title, x => x.Ignore())
+                .ForMember(x => x.MetaDescription, x => x.Ignore())
+                .ForMember(x => x.MetaKeywords, x => x.Ignore())
+                .ForMember(x => x.Styles, x => x.Ignore())
+                .ForMember(x => x.Scripts, x => x.Ignore())
+                .ForMember(x => x.Layout, x => x.Ignore())
+                .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
                 .ForMember(x => x.CanonicalUrl, x => x.Ignore());
             Mapper.CreateMap<Contract.Models.Page, Page>();
-            
+
 
             Mapper.CreateMap<Review, Contract.Models.Review>();
             Mapper.CreateMap<Contract.Models.Review, Review>();
@@ -134,7 +146,7 @@ namespace RoCMS.Web.Services
 
             Mapper.CreateMap<string, OrderFormFieldType>().ConvertUsing((x) =>
             {
-                return (OrderFormFieldType)Enum.Parse(typeof (OrderFormFieldType), x);
+                return (OrderFormFieldType)Enum.Parse(typeof(OrderFormFieldType), x);
             });
             Mapper.CreateMap<OrderFormFieldType, string>().ConvertUsing((x) =>
             {

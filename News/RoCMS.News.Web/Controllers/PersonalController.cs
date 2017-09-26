@@ -85,7 +85,13 @@ namespace RoCMS.News.Web.Controllers
             ViewBag.Categories = cats;
             int userId = _principalResolver.GetUserId();
             var item = _newsItemService.GetNewsItem(id);
-            var blog = _blogService.GetBlog(item.BlogId);
+
+            if (!item.BlogId.HasValue)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            var blog = _blogService.GetBlog(item.BlogId.Value);
             if (blog.OwnerId != userId)
             {
                 throw new UnauthorizedAccessException();

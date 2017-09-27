@@ -35,20 +35,19 @@ namespace RoCMS.Web.Services
         public int CreatePage(Page page)
         {
             page.Type = page.GetType().FullName;
+            int heartId;
             using (var ts = new TransactionScope())
             {
-                int heartId = _heartService.CreateHeart(page);
+                heartId = _heartService.CreateHeart(page);
                 page.HeartId = heartId;
                 var newPage = Mapper.Map<Data.Models.Page>(page);
                 _pageGateway.Insert(newPage);
-                var np = Mapper.Map<Page>(newPage);
-                np.CreationDate = DateTime.UtcNow;
-                np.CanonicalUrl = _heartService.GetCanonicalUrl(np.RelativeUrl);
-                AddOrUpdateCacheObject(GetPageCacheKey(page.RelativeUrl), np);
-                _searchService.UpdateIndex(np);
+                page.CanonicalUrl = _heartService.GetCanonicalUrl(page.RelativeUrl);
+                _searchService.UpdateIndex(page);
                 ts.Complete();
-                return heartId;
             }
+            AddOrUpdateCacheObject(GetPageCacheKey(page.RelativeUrl), page);
+            return heartId;
         }
 
         public Page GetPage(string url)

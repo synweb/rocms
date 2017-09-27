@@ -175,10 +175,19 @@ namespace RoCMS.Web.Services
 
         private void CreateRoute(Heart heart)
         {
-            var typeRoutes = _heartUrlPairs[heart.Type];
+            List<UrlPair> typeRoutes;
+            if (!_heartUrlPairs.ContainsKey(heart.Type))
+            {
+                typeRoutes = new List<UrlPair>();
+                _heartUrlPairs.Add(heart.Type, typeRoutes);
+            }
+            else
+            {
+                typeRoutes = _heartUrlPairs[heart.Type];
+            }
             typeRoutes.Add(new UrlPair(heart.RelativeUrl.ToLower(), GetUncachedCanonicalUrl(heart.RelativeUrl)));
         }
-
+        
         private void DeleteRoute(Data.Models.Heart heart)
         {
             var typeRoutes = _heartUrlPairs[heart.Type];

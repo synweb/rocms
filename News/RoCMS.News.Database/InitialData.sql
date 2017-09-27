@@ -20,7 +20,6 @@ BEGIN
 	SET IDENTITY_INSERT [News].[Blog] ON
 	INSERT INTO [News].[Blog] ([BlogId], [Title], [OwnerId]) VALUES 
 		(1, N'Новости сайта', @adminId)
-	INSERT INTO [News].[Blog_User] ([BlogId],[UserId]) VALUES (1, 1) 
 	INSERT INTO [News].[Blog_User] ([BlogId],[UserId]) VALUES (1, @adminId) 
 	SET IDENTITY_INSERT [News].[Blog] OFF
 END

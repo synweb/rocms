@@ -25,7 +25,7 @@ namespace RoCMS.News.Web.Helpers
                     // ключ должен быть уникальным для каждой ноды
                     dynamicNode.Key = "news_" + newsItem.HeartId;
                     dynamicNode.RouteValues.Add("relativeUrl", newsItem.CanonicalUrl);
-                    dynamicNode.Route = "BlogItem";
+                    dynamicNode.Route = typeof(NewsItem).FullName;
                     dynamicNode.Title = newsItem.Title;
 
                     dynamicNode.Attributes.Add("visibility", "MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult");

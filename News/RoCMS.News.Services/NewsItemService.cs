@@ -257,10 +257,12 @@ namespace RoCMS.News.Services
         {
             using (var ts = new TransactionScope())
             {
-                _newsItemGateway.Delete(id);
+                //var heart = _heartService.GetHeart(id);
+                _heartService.DeleteHeart(id);
                 _tagGateway.DeleteUnassociated();
                 _searchService.RemoveFromIndex(typeof(NewsItem), id);
                 ts.Complete();
+
             }
         }
 

@@ -96,7 +96,7 @@ namespace RoCMS.News.Web.Controllers
             }
         }
 
-        [MvcSiteMapNode(ParentKey = "Home", Key = "NewsCategorySEF", DynamicNodeProvider = "RoCMS.News.Web.Helpers.NewsСategoryDynamicNodeProvider, RoCMS.News.Web")]
+        //[MvcSiteMapNode(ParentKey = "Home", Key = "NewsCategorySEF", DynamicNodeProvider = "RoCMS.News.Web.Helpers.NewsСategoryDynamicNodeProvider, RoCMS.News.Web")]
         [PagingFilter]
         [AllowAnonymous]
         public ActionResult CategorySEF(string relativeUrl, int pageNumber = 1, int pageSize = 10)
@@ -170,7 +170,7 @@ namespace RoCMS.News.Web.Controllers
         [Obsolete]
         public ActionResult NewsSEF(string relativeUrl)
         {
-            return RedirectToRoutePermanent("BlogItem", new { relativeUrl = relativeUrl });
+            return RedirectToRoutePermanent(typeof(NewsItem).FullName, new { relativeUrl = relativeUrl });
         }
         /// <summary>
         /// Используется при построении страниц аля /blog/tag/блаблабла

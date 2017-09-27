@@ -1,5 +1,6 @@
 ﻿@using System.Globalization
 @using RoCMS.Base.ForWeb.Extensions
+@using RoCMS.Comments.Contract.ViewModels
 @using RoCMS.Web.Contract.Services
 @using RoCMS.Web.Contract.Extensions
 @using RoCMS.News.Contract.Models
@@ -67,10 +68,10 @@
         </div>
 
 
-        @*            @Html.Partial("_CommentsBlock", new CommentsBlockVM(Model.CommentTopicId,
-    "/api/news/" + Model.NewsId + "/comment/create",
+                  @Html.Partial("_CommentsBlock", new CommentsBlockVM(Model.CommentTopicId,
+    "/api/news/" + Model.HeartId + "/comment/create",
     "Комментировать",
-    "Комментарии"))*@
+    "Комментарии"))
 
         @Block(shareBlock)
     </div>

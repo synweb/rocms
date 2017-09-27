@@ -106,20 +106,24 @@ namespace RoCMS.Web.Services
 
         public ICollection<UrlPair> GetHeartUrls(Type type)
         {
-            if (type == null)
+            lock (this)
             {
-                throw new ArgumentException(nameof(type));
-            }
-            string typeName = type.FullName;
-            if (string.IsNullOrEmpty(typeName))
-            {
-                throw new ArgumentException(nameof(type));
-            }
-            if (_heartUrlPairs.ContainsKey(typeName))
-            {
+                if (type == null)
+                {
+                    throw new ArgumentException(nameof(type));
+                }
+                string typeName = type.FullName;
+                if (string.IsNullOrEmpty(typeName))
+                {
+                    throw new ArgumentException(nameof(type));
+                }
+                if (!_heartUrlPairs.ContainsKey(typeName))
+                {
+                    _heartUrlPairs.Add(typeName, new List<UrlPair>());
+                }
+
                 return _heartUrlPairs[typeName];
             }
-            return new List<UrlPair>();
         }
 
 

@@ -13,6 +13,7 @@
     [EventDate] DATETIME NULL, 
 	[ViewCount] BIGINT NOT NULL DEFAULT 0,
     CONSTRAINT [PK_NewsSet] PRIMARY KEY CLUSTERED ([HeartId] ASC),
+	CONSTRAINT [FK_News_Heart] FOREIGN KEY ([HeartId]) REFERENCES [Heart]([HeartId]) ON DELETE CASCADE,
     CONSTRAINT [FK_NewsSetImage] FOREIGN KEY ([ImageId]) REFERENCES [dbo].[Image] ([ImageId]) ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT [FK_NewsSetUser] FOREIGN KEY ([AuthorId]) REFERENCES [dbo].[User] ([UserId]),
 	CONSTRAINT [FK_NewsSetBlog] FOREIGN KEY ([BlogId]) REFERENCES [News].[Blog] ([BlogId]),

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using JetBrains.Annotations;
+using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Web.Contract.Infrastructure;
 
 namespace RoCMS.Base.ForWeb.Routing
@@ -76,22 +77,32 @@ namespace RoCMS.Base.ForWeb.Routing
             if (urlPair == null)
                 return null;
 
-            
-            StringBuilder otherParams = new StringBuilder();
-            if (values.Count > 1)
+            var otherParams = new Dictionary<string, object>();
+            foreach (var param in values)
             {
-                otherParams.Append("?");
-            }
-            foreach (var token in values.Where(x => x.Key != "relativeUrl"))
-            {
-                otherParams.Append($"{token.Key}={token.Value}");
-                if (token.Key != values.Last(x => x.Key != "relativeUrl").Key)
+                if (param.Key != "relativeUrl" && param.Key != "action" && param.Key != "controller" &&
+                    param.Key != "area")
                 {
-                    otherParams.Append("&");
+                    otherParams.Add(param.Key, param.Value);
                 }
             }
 
-            var result = new VirtualPathData(this, $"{urlPair.CanonicalUrl}{otherParams}");
+
+            StringBuilder otherParamsString = new StringBuilder();
+            if (otherParams.Any())
+            {
+                otherParamsString.Append("?");
+            }
+            foreach (var token in otherParams)
+            {
+                otherParamsString.Append($"{token.Key}={token.Value}");
+                if (token.Key != otherParams.Last().Key)
+                {
+                    otherParamsString.Append("&");
+                }
+            }
+
+            var result = new VirtualPathData(this, $"{urlPair.CanonicalUrl}{otherParamsString}");
 
             return result;
         }

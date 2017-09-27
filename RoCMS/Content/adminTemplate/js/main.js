@@ -1,5 +1,6 @@
 ﻿/// <reference path="../../base/vendor/jquery/core/jquery-2.0.2.js" />
 /// <reference path="../../base/ro/js/rocms.helpers.js" />
+/// <reference path="../../admin/vendor/bootstrap/js/bootstrap.min.js" />
 
 
 function toggleHideMenuCookie() {

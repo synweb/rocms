@@ -112,9 +112,9 @@ namespace RoCMS
             );
 
 
-
-            RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
             RegisterIndexRoute(routes);
+            RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
+            
 
             routes.MapRoute(
                 name: "Default",

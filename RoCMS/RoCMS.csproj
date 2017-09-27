@@ -515,6 +515,7 @@
     <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\base\vendor\jquery\core\jquery.mask.js" />
     <Content Include="Content\base\vendor\jquery\ui-short\jquery.blockUI.js" />
+    <Content Include="Content\base\vendor\jquery\ui\jquery-ui-1.10.3.js" />
     <Content Include="Content\base\vendor\knockout\ru-RU.js" />
     <Content Include="Content\login\login.css" />
     <Content Include="Content\base\vendor\typeahead\bootstrap3-typeahead.js" />
@@ -624,7 +625,6 @@
     <Content Include="Content\admin\vendor\bootstrap-switch\css\bootstrap-switch.css" />
     <Content Include="Content\admin\vendor\bootstrap-switch\js\bootstrap-switch.min.js" />
     <Content Include="Content\base\vendor\jquery\core\jquery-2.0.2.js" />
-    <Content Include="Content\base\vendor\jquery\ui\jquery-ui-1.10.3.js" />
     <Content Include="Content\base\vendor\jquery\core\jquery.tmpl.js" />
     <Content Include="Content\base\vendor\jquery\core\jquery.unobtrusive-ajax.js" />
     <Content Include="Content\base\vendor\jquery\core\jquery.validate.js" />

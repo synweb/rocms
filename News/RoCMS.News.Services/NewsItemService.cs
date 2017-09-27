@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using AutoMapper;
+using RoCMS.Base.Exceptions;
 using RoCMS.Base.Extentions;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Models;
@@ -267,7 +268,7 @@ namespace RoCMS.News.Services
         {
             var heart = _heartService.GetHeart(id);
             if (heart == null)
-                return null;
+                throw new UrlNotFoundException();
             var dataRes = _newsItemGateway.SelectOne(heart.HeartId);
             var res = Mapper.Map<NewsItem>(dataRes);
             res.FillHeart(heart);
@@ -279,7 +280,7 @@ namespace RoCMS.News.Services
         {
             var heart = _heartService.GetHeart(relativeUrl);
             if (heart == null)
-                return null;
+                throw new UrlNotFoundException(relativeUrl);
             var dataRes = _newsItemGateway.SelectOne(heart.HeartId);
             var res = Mapper.Map<NewsItem>(dataRes);
             res.FillHeart(heart);

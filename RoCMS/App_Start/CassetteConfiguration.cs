@@ -1,4 +1,5 @@
 using System.IO;
+using System.Web.UI.WebControls;
 using Cassette;
 using Cassette.Scripts;
 using Cassette.Stylesheets;
@@ -90,7 +91,12 @@ namespace RoCMS
                 "bootstrap-timepicker/js/bootstrap-timepicker.js",
                 "tagsinput/jquery.tagsinput.min.js",
                 "clipboard/clipboard.min.js"
-            }, bundle => bundle.AddReference("~/Content/base/vendor/jquery/core"));
+            }, bundle =>
+            {
+                bundle.AddReference("~/Content/base/vendor/jquery/core");
+                bundle.AddReference("~/Content/base/vendor/jquery/ui");
+                
+            });
 
             bundles.AddPerIndividualFile<ScriptBundle>("Content/admin/ro", new FileSearch
             {

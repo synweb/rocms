@@ -11,5 +11,10 @@ namespace RoCMS.Base.Exceptions
         public UrlNotFoundException(string message):base(message)
         {
         }
+
+        public UrlNotFoundException()
+        {
+            
+        }
     }
 }

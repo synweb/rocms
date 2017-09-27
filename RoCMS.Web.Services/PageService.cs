@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Transactions;
 using AutoMapper;
+using RoCMS.Base.Exceptions;
 using RoCMS.Data.Gateways;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
@@ -57,7 +58,7 @@ namespace RoCMS.Web.Services
             {
                 var heart = _heartService.GetHeart(url);
                 if (heart == null)
-                    return null;
+                    throw new UrlNotFoundException(url);
                 var page = _pageGateway.SelectOne(heart.HeartId);
                 var res = Mapper.Map<Page>(page);
                 res.FillHeart(heart);
@@ -70,7 +71,7 @@ namespace RoCMS.Web.Services
         {
             var page = _pageGateway.SelectOne(id);
             if (page == null)
-                return null;
+                throw new UrlNotFoundException();
             var res = Mapper.Map<Page>(page);
             var heart = _heartService.GetHeart(id);
             Mapper.Map(res, heart);

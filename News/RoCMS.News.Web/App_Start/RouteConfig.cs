@@ -31,7 +31,6 @@ namespace RoCMS.News.Web
 
         public static void RegisterRoutes(RouteCollection routes)
         {
-            RoutingHelper.RegisterHeartRoute(routes, typeof(NewsItem), "News", "BlogSEF");
             //routes.MapRoute(
             //    name: "NewsItem",
             //    url: "News/{id}",
@@ -132,6 +131,7 @@ namespace RoCMS.News.Web
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 constraints: new { controller = constraint }
             );
+            RoutingHelper.RegisterHeartRoute(routes, typeof(NewsItem), "News", "BlogSEF");
         }
     }
 }

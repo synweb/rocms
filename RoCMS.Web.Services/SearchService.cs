@@ -12,16 +12,18 @@ namespace RoCMS.Web.Services
 {
     public class SearchService : BaseCoreService, ISearchService
     {
-
         protected override int CacheExpirationInMinutes => 30;
 
         private readonly SearchItemGateway _searchItemGateway = new SearchItemGateway();
         
-        public SearchService()
+        public SearchService(IHeartService heartService)
         {
+            _heartService = heartService;
             _rules = new Dictionary<Type, ICollection<IndexingRule>>();
             InitCache();
         }
+
+        private readonly IHeartService _heartService;
 
 
         public void RegisterRules(Type type, ICollection<IndexingRule> rules)
@@ -93,7 +95,20 @@ namespace RoCMS.Web.Services
 
             var dataRes = items.OrderByDescending(x => x.Relevance).Skip(startIndex - 1).Take(count);
             totalCount = items.Count;
-            return Mapper.Map<IEnumerable<SearchResultItem>>(dataRes);
+
+            var res = new List<SearchResultItem>();
+            foreach (var searchResultItem in dataRes)
+            {
+                var resItem = Mapper.Map<SearchResultItem>(searchResultItem);
+                if (searchResultItem.HeartId.HasValue)
+                {
+                    // берём Url из Heart-ов, если определён HeartId
+                    // на уровне базы в результате поиска есть ЛИБО heartId, ЛИБО url
+                    resItem.Url = _heartService.GetCanonicalUrl(searchResultItem.HeartId.Value);
+                }
+                res.Add(resItem);
+            }
+            return res;
         }
 
     }

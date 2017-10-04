@@ -8,7 +8,7 @@
 @model RoCMS.News.Contract.Models.NewsItem
 @{
     var blogService = DependencyResolver.Current.GetService<IBlogService>();
-    var blog = blogService.GetBlog(Model.BlogId);
+    var blog = blogService.GetBlog(Model.BlogId.Value);
 
     ViewBag.Header = ViewBag.Title = "Пост в блоге";
     if (!Request.IsAjaxRequest())

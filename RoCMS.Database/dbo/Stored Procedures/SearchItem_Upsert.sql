@@ -7,6 +7,7 @@
 	@Title nvarchar(200),
 	@Url nvarchar(500),
 	@ImageId VARCHAR(30),
+	@HeartId int,
 	@Weight int
 AS
 	IF (EXISTS(SELECT * FROM SearchItem WHERE [SearchItemKey]=@SearchItemKey AND [EntityName]=@EntityName AND [EntityId]=@EntityId))
@@ -21,6 +22,6 @@ AS
 		WHERE 
 			[SearchItemKey]=@SearchItemKey AND [EntityName]=@EntityName AND [EntityId]=@EntityId
 	ELSE
-		INSERT INTO [SearchItem] ([SearchItemKey], [EntityName], [EntityId], [SearchContent], [Text], [Title], [Url], [Weight],[ImageId])
-			VALUES (@SearchItemKey, @EntityName, @EntityId, @SearchContent, @Text, @Title, @Url, @Weight, @ImageId)
+		INSERT INTO [SearchItem] ([SearchItemKey], [EntityName], [EntityId], [SearchContent], [Text], [Title], [Url], [Weight],[ImageId],[HeartId])
+			VALUES (@SearchItemKey, @EntityName, @EntityId, @SearchContent, @Text, @Title, @Url, @Weight, @ImageId, @HeartId)
 		

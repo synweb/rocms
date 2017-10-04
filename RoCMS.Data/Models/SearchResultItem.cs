@@ -16,6 +16,7 @@ namespace RoCMS.Data.Models
         public string Url { get; set; }
         public int Weight { get; set; }
         public string ImageId { get; set; }
+        public int? HeartId { get; set; }
         public int Rank { get; set; }
         public int Relevance => Weight*Rank;
     }

@@ -167,7 +167,7 @@ namespace RoCMS
                         SearchContent = SearchHelper.ToSearchIndexText(item.Title),
                         Title = item.Title,
                         Weight = 2,
-                        Url = item.CanonicalUrl,
+                        HeartId = item.HeartId,
                         Text = item.MetaDescription ?? SearchHelper.ToSearchIndexText(TextCutHelper.Cut(SearchHelper.ToSearchIndexText(item.Content), 150)),
                     };
                 },
@@ -182,7 +182,7 @@ namespace RoCMS
                         SearchContent = SearchHelper.ToSearchIndexText(item.Content),
                         Title = item.Title,
                         Weight = 1,
-                        Url = item.CanonicalUrl,
+                        HeartId = item.HeartId,
                         Text = item.MetaDescription ?? SearchHelper.ToSearchIndexText(TextCutHelper.Cut(SearchHelper.ToSearchIndexText(item.Content), 150)),
                     };
                 }

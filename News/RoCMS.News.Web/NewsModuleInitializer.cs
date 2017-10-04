@@ -24,7 +24,7 @@ namespace RoCMS.News.Web
 
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             RegisterSearch();
-            InitBreadcrumbs();
+            //InitBreadcrumbs();
             InitSessionUrls();
         }
 
@@ -51,7 +51,7 @@ namespace RoCMS.News.Web
                         Title = item.Title,
                         Weight = 2,
                         Text = item.Description,
-                        Url = RouteConfig.BlogUrl+"/"+item.RelativeUrl
+                        HeartId = item.HeartId
                     };
                 },
                 x =>
@@ -67,7 +67,7 @@ namespace RoCMS.News.Web
                         Title = item.Title,
                         Weight = 1,
                         Text = item.Description,
-                        Url = RouteConfig.BlogUrl+"/"+item.RelativeUrl
+                        HeartId = item.HeartId
                     };
                 },
                 x =>
@@ -83,76 +83,77 @@ namespace RoCMS.News.Web
                         Title = item.Title,
                         Weight = 1,
                         Text = item.Description,
-                        Url = RouteConfig.BlogUrl+"/"+item.RelativeUrl
+                        HeartId = item.HeartId
                     };
                 }
             });
-            searchService.RegisterRules(typeof (Category), new List<IndexingRule>()
-            {
-                x =>
-                {
-                    var item = (Category) x;
-                    return new SearchItem()
-                    {
-                        SearchItemKey = item.SearchKeyName,
-                        EntityName = x.GetType().FullName,
-                        EntityId = item.CategoryId.ToString(),
-                        SearchContent = item.Name,
-                        Title = item.Name,
-                        Text = item.Name,
-                        Weight = 1,
-                        Url = $"{RouteConfig.BlogUrl}/{item.RelativeUrl}"
-                    };
-                }
-            });
-            searchService.RegisterRules(typeof(Blog), new List<IndexingRule>()
-            {
-                x =>
-                {
-                    var item = (Blog) x;
-                    return new SearchItem()
-                    {
-                        SearchItemKey = item.SearchKeyRelativeUrl,
-                        EntityName = x.GetType().FullName,
-                        EntityId = item.BlogId.ToString(),
-                        SearchContent = item.RelativeUrl,
-                        Title = item.Title,
-                        Text = item.RelativeUrl,
-                        Weight = 1,
-                        Url = $"blogs/{item.RelativeUrl}"
-                    };
-                },
-                                x =>
-                {
-                    var item = (Blog) x;
-                    return new SearchItem()
-                    {
-                        SearchItemKey = item.SearchKeyTitle,
-                        EntityName = x.GetType().FullName,
-                        EntityId = item.BlogId.ToString(),
-                        SearchContent = item.Title,
-                        Title = item.Title,
-                        Text = item.Title,
-                        Weight = 1,
-                        Url = $"blogs/{item.RelativeUrl}"
-                    };
-                },
-                x =>
-                {
-                    var item = (Blog) x;
-                    return new SearchItem()
-                    {
-                        SearchItemKey = item.SearchKeySubtitle,
-                        EntityName = x.GetType().FullName,
-                        EntityId = item.BlogId.ToString(),
-                        SearchContent = item.Subtitle,
-                        Title = item.Title,
-                        Text = item.Subtitle,
-                        Weight = 1,
-                        Url = $"blogs/{item.RelativeUrl}"
-                    };
-                }
-            });
+            //TODO: категории и блоги пока не участвуют в поиске.
+            //searchService.RegisterRules(typeof (Category), new List<IndexingRule>()
+            //{
+            //    x =>
+            //    {
+            //        var item = (Category) x;
+            //        return new SearchItem()
+            //        {
+            //            SearchItemKey = item.SearchKeyName,
+            //            EntityName = x.GetType().FullName,
+            //            EntityId = item.CategoryId.ToString(),
+            //            SearchContent = item.Name,
+            //            Title = item.Name,
+            //            Text = item.Name,
+            //            Weight = 1,
+            //            Url = $"{RouteConfig.BlogUrl}/{item.RelativeUrl}"
+            //        };
+            //    }
+            //});
+            //searchService.RegisterRules(typeof(Blog), new List<IndexingRule>()
+            //{
+            //    x =>
+            //    {
+            //        var item = (Blog) x;
+            //        return new SearchItem()
+            //        {
+            //            SearchItemKey = item.SearchKeyRelativeUrl,
+            //            EntityName = x.GetType().FullName,
+            //            EntityId = item.BlogId.ToString(),
+            //            SearchContent = item.RelativeUrl,
+            //            Title = item.Title,
+            //            Text = item.RelativeUrl,
+            //            Weight = 1,
+            //            Url = $"blogs/{item.RelativeUrl}"
+            //        };
+            //    },
+            //                    x =>
+            //    {
+            //        var item = (Blog) x;
+            //        return new SearchItem()
+            //        {
+            //            SearchItemKey = item.SearchKeyTitle,
+            //            EntityName = x.GetType().FullName,
+            //            EntityId = item.BlogId.ToString(),
+            //            SearchContent = item.Title,
+            //            Title = item.Title,
+            //            Text = item.Title,
+            //            Weight = 1,
+            //            Url = $"blogs/{item.RelativeUrl}"
+            //        };
+            //    },
+            //    x =>
+            //    {
+            //        var item = (Blog) x;
+            //        return new SearchItem()
+            //        {
+            //            SearchItemKey = item.SearchKeySubtitle,
+            //            EntityName = x.GetType().FullName,
+            //            EntityId = item.BlogId.ToString(),
+            //            SearchContent = item.Subtitle,
+            //            Title = item.Title,
+            //            Text = item.Subtitle,
+            //            Weight = 1,
+            //            Url = $"blogs/{item.RelativeUrl}"
+            //        };
+            //    }
+            //});
         }
 
         private void InitBreadcrumbs()

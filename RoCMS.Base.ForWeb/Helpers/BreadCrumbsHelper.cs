@@ -31,7 +31,7 @@ namespace RoCMS.Base.ForWeb.Helpers
             return res;
         }
         
-        public static IList<BreadCrumb> ForCurrentPage(string url)
+        public static IList<BreadCrumb> ForCurrentHeart(string url)
         {
             try
             {
@@ -43,24 +43,24 @@ namespace RoCMS.Base.ForWeb.Helpers
                     }
                 }
 
-                var pageService = DependencyResolver.Current.GetService<IPageService>();
+                var heartService = DependencyResolver.Current.GetService<IHeartService>();
                 var settingService = DependencyResolver.Current.GetService<ISettingsService>();
                 var indexPage = settingService.GetHomepageUrl();
-                string[] pageUrls = url.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+                string[] urlSegments = url.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
                 IList<BreadCrumb> res = new List<BreadCrumb>();
 
-                foreach (var pageUrl in pageUrls)
+                foreach (var urlSegment in urlSegments)
                 {
-                    if(indexPage.Equals(pageUrl))
+                    if(indexPage.Equals(urlSegment))
                         continue;
-                    var page = pageService.GetPage(pageUrl);
-                    if (page != null)
+                    var heart = heartService.GetHeart(urlSegment);
+                    if (heart != null)
                     {
                         res.Add(new BreadCrumb()
                         {
-                            IsLast = pageUrl == pageUrls.Last(),
-                            Title = string.IsNullOrEmpty(page.BreadcrumbsTitle) ? page.Title : page.BreadcrumbsTitle,
-                            Url = $"/{page.CanonicalUrl}"
+                            IsLast = urlSegment == urlSegments.Last(),
+                            Title = string.IsNullOrEmpty(heart.BreadcrumbsTitle) ? heart.Title : heart.BreadcrumbsTitle,
+                            Url = $"/{heart.CanonicalUrl}"
                         });
                     }
                 }

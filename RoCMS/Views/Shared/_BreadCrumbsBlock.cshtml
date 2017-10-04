@@ -4,7 +4,7 @@
 
     string url = HttpUtility.UrlDecode(Request.Url.AbsolutePath);
 
-    var breadCrumbs = BreadCrumbsHelper.ForCurrentPage(url);
+    var breadCrumbs = BreadCrumbsHelper.ForCurrentHeart(url);
 }
 
 @if (breadCrumbs.Any())

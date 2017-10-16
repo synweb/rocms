@@ -25,6 +25,7 @@ namespace RoCMS.Helpers
                     dynamicNode.RouteValues.Add("relativeUrl", page.CanonicalUrl);
                     dynamicNode.Route = typeof(RoCMS.Web.Contract.Models.Page).FullName;
                     dynamicNode.Title = page.Title;
+                    dynamicNode.Protocol = "*";
 
                     dynamicNode.Attributes.Add("visibility", "MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult");
 

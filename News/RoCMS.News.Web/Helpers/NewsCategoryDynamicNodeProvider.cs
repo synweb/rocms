@@ -25,6 +25,7 @@ namespace RoCMS.News.Web.Helpers
     //                dynamicNode.RouteValues.Add("relativeUrl", cat.CanonicalUrl);
     //                dynamicNode.Route = "NewsCategoryItem";
     //                dynamicNode.Title = cat.Name;
+    //                  dynamicNode.Protocol = "*";
 
     //                dynamicNode.Attributes.Add("visibility", "MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult");
 
@@ -34,7 +35,7 @@ namespace RoCMS.News.Web.Helpers
     //        }
     //        catch
     //        {
-                
+
     //        }
 
     //        return nodes;

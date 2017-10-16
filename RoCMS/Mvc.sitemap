@@ -3,7 +3,7 @@
             xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
             xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
 
-  <mvcSiteMapNode title="Home" controller="Home" action="Index" key="Home" visibility="MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult">
+  <mvcSiteMapNode title="Home" controller="Home" action="Index" key="Home" protocol="*" visibility="MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult">
     <mvcSiteMapNode title="AdminHome" controller="Admin" action="Index" key="AdminHome" visibility="AdminMenu,!*"/>
     <!--<mvcSiteMapNode title="Site" key="Site" controller="Home" action="Index" visibilityProvider=""/>-->
   </mvcSiteMapNode>

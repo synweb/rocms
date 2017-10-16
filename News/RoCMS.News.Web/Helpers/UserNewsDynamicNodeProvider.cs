@@ -28,7 +28,7 @@ namespace RoCMS.News.Web.Helpers
     //                dynamicNode.RouteValues.Add("newsUrl", newsItem.RelativeUrl);
     //                dynamicNode.RouteValues.Add("blogUrl", blog.RelativeUrl);
     //                dynamicNode.Route = "UserBlogItem";
-
+    //              dynamicNode.Protocol = "*";
     //                dynamicNode.Title = newsItem.Title;
 
     //                dynamicNode.Attributes.Add("visibility", "MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult");
@@ -39,7 +39,7 @@ namespace RoCMS.News.Web.Helpers
     //        }
     //        catch (Exception e)
     //        {
-                
+
     //        }
 
     //        return nodes;

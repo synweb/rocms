@@ -171,6 +171,13 @@ namespace RoCMS.News.Web.Controllers
             return RedirectToRoutePermanent("BlogItem", new { relativeUrl = relativeUrl });
         }
 
+        /// <summary>
+        /// Используется при построении страниц аля /blog/tag/блаблабла
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
         [PagingFilter]
         [AllowAnonymous]
         public ActionResult TagSearch(string tag, int pageNumber = 1, int pageSize = 10)
@@ -188,6 +195,26 @@ namespace RoCMS.News.Web.Controllers
             ViewBag.TotalCount = totalCount;
             ViewBag.PagingRoute = "BlogTagSearch";
             return View(news);
+        }
+
+        /// <summary>
+        /// Используется при встраивании в страницы через виджет
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <param name="pageNumber"></param>
+        /// <param name="pageSize"></param>
+        /// <returns></returns>
+        [PagingFilter]
+        [AllowAnonymous]
+        public ActionResult Tag(string tag, int pageNumber = 1, int pageSize = 10)
+        {
+            ViewBag.Tag = tag;
+            int totalCount;
+            IEnumerable<NewsItem> news = _newsItemService.GetNewsPage(new NewsFilter() { TagName = tag }, pageNumber, pageSize, out totalCount);
+            ViewBag.TotalCount = totalCount;
+            ViewBag.NoLayout = true;
+            ViewBag.PagingRoute = typeof(RoCMS.Web.Contract.Models.Page).FullName;
+            return View("Page", news);
         }
 
         [PagingFilter]

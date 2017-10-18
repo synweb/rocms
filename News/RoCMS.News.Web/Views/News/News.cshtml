@@ -8,19 +8,30 @@
 @{
     ViewBag.Title = ViewBag.Header = Model.Title;
 
-    if (Model.Categories.Any())
-    {
-        ViewBag.CanonicalUrl = Url.RouteUrl(typeof(NewsItem).FullName, new {relativeUrl = Model.CanonicalUrl});
-    }
+
+    ViewBag.Styles = Model.Styles;
+    ViewBag.Scripts = Model.Scripts;
+
+    ViewBag.CanonicalUrl = Url.RouteUrl(typeof(NewsItem).FullName, new { relativeUrl = Model.CanonicalUrl });
+    ViewBag.DisableIndexation = Model.Noindex;
+
+
     var userService = DependencyResolver.Current.GetService<ISecurityService>();
     var author = userService.GetUser(Model.AuthorId).Username;
 
-    if (!Request.IsAjaxRequest())
+    if (!String.IsNullOrEmpty(Model.Layout))
+    {
+        ViewBag.Layout = Model.Layout;
+
+        Layout = String.Format("~/Views/Shared/PublicLayouts/_{0}.cshtml", Model.Layout);
+    }
+    else
     {
         Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
     }
 
     bool showEditLink = User.IsAuthorizedForResource(RoCMS.Base.RoCmsResources.News);
+
 
 
     var blockService = DependencyResolver.Current.GetService<IBlockService>();

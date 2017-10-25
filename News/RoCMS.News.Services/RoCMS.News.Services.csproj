@@ -58,10 +58,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Comments\RoCMS.Comments.Contract\RoCMS.Comments.Contract.csproj">
-      <Project>{409D7216-9EFD-4CFE-A2F8-1497A40B07B5}</Project>
-      <Name>RoCMS.Comments.Contract</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\RoCMS.Base\RoCMS.Base.csproj">
       <Project>{83422666-7277-47C6-8CD1-D2B9721596DA}</Project>
       <Name>RoCMS.Base</Name>

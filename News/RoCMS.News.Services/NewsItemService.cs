@@ -7,9 +7,6 @@ using RoCMS.Base.Exceptions;
 using RoCMS.Base.Extentions;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Models;
-using RoCMS.Comments.Contract.Models;
-using RoCMS.Comments.Contract.Services;
-using RoCMS.Comments.Contract.ViewModels;
 using RoCMS.News.Contract.Services;
 using RoCMS.News.Data.Gateways;
 using RoCMS.News.Data.Models;
@@ -26,7 +23,7 @@ namespace RoCMS.News.Services
     {
         private const int TagCacheLenght = 2; // количество букв по которым ищутся тэги
         private readonly ISearchService _searchService;
-        private readonly ICommentService _commentService;
+
         private readonly CategoryGateway _categoryGateway = new CategoryGateway();
         private readonly NewsItemCategoryGateway _newsItemCategoryGateway = new NewsItemCategoryGateway();
         private readonly NewsItemGateway _newsItemGateway = new NewsItemGateway();
@@ -37,9 +34,9 @@ namespace RoCMS.News.Services
         private readonly IHeartService _heartService;
         private readonly IBlogService _blogService;
 
-        public NewsItemService(ICommentService commentService, ISearchService searchService, INewsCategoryService categoryService, IBlogService blogService, IHeartService heartService)
+        public NewsItemService(ISearchService searchService, INewsCategoryService categoryService, IBlogService blogService, IHeartService heartService)
         {
-            _commentService = commentService;
+
             _searchService = searchService;
             _categoryService = categoryService;
             _blogService = blogService;
@@ -47,60 +44,6 @@ namespace RoCMS.News.Services
 
             InitCache("TagMemoryCache");
             CacheExpirationInMinutes = 30;
-        }
-
-        public int CreateComment(int targetId, Comment comment)
-        {
-            var item = _newsItemGateway.SelectOne(targetId);
-            var heart = _heartService.GetHeart(targetId);
-            using (var ts = new TransactionScope())
-            {
-                if (item.CommentTopicId == null)
-                {
-                    var commentTopic = new CommentTopic()
-                    {
-                        TargetId = item.HeartId,
-                        TargetUrl = "/News/" + targetId,
-                        TargetTitle = heart.Title,
-                        TargetType = "News"
-                    };
-                    int commentTopicId = _commentService.CreateTopic(commentTopic);
-                    item.CommentTopicId = commentTopicId;
-                    _newsItemGateway.Update(item);
-                }
-                comment.CommentTopicId = item.CommentTopicId.Value;
-                int res = _commentService.CreateComment(comment);
-
-                ts.Complete();
-                return res;
-            }
-        }
-
-        public void DeleteComment(int commentId)
-        {
-            _commentService.DeleteComment(commentId);
-        }
-
-        public void UpdateCommentText(int commentId, string text)
-        {
-            _commentService.UpdateCommentText(commentId, text);
-        }
-
-        public void ModerateComment(int commentId, bool moderated)
-        {
-            _commentService.ModerateComment(commentId, moderated);
-        }
-
-        public ICollection<CommentVM> GetThread(int targetId)
-        {
-            var res = _commentService.GetThreadsByTopic(targetId, false);
-            return res;
-        }
-
-        public Comment GetComment(int commentId)
-        {
-            var res = _commentService.GetComment(commentId);
-            return res;
         }
 
         public IEnumerable<NewsItem> GetAllNews()

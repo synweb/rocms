@@ -1,12 +1,14 @@
-﻿function commentsLoaded(apiUrl) {
+﻿function commentsLoaded(heartId) {
+    var apiUrl = "/api/comments/comment/create";
+
     $("button.leave-comment").click(function () {
-        leaveComment(apiUrl, $(this).closest(".leave-comment-container"));
+        leaveComment(apiUrl, $(this).closest(".leave-comment-container"), heartId);
     });
 
     $(".comment-textarea").keydown(function (e) {
         if (e.ctrlKey && e.keyCode === 13) {
             // Ctrl-Enter pressed
-            leaveComment(apiUrl, $(this).closest(".leave-comment-container"), true);
+            leaveComment(apiUrl, $(this).closest(".leave-comment-container"), heartId, true);
         }
     });
 
@@ -25,24 +27,22 @@
     });
 
     $(".comments").on("click", "button.leave-reply", function () {
-        leaveComment(apiUrl, $(this).closest(".leave-reply-container"), true);
+        leaveComment(apiUrl, $(this).closest(".leave-reply-container"), heartId, true);
     });
 
     $(".comments").on("keydown", '.reply-textarea', function (e) {
         if (e.ctrlKey && e.keyCode === 13) {
             // Ctrl-Enter pressed
-            leaveComment(apiUrl, $(this).closest(".leave-reply-container"), true);
+            leaveComment(apiUrl, $(this).closest(".leave-reply-container"), heartId, true);
         }
     });
 }
 
-function leaveComment(apiUrl, $context, isReply) {
+function leaveComment(apiUrl, $context, heartId, isReply) {
     var form = $context.find("form");
     $.validator.unobtrusive.parse(form, true);
 
     if (form.valid()) {
-
-
         var text = $context.find("textarea").val();
         var name = $context.find(".comment-name").val();
         var email = $context.find(".comment-email").val();
@@ -51,7 +51,8 @@ function leaveComment(apiUrl, $context, isReply) {
             text: text,
             name: name,
             email: email,
-            url: url
+            url: url,
+            heartId: heartId
         };
 
         if (isReply) {

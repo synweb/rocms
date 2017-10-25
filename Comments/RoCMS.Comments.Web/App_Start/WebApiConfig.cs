@@ -15,6 +15,7 @@ namespace RoCMS.Comments.Web
             ApiRoute(config.Routes, "comment/{id}/delete", "CommentApi", "Delete");
             ApiRoute(config.Routes, "comment/{id}/hide", "CommentApi", "Hide");
             ApiRoute(config.Routes, "comment/{id}/show", "CommentApi", "Show");
+            ApiRoute(config.Routes, "comment/create", "CommentApi", "Create");
         }
 
 

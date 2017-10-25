@@ -6,7 +6,7 @@ namespace RoCMS.Comments.Contract.Models
     {
         public int CommentId { get; set; }
         public int? ParentCommentId { get; set; }
-        public int CommentTopicId { get; set; }
+        public int HeartId { get; set; }
         public string Text { get; set; }
         public bool Moderated { get; set; }
         public int? AuthorId { get; set; }

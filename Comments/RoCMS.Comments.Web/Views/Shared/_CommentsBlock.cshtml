@@ -2,12 +2,14 @@
 @using RoCMS.Comments.Contract.ViewModels
 @model RoCMS.Comments.Contract.ViewModels.CommentsBlockVM
 
+@{
+    var commentService = DependencyResolver.Current.GetService<ICommentService>();
+    ICollection<CommentVM> threads = commentService.GetThreadsByHeart(Model.HeartId, true);
+}
+
 <div class="comments single_post_comment_area">
-    @if (Model.TopicId.HasValue)
-    {
-        var commentService = DependencyResolver.Current.GetService<ICommentService>();
-        ICollection<CommentVM> threads = commentService.GetThreadsByTopic(Model.TopicId.Value, false);
-        if (threads.Any())
+
+        @if (threads.Any())
         {
             <div class="section-heading">
                 <p class="comments-title">@Model.SectionHeader</p>
@@ -16,7 +18,7 @@
                 @Html.Partial("_Thread", threads)
             </div>
         }
-    }
+
     <div class="section-heading">
         <p class="comments-title">@Model.LeaveCommentHeader</p>
     </div>
@@ -29,7 +31,7 @@
 @Js("/bin/Content/client/comments")
 @JsInline(@<script>
     $(function () {
-        commentsLoaded("@(Model.AddCommentApiUrl)");
+        commentsLoaded(@Model.HeartId);
     });
     </script>)
 

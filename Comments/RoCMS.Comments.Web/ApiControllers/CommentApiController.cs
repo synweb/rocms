@@ -11,32 +11,58 @@ using RoCMS.Comments.Contract;
 using RoCMS.Comments.Contract.Models;
 using RoCMS.Comments.Contract.Services;
 using RoCMS.Helpers;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Comments.Web.ApiControllers
 {
-    
+
     [AuthorizeResourcesApi(RoCmsResources.AdminPanel, CommentsRoCMSResources.CommentsEditor)]
-    public class CommentApiController: ApiController
+    public class CommentApiController : ApiController
     {
         private readonly ICommentService _commentService;
+        private readonly ILogService _logService;
 
-        public CommentApiController(ICommentService commentService)
+        public CommentApiController(ICommentService commentService, ILogService logService)
         {
             _commentService = commentService;
+            _logService = logService;
         }
 
         //private int UserId { get { return AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current); } }
 
-        //public ResultModel Create(Comment comment)
-        //{
-        //    if (String.IsNullOrWhiteSpace(comment.Text))
-        //    {
-        //        return new ResultModel(false) {ErrorType = "TextEmpty"};
-        //    }
-        //    comment.AuthorId = UserId;
-        //    int id = _commentService.CreateComment(comment);
-        //    return new ResultModel(true, id);
-        //}
+        [System.Web.Http.AllowAnonymous]
+        [System.Web.Http.HttpPost]
+        public ResultModel Create(Comment comment)
+        {
+            //    if (String.IsNullOrWhiteSpace(comment.Text))
+            //    {
+            //        return new ResultModel(false) {ErrorType = "TextEmpty"};
+            //    }
+            //    comment.AuthorId = UserId;
+            //    int id = _commentService.CreateComment(comment);
+            //    return new ResultModel(true, id);
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(comment.Text))
+                {
+                    return new ResultModel(false) { ErrorType = "TextEmpty" };
+                }
+                //TODO: сделать нормальную настройку для доступа комментов для зарегистррованных
+                //comment.AuthorId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
+                int res = _commentService.CreateComment(comment);
+                return new ResultModel(true, res);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return new ResultModel(e);
+            }
+
+
+        }
+
+
         [System.Web.Http.HttpPost]
         public ResultModel Delete(int id)
         {

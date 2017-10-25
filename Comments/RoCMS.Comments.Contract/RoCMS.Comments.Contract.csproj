@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="CommentsRoCMSResources.cs" />
     <Compile Include="CommentsSettingStrings.cs" />
-    <Compile Include="ICommentable.cs" />
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\CommentTopic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

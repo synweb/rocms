@@ -65,22 +65,17 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Schema\Comments.sql" />
-    <Build Include="Tables\CommentTopic.sql" />
     <Build Include="Tables\Comment.sql" />
     <Build Include="Triggers\CommentDelete.sql" />
-    <Build Include="Triggers\CommentTopicDelete.sql" />
-    <Build Include="Stored Procedures\CommentTopic_Insert.sql" />
-    <Build Include="Stored Procedures\CommentTopic_Delete.sql" />
     <Build Include="Stored Procedures\Comment_Insert.sql" />
     <Build Include="Stored Procedures\Comment_UpdateText.sql" />
     <Build Include="Stored Procedures\Comment_UpdateModerated.sql" />
     <Build Include="Stored Procedures\Comment_Delete.sql" />
-    <Build Include="Stored Procedures\Comment_SelectByTopic.sql" />
+    <Build Include="Stored Procedures\Comment_SelectByHeart.sql" />
     <Build Include="Stored Procedures\Comment_SelectByAuthor.sql" />
     <Build Include="Stored Procedures\Comment_SelectOne.sql" />
-    <Build Include="Stored Procedures\CommentTopic_Select.sql" />
-    <Build Include="Stored Procedures\CommentTopic_SelectCommentCount.sql" />
-    <Build Include="Stored Procedures\CommentTopic_SelectOne.sql" />
+    <Build Include="Stored Procedures\Comment_SelectHeartIds.sql" />
+    <Build Include="Stored Procedures\Comment_SelectCount.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">
@@ -89,5 +84,8 @@
       <Private>True</Private>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="RoCMS.Comments.Database.refactorlog" />
   </ItemGroup>
 </Project>

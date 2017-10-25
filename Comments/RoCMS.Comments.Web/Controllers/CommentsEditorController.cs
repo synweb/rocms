@@ -9,32 +9,38 @@ using RoCMS.Comments.Contract;
 using RoCMS.Comments.Contract.Models;
 using RoCMS.Comments.Contract.Services;
 using RoCMS.Comments.Contract.ViewModels;
+using RoCMS.Web.Contract.Models;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Comments.Web.Controllers
 {
     [AuthorizeResources(RoCmsResources.AdminPanel, CommentsRoCMSResources.CommentsEditor)]
-    public class CommentsEditorController: Controller
+    public class CommentsEditorController : Controller
     {
         private readonly ICommentService _commentService;
+        private readonly IHeartService _heartService;
 
-        public CommentsEditorController(ICommentService commentService)
+        public CommentsEditorController(ICommentService commentService, IHeartService heartService)
         {
             _commentService = commentService;
+            _heartService = heartService;
         }
 
         [MvcSiteMapNode(Title = "Комментарии", ParentKey = "AdminHome", Key = "Comments", VisibilityProvider = "RoCMS.Helpers.RoCMSSiteMapNodesVisibilityProvider, RoCMS", Attributes = @"{ ""cmsResourceRequired"":""CommentsEditor"", ""visibility"": ""AdminMenu"", ""iconClass"" : ""fa-comments-o"" }")]
-        public ActionResult Topics(PagingFilter paging)
+        [PagingFilter]
+        public ActionResult Topics(int page = 1, int pageSize = 10)
         {
             int totalCount;
-            ICollection<CommentTopicVM> topics = _commentService.GetTopicVMs(paging, out totalCount);
+            int startIndex = (page - 1) * pageSize + 1;
+            ICollection<CommentTopicVM> topics = _commentService.GetTopicVMs(startIndex, pageSize, out totalCount);
             return View(topics);
         }
 
         public ActionResult Topic(int id)
         {
-            CommentTopic topic = _commentService.GetTopic(id);
-            ICollection<CommentVM> comments = _commentService.GetThreadsByTopic(id, false);
-            return View(new Tuple<CommentTopic, ICollection<CommentVM>>(topic, comments));
+            Heart heart = _heartService.GetHeart(id);
+            ICollection<CommentVM> comments = _commentService.GetThreadsByHeart(id);
+            return View(new Tuple<Heart, ICollection<CommentVM>>(heart, comments));
         }
     }
 }

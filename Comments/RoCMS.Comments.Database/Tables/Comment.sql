@@ -2,7 +2,7 @@
 (
 	[CommentId] INT NOT NULL IDENTITY(1,1),
 	[ParentCommentId] INT NULL, 
-	[CommentTopicId] INT NOT NULL, 
+	[HeartId] INT NOT NULL, 
 	[Text] NVARCHAR(MAX) NOT NULL,
 	[Moderated] BIT NOT NULL,
 	[AuthorId] INT NULL,
@@ -13,7 +13,7 @@
     [Name] NVARCHAR(200) NULL, 
     CONSTRAINT [PK_Comment] PRIMARY KEY CLUSTERED ([CommentId] DESC), 
     CONSTRAINT [FK_Comment_Author] FOREIGN KEY ([AuthorId]) REFERENCES [dbo].[User]([UserId]) ON DELETE SET NULL, 
-    CONSTRAINT [FK_Comment_CommentTopic] FOREIGN KEY ([CommentTopicId]) REFERENCES [Comments].[CommentTopic]([CommentTopicId]),
+    CONSTRAINT [FK_Comment_Heart] FOREIGN KEY ([HeartId]) REFERENCES [dbo].[Heart]([HeartId]),
     CONSTRAINT [FK_Comment_Comment] FOREIGN KEY ([ParentCommentId]) REFERENCES [Comments].[Comment]([CommentId]),
 )
 

@@ -8,15 +8,13 @@ namespace RoCMS.Comments.Contract.ViewModels
 {
     public class CommentsBlockVM
     {
-        public CommentsBlockVM(int? topicId, string addCommentApiUrl, string leaveCommentHeader, string sectionHeader)
+        public CommentsBlockVM(int heartId, string leaveCommentHeader, string sectionHeader)
         {
-            TopicId = topicId;
-            AddCommentApiUrl = addCommentApiUrl;
+            HeartId = heartId;
             LeaveCommentHeader = leaveCommentHeader;
             SectionHeader = sectionHeader;
         }
-        public int? TopicId { get; set; }
-        public string AddCommentApiUrl { get; set; }
+        public int HeartId { get; set; }
         public string LeaveCommentHeader { get; set; }
         public string SectionHeader { get; set; }
     }

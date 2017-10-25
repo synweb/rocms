@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="1bbd903a-0211-44f6-b5d7-ea78686b9974" ChangeDateTime="10/23/2017 15:08:44">
+    <Property Name="ElementName" Value="[Comments].[Comment].[CommentTopicId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Comments].[Comment]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
+</Operations>

@@ -6,8 +6,6 @@ using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Models;
-using RoCMS.Comments.Contract;
-using RoCMS.Comments.Contract.Models;
 using RoCMS.Helpers;
 using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
@@ -173,64 +171,64 @@ namespace RoCMS.News.Web.ApiControllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        public ResultModel CreateComment(int id, Comment comment)
-        {
-            try
-            {
-                if (String.IsNullOrWhiteSpace(comment.Text))
-                {
-                    return new ResultModel(false) { ErrorType = "TextEmpty" };
-                }
-                comment.AuthorId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
-                int res = _newsItemService.CreateComment(id, comment);
-                return new ResultModel(true, res);
-            }
-            catch (Exception e)
-            {
-                _logService.LogError(e);
-                return new ResultModel(e);
-            }
-        }
+        //[AllowAnonymous]
+        //[HttpPost]
+        //public ResultModel CreateComment(int id, Comment comment)
+        //{
+        //    try
+        //    {
+        //        if (String.IsNullOrWhiteSpace(comment.Text))
+        //        {
+        //            return new ResultModel(false) { ErrorType = "TextEmpty" };
+        //        }
+        //        comment.AuthorId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
+        //        int res = _newsItemService.CreateComment(id, comment);
+        //        return new ResultModel(true, res);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logService.LogError(e);
+        //        return new ResultModel(e);
+        //    }
+        //}
 
-        [Authorize]
-        [HttpPost]
-        public ResultModel DeleteComment(int id)
-        {
-            try
-            {
-                int userId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
-                var comment = _newsItemService.GetComment(id);
-                if (comment.AuthorId != userId)
-                {
-                    return new ResultModel(false, "Forbidden");
-                }
-                _newsItemService.DeleteComment(id);
-                return ResultModel.Success;
-            }
-            catch (Exception e)
-            {
-                _logService.LogError(e);
-                return new ResultModel(e);
-            }
-        }
+        //[Authorize]
+        //[HttpPost]
+        //public ResultModel DeleteComment(int id)
+        //{
+        //    try
+        //    {
+        //        int userId = AuthenticationHelper.GetInstance().GetUserId(HttpContext.Current);
+        //        var comment = _newsItemService.GetComment(id);
+        //        if (comment.AuthorId != userId)
+        //        {
+        //            return new ResultModel(false, "Forbidden");
+        //        }
+        //        _newsItemService.DeleteComment(id);
+        //        return ResultModel.Success;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logService.LogError(e);
+        //        return new ResultModel(e);
+        //    }
+        //}
 
-        [AuthorizeResources(RoCmsResources.AdminPanel, RoCmsResources.News, CommentsRoCMSResources.CommentsEditor)]
-        [HttpPost]
-        public ResultModel AdminDeleteComment(int id)
-        {
-            try
-            {
-                _newsItemService.DeleteComment(id);
-                return ResultModel.Success;
-            }
-            catch (Exception e)
-            {
-                _logService.LogError(e);
-                return new ResultModel(e);
-            }
-        }
+        //[AuthorizeResources(RoCmsResources.AdminPanel, RoCmsResources.News, CommentsRoCMSResources.CommentsEditor)]
+        //[HttpPost]
+        //public ResultModel AdminDeleteComment(int id)
+        //{
+        //    try
+        //    {
+        //        _newsItemService.DeleteComment(id);
+        //        return ResultModel.Success;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        _logService.LogError(e);
+        //        return new ResultModel(e);
+        //    }
+        //}
 
         [AllowAnonymous]
         [HttpGet]

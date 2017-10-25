@@ -15,16 +15,13 @@
 <div class="comments-threads records-table">
 
         <div class="table-header row">
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 #
             </div>
-            <div class="col-xs-2">
-                Тип
-            </div>
-            <div class="col-xs-7">
+            <div class="col-xs-8">
                 Заголовок
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-2">
                 Комментариев
             </div>
             <div class="col-xs-1">
@@ -36,16 +33,13 @@
 
     @foreach (var topic in Model)
     {
-        <div class="table-record row topic" data-topic-id="@topic.CommentTopicId">
+        <div class="table-record row topic" data-topic-id="@topic.HeartId">
         @*<a href="@topic.TargetUrl">*@
-            <a href="@Url.Action("Topic",new{id = topic.CommentTopicId})">
-                <div class="col-xs-1">
-                    @topic.CommentTopicId
-                </div>
+            <a href="@Url.Action("Topic",new{id = topic.HeartId})">
                 <div class="col-xs-2">
-                    @topic.TargetType
+                    @topic.HeartId
                 </div>
-                <div class="col-xs-7">
+                <div class="col-xs-8">
                     @topic.TargetTitle
                 </div>
                 <div class="col-xs-1">

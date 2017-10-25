@@ -6,7 +6,7 @@ using RoCMS.News.Contract.Models;
 
 namespace RoCMS.News.Contract.Services
 {
-    public interface INewsItemService: ICommentable
+    public interface INewsItemService
     {
         IEnumerable<NewsItem> GetAllNews();
         ICollection<NewsItem> GetNewsPage(NewsFilter filter, int pageNumber, int pageSize, out int totalCount);

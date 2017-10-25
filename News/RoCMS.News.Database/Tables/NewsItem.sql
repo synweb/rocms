@@ -5,7 +5,6 @@
     [Description]  NVARCHAR (MAX) NOT NULL,
     [AuthorId]     INT            NOT NULL,
     [ImageId]      VARCHAR (30)   NULL,
-	[CommentTopicId] INT NULL,
 	[RecordType] VARCHAR(20) NOT NULL DEFAULT 'Default',
 	[Filename] NVARCHAR(200) NULL,
 	[VideoId] varchar(50) NULL,
@@ -16,8 +15,7 @@
 	CONSTRAINT [FK_News_Heart] FOREIGN KEY ([HeartId]) REFERENCES [Heart]([HeartId]) ON DELETE CASCADE,
     CONSTRAINT [FK_NewsSetImage] FOREIGN KEY ([ImageId]) REFERENCES [dbo].[Image] ([ImageId]) ON UPDATE CASCADE ON DELETE SET NULL,
     CONSTRAINT [FK_NewsSetUser] FOREIGN KEY ([AuthorId]) REFERENCES [dbo].[User] ([UserId]),
-	CONSTRAINT [FK_NewsSetBlog] FOREIGN KEY ([BlogId]) REFERENCES [News].[Blog] ([BlogId]),
-    CONSTRAINT [FK_NewsSet_CommentTopic] FOREIGN KEY ([CommentTopicId]) REFERENCES [Comments].[CommentTopic]([CommentTopicId]) ON DELETE SET NULL,
+	CONSTRAINT [FK_NewsSetBlog] FOREIGN KEY ([BlogId]) REFERENCES [News].[Blog] ([BlogId])
 );
 
 

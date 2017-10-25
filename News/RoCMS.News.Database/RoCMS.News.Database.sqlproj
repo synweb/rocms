@@ -124,12 +124,6 @@
       <Private>True</Private>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
     </ProjectReference>
-    <ProjectReference Include="..\..\Comments\RoCMS.Comments.Database\RoCMS.Comments.Database.sqlproj">
-      <Name>RoCMS.Comments.Database</Name>
-      <Project>{005cf8bf-8116-4f7b-8534-3154a42e301f}</Project>
-      <Private>True</Private>
-      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="RoCMS.News.Database.refactorlog" />

@@ -207,10 +207,6 @@
       <Project>{409D7216-9EFD-4CFE-A2F8-1497A40B07B5}</Project>
       <Name>RoCMS.Comments.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Comments\RoCMS.Comments.Services\RoCMS.Comments.Services.csproj">
-      <Project>{9EE22720-4EE5-4565-AACD-0916477E3543}</Project>
-      <Name>RoCMS.Comments.Services</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\JetBrains.Annotations\JetBrains.Annotations.csproj">
       <Project>{736c4c91-2dd6-4c38-b44a-85b6f5685c7f}</Project>
       <Name>JetBrains.Annotations</Name>

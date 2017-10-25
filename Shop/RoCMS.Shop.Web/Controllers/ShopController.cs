@@ -112,6 +112,7 @@ namespace RoCMS.Shop.Web.Controllers
         {
             int totalCount;
             FilterCollections filters;
+            //TODO: ЭТО ЯВНО КОСЯК. Передается page, ожидается - startIndex !!! Перепроверить всё
             var goods = _shopService.GetGoodsSet(new GoodsFilter() { ClientMode = true }, page, pgsize, out totalCount, out filters, true);
             ViewBag.TotalCount = totalCount;
             return PartialView("_GoodsPage", goods);

@@ -21,7 +21,6 @@ AS
     [Description]  NVARCHAR (MAX) NOT NULL,
     [AuthorId]     INT            NOT NULL,
     [ImageId]      VARCHAR (30)   NULL,
-	[CommentTopicId] INT NULL,
 	[RecordType] VARCHAR(20) NOT NULL DEFAULT 'Default',
 	[Filename] NVARCHAR(200) NULL,
 	[VideoId] varchar(50) NULL,
@@ -31,8 +30,8 @@ AS
 	[CreationDate] DATETIME NOT NULL
 	)
 	
-		INSERT INTO @news ([HeartId],  [Text], [PostingDate], [Description], [AuthorId], [ImageId], [CommentTopicId],[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], [CreationDate] )
-	SELECT DISTINCT ni.[HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId], [CommentTopicId] ,[RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], h.[CreationDate]
+		INSERT INTO @news ([HeartId],  [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], [CreationDate] )
+	SELECT DISTINCT ni.[HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], h.[CreationDate]
 		FROM [News].[NewsItem] ni join [dbo].[Heart] h on ni.HeartId=h.HeartId
 			JOIN @NewsIds ids ON ni.[HeartId]=ids.Val
 		WHERE 

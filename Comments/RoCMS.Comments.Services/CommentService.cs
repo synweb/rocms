@@ -13,26 +13,45 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Comments.Services
 {
-    public class CommentService: BaseService, ICommentService
+    public class CommentService : BaseService, ICommentService
     {
-        private readonly CommentTopicGateway _commentTopicGateway = new CommentTopicGateway();
+        private readonly IHeartService _heartService;
         private readonly CommentGateway _commentGateway = new CommentGateway();
         private readonly ISettingsService _settingsService;
         private readonly ISecurityService _securityService;
         private readonly ILogService _logService;
         private readonly bool _premoderation;
 
-        public int CreateTopic(CommentTopic topic)
+
+        protected override int CacheExpirationInMinutes
         {
-            var dataRec = _mapper.Map<Data.Models.CommentTopic>(topic);
-            int id = _commentTopicGateway.Insert(dataRec);
-            return id;
+            get { throw new NotImplementedException(); }
         }
 
-        public void RemoveTopic(int topicId)
+        public CommentService(IMapperService mapper, ISettingsService settingsService, ISecurityService securityService,
+            ILogService logService, IHeartService heartService) : base(mapper)
         {
-            _commentTopicGateway.Delete(topicId);
+            _settingsService = settingsService;
+            _securityService = securityService;
+            _logService = logService;
+            _heartService = heartService;
+
+            // TODO: перенесено сюда для того, чтобы транзакции EF и EL не пересекались.
+            // Убрать, когда переведём _settingsService на EL
+            try
+            {
+                _premoderation = _settingsService.GetSettings<bool>(CommentsSettingStrings.CommentsPremoderation);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                _premoderation = true;
+            }
         }
+
+
+
+
 
         public int CreateComment(Comment comment)
         {
@@ -58,24 +77,24 @@ namespace RoCMS.Comments.Services
             _commentGateway.UpdateModerated(commentId, moderated);
         }
 
-        public ICollection<Comment> GetCommentsByTopic(int topicId, bool onlyModerated)
+        public ICollection<Comment> GetCommentsByHeart(int topicId, bool? moderated = null)
         {
-            var dataRes = _commentGateway.SelectByTopic(topicId, onlyModerated);
+            var dataRes = _commentGateway.SelectByHeart(topicId, moderated);
             var res = _mapper.Map<ICollection<Comment>>(dataRes);
             return res;
         }
 
-        public ICollection<Comment> GetCommentsByAuthor(int authorId, bool onlyModerated)
+        public ICollection<Comment> GetCommentsByAuthor(int authorId, bool? moderated = null)
         {
-            var dataRes = _commentGateway.SelectByAuthor(authorId, onlyModerated);
+            var dataRes = _commentGateway.SelectByAuthor(authorId, moderated);
             var res = _mapper.Map<ICollection<Comment>>(dataRes);
             return res;
         }
 
-        public ICollection<CommentVM> GetThreadsByTopic(int topicId, bool moderated)
+        public ICollection<CommentVM> GetThreadsByHeart(int heartId, bool? moderated = null)
         {
             var res = new List<CommentVM>();
-            var comments = GetCommentsByTopic(topicId, moderated).OrderBy(x => x.CreationDate);
+            var comments = GetCommentsByHeart(heartId, moderated).OrderBy(x => x.CreationDate);
             foreach (var comment in comments)
             {
                 var newRec = CreateVM(comment);
@@ -122,30 +141,25 @@ namespace RoCMS.Comments.Services
             return res;
         }
 
-        public ICollection<CommentTopicVM> GetTopicVMs(PagingFilter paging, out int totalCount)
+        public ICollection<CommentTopicVM> GetTopicVMs(int startIndex, int count, out int totalCount)
         {
             var res = new List<CommentTopicVM>();
-            var topics = GetTopics(paging, out totalCount);
+            var topics = GetTopics(startIndex, count, out totalCount);
             foreach (var commentTopic in topics)
             {
                 var newVm = _mapper.Map<CommentTopicVM>(commentTopic);
-                newVm.CommentCount = _commentGateway.SelectCommentCount(newVm.CommentTopicId);
+                newVm.CommentCount = _commentGateway.SelectCount(newVm.HeartId);
                 res.Add(newVm);
             }
             return res;
         }
 
-        public CommentTopic GetTopic(int id)
-        {
-            var dataRes = _commentTopicGateway.SelectOne(id);
-            var res = _mapper.Map<CommentTopic>(dataRes);
-            return res;
-        }
 
-        public ICollection<CommentTopic> GetTopics(PagingFilter paging, out int totalCount)
+        public ICollection<CommentTopic> GetTopics(int startIndex, int count, out int totalCount)
         {
-            var dataTopics = _commentTopicGateway.Select(paging, out totalCount);
-            var res = _mapper.Map<ICollection<CommentTopic>>(dataTopics);
+            var heartIds = _commentGateway.SelectHeartIds(startIndex, count, out totalCount);
+            var hearts = _heartService.GetHearts(heartIds);
+            var res = _mapper.Map<ICollection<CommentTopic>>(hearts);
             return res;
         }
 
@@ -205,30 +219,6 @@ namespace RoCMS.Comments.Services
                 }
             }
             return res;
-        }
-
-        protected override int CacheExpirationInMinutes
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public CommentService(IMapperService mapper, ISettingsService settingsService, ISecurityService securityService, ILogService logService) : base(mapper)
-        {
-            _settingsService = settingsService;
-            _securityService = securityService;
-            _logService = logService;
-
-            // TODO: перенесено сюда для того, чтобы транзакции EF и EL не пересекались.
-            // Убрать, когда переведём _settingsService на EL
-            try
-            {
-                _premoderation = _settingsService.GetSettings<bool>(CommentsSettingStrings.CommentsPremoderation);
-            }
-            catch (Exception e)
-            {
-                _logService.LogError(e);
-                _premoderation = true;
-            }
         }
     }
 }

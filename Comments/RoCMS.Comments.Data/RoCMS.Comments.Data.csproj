@@ -48,9 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Gateways\CommentGateway.cs" />
-    <Compile Include="Gateways\CommentTopicGateway.cs" />
     <Compile Include="Models\Comment.cs" />
-    <Compile Include="Models\CommentTopic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

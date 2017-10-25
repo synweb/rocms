@@ -1,4 +1,4 @@
-﻿@model Tuple<RoCMS.Comments.Contract.Models.CommentTopic, ICollection<RoCMS.Comments.Contract.ViewModels.CommentVM>>
+﻿@model Tuple<RoCMS.Web.Contract.Models.Heart, ICollection<RoCMS.Comments.Contract.ViewModels.CommentVM>>
 
 @{
     ViewBag.PageTitle = "Комментарии";
@@ -10,8 +10,8 @@
 <div class="pull-right">
     <a class="btn btn-info to-albums" href="@Url.Action("Topics")"><i class="fa fa-backward"></i>&nbsp;К списку тем</a>
 </div>
-<h2>Комментарии к теме: &laquo;@(Model.Item1.TargetTitle)&raquo;</h2>
-<a href="@Model.Item1.TargetUrl" target="_blank">(перейти к объекту обсуждения)</a>
+<h2>Комментарии к теме: &laquo;@(Model.Item1.Title)&raquo;</h2>
+<a href="/@Model.Item1.CanonicalUrl" target="_blank">(перейти к объекту обсуждения)</a>
 
 <div class="comments-tree">
     @Html.Partial("_ThreadEditorInternal", Model.Item2)

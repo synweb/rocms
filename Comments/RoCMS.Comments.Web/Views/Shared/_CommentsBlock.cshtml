@@ -4,7 +4,7 @@
 
 @{
     var commentService = DependencyResolver.Current.GetService<ICommentService>();
-    ICollection<CommentVM> threads = commentService.GetThreadsByHeart(Model.HeartId, true);
+    ICollection<CommentVM> threads = commentService.GetThreadsByHeart(Model.HeartId);
 }
 
 <div class="comments single_post_comment_area">

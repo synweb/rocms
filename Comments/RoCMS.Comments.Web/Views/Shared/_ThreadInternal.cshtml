@@ -29,7 +29,8 @@ string classNesing = "nesting" + (nesting > 9 ? 9 : nesting);
                     }
                     @if (!String.IsNullOrWhiteSpace(thread.Url))
                     {
-                        <p><a href="@url" rel="nofollow">@thread.Name</a></p>
+                        <p><a href="@url" rel="nofollow">@thread.Name</a>
+                        </p>
                     }
                     else
                     {
@@ -40,10 +41,9 @@ string classNesing = "nesting" + (nesting > 9 ? 9 : nesting);
                     <p>
                         @Html.Raw(Html.Encode(thread.Text).Replace("\n", "\n<br/>"))
                     </p>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <a class="comment-reply-link comment-reply reply" href="#">Ответить</a>
-                    }
+
+                    <a class="comment-reply-link comment-reply reply" href="#">Ответить</a>
+
                     @if (thread.ParentCommentId.HasValue)
                     {
                         <text>
@@ -54,20 +54,18 @@ string classNesing = "nesting" + (nesting > 9 ? 9 : nesting);
                 </div>
 
 
-                        }
-                        else
-                        {
-                            <div class="deleted-comment-body">
-                                Комментарий удалён
-                            </div>
-                        }
+            }
+            else
+            {
+                <div class="deleted-comment-body">
+                    Комментарий удалён
+                </div>
+            }
         </div>
         <ul class="subthread children">
             @foreach (var reply in thread.Replies)
             {
-
                 @RenderThread(reply, nesting + 1)
-
             }
         </ul>
     </li>

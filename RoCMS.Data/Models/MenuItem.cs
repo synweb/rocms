@@ -9,7 +9,7 @@ namespace RoCMS.Data.Models
 
         public int MenuId { get; set; }
         public Nullable<int> ParentMenuItemId { get; set; }
-        public string PageUrl { get; set; }
+        public int? HeartId { get; set; }
         public int SortOrder { get; set; }
         public Nullable<int> BlockId { get; set; }
     }

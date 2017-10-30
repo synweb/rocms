@@ -48,6 +48,9 @@ namespace RoCMS.App_Start
             WebApiConfigHelper.ApiRoute(config.Routes, "block/{id}/delete", "BlockApi", "Delete");
             WebApiConfigHelper.ApiRoute(config.Routes, "block/blocks/get", "BlockApi", "Blocks");
 
+            WebApiConfigHelper.ApiRoute(config.Routes, "heart/hearts/get", "HeartApi", "GetHearts");
+            WebApiConfigHelper.ApiRoute(config.Routes, "heart/hearts/{type}/get", "HeartApi", "GetHeartsByType");
+
             WebApiConfigHelper.ApiRoute(config.Routes, "page/pages/get", "PageApi", "Pages");
             WebApiConfigHelper.ApiRoute(config.Routes, "page/{id}/copy", "PageApi", "CopyPage");
             WebApiConfigHelper.ApiRoute(config.Routes, "page/{relativeUrl}/get", "PageApi", "GetPage");

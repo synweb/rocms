@@ -149,6 +149,12 @@ namespace RoCMS.Web.Services
             return res;
         }
 
+        public ICollection<Heart> GetHearts(string type)
+        {
+            var hearts = GetHearts();
+            return hearts.Where(x => x.Type == type).ToList();
+        }
+
         public bool CheckIfUrlExists(string relativeUrl)
         {
             var heart = _heartGateway.SelectByRelativeUrl(relativeUrl);

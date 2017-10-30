@@ -205,7 +205,7 @@ function initNewsEditorKo(newsId, onSuccess) {
 
     };
 
-    vm.parents.push({ title: "Нет", heartId: null });
+    vm.parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
 
     vm.errors = ko.computed(function () {
         return ko.validation.group(vm.newsItem(), { deep: true });
@@ -214,7 +214,7 @@ function initNewsEditorKo(newsId, onSuccess) {
 
     blockUI();
     $.when(
-            getJSON("/api/page/pages/get", "", function (res) {
+            getJSON("/api/heart/hearts/get", "", function (res) {
                 $(res).each(function () {
                     vm.parents.push(this);
                 });
@@ -239,6 +239,8 @@ function initNewsEditorKo(newsId, onSuccess) {
             vm.parents.remove(function (item) { return item.heartId === vm.newsItem().heartId() });
 
             ko.applyBindings(vm);
+
+            $(".withsearch").selectpicker();
 
             if (onSuccess) {
                 onSuccess();

@@ -3,7 +3,7 @@
 	@Name NVARCHAR (200),
     @MenuId  INT,
     @ParentMenuItemId INT,
-    @PageUrl NVARCHAR(300),
+    @HeartId INT,
     @SortOrder INT,
     @BlockId INT
 AS
@@ -12,7 +12,7 @@ UPDATE MenuItem
 SET Name=@Name,
 	MenuId=@MenuId,
 	ParentMenuItemId=@ParentMenuItemId,
-	PageUrl=@PageUrl,
+	HeartId=@HeartId,
 	SortOrder=@SortOrder,
 	BlockId=@BlockId
 WHERE MenuItemId=@MenuItemId

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using RoCMS.Web.Contract.Models.Search;
 
 namespace RoCMS.Web.Contract.Models
 {
+    [DisplayName(@"Страница")]
     public class Page: Heart, ISearchable
     {
         [AllowHtml]

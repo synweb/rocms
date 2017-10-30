@@ -5,12 +5,12 @@ App.Admin.MenuItem = function () {
     self.name = ko.observable();
     self.items = ko.observableArray();
     self.menuItemId = ko.observable(-1);
-    self.pageUrl = ko.observable();
+    self.heartId = ko.observable();
     self.blockId = ko.observable();
 
     self.init = function (data) {
         self.name(data.name);
-        self.pageUrl(data.pageUrl);
+        self.heartId(data.heartId);
         self.blockId(data.blockId);
         self.menuId = data.menuId;
         self.menuItemId(data.menuItemId);
@@ -47,7 +47,7 @@ App.Admin.MenuItem = function () {
         parent.items.remove(item);
     };
 
-    self.pageUrl.subscribe(function (val) {
+    self.heartId.subscribe(function (val) {
         if (val == null) {
             return;
         }
@@ -55,7 +55,7 @@ App.Admin.MenuItem = function () {
 
             var vm = ko.contextFor($('.menu-info')[0]);
 
-            var result = $.grep(vm.$root.pages(), function (e) { return e.relativeUrl == val; });
+            var result = $.grep(vm.$root.pages(), function (e) { return e.heartId == val; });
             if (result.length === 1) {
                 self.name(result[0].title);
             }
@@ -65,7 +65,7 @@ App.Admin.MenuItem = function () {
     });
 };
 
-App.Admin.Menu = function(id) {
+App.Admin.Menu = function() {
     //Properties
     var self = this;
     self.name = ko.observable();
@@ -73,21 +73,25 @@ App.Admin.Menu = function(id) {
     self.items = ko.observableArray();
 
     //Methods
-    self.init = function(id) {
-        self.menuId(id);
-        self.fetch();
+    self.init = function (id) {
+        if (id) {
+            self.menuId(id);
+            return self.fetch();
+        }
     };
 
     self.addItem = function () {
         var item = new App.Admin.MenuItem();
         item.menuId = self.menuId;
         self.items.push(item);
+
+        $(".withsearch").selectpicker();
     };
 
     self.fetch = function () {
         if (self.menuId()) {
             blockUI();
-            getJSON("/api/menu/" + self.menuId() + "/get", "", function(result) {
+            return getJSON("/api/menu/" + self.menuId() + "/get", "", function(result) {
                 self.name(result.name);
                 $(result.items).each(function() {
                     self.items.push(new App.Admin.MenuItem().init(this));
@@ -117,9 +121,5 @@ App.Admin.Menu = function(id) {
             postJSON("/api/menu/" + self.menuId() + "/delete");
         }
     };
-   
-    if (id) {
-        self.init(id);
-    }
     
 };

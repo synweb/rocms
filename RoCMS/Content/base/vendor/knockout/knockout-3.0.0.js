@@ -1,4 +1,4 @@
-/// <reference path="../jquery/core/jquery-2.0.2.js" />
+
 
 // Knockout JavaScript library v3.0.0
 // (c) Steven Sanderson - http://knockoutjs.com/

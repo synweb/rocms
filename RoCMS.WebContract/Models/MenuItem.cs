@@ -6,7 +6,8 @@ namespace RoCMS.Web.Contract.Models
     {
         public int MenuItemId { get; set; }
 
-        public string PageUrl { get; set; }
+        public int? HeartId { get; set; }
+
         public string Name { get; set; }
         
         public List<MenuItem> Items { get; set; }

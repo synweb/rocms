@@ -761,13 +761,13 @@ li .page-list-item {
     color: #2a6496;
 }
 
-.collapser span:before {
-    content: "-";
-}
+    .collapser span:before {
+        content: "-";
+    }
 
-.collapser.collapsed span:before {
-    content: "+";
-}
+    .collapser.collapsed span:before {
+        content: "+";
+    }
 
 .block-id {
     color: lightgray;
@@ -951,7 +951,6 @@ header.head .rocms-logo {
 
 .wysiwyg-container {
     position: relative;
-    
 }
 
     .wysiwyg-container .toggle-ck {
@@ -960,9 +959,9 @@ header.head .rocms-logo {
         right: 0;
     }
 
-.wysiwyg-container.for-dialog {
-    padding-top: 35px;
-}
+    .wysiwyg-container.for-dialog {
+        padding-top: 35px;
+    }
 
 .ui-dialog .ui-dialog-content {
     padding: 15px;
@@ -984,6 +983,12 @@ header.head .rocms-logo {
     display: table;
 }
 
-.super-warning h2{
-    color: #ce4844; margin: 0 0 10px;
+    .super-warning h2 {
+        color: #ce4844;
+        margin: 0 0 10px;
+    }
+
+.bootstrap-select, .bootstrap-select button {
+    width: 100% !important;
+    border-radius: 0 !important;
 }

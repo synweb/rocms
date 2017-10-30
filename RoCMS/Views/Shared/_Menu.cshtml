@@ -2,15 +2,16 @@
 @using RoCMS.Web.Contract.Services
 @{
     var menuService = DependencyResolver.Current.GetService<IMenuService>();
+    var heartService = DependencyResolver.Current.GetService<IHeartService>();
     var menu = menuService.GetMenu(Model);
 }
 <ul class="categories">
     @foreach (var menuItem in menu.Items)
     {
         string url = "#";
-        if (!String.IsNullOrEmpty(menuItem.PageUrl))
+        if (menuItem.HeartId.HasValue)
         {
-            url = String.Format("/{0}", menuItem.PageUrl);
+            url = String.Format("/{0}", heartService.GetCanonicalUrl(menuItem.HeartId.Value));
         }
         <li class="@(Request.Url.AbsolutePath == url ? "active" : "")">
             <a href="@url">@menuItem.Name</a>

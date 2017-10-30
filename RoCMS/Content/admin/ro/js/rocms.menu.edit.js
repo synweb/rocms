@@ -22,7 +22,7 @@ function menuPageLoaded() {
 }
 
 function menuEditorLoaded(menuId) {
-    var nmenu = new App.Admin.Menu(menuId);
+    var nmenu = new App.Admin.Menu();
     var $menu = $('.menu-info');
 
     var vm = {
@@ -30,15 +30,37 @@ function menuEditorLoaded(menuId) {
         pages: ko.observable(),
         blocks: ko.observable()
     };
-    getJSON("/api/page/pages/get", "", function (result) {
-        result.splice(0, 0, { relativeUrl: null, title: 'Выберите страницу...' });
-        vm.pages(result);
-        getJSON("/api/block/blocks/get", "", function (result2) {
-            result2.splice(0, 0, { blockId: null, title: 'Выпадающий блок меню...' });
-            vm.blocks(result2);
-            ko.applyBindings(vm, $menu[0]);
+
+
+
+    var initOnLoad = function (pages, blocks) {
+        pages.splice(0, 0, { heartId: null, title: 'Выберите страницу...', type: 'Не выбрано' });
+        vm.pages(pages);
+
+        blocks.splice(0, 0, { blockId: null, title: 'Выпадающий блок меню...' });
+        vm.blocks(blocks);
+
+        ko.applyBindings(vm, $menu[0]);
+
+        $(".withsearch").selectpicker();
+    }
+
+    if (menuId) {
+        $.when(
+            getJSON("/api/heart/hearts/get", ""),
+            getJSON("/api/block/blocks/get", ""),
+            nmenu.init(menuId)
+        ).then(function(result, result2) {
+            initOnLoad(result[0], result2[0]);
         });
-    });
+    } else {
+        $.when(
+            getJSON("/api/heart/hearts/get", ""),
+            getJSON("/api/block/blocks/get", "")
+        ).then(function(result, result2) {
+            initOnLoad(result[0], result2[0]);
+        });
+    }
 
     $(".menu-save-button").click(function () {
         nmenu.save().done(function () {

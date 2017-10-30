@@ -98,7 +98,7 @@ function pageEditorLoad(relativeUrl) {
         }
     };
 
-    vm.parents.push({ title: "Нет", heartId: null });
+    vm.parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
 
     vm.errors = ko.computed(function () {
         return ko.validation.group(vm.page(), { deep: true });
@@ -106,7 +106,7 @@ function pageEditorLoad(relativeUrl) {
 
     blockUI();
     $.when(
-            getJSON("/api/page/pages/get", "", function (res) {
+            getJSON("/api/heart/hearts/get", "", function (res) {
                 $(res).each(function () {
                     vm.parents.push(this);
                 });
@@ -122,8 +122,10 @@ function pageEditorLoad(relativeUrl) {
     ).then(
         function () {
             vm.parents.remove(function(item) { return item.heartId === vm.page().heartId() });
-
             ko.applyBindings(vm);
+
+            $(".withsearch").selectpicker();
+
         },
         function() {
             smartAlert("Произошла ошибка");

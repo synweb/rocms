@@ -2,12 +2,12 @@
     @Name NVARCHAR (200),
     @MenuId  INT,
     @ParentMenuItemId INT,
-    @PageUrl NVARCHAR(300),
+    @HeartId INT,
     @SortOrder INT,
     @BlockId INT
 
 AS
 
-INSERT INTO MenuItem ([Name], [MenuId], [ParentMenuItemId], [PageUrl], [SortOrder],[BlockId])
-VALUES (@Name, @MenuId, @ParentMenuItemId, @PageUrl, @SortOrder, @BlockId)
+INSERT INTO MenuItem ([Name], [MenuId], [ParentMenuItemId], [HeartId], [SortOrder],[BlockId])
+VALUES (@Name, @MenuId, @ParentMenuItemId, @HeartId, @SortOrder, @BlockId)
 SELECT @@IDENTITY

@@ -149,6 +149,7 @@
     <Compile Include="ApiControllers\BlockApiController.cs" />
     <Compile Include="ApiControllers\DeveloperApiController.cs" />
     <Compile Include="ApiControllers\EmailTemplateApiController.cs" />
+    <Compile Include="ApiControllers\HeartApiController.cs" />
     <Compile Include="ApiControllers\ImageApiController.cs" />
     <Compile Include="ApiControllers\MailApiController.cs" />
     <Compile Include="ApiControllers\InterfaceStringApiController.cs" />
@@ -305,6 +306,8 @@
     <Content Include="Content\admin\vendor\ace\worker-xml.js" />
     <Content Include="Content\admin\vendor\bootstrap-datepicker\css\datepicker.css" />
     <Content Include="Content\admin\vendor\bootstrap-datepicker\js\bootstrap-datepicker.js" />
+    <Content Include="Content\admin\vendor\bootstrap-select\bootstrap-select.min.css" />
+    <Content Include="Content\admin\vendor\bootstrap-select\bootstrap-select.min.js" />
     <Content Include="Content\admin\vendor\bootstrap-timepicker\css\bootstrap-responsive.css" />
     <Content Include="Content\admin\vendor\bootstrap-timepicker\css\bootstrap-timepicker.css" />
     <Content Include="Content\admin\vendor\bootstrap-timepicker\js\bootstrap-timepicker.js" />
@@ -516,6 +519,7 @@
     <Content Include="Content\base\vendor\jquery\core\jquery.mask.js" />
     <Content Include="Content\base\vendor\jquery\ui-short\jquery.blockUI.js" />
     <Content Include="Content\base\vendor\jquery\ui\jquery-ui-1.10.3.js" />
+    <Content Include="Content\base\vendor\knockout\knockout.groupedOptions.js" />
     <Content Include="Content\base\vendor\knockout\ru-RU.js" />
     <Content Include="Content\login\login.css" />
     <Content Include="Content\base\vendor\typeahead\bootstrap3-typeahead.js" />

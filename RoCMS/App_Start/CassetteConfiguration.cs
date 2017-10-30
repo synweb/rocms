@@ -86,6 +86,7 @@ namespace RoCMS
             bundles.Add<ScriptBundle>("Content/admin/vendor", new[]
             {
                 "bootstrap/js/bootstrap.min.js",
+                "bootstrap-select/bootstrap-select.min.js",
                 "dateformat/dateformat.js",
                 "bootstrap-switch/js/bootstrap-switch.min.js",
                 "bootstrap-timepicker/js/bootstrap-timepicker.js",
@@ -168,7 +169,7 @@ namespace RoCMS
 
             bundles.Add<StylesheetBundle>("Content/admin/vendor", new[]
             {
-
+                "bootstrap-select/bootstrap-select.min.css",
                 "bootstrap-switch/css/bootstrap-switch.css",
                 "bootstrap-timepicker/css/bootstrap-timepicker.css",
                 "tagsinput/jquery.tagsinput.css"

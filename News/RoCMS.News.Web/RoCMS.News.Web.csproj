@@ -204,11 +204,11 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Comments\RoCMS.Comments.Contract\RoCMS.Comments.Contract.csproj">
-      <Project>{409D7216-9EFD-4CFE-A2F8-1497A40B07B5}</Project>
+      <Project>{409d7216-9efd-4cfe-a2f8-1497a40b07b5}</Project>
       <Name>RoCMS.Comments.Contract</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Comments\RoCMS.Comments.Services\RoCMS.Comments.Services.csproj">
-      <Project>{9EE22720-4EE5-4565-AACD-0916477E3543}</Project>
+      <Project>{9ee22720-4ee5-4565-aacd-0916477e3543}</Project>
       <Name>RoCMS.Comments.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\JetBrains.Annotations\JetBrains.Annotations.csproj">

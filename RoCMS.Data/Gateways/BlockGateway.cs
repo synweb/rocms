@@ -6,7 +6,7 @@ namespace RoCMS.Data.Gateways
 {
     public class BlockGateway: BasicGateway<Block>
     {
-        public object SelectByName(string name)
+        public Block SelectByName(string name)
         {
             return Exec<Block>(GetProcedureString(), name);
         }

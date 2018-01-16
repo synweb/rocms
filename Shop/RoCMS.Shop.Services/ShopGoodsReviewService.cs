@@ -28,25 +28,25 @@ namespace RoCMS.Shop.Services
             return res;
         }
 
-        public IList<GoodsReview> GetGoodsReviews(int goodsId)
+        public IList<GoodsReview> GetGoodsReviews(int heartId)
         {
-            var dataRes = _goodsReviewGateway.SelectByGoods(goodsId);
+            var dataRes = _goodsReviewGateway.SelectByGoods(heartId);
             var res = Mapper.Map<IList<GoodsReview>>(dataRes);
             return res;
         }
 
-        public IList<GoodsReview> GetGoodsReviewsWithText(int goodsId)
+        public IList<GoodsReview> GetGoodsReviewsWithText(int heartId)
         {
-            var dataRes = _goodsReviewGateway.SelectByGoods(goodsId)
+            var dataRes = _goodsReviewGateway.SelectByGoods(heartId)
                 .Where(x => !string.IsNullOrEmpty(x.Text));
             var res = Mapper.Map<IList<GoodsReview>>(dataRes);
             return res;
         }
 
-        public IList<GoodsReview> GetGoodsModeratedReviewsWithText(int goodsId)
+        public IList<GoodsReview> GetGoodsModeratedReviewsWithText(int heartId)
         {
 
-            var dataRes = _goodsReviewGateway.SelectByGoods(goodsId)
+            var dataRes = _goodsReviewGateway.SelectByGoods(heartId)
                 .Where(x => !string.IsNullOrEmpty(x.Text)
                 && x.Moderated);
             var res = Mapper.Map<IList<GoodsReview>>(dataRes);

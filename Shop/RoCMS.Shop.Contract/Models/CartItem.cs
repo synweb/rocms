@@ -8,7 +8,7 @@ namespace RoCMS.Shop.Contract.Models
         public int CartItemId { get; set; }
         public System.DateTime CreationDate { get; set; }
         public System.Guid CartId { get; set; }
-        public int GoodsId { get; set; }
+        public int HeartId { get; set; }
         public GoodsItem GoodsItem { get; set; }
 
         public int? PackId { get; set; }

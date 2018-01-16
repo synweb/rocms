@@ -57,24 +57,24 @@ namespace RoCMS.Shop.Data.Gateways
             public int Count { get; set; }
         }
 
-        public ICollection<IdNamePair<int>> GetManufacturers(ICollection<int> goodsIds)
+        public ICollection<IdNamePair<int>> GetManufacturers(ICollection<int> heartIds)
         {
-            return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetManufacturers]", goodsIds);
+            return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetManufacturers]", heartIds);
         }
 
-        public ICollection<IdNamePair<int>> GetCountries(ICollection<int> goodsIds)
+        public ICollection<IdNamePair<int>> GetCountries(ICollection<int> heartIds)
         {
-            return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetCountries]", goodsIds);
+            return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetCountries]", heartIds);
         }
 
-        public ICollection<IdNamePair<int>> GetPacks(ICollection<int> goodsIds)
+        public ICollection<IdNamePair<int>> GetPacks(ICollection<int> heartIds)
         {
-            return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetPacks]", goodsIds);
+            return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetPacks]", heartIds);
         }
 
-        public ICollection<KeyValuePair<int, string>> GetSpecs(ICollection<int> goodsIds)
+        public ICollection<KeyValuePair<int, string>> GetSpecs(ICollection<int> heartIds)
         {
-            var res = ExecSelect<GetSpecsResult>("[Shop].[Goods_GetSpecs]", goodsIds);
+            var res = ExecSelect<GetSpecsResult>("[Shop].[Goods_GetSpecs]", heartIds);
             return res.Select(x => new KeyValuePair<int, string>(x.Key, x.Value)).ToList();
         }
 

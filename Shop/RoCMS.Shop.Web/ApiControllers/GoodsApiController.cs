@@ -66,9 +66,9 @@ namespace RoCMS.Shop.Web.ApiControllers
         }
 
         [HttpGet]
-        public GoodsItem Get(int goodsId)
+        public GoodsItem Get(int heartId)
         {
-            return _shopService.GetGoods(goodsId, false);
+            return _shopService.GetGoods(heartId, false);
         }
 
         [HttpPost]
@@ -101,11 +101,11 @@ namespace RoCMS.Shop.Web.ApiControllers
         }
 
         [HttpPost]
-        public ResultModel Delete(int goodsId)
+        public ResultModel Delete(int heartId)
         {
             try
             {
-                _shopService.DeleteGoods(goodsId);
+                _shopService.DeleteGoods(heartId);
                 return ResultModel.Success;
             }
             catch (GoodsNotFoundException)
@@ -132,15 +132,15 @@ namespace RoCMS.Shop.Web.ApiControllers
         }
 
         [HttpGet]
-        public IList<GoodsReview> GetGoodsReviews(int goodsId)
+        public IList<GoodsReview> GetGoodsReviews(int heartId)
         {
-            return _shopGoodsReviewService.GetGoodsReviews(goodsId);
+            return _shopGoodsReviewService.GetGoodsReviews(heartId);
         }
 
         [HttpGet]
-        public IList<GoodsReview> GetGoodsReviewsWithText(int goodsId)
+        public IList<GoodsReview> GetGoodsReviewsWithText(int heartId)
         {
-            return _shopGoodsReviewService.GetGoodsReviewsWithText(goodsId);
+            return _shopGoodsReviewService.GetGoodsReviewsWithText(heartId);
             
         }
 
@@ -177,18 +177,18 @@ namespace RoCMS.Shop.Web.ApiControllers
                 if (cookie == null)
                 {
                     res = SaveReview(review);
-                    IncludeRatingCookie(res, review.GoodsId.ToString());
+                    IncludeRatingCookie(res, review.HeartId.ToString());
                 }
                 else
                 {
                     var found = cookie["goodsRated"];
                     var values = found.Value.Split(',').ToList();
-                    if (values.Contains(review.GoodsId.ToString()))
+                    if (values.Contains(review.HeartId.ToString()))
                     {
                         //товарищ отправляет рейтинг товара, который он уже оценивал
                         return new HttpResponseMessage(HttpStatusCode.InternalServerError);
                     }
-                    values.Add(review.GoodsId.ToString());
+                    values.Add(review.HeartId.ToString());
                     string cookieValue = string.Join(",", values);
                     res = SaveReview(review);
                     IncludeRatingCookie(res, cookieValue);

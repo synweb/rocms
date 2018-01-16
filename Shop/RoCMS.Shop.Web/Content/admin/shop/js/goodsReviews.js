@@ -5,7 +5,7 @@ App.Admin.GoodsReview = function() {
 
     self.goodsReviewId = ko.observable();
     self.author = ko.observable();
-    self.goodsId = ko.observable();
+    self.heartId = ko.observable();
     self.creationDate = ko.observable();
     self.authorContact = ko.observable();
     self.text = ko.observable();
@@ -38,7 +38,7 @@ App.Admin.GoodsReviewValidationMapping = {
 App.Admin.GoodsReviewFunctions = {
 
     goodsUrl: function() {
-        return '/Shop/Goods/' + this.goodsId();
+        return '/Shop/Goods/' + this.heartId();
     },
 
     containerId: function () {
@@ -49,7 +49,7 @@ App.Admin.GoodsReviewFunctions = {
         var self = this;
         self.goodsReviewId(d.goodsReviewId);
         self.author(d.author);
-        self.goodsId(d.goodsId);
+        self.heartId(d.heartId);
         self.creationDate(d.creationDate);
         self.authorContact(d.authorContact);
         self.text(d.text);

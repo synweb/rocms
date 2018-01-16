@@ -161,7 +161,7 @@
                                         <tbody>
                                             @foreach (var item in order.GoodsInOrder)
                                             {
-                                                var goods = shopService.GetGoods(item.GoodsId);
+                                                var goods = shopService.GetGoods(item.HeartId);
                                                 decimal sum = item.Price * item.Quantity;
                                                 <tr style="padding: 5px 0 5px 0">
                                                     <td style="text-align: center;">

@@ -2,7 +2,7 @@
 {
     public class CompatibleSetGoods
     {
-        public int GoodsId { get; set; }
+        public int HeartId { get; set; }
         public int CompatibleSetId { get; set; }
     }
 }

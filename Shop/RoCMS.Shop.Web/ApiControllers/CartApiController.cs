@@ -36,26 +36,26 @@ namespace RoCMS.Shop.Web.ApiControllers
         }
 
         [System.Web.Http.HttpPost]
-        public ResultModel AddItem(int goodsId, int count, int? packId)
+        public ResultModel AddItem(int heartId, int count, int? packId)
         {
             Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
-            _cartService.AddItemToCart(cartId, goodsId, count, packId);
+            _cartService.AddItemToCart(cartId, heartId, count, packId);
             return ResultModel.Success;
         }
 
         [System.Web.Http.HttpPost]
-        public ResultModel ChangeItemCount(int goodsId, int count, int? packId)
+        public ResultModel ChangeItemCount(int heartId, int count, int? packId)
         {
             Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
-            _cartService.UpdatItemCount(cartId, goodsId, count, packId);
+            _cartService.UpdatItemCount(cartId, heartId, count, packId);
             return ResultModel.Success;
         }
 
         [System.Web.Http.HttpPost]
-        public ResultModel RemoveItem(int goodsId, int? packId)
+        public ResultModel RemoveItem(int heartId, int? packId)
         {
             Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
-            _cartService.RemoveItemFromCart(cartId, goodsId, packId);
+            _cartService.RemoveItemFromCart(cartId, heartId, packId);
             return ResultModel.Success;
         }
 

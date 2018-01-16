@@ -14,9 +14,9 @@ namespace RoCMS.Shop.Data.Gateways
         {
             Exec(GetProcedureString(), rec);
         }
-        public ICollection<GoodsImage> SelectByGoods(int goodsId)
+        public ICollection<GoodsImage> SelectByGoods(int heartId)
         {
-            return ExecSelect<GoodsImage>(GetProcedureString(), goodsId);
+            return ExecSelect<GoodsImage>(GetProcedureString(), heartId);
         }
     }
 }

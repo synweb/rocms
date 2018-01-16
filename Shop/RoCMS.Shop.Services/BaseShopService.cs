@@ -142,12 +142,12 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.OrderId, x => x.Ignore())
                 .ForMember(x => x.Id, x => x.Ignore())
                 .ForMember(x => x.Price, x => x.MapFrom(y => y.DiscountedPrice))
-                .ForMember(x => x.GoodsId, x => x.MapFrom(y => y.GoodsItem.GoodsId));
+                .ForMember(x => x.HeartId, x => x.MapFrom(y => y.GoodsItem.HeartId));
             Mapper.CreateMap<CartItem, Contract.Models.GoodsInOrder>()
                 .ForMember(x => x.OrderId, x => x.Ignore())
                 .ForMember(x => x.Id, x => x.Ignore())
                 .ForMember(x => x.Price, x => x.MapFrom(y => y.DiscountedPrice))
-                .ForMember(x => x.GoodsId, x => x.MapFrom(y => y.GoodsItem.GoodsId))
+                .ForMember(x => x.HeartId, x => x.MapFrom(y => y.GoodsItem.HeartId))
                 .ForMember(x => x.Pack, x => x.MapFrom(y => y.Pack.PackInfo))
                 .ForMember(x => x.Goods, x => x.MapFrom(y => y.GoodsItem));
 

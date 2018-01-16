@@ -277,7 +277,7 @@ App.Admin.GoodsItemValidationMapping = {
 App.Admin.GoodsItem = function () {
     var self = this;
 
-    self.goodsId = ko.observable();
+    self.heartId = ko.observable();
     self.name = ko.observable().extend({ required: true });
 
     self.notAvailable = ko.observable();
@@ -321,7 +321,7 @@ App.Admin.GoodsItemFunctions = {
         showSpecDialog(function (item) {
             var specValue = {
                 spec: item,
-                goodsId: ko.observable(self.goodsId()),
+                heartId: ko.observable(self.heartId()),
                 value: ko.observable(),
                 isPrimary: ko.observable(),
                 inputValue: ko.observable()
@@ -432,7 +432,7 @@ App.Admin.GoodsItemFunctions = {
         var self = this;
         self.dialog(function () {
             self.save("/api/shop/goods/create", function (result) {
-                self.goodsId(result.id);
+                self.heartId(result.id);
                 if (onSuccess) {
                     onSuccess();
                 }
@@ -449,9 +449,9 @@ App.Admin.GoodsItemFunctions = {
 
     remove: function (item, parent) {
         var self = this;
-        if (self.goodsId()) {
+        if (self.heartId()) {
             blockUI();
-            var url = "/api/shop/goods/" + self.goodsId() + "/delete";
+            var url = "/api/shop/goods/" + self.heartId() + "/delete";
             postJSON(url, "", function (result) {
                 if (result.succeed) {
                     parent.goods.remove(item);
@@ -592,7 +592,7 @@ function showGoodsDialog(onSelected) {
             var that = this;
             goodsEditorLoaded(function (item) {
                 if (onSelected) {
-                    onSelected({ id: item.goodsId(), name: item.name() });
+                    onSelected({ id: item.heartId(), name: item.name() });
                 }
                 $(that).dialog("close");
             }, $dialog);

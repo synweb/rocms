@@ -84,7 +84,7 @@ namespace RoCMS.Shop.Services
         //        {
         //            if (String.IsNullOrEmpty(item.RelativeUrl))
         //            {
-        //                item.RelativeUrl = String.Format("{0}-{1}", TranslitHelper.ToTranslitedUrl(item.Name, 250), item.GoodsId);
+        //                item.RelativeUrl = String.Format("{0}-{1}", TranslitHelper.ToTranslitedUrl(item.Name, 250), item.HeartId);
         //            }
         //            else
         //            {
@@ -96,12 +96,12 @@ namespace RoCMS.Shop.Services
         //    }
         //}
 
-        public GoodsItem GetGoods(int goodsId, bool activeActionsOnly = true)
+        public GoodsItem GetGoods(int heartId, bool activeActionsOnly = true)
         {
-            var goods = _goodsItemGateway.SelectOne(goodsId);
+            var goods = _goodsItemGateway.SelectOne(heartId);
             if (goods == null || goods.Deleted)
             {
-                throw new GoodsNotFoundException(goodsId);
+                throw new GoodsNotFoundException(heartId);
             }
             var res = Mapper.Map<GoodsItem>(goods);
             FillData(res, activeActionsOnly);
@@ -120,10 +120,12 @@ namespace RoCMS.Shop.Services
             if (activeActionsOnly)
             {
                 goodsItem.Actions.Clear();
-                goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.GoodsId);
-                goodsItem.CannonicalUrl = goodsItem.Categories.Any()
-                    ? GetGoodsCannonicalUrl(goodsItem.RelativeUrl, goodsItem.Categories.First().ID)
-                    : goodsItem.RelativeUrl;
+                goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
+
+                //TODO: разрулить через харты
+                //goodsItem.CannonicalUrl = goodsItem.Categories.Any()
+                //    ? GetGoodsCannonicalUrl(goodsItem.RelativeUrl, goodsItem.Categories.First().ID)
+                //    : goodsItem.RelativeUrl;
             }
         }
 
@@ -141,7 +143,7 @@ namespace RoCMS.Shop.Services
 
         private void FillSpecs(GoodsItem goodsItem)
         {
-            var dataVals = _goodsSpecGateway.SelectByGoods(goodsItem.GoodsId);
+            var dataVals = _goodsSpecGateway.SelectByGoods(goodsItem.HeartId);
             var vals = Mapper.Map<IList<SpecValue>>(dataVals);
             foreach (var specValue in vals)
             {
@@ -152,7 +154,7 @@ namespace RoCMS.Shop.Services
 
         private void FillPacks(GoodsItem goodsItem)
         {
-            var dataVals = _goodsPackGateway.SelectByGoods(goodsItem.GoodsId);
+            var dataVals = _goodsPackGateway.SelectByGoods(goodsItem.HeartId);
             var vals = Mapper.Map<IList<GoodsPack>>(dataVals);
             foreach (var goodsPack in vals)
             {
@@ -163,12 +165,12 @@ namespace RoCMS.Shop.Services
 
         private void FillActions(GoodsItem goodsItem)
         {
-            goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.GoodsId);
+            goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
         }
 
         private void FillCats(GoodsItem goodsItem)
         {
-            var catsIds = _goodsCategoryGateway.SelectByGoods(goodsItem.GoodsId).Select(x => x.CategoryId);
+            var catsIds = _goodsCategoryGateway.SelectByGoods(goodsItem.HeartId).Select(x => x.CategoryId);
             var cats = catsIds.Select(x => _categoryGateway.SelectOne(x));
             var idNames = Mapper.Map<IList<IdNamePair<int>>>(cats);
             goodsItem.Categories = idNames;
@@ -176,14 +178,14 @@ namespace RoCMS.Shop.Services
 
         private void FillCompatibles(GoodsItem goodsItem)
         {
-            var compIds = _compatibleSetGoodsGateway.SelectByGoods(goodsItem.GoodsId).Select(x => x.CompatibleSetId);
+            var compIds = _compatibleSetGoodsGateway.SelectByGoods(goodsItem.HeartId).Select(x => x.CompatibleSetId);
             var comps = compIds.Select(x => _shopCompatiblesService.GetCompatibleSet(x)).ToList();
             goodsItem.CompatibleGoods = comps;
         }
 
         private void FillImages(GoodsItem goodsItem)
         {
-            var imageIds = _goodsImageGateway.SelectByGoods(goodsItem.GoodsId).Select(x => x.ImageId);
+            var imageIds = _goodsImageGateway.SelectByGoods(goodsItem.HeartId).Select(x => x.ImageId);
             goodsItem.Images = imageIds.ToList();
         }
 
@@ -209,23 +211,23 @@ namespace RoCMS.Shop.Services
                 foreach (var goodsCategory in goods.Categories)
                 {
                     _goodsCategoryGateway.Insert(new GoodsCategory()
-                    {CategoryId = goodsCategory.ID, GoodsId = id});
+                    {CategoryId = goodsCategory.ID, HeartId = id});
                 }
                 foreach (var goodsImageId in goods.Images)
                 {
                     _goodsImageGateway.Insert(new GoodsImage()
-                    { ImageId = goodsImageId, GoodsId = id });
+                    { ImageId = goodsImageId, HeartId = id });
                 }
                 foreach (var goodsPack in goods.Packs)
                 {
                     var dataGoodsPack = Mapper.Map<Data.Models.GoodsPack>(goodsPack);
-                    dataGoodsPack.GoodsId = id;
+                    dataGoodsPack.HeartId = id;
                     _goodsPackGateway.Insert(dataGoodsPack);
                 }
                 foreach (var compatibleGoods in goods.CompatibleGoods)
                 {
                     _compatibleSetGoodsGateway.Insert(new CompatibleSetGoods()
-                    {CompatibleSetId = compatibleGoods.CompatibleSetId, GoodsId = id});
+                    {CompatibleSetId = compatibleGoods.CompatibleSetId, HeartId = id});
                 }
                 foreach (var specVal in goods.GoodsSpecs)
                 {
@@ -239,14 +241,14 @@ namespace RoCMS.Shop.Services
 
         public void UpdateGoods(GoodsItem goods)
         {
-            int goodsId = goods.GoodsId;
+            int heartId = goods.HeartId;
             var dataGoods = Mapper.Map<Data.Models.GoodsItem>(goods);
             dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
             using (var ts = new TransactionScope())
             {
                 _goodsItemGateway.Update(dataGoods);
 
-                var oldCats = _goodsCategoryGateway.SelectByGoods(goodsId);
+                var oldCats = _goodsCategoryGateway.SelectByGoods(heartId);
                 var newCats = goods.Categories;
                 foreach (var oldCat in oldCats)
                 {
@@ -261,13 +263,13 @@ namespace RoCMS.Shop.Services
                     {
                         _goodsCategoryGateway.Insert(new GoodsCategory()
                         {
-                            GoodsId = goodsId,
+                            HeartId = heartId,
                             CategoryId = newCat.ID
                         });
                     }
                 }
 
-                var oldSpecs = _goodsSpecGateway.SelectByGoods(goodsId);
+                var oldSpecs = _goodsSpecGateway.SelectByGoods(heartId);
                 var newSpecs = goods.GoodsSpecs;
                 foreach (var oldSpec in oldSpecs)
                 {
@@ -289,7 +291,7 @@ namespace RoCMS.Shop.Services
                     }
                 }
 
-                var oldImages = _goodsImageGateway.SelectByGoods(goodsId);
+                var oldImages = _goodsImageGateway.SelectByGoods(heartId);
                 var newImages = goods.Images;
                 foreach (var oldImage in oldImages)
                 {
@@ -304,13 +306,13 @@ namespace RoCMS.Shop.Services
                     {
                         _goodsImageGateway.Insert(new GoodsImage()
                         {
-                            GoodsId = goodsId,
+                            HeartId = heartId,
                             ImageId = newImage
                         });
                     }
                 }
 
-                var oldPacks = _goodsPackGateway.SelectByGoods(goodsId);
+                var oldPacks = _goodsPackGateway.SelectByGoods(heartId);
                 var newPacks = goods.Packs;
                 foreach (var oldPack in oldPacks)
                 {
@@ -322,7 +324,7 @@ namespace RoCMS.Shop.Services
                 foreach (var newPack in newPacks)
                 {
                     var dataPackVal = Mapper.Map<Data.Models.GoodsPack>(newPack);
-                    dataPackVal.GoodsId = goodsId;
+                    dataPackVal.HeartId = heartId;
                     if (oldPacks.All(x => x.PackId != newPack.PackId))
                     {
                         _goodsPackGateway.Insert(dataPackVal);
@@ -333,7 +335,7 @@ namespace RoCMS.Shop.Services
                     }
                 }
 
-                var oldActions = _actionGoodsGateway.SelectByGoods(goodsId);
+                var oldActions = _actionGoodsGateway.SelectByGoods(heartId);
                 var newActions = goods.Actions;
                 foreach (var oldAction in oldActions)
                 {
@@ -346,11 +348,11 @@ namespace RoCMS.Shop.Services
                 {
                     if (oldActions.All(x => x.ActionId != newAction.ID))
                     {
-                        _actionGoodsGateway.Insert(new ActionGoods() {ActionId = newAction.ID, GoodsId = goodsId});
+                        _actionGoodsGateway.Insert(new ActionGoods() {ActionId = newAction.ID, HeartId = heartId});
                     }
                 }
 
-                var oldComps = _compatibleSetGoodsGateway.SelectByGoods(goodsId);
+                var oldComps = _compatibleSetGoodsGateway.SelectByGoods(heartId);
                 var newComps = goods.CompatibleGoods;
                 foreach (var oldComp in oldComps)
                 {
@@ -365,7 +367,7 @@ namespace RoCMS.Shop.Services
                     {
                         _compatibleSetGoodsGateway.Insert(new CompatibleSetGoods()
                         {
-                            GoodsId = goodsId,
+                            HeartId = heartId,
                             CompatibleSetId = newComp.CompatibleSetId
                         });
                     }
@@ -374,33 +376,33 @@ namespace RoCMS.Shop.Services
             }
         }
 
-        public void DeleteGoods(int goodsId)
+        public void DeleteGoods(int heartId)
         {
             using (var ts = new TransactionScope())
             {
-                _goodsItemGateway.Delete(goodsId);
-                foreach (var compatibleSetGoods in _compatibleSetGoodsGateway.SelectByGoods(goodsId))
+                _goodsItemGateway.Delete(heartId);
+                foreach (var compatibleSetGoods in _compatibleSetGoodsGateway.SelectByGoods(heartId))
                 {
                     _compatibleSetGoodsGateway.Delete(compatibleSetGoods);
                 }
-                foreach (var goodsCategory in _goodsCategoryGateway.SelectByGoods(goodsId))
+                foreach (var goodsCategory in _goodsCategoryGateway.SelectByGoods(heartId))
                 {
                     _goodsCategoryGateway.Delete(goodsCategory);
                 }
-                foreach (var goodsImage in _goodsImageGateway.SelectByGoods(goodsId))
+                foreach (var goodsImage in _goodsImageGateway.SelectByGoods(heartId))
                 {
                     _goodsImageGateway.Delete(goodsImage);
                 }
-                foreach (var goodsReview in _goodsReviewGateway.SelectByGoods(goodsId))
+                foreach (var goodsReview in _goodsReviewGateway.SelectByGoods(heartId))
                 {
                     _goodsReviewGateway.Delete(goodsReview.GoodsReviewId);
                 }
-                foreach (var actionGoods in _actionGoodsGateway.SelectByGoods(goodsId))
+                foreach (var actionGoods in _actionGoodsGateway.SelectByGoods(heartId))
                 {
                     _actionGoodsGateway.Delete(actionGoods);
                 }
                 // упаковки не удаляем, так как они, возможно, понадобятся для истории заказов
-                foreach (var goodsSpec in _goodsSpecGateway.SelectByGoods(goodsId))
+                foreach (var goodsSpec in _goodsSpecGateway.SelectByGoods(heartId))
                 {
                     _goodsSpecGateway.Delete(goodsSpec);
                 }
@@ -412,12 +414,12 @@ namespace RoCMS.Shop.Services
             bool activeActionsOnly = true)
         {
             var dataFilter = Mapper.Map<Data.Models.GoodsFilter>(filter);
-            var goodsIds = _goodsItemGateway.FilterGoods(dataFilter, startIndex, count, out totalCount);
+            var heartIds = _goodsItemGateway.FilterGoods(dataFilter, startIndex, count, out totalCount);
             collections = new FilterCollections();
-            collections.Manufacturers = _goodsItemGateway.GetManufacturers(goodsIds);
-            collections.Countries = _goodsItemGateway.GetCountries(goodsIds);
-            collections.Packs = _goodsItemGateway.GetPacks(goodsIds);
-            var specValues = _goodsItemGateway.GetSpecs(goodsIds);
+            collections.Manufacturers = _goodsItemGateway.GetManufacturers(heartIds);
+            collections.Countries = _goodsItemGateway.GetCountries(heartIds);
+            collections.Packs = _goodsItemGateway.GetPacks(heartIds);
+            var specValues = _goodsItemGateway.GetSpecs(heartIds);
 
             foreach (var spec in specValues)
             {
@@ -438,12 +440,12 @@ namespace RoCMS.Shop.Services
             }
 
 
-            var goodsPage = startIndex > 1 ? goodsIds.Skip(startIndex - 1).Take(count) : goodsIds.Take(count);
+            var goodsPage = startIndex > 1 ? heartIds.Skip(startIndex - 1).Take(count) : heartIds.Take(count);
 
             var result = new List<GoodsItem>();
-            foreach (int goodsId in goodsPage)
+            foreach (int heartId in goodsPage)
             {
-                result.Add(GetGoods(goodsId, activeActionsOnly));
+                result.Add(GetGoods(heartId, activeActionsOnly));
             }
             return result;
             //TODO: кэш
@@ -505,7 +507,7 @@ namespace RoCMS.Shop.Services
             return _goodsItemGateway.ExistsByRelativeUrl(relativeUrl);
         }
 
-        public IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentGoodsId)
+        public IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentHeartId)
         {
             throw new NotImplementedException();
         }

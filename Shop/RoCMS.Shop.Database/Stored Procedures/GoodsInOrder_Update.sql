@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [Shop].[GoodsInOrder_Update]
 @Quantity int,
-@GoodsId int,
+@HeartId int,
 @OrderId int,
 @PackId int,
 @Price decimal,
@@ -8,7 +8,7 @@
 AS
 	UPDATE [Shop].[GoodsInOrder] SET
 		[Quantity]=@Quantity,
-		[GoodsId]=@GoodsId,
+		[HeartId]=@HeartId,
 		[OrderId]=@OrderId,
 		[PackId]=@PackId,
 		[Price]=@Price

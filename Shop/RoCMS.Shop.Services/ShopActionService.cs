@@ -59,9 +59,9 @@ namespace RoCMS.Shop.Services
 
         private void FillGoods(Action action)
         {
-            var ids = _actionGoodsGateway.SelectByAction(action.ActionId).Select(x => x.GoodsId);
+            var ids = _actionGoodsGateway.SelectByAction(action.ActionId).Select(x => x.HeartId);
             var goods = ids.Select(x => _goodsGateway.SelectOne(x));
-            var idNames = goods.Select(x => new IdNamePair<int>(x.GoodsId, x.Name)).ToList();
+            var idNames = goods.Select(x => new IdNamePair<int>(x.HeartId, x.Name)).ToList();
             action.Goods = idNames;
         }
 
@@ -77,7 +77,7 @@ namespace RoCMS.Shop.Services
                 }
                 foreach (var goodsId in action.Goods.Select(x => x.ID))
                 {
-                    _actionGoodsGateway.Insert(new ActionGoods() { ActionId = id, GoodsId = goodsId });
+                    _actionGoodsGateway.Insert(new ActionGoods() { ActionId = id, HeartId = goodsId });
                 }
                 foreach (var manId in action.Manufacturers.Select(x => x.ID))
                 {
@@ -121,19 +121,19 @@ namespace RoCMS.Shop.Services
                 var newGoods = action.Goods;
                 foreach (var old in oldGoods)
                 {
-                    if (newGoods.All(x => x.ID != old.GoodsId))
+                    if (newGoods.All(x => x.ID != old.HeartId))
                     {
                         _actionGoodsGateway.Delete(old);
                     }
                 }
                 foreach (var @new in newGoods)
                 {
-                    if (oldGoods.All(x => x.GoodsId != @new.ID))
+                    if (oldGoods.All(x => x.HeartId != @new.ID))
                     {
                         _actionGoodsGateway.Insert(new ActionGoods()
                         {
                             ActionId = actionId,
-                            GoodsId = @new.ID
+                            HeartId = @new.ID
                         });
                     }
                 }

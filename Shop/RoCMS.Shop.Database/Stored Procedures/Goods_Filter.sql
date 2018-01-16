@@ -36,7 +36,7 @@ IF EXISTS (SELECT * FROM @SpecIds)
 SET NOCOUNT ON
 --SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
-DECLARE @GoodsIds TABLE(RowNumber INT IDENTITY PRIMARY KEY, GoodsId INT)
+DECLARE @HeartIds TABLE(RowNumber INT IDENTITY PRIMARY KEY, HeartId INT)
 
 DECLARE @FullCategoryIds TABLE(Val INT)
 
@@ -62,7 +62,7 @@ ELSE BEGIN
 END
 
 -- Вытаскиваем айдишники товаров с акциями
-DECLARE @ActionGoodsIds [Int_Table]
+DECLARE @ActionHeartIds [Int_Table]
 IF @ActionIdsExist=1
 BEGIN
 	DECLARE @ActionCategoryIds [Int_Table] 
@@ -90,12 +90,12 @@ BEGIN
 	SELECT [ManufacturerId] FROM [Shop].[Action_Manufacturer] WHERE [ActionId] IN (SELECT Val FROM @ActionIds)
 	
 	
-	INSERT INTO @ActionGoodsIds (Val)
-	SELECT GoodsId FROM [Shop].[Action_Goods] WHERE ActionId IN (SELECT Val FROM @ActionIds)
+	INSERT INTO @ActionHeartIds (Val)
+	SELECT HeartId FROM [Shop].[Action_Goods] WHERE ActionId IN (SELECT Val FROM @ActionIds)
 	UNION
-	SELECT GoodsId FROM [Shop].[GoodsItem] WHERE [ManufacturerId] IN (SELECT Val FROM @ActionManufacturerIds)
+	SELECT HeartId FROM [Shop].[GoodsItem] WHERE [ManufacturerId] IN (SELECT Val FROM @ActionManufacturerIds)
 	UNION
-	SELECT GoodsId FROM [Shop].Goods_Category WHERE CategoryId IN (SELECT Val FROM @ActionFullCategoryIds)
+	SELECT GoodsHeartId FROM [Shop].Goods_Category WHERE CategoryId IN (SELECT Val FROM @ActionFullCategoryIds)
 END
 
 
@@ -127,93 +127,93 @@ INSERT INTO @FinalManufacturerIds (Val)
 		) t3)
 END
 
-DECLARE @UnsortedGoodsIds [Int_Table]
+DECLARE @UnsortedHeartIds [Int_Table]
 
-INSERT INTO @UnsortedGoodsIds
-SELECT gc1.GoodsId
-FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.GoodsId = g.GoodsId
+INSERT INTO @UnsortedHeartIds
+SELECT gc1.GoodsHeartId
+FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.HeartId = g.HeartId
 WHERE
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))
 		
 AND
 ( (@ManufacturerIdsExist = 0 AND @CountriesExist = 0) OR
 		
-	EXISTS (SELECT * FROM [GoodsItem] g WHERE g.GoodsId = gc1.GoodsId AND (
+	EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.HeartId AND (
 	g.SupplierId IN (SELECT Val FROM @FinalManufacturerIds) 
 	OR g.ManufacturerId IN (SELECT Val FROM @FinalManufacturerIds))))
 AND
-(@ActionIdsExist = 0 OR gc1.GoodsId IN (SELECT Val FROM @ActionGoodsIds))
+(@ActionIdsExist = 0 OR gc1.GoodsHeartId IN (SELECT Val FROM @ActionHeartIds))
 AND
-(@PackIdsExist = 0 OR gc1.GoodsId IN (SELECT GoodsId FROM [Goods_Pack] WHERE [PackId] IN (SELECT Val FROM @PackIds) ))
+(@PackIdsExist = 0 OR gc1.GoodsHeartId IN (SELECT HeartId FROM [Goods_Pack] WHERE [PackId] IN (SELECT Val FROM @PackIds) ))
 	AND
 (@SpecIdsExist = 0
-OR gc1.GoodsId IN (SELECT GoodsId From [Goods_Spec] gs INNER JOIN @SpecIds sis ON gs.SpecId = sis.[Key] AND [Shop].CheckSpecValue(sis.[Val], gs.[Value]) = 1))
+OR gc1.GoodsHeartId IN (SELECT HeartId From [Goods_Spec] gs INNER JOIN @SpecIds sis ON gs.SpecId = sis.[Key] AND [Shop].CheckSpecValue(sis.[Val], gs.[Value]) = 1))
 --OPTION (OPTIMIZE FOR (@CategoryIdsExist=1))
 
 IF (@SearchQuery IS NOT NULL AND @SearchQuery != '' AND @FulltextSearchQuery IS NOT NULL AND @FulltextSearchQuery != '')
 BEGIN
-	DECLARE @searchGoodsIds [Int_Table]
-	INSERT INTO @searchGoodsIds
-	SELECT GoodsId FROM (
-		SELECT g.GoodsId, 1 AS ColumnLocation, 2000 AS Rank --Entire Fit by article 
-		FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId WHERE LOWER([Article])=@SearchQuery
+	DECLARE @searchHeartIds [Int_Table]
+	INSERT INTO @searchHeartIds
+	SELECT HeartId FROM (
+		SELECT g.HeartId, 1 AS ColumnLocation, 2000 AS Rank --Entire Fit by article 
+		FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId WHERE LOWER([Article])=@SearchQuery
 		UNION
-		SELECT g.GoodsId, 2 AS ColumnLocation, 1800 AS Rank --Entire Fit by name
-		FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId WHERE LOWER([Name])=@SearchQuery
+		SELECT g.HeartId, 2 AS ColumnLocation, 1800 AS Rank --Entire Fit by name
+		FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId WHERE LOWER([Name])=@SearchQuery
 		UNION
-		SELECT g.GoodsId, 3 AS ColumnLocation, Rank --Partial Fit by article
-		FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId INNER JOIN
+		SELECT g.HeartId, 3 AS ColumnLocation, Rank --Partial Fit by article
+		FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId INNER JOIN
 		   CONTAINSTABLE([Shop].[GoodsItem], 
 			[Name], 
 			@FulltextSearchQuery
 		   ) AS KEY_TBL
-		   ON g.GoodsId = KEY_TBL.[KEY]
+		   ON g.HeartId = KEY_TBL.[KEY]
 		UNION
-		SELECT g.GoodsId, 4 AS ColumnLocation, Rank --Partial Fit by description
-		FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId INNER JOIN
+		SELECT g.HeartId, 4 AS ColumnLocation, Rank --Partial Fit by description
+		FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId INNER JOIN
 		   CONTAINSTABLE([Shop].[GoodsItem], 
 			[HtmlDescription], 
 			@FulltextSearchQuery
 		   ) AS KEY_TBL
-		   ON g.GoodsId = KEY_TBL.[KEY]
+		   ON g.HeartId = KEY_TBL.[KEY]
 		) t
 	ORDER BY RANK DESC
 
-	DELETE FROM @UnsortedGoodsIds
-	INSERT INTO @UnsortedGoodsIds -- нужно для сохранения порядка по релевантности
-	SELECT Val FROM @searchGoodsIds
+	DELETE FROM @UnsortedHeartIds
+	INSERT INTO @UnsortedHeartIds -- нужно для сохранения порядка по релевантности
+	SELECT Val FROM @searchHeartIds
 END
 		
-SELECT @TotalCount = COUNT(*) FROM @UnsortedGoodsIds
+SELECT @TotalCount = COUNT(*) FROM @UnsortedHeartIds
 --SELECT @TotalCount
 
 -- Сортируем
 
 IF @SortBy='Relevance'
 BEGIN
-	INSERT INTO @GoodsIds (GoodsId)
-	SELECT Val FROM @UnsortedGoodsIds ug-- JOIN [GoodsItem] g ON ug.Val = g.GoodsId
+	INSERT INTO @HeartIds (HeartId)
+	SELECT Val FROM @UnsortedHeartIds ug-- JOIN [GoodsItem] g ON ug.Val = g.HeartId
 END
 ELSE 
 IF @SortBy='CreationDate'
 BEGIN
 	IF @SortOrder = 'Asc'
 	BEGIN
-		INSERT INTO @GoodsIds (GoodsId)
-		SELECT Val FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId
+		INSERT INTO @HeartIds (HeartId)
+		SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
 			ORDER BY g.NotAvailable, ug.Val
 	END
 	ELSE
 	BEGIN
-		INSERT INTO @GoodsIds (GoodsId)
-		SELECT Val FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId
+		INSERT INTO @HeartIds (HeartId)
+		SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
 			ORDER BY g.NotAvailable, ug.Val DESC
 	END
 END
 ELSE IF @SortBy='Article'
 BEGIN
-	INSERT INTO @GoodsIds (GoodsId)
-	SELECT Val FROM @UnsortedGoodsIds ug JOIN [GoodsItem] g ON ug.Val = g.GoodsId
+	INSERT INTO @HeartIds (HeartId)
+	SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
 		ORDER BY g.NotAvailable, g.[Article]
 END
 ELSE IF @SortBy='Price'
@@ -221,14 +221,14 @@ BEGIN
 
 	IF @SortOrder = 'Asc'
 	BEGIN
-		INSERT INTO @GoodsIds (GoodsId)
-		SELECT Val FROM @UnsortedGoodsIds ug JOIN GoodsWithActualDiscounts g ON ug.Val = g.GoodsId
+		INSERT INTO @HeartIds (HeartId)
+		SELECT Val FROM @UnsortedHeartIds ug JOIN GoodsWithActualDiscounts g ON ug.Val = g.HeartId
 			ORDER BY g.NotAvailable, g.[ActualPrice]
 	END
 	ELSE
 	BEGIN
-		INSERT INTO @GoodsIds (GoodsId)
-		SELECT Val FROM @UnsortedGoodsIds ug JOIN GoodsWithActualDiscounts g ON ug.Val = g.GoodsId
+		INSERT INTO @HeartIds (HeartId)
+		SELECT Val FROM @UnsortedHeartIds ug JOIN GoodsWithActualDiscounts g ON ug.Val = g.HeartId
 			ORDER BY g.NotAvailable, g.[ActualPrice] DESC
 	END
 END
@@ -236,15 +236,15 @@ ELSE IF @SortBy='Rating'
 BEGIN
 	IF @SortOrder = 'Asc'
 	BEGIN
-		INSERT INTO @GoodsIds (GoodsId)
-		SELECT Val FROM @UnsortedGoodsIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.GoodsId INNER JOIN GoodsItem g ON gr.GoodsId = g.GoodsId
+		INSERT INTO @HeartIds (HeartId)
+		SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON gr.HeartId = g.HeartId
 			GROUP BY Val, g.NotAvailable
 			ORDER BY g.NotAvailable, AVG(Rating)
 	END
 	ELSE
 	BEGIN
-		INSERT INTO @GoodsIds (GoodsId)
-		SELECT Val FROM @UnsortedGoodsIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.GoodsId INNER JOIN GoodsItem g ON gr.GoodsId = g.GoodsId
+		INSERT INTO @HeartIds (HeartId)
+		SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON gr.HeartId = g.HeartId
 			GROUP BY Val, g.NotAvailable
 			ORDER BY g.NotAvailable, AVG(Rating) DESC
 	END
@@ -252,10 +252,10 @@ END
 
 
 
-SELECT GoodsId FROM @GoodsIds
+SELECT HeartId FROM @HeartIds
 ORDER BY RowNumber
 --CASE WHEN @SortOrder = 'Asc' THEN RowNumber else -RowNumber END asc
 OFFSET (@StartIndex-1) ROWS
-FETCH NEXT @Count ROWS ONLY --g JOIN [GoodsWithActualDiscounts] gd ON g.GoodsId = gd.GoodsId
+FETCH NEXT @Count ROWS ONLY --g JOIN [GoodsWithActualDiscounts] gd ON g.HeartId = gd.HeartId
 
 --SET TRANSACTION ISOLATION LEVEL READ COMMITTED

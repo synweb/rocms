@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [Shop].[Action_Goods_Insert]
 @ActionId int,
-@GoodsId int
+@HeartId int
 AS
-	INSERT INTO [Shop].[Action_Goods] ([ActionId], [GoodsId])
-	VALUES (@ActionId, @GoodsId)
+	INSERT INTO [Shop].[Action_Goods] ([ActionId], [HeartId])
+	VALUES (@ActionId, @HeartId)

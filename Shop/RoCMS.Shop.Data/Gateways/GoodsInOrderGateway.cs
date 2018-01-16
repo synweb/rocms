@@ -19,9 +19,9 @@ namespace RoCMS.Shop.Data.Gateways
         {
             return ExecSelect<GoodsInOrder>(GetProcedureString(), orderId);
         }
-        public ICollection<GoodsInOrder> SelectByGoods(int goodsId)
+        public ICollection<GoodsInOrder> SelectByGoods(int heartId)
         {
-            return ExecSelect<GoodsInOrder>(GetProcedureString(), goodsId);
+            return ExecSelect<GoodsInOrder>(GetProcedureString(), heartId);
         }
 
         public void Delete(int id)

@@ -54,7 +54,7 @@ namespace RoCMS.Shop.Web
                     {
                         SearchItemKey = item.SearchKeyName,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.GoodsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Name),
                         ImageId = item.MainImageId,
                         Title = item.Name,
@@ -70,7 +70,7 @@ namespace RoCMS.Shop.Web
                     {
                         SearchItemKey = item.SearchKeyDescription,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.GoodsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Description),
                         ImageId = item.MainImageId,
                         Title = item.Name,
@@ -86,7 +86,7 @@ namespace RoCMS.Shop.Web
                     {
                         SearchItemKey = item.SearchKeyHtmlDescription,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.GoodsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.HtmlDescription),
                         ImageId = item.MainImageId,
                         Title = item.Name,

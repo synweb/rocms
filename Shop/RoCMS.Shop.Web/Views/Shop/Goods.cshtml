@@ -6,7 +6,7 @@
     var shopService = DependencyResolver.Current.GetService<IShopService>();
 
     var goodsItem = shopService.GetGoods(Model);
-    int goodsId = goodsItem.GoodsId;
+    int heartId = goodsItem.HeartId;
 
     if (!Request.IsAjaxRequest())
     {

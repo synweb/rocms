@@ -22,7 +22,7 @@ namespace RoCMS.Shop.Contract.Models
             //this.GoodsReviews = new List<GoodsReview>();
         }
 
-        public int GoodsId { get; set; }
+        public int HeartId { get; set; }
         public System.Guid Guid { get; set; }
         public string Name { get; set; }
 
@@ -133,7 +133,7 @@ namespace RoCMS.Shop.Contract.Models
         }
 
         public System.DateTime DateOfAddition { get; set; }
-        public string Keywords { get; set; }
+
         public string Description { get; set; }
         public string HtmlDescription { get; set; }
         public string MainImageId { get; set; }
@@ -155,7 +155,7 @@ namespace RoCMS.Shop.Contract.Models
         public Pack BasePack { get; set; }
 
         public IList<CompatibleSet> CompatibleGoods { get; set; }
-        public string RelativeUrl { get; set; }
+
 
         public string CannonicalUrl { get; set; }
         public string Filename { get; set; }

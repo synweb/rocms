@@ -5,11 +5,11 @@ namespace RoCMS.Shop.Contract.Services
 {
     public interface IShopService
     {
-        GoodsItem GetGoods(int goodsId, bool activeActionsOnly = true);
+        GoodsItem GetGoods(int heartId, bool activeActionsOnly = true);
         GoodsItem GetGoods(string relativeUrl, bool activeActionsOnly = true);
         int CreateGoods(GoodsItem goods);
         void UpdateGoods(GoodsItem goods);
-        void DeleteGoods(int goodsId);
+        void DeleteGoods(int heartId);
         IList<GoodsItem> GetGoodsSet(GoodsFilter filter, int startIndex, int count, out int totalCount, out FilterCollections collections, bool activeActionsOnly = true);
         int[] GetGoodsIds(string searchPattern);
         IList<Country> GetCountries();

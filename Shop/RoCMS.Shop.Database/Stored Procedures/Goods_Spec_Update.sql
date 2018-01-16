@@ -1,10 +1,10 @@
 ﻿CREATE PROCEDURE [Shop].[Goods_Spec_Update]
 @Value nvarchar(150),
-@GoodsId int,
+@HeartId int,
 @SpecId int,
 @IsPrimary bit
 AS
 	UPDATE [Shop].[Goods_Spec]
 		SET [Value]=@Value,
 		[IsPrimary]=@IsPrimary
-	WHERE [GoodsId]=@GoodsId AND [SpecId]=@SpecId
+	WHERE [HeartId]=@HeartId AND [SpecId]=@SpecId

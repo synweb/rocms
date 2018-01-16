@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[GoodsAwaiting_Update]
-@GoodsId int,
+@HeartId int,
 @Contact nvarchar(50),
 @ContactType varchar(20),
 @UserId int,
@@ -7,7 +7,7 @@
 @GoodsAwaitingId int
 AS
 	UPDATE [Shop].[GoodsAwaiting] SET
-		[GoodsId]=@GoodsId,
+		[HeartId]=@HeartId,
 		[Contact]=@Contact,
 		[ContactType]=@ContactType,
 		[UserId]=@UserId,

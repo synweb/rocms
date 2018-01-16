@@ -30,19 +30,19 @@ namespace RoCMS.Shop.Services
         }
 
 
-        public void AddItemToCart(Guid cartId, int goodsId, int count, int? packId)
+        public void AddItemToCart(Guid cartId, int heartId, int count, int? packId)
         {
             var cart = GetCart(cartId);
-            if (cart.CartItems.Any(x => x.GoodsItem.GoodsId == goodsId && x.PackId == packId))
+            if (cart.CartItems.Any(x => x.GoodsItem.HeartId == heartId && x.PackId == packId))
             {
-                var goods = cart.CartItems.First(x => x.GoodsItem.GoodsId == goodsId);
+                var goods = cart.CartItems.First(x => x.GoodsItem.HeartId == heartId);
                 goods.Quantity += count;
             }
             else
             {
                 cart.CartItems.Add(new CartItem()
                 {
-                    GoodsItem = _shopService.GetGoods(goodsId),
+                    GoodsItem = _shopService.GetGoods(heartId),
                     Quantity = count,
                     PackId = packId
                 });
@@ -50,17 +50,17 @@ namespace RoCMS.Shop.Services
             AddOrUpdateCacheObject(cartId.ToString(), cart);
         }
 
-        public void RemoveItemFromCart(Guid cartId, int goodsId, int? packId)
+        public void RemoveItemFromCart(Guid cartId, int heartId, int? packId)
         {
             var cart = GetFromCache<Cart>(cartId.ToString()) ?? new Cart() { CartId = cartId };
-            cart.CartItems.RemoveAll(x => x.GoodsItem.GoodsId == goodsId && x.PackId == packId);
+            cart.CartItems.RemoveAll(x => x.GoodsItem.HeartId == heartId && x.PackId == packId);
             AddOrUpdateCacheObject(cartId.ToString(), cart);
         }
 
-        public void UpdatItemCount(Guid cartId, int goodsId, int count, int? packId)
+        public void UpdatItemCount(Guid cartId, int heartId, int count, int? packId)
         {
             var cart = GetFromCache<Cart>(cartId.ToString()) ?? new Cart() { CartId = cartId };
-            cart.CartItems.First(x => x.GoodsItem.GoodsId == goodsId && x.PackId == packId).Quantity = count;
+            cart.CartItems.First(x => x.GoodsItem.HeartId == heartId && x.PackId == packId).Quantity = count;
             AddOrUpdateCacheObject(cartId.ToString(), cart);
         }
 

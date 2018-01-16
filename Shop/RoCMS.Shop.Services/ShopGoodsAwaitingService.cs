@@ -13,12 +13,12 @@ namespace RoCMS.Shop.Services
     class ShopGoodsAwaitingService: BaseShopService, IShopGoodsAwaitingService
     {
         private readonly GoodsAwaitingGateway _goodsAwaitingGateway = new GoodsAwaitingGateway();
-        public void SendNotifications(int goodsId)
+        public void SendNotifications(int heartId)
         {
             throw new NotImplementedException();
         }
 
-        public void SendNotifications(int[] goodsId)
+        public void SendNotifications(int[] heartId)
         {
             throw new NotImplementedException();
         }

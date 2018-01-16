@@ -1,4 +1,4 @@
 ﻿CREATE PROCEDURE [Shop].[GoodsReview_SelectByGoods]
-	@GoodsId int
+	@HeartId int
 AS
-	SELECT * FROM [Shop].GoodsReview WHERE [GoodsId]=@GoodsId
+	SELECT * FROM [Shop].GoodsReview WHERE [HeartId]=@HeartId

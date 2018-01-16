@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[Goods_Pack_SelectByGoods]
-@GoodsId int
+@HeartId int
 AS
 	SELECT * FROM [Shop].[Goods_Pack]
-		WHERE [GoodsId]=@GoodsId
+		WHERE [HeartId]=@HeartId

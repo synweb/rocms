@@ -38,14 +38,14 @@
         var text = textField.val();
         
         var rating = ratingField.val();
-        var goodsId = $(".goods-item-card").data("goodsId");
+        var heartId = $(".goods-item-card").data("heartId");
 
         postJSON("/api/shop/goods/reviews/create", {
             author: author,
             text: text,
             rating: rating,
             authorContact: contacts,
-            goodsId: goodsId
+            heartId: heartId
         }, function () {
             authorField.val("");
             contactsField.val("");
@@ -57,7 +57,7 @@
 };
 
 
-function createGoodsAwaitingDialog(goodsId, onSuccess) {
+function createGoodsAwaitingDialog(heartId, onSuccess) {
 
 
         showBootstrapDialogFromUrl("/Shop/GoodsAwaitingDialog", {
@@ -73,7 +73,7 @@ function createGoodsAwaitingDialog(goodsId, onSuccess) {
                     var phone = $dialog.find(".phone").val();
 
                     if ($.trim(mail) || $.trim(phone)) {
-                        postJSON("/api/shop/goods/awaiting/create", { email: mail, phone: phone, goodsId: goodsId }, function(data) {
+                        postJSON("/api/shop/goods/awaiting/create", { email: mail, phone: phone, heartId: heartId }, function(data) {
                             if (data.succeed !== false) {
                                 $dialog.modal("hide");
                                 if (onSuccess) {
@@ -100,8 +100,8 @@ function goodsLoaded() {
 
     $(".btn-awaiting").click(function() {
         var self = $(this);
-        var goodsId = $(this).data("goodsId");
-        createGoodsAwaitingDialog(goodsId, function() {
+        var heartId = $(this).data("heartId");
+        createGoodsAwaitingDialog(heartId, function() {
             self.replaceWith($("<span>Товар добавлен в лист ожидания.</span>"));
         });
 

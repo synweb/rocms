@@ -94,7 +94,7 @@ namespace RoCMS.Shop.Services
             using (TransactionScope scope = new TransactionScope())
             {
                 Data.Models.Category dataCategory = _categoryGateway.SelectOne(categoryId);
-                var goodsIds = _goodsCategoryGateway.SelectByCategory(categoryId).Select(x => x.GoodsId);
+                var goodsIds = _goodsCategoryGateway.SelectByCategory(categoryId).Select(x => x.HeartId);
                 foreach (var goodsId in goodsIds)
                 {
                     _goodsItemGateway.Delete(goodsId);

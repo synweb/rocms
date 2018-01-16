@@ -51,12 +51,12 @@ namespace Shop.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/get", "GoodsApi", "Get");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/create", "GoodsApi", "Create");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/update", "GoodsApi", "Update");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/{goodsId}/delete", "GoodsApi", "Delete");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/{heartId}/delete", "GoodsApi", "Delete");
 
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/reviews/get", "GoodsApi", "GetAllGoodsReviews");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/reviews/{goodsId}/get", "GoodsApi", "GetGoodsReviews");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/reviews/{heartId}/get", "GoodsApi", "GetGoodsReviews");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/textreviews/get", "GoodsApi", "GetAllGoodsReviewsWithText");
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/textreviews/{goodsId}/get", "GoodsApi", "GetGoodsReviewsWithText");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/textreviews/{heartId}/get", "GoodsApi", "GetGoodsReviewsWithText");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/reviews/create", "GoodsApi", "CreateGoodsReview");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/reviews/update", "GoodsApi", "UpdateGoodsReview");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/goods/reviews/{reviewId}/delete", "GoodsApi", "DeleteGoodsReview");
@@ -89,9 +89,9 @@ namespace Shop.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/regularClients/update", "RegularClientApi", "Update");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/regularClients/{id}/delete", "RegularClientApi", "Delete");
 
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/{count}/add", "CartApi", "AddItem", true);
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/{count}/change", "CartApi", "ChangeItemCount", true);
-            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{goodsId}/{packId}/remove", "CartApi", "RemoveItem", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{heartId}/{packId}/{count}/add", "CartApi", "AddItem", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{heartId}/{packId}/{count}/change", "CartApi", "ChangeItemCount", true);
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/{heartId}/{packId}/remove", "CartApi", "RemoveItem", true);
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/clear", "CartApi", "Clear", true);
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/summary", "CartApi", "CartSummary", true);
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/cart/get", "CartApi", "GetCart", true);

@@ -75,6 +75,14 @@ namespace RoCMS
                 url: "Image/{id}",
                 defaults: new { controller = "Image", action = "Image" });
             routes.MapRoute(
+                name: "SetAlbumWatermark",
+                url: "api/album/{albumId}/{watermarkImageId}/watermark/set",
+                defaults: new { controller = "Gallery", action = "SetAlbumWatermark" });
+            routes.MapRoute(
+                name: "RemoveAlbumWatermark",
+                url: "api/album/{albumId}/watermark/remove",
+                defaults: new { controller = "Gallery", action = "RemoveAlbumWatermark" });
+            routes.MapRoute(
                 name: "FileWithExt",
                 url: "File/Get/{fileName}.{ext}",
                 defaults: new { controller = "File", action = "Get" });

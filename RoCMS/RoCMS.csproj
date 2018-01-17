@@ -223,6 +223,7 @@
     <Content Include="Content\adminTemplate\css\rocms-admin\jquery-ui.theme.css" />
     <Content Include="Content\adminTemplate\css\style.css" />
     <Content Include="Content\adminTemplate\js\main.js" />
+    <Content Include="Content\admin\ro\img\chess.png" />
     <Content Include="Content\admin\ro\js\rocms.albums.js" />
     <Content Include="Content\admin\ro\js\rocms.video.album.edit.js" />
     <Content Include="Content\admin\ro\js\rocms.video.albums.js" />

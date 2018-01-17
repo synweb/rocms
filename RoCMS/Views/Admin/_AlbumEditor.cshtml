@@ -11,6 +11,7 @@
     var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
     var rootUrl = settingsService.GetSettings<string>("RootUrl");
     Album album = ViewBag.Album;
+    string emptyImg = Url.Content("~/Content/admin/ro/img/no-image.png");
 }
 
 @*<script type="text/ecmascript">
@@ -94,7 +95,33 @@
                     <input type="checkbox" class="toggle">
                 }
             </div>
-
+            <div class="col-lg-12">
+                @{
+                    bool hasWatermark = !string.IsNullOrEmpty(album.WatermarkImageId);
+                    <button type="button" class="btn btn-xs btn-warning pick-watermark" style="@(hasWatermark ? "display:none;" : "")">Установить Watermark</button>
+                    string imgSrc;
+                    if (Model != null && !String.IsNullOrEmpty(album.WatermarkImageId))
+                    {
+                        imgSrc = Url.Action("Thumbnail", "Gallery", new {id = album.WatermarkImageId});
+                    }
+                    else
+                    {
+                        imgSrc = emptyImg;
+                    }
+                    <div class="watermark-info" style="@(hasWatermark ? "" : "display:none;")">
+                    <a href="@imgSrc" target="_blank">
+                        <img class="water-img pointer" style="background: url(/Content/admin/ro/img/chess.png) repeat" src="@imgSrc" data-id="@album.WatermarkImageId"/>
+                    </a>
+                    <input type="button" class="btn btn-danger btn-xs remove-watermark" value="Убрать Watermark" style="vertical-align: middle; margin-left:10px;"/>
+                        <div class="regular-warning">
+                            <h2>Обратите внимание</h2>
+                            <p>Для ускорения работы сайта изображения кэшируются в браузере.</p>
+                            <p>Эффект от применения или удаления вотермарки будет заметен после обновления или устаревания кэша, также часто помогает сочетание клавиш Ctrl+F5.</p>
+                            <p>Новые посетители будут видеть актуальные картинки сразу без каких-либо действий.</p>
+                        </div>
+                    </div>
+                }
+            </div>
             <div class="col-lg-12">
                 <!-- The global progress bar -->
                 <div class="progress progress-striped active fade">

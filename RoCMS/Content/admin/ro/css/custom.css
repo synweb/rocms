@@ -974,6 +974,20 @@ header.head .rocms-logo {
     border: 0;
 }
 
+.regular-warning {
+     border: 1px solid #eee;
+     border-left-color: #f0ad4e;
+     border-left-width: 5px;
+     padding: 20px;
+     margin: 20px 0;
+     background: #fcfcfd;
+     display: table;
+ }
+
+.regular-warning h2{
+    color: #eea236; margin: 0 0 10px;
+}
+
 .super-warning {
     border: 1px solid #eee;
     border-left-color: #ce4844;

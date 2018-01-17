@@ -29,6 +29,7 @@ namespace RoCMS.Web.Services
         private const string MIMETYPE_GIF = "image/gif";
 
         private const string IMAGES_DIR = "Images";
+        private const string IMAGES_ORIGINAL_DIR = "Images_original";
         private const string THUMBNAILS_DIR = "Thumbnails";
         private readonly ImageGateway _imageGateway = new ImageGateway();
         private readonly ImageInAlbumGateway _imageInAlbumGateway = new ImageInAlbumGateway();
@@ -281,6 +282,22 @@ namespace RoCMS.Web.Services
             }
         }
 
+        private string GetOriginalImagePath(string imageId)
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string first = imageId.Substring(0, 1);
+            string second = imageId.Substring(1, 1);
+            var dir = Path.Combine(baseDir, IMAGES_ORIGINAL_DIR, first, second);
+            // в imageId есть расширение
+            if (imageId.Contains("."))
+            {
+                return Path.Combine(dir, imageId);
+            }
+            // в imageId нет расширения
+            var path = Path.Combine(dir, imageId.ToLower());
+            return path;
+        }
+
         /// <summary>
         /// Получить путь к изображению для отображения
         /// </summary>
@@ -373,6 +390,74 @@ namespace RoCMS.Web.Services
             return sizes?.OrderBy(x => x.Side).ThenBy(x => x.Pixels).FirstOrDefault();
         }
 
+        public void ApplyWatermark(string imageId, string watermarkImageId)
+        {
+            var imagePath = GetImagePath(imageId, null);
+            var backupImagePath = GetOriginalImagePath(imageId);
+            var watermarkPath = GetImagePath(watermarkImageId, null);
+            try
+            {
+                Image img = null; 
+                // не пихаем всё сразу в кучу юзингов, потому что потом картинку по тому же урлу нельзя будет сохранить
+                try
+                {
+                    using (FileStream source = new FileStream(imagePath, FileMode.Open))
+                    {
+                        img = Image.FromStream(source);
+                        using (FileStream watermarkSource = new FileStream(watermarkPath, FileMode.Open))
+                        using (Image watermarkImg = Image.FromStream(watermarkSource))
+                        {
+                            if (img.Width < watermarkImg.Width || img.Height < watermarkImg.Height)
+                                return;
+
+                            if (!File.Exists(backupImagePath))
+                            {
+                                CreateDirectoryForPath(backupImagePath);
+                                File.Copy(imagePath, backupImagePath);
+                            }
+
+                            using (Graphics imageGraphics = Graphics.FromImage(img))
+                            using (TextureBrush watermarkBrush = new TextureBrush(watermarkImg))
+                            {
+                                int x = img.Width / 2 - watermarkImg.Width / 2;
+                                int y = img.Height / 2 - watermarkImg.Height / 2;
+                                watermarkBrush.TranslateTransform(x, y);
+                                imageGraphics.FillRectangle(watermarkBrush,
+                                    new Rectangle(new Point(x, y),
+                                        new Size(watermarkImg.Width + 1, watermarkImg.Height)));
+                            }
+                        }
+                    }
+                    ImageFormat format = FilenameToImageFormat(imageId);
+                    img.Save(imagePath, format);
+                    DeleteThumbnails(imageId);
+                }
+                finally
+                {
+                    // using не подойдёт, ибо в начале объект - null
+                    img?.Dispose();
+                }
+                
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+            }
+
+        }
+
+        public void RestoreImage(string imageId)
+        {
+            var imagePath = GetImagePath(imageId, null);
+            var backupImagePath = GetOriginalImagePath(imageId);
+            if (File.Exists(backupImagePath))
+            {
+                File.Copy(backupImagePath, imagePath, true);
+                File.Delete(backupImagePath);
+            }
+            DeleteThumbnails(imageId);
+        }
+
         /// <summary>
         /// Получить все размеры миниатюр, которые используются в системе в текущий момент
         /// </summary>
@@ -393,6 +478,11 @@ namespace RoCMS.Web.Services
             var path = GetImagePathInternal(imageId, null);
             File.Delete(path);
             // удаляем все миниатюры
+            DeleteThumbnails(imageId);
+        }
+
+        private void DeleteThumbnails(string imageId)
+        {
             var sizes = GetThumbnailSizes();
             foreach (var thumbnailSize in sizes)
             {

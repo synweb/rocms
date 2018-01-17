@@ -71,7 +71,4 @@
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="test.mocha.publish.xml" />
-  </ItemGroup>
 </Project>

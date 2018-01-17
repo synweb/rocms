@@ -14,5 +14,6 @@ namespace RoCMS.Web.Contract.Models
         public int? OwnerId { get; set; }
         public DateTime CreationDate { get; set; }
         public int ImageCount { get; set; }
+        public string WatermarkImageId { get; set; }
     }
 }

@@ -16,5 +16,7 @@ namespace RoCMS.Web.Contract.Services
         ImageInfo GetImageInfo(string imageId);
         void ClearUnusedThumbnailDirectories();
         ThumbnailSize? GetSmallestThumbnailSize();
+        void ApplyWatermark(string imageId, string watermarkImageId);
+        void RestoreImage(string imageId);
     }
 }

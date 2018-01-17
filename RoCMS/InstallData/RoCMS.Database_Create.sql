@@ -173,6 +173,7 @@ CREATE TABLE [dbo].[Album] (
     [AlbumId]      INT            IDENTITY (1, 1) NOT NULL,
     [Name]         NVARCHAR (50)  NOT NULL,
     [Description]  NVARCHAR (MAX) NULL,
+    [WatermarkImageId]      VARCHAR(30)   NULL,
     [CreationDate] DATETIME       NOT NULL,
     [OwnerId]      INT            NULL,
     CONSTRAINT [PK_AlbumSet] PRIMARY KEY CLUSTERED ([AlbumId] ASC)
@@ -1118,6 +1119,13 @@ ALTER TABLE [dbo].[Album]
 
 
 GO
+PRINT N'Creating [dbo].[FK_Album_WatermarkImageId]...';
+
+ALTER TABLE [dbo].[Album]
+    ADD CONSTRAINT [FK_Album_WatermarkImageId] FOREIGN KEY ([WatermarkImageId]) REFERENCES [dbo].[Image] ([ImageId]) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+GO
 PRINT N'Creating [dbo].[FK_ImageInAlbum_AlbumId]...';
 
 
@@ -1518,12 +1526,14 @@ CREATE PROCEDURE [dbo].[Album_Update]
 @Name nvarchar(50),
 @Description nvarchar(MAX),
 @OwnerId int,
+@WatermarkImageId varchar(30),
 @AlbumId int
 AS
 	UPDATE [dbo].[Album] SET
 		[Name]=@Name,
 		[Description]=@Description,
-		[OwnerId]=@OwnerId
+		[OwnerId]=@OwnerId,
+		[WatermarkImageId]=@WatermarkImageId
 	WHERE [AlbumId]=@AlbumId
 GO
 PRINT N'Creating [dbo].[Block_Delete]...';

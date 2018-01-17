@@ -82,6 +82,8 @@ namespace RoCMS.App_Start
             WebApiConfigHelper.ApiRoute(config.Routes, "album/{albumId}/{imageId}/add", "AlbumApi", "AddImageToAlbum");
             WebApiConfigHelper.ApiRoute(config.Routes, "album/{albumId}/images/remove/{id}", "AlbumApi", "RemoveImageFromAlbum");
             WebApiConfigHelper.ApiRoute(config.Routes, "album/update", "AlbumApi", "UpdateAlbum");
+            //WebApiConfigHelper.ApiRoute(config.Routes, "album/{albumId}/{watermarkImageId}/watermark/set", "Gallery", "SetAlbumWatermark"); // метод там, так как работает с кэшэм, который есть только в MVC
+            //WebApiConfigHelper.ApiRoute(config.Routes, "album/{albumId}/watermark/remove", "Gallery", "RemoveAlbumWatermark"); // метод там, так как работает с кэшэм, который есть только в MVC
 
             WebApiConfigHelper.ApiRoute(config.Routes, "useralbum/getid", "UserAlbumApi", "GetUserAlbumId");
             WebApiConfigHelper.ApiRoute(config.Routes, "useralbum/{imageId}/add", "UserAlbumApi", "AddImageToUserAlbum");

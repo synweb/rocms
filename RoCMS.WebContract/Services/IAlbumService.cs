@@ -33,6 +33,7 @@ namespace RoCMS.Web.Contract.Services
 
         void UpdateAlbum(Album album);
         void UpdateImageDestinationUrl(int albumId, string imageId, string destinationUrl);
-        
+
+        void SetAlbumWatermark(int albumId, string watermarkImageId);
     }
 }

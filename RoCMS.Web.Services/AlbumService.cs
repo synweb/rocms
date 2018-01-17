@@ -124,6 +124,11 @@ namespace RoCMS.Web.Services
                 ImageId = imageId,
                 Title = title
             });
+            var dataAlbum = _albumGateway.SelectOne(albumId);
+            if (!string.IsNullOrEmpty(dataAlbum.WatermarkImageId))
+            {
+                _imageService.ApplyWatermark(imageId, dataAlbum.WatermarkImageId);
+            }
         }
 
         public IEnumerable<AlbumImageInfo> GetAlbumImages(int albumId)
@@ -191,6 +196,31 @@ namespace RoCMS.Web.Services
             var iia = _imageInAlbumGateway.SelectOne(albumId, imageId);
             iia.DestinationUrl = destinationUrl;
             _imageInAlbumGateway.Update(iia);
+        }
+
+        public void SetAlbumWatermark(int albumId, string watermarkImageId)
+        {
+            if (string.IsNullOrEmpty(watermarkImageId))
+            {
+                // удаляем вотермарку, восстанавливаем картинки
+                foreach (var imageId in GetAlbumImageIds(albumId))
+                {
+                    _imageService.RestoreImage(imageId);
+                }
+            }
+            else
+            {
+                // ставим вотермарку, бэкапим картинки
+                foreach (var imageId in GetAlbumImageIds(albumId))
+                {
+                    _imageService.ApplyWatermark(imageId, watermarkImageId);
+                }
+
+            }
+
+            var dataAlbum = _albumGateway.SelectOne(albumId);
+            dataAlbum.WatermarkImageId = watermarkImageId;
+            _albumGateway.Update(dataAlbum);
         }
 
         public void UpdateImageTitle(int albumId, string imageId, string title)

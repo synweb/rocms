@@ -21,7 +21,7 @@ namespace RoCMS.Web.Services
         private readonly UserGateway _userGateway = new UserGateway();
         private readonly UserCMSResourceGateway _userCMSResourceGateway = new UserCMSResourceGateway();
         private readonly CMSResourceGateway _cmsResourceGateway = new CMSResourceGateway();
-        
+
 
         public static string CalculateHash(string input)
         {
@@ -38,12 +38,27 @@ namespace RoCMS.Web.Services
             Array.Copy(saltBytes, hashPlusSaltBytes, saltBytes.Length);
             Array.Copy(hash, 0, hashPlusSaltBytes, saltBytes.Length, hash.Length);
             Array.Copy(saltBytes2, 0, hashPlusSaltBytes, hash.Length + saltBytes.Length, saltBytes2.Length);
-            hash = hashAlg.ComputeHash(hashPlusSaltBytes);
+            var saltedHash = hashAlg.ComputeHash(hashPlusSaltBytes);
+            
+            // Без этих двух строк результаты работы этой функции, скомпилированной с оптимизацией и без неё, на некоторых машинах различаются
+            // (было замечено только на одной)
+            // короче, это убирать нельзя
+            var logService = DependencyResolver.Current.GetService<ILogService>();
+            logService.TraceMessage($"Random seed for hashing: {seed}");
+            //logService.TraceMessage($"Initial hash: {BytesToHex(hash)}");
+            //logService.TraceMessage($"Salt 1: {BytesToHex(saltBytes)}");
+            //logService.TraceMessage($"Salt 2: {BytesToHex(saltBytes2)}");
+            //logService.TraceMessage($"Final hash: {BytesToHex(saltedHash)}");
 
+            return BytesToHex(saltedHash);
+        }
+
+        private static string BytesToHex(byte[] bytes)
+        {
             var sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            for (int i = 0; i < bytes.Length; i++)
             {
-                sb.Append(hash[i].ToString("X2"));
+                sb.Append(bytes[i].ToString("X2"));
             }
             return sb.ToString().ToLower();
         }

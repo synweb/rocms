@@ -213,7 +213,7 @@ namespace RoCMS.News.Web.Controllers
             IEnumerable<NewsItem> news = _newsItemService.GetNewsPage(new NewsFilter() { TagName = tag }, pageNumber, pageSize, out totalCount);
             ViewBag.TotalCount = totalCount;
             ViewBag.NoLayout = true;
-            ViewBag.PagingRoute = typeof(RoCMS.Web.Contract.Models.Page).FullName;
+            ViewBag.PagingRoute = "PageSEF";
             return View("Page", news);
         }
 

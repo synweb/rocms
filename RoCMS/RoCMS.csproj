@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -590,7 +591,6 @@
     <Content Include="Content\theme\vendor\font-awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\theme\vendor\font-awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\theme\vendor\font-awesome\fonts\FontAwesome.otf" />
-    <Content Include="Connections.config" />
     <Content Include="InstallData\Connections.mssql.template" />
     <Content Include="Content\client\ro\js\rocms.fixed-menu.js" />
     <Content Include="Content\base\vendor\ckeditor\CHANGES.md" />

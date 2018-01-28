@@ -15,11 +15,12 @@
     {
         <div class="box video-album">
             <header>
-                <h5 title="@album.Name">@album.Name</h5>
-                <div class="toolbar multibutton">
+
+                <div class="toolbar">
                     <a class="btn btn-xs btn-warning edit" href="@Url.Action("ConfigureVideoAlbum", "Admin", new {id = album.ID})"><i class="fa fa-pencil"></i></a>
                     <a class="btn btn-xs btn-danger delete" data-album-id="@album.ID" onclick="true"><i class="fa fa-trash-o"></i></a>
                 </div>
+                <h5 title="@album.Name">@album.Name</h5>
             </header>
         </div>
     }

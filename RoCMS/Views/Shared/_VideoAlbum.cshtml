@@ -8,7 +8,7 @@
 
 <section id="gal-container">
     <ul class="gallery-two-col" id="stage">
-        @foreach (var vid in vids)
+        @foreach (var vid in vids.OrderByDescending(x => x.CreationDate))
         {
             <li data-tags="Videos">
                 <a class="thumb play" href="http://www.youtube.com/watch?v=@vid.VideoId"><img alt="@vid.Title" src="http://img.youtube.com/vi/@vid.VideoId/hqdefault.jpg" width="476" /></a>

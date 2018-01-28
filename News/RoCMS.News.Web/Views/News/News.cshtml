@@ -7,6 +7,7 @@
 @using RoCMS.Web.Contract.Services
 @using RoCMS.Web.Contract.Extensions
 @using RoCMS.Comments.Contract.ViewModels
+@using RoCMS.News.Contract.Services
 @model RoCMS.News.Contract.Models.NewsItem
 @{
     ViewBag.Title = ViewBag.Header = Model.Title;
@@ -35,6 +36,9 @@
 
     var shareBlock = blockService.GetBlock(7);
 
+
+    var newsItemService = DependencyResolver.Current.GetService<INewsItemService>();
+    var relatedNews = newsItemService.GetRelatedNews(Model.NewsId, false, 5, true, Model.NewsId);
 }
 
 @if (showEditLink)
@@ -70,6 +74,15 @@
             </div>
 
             @Html.Raw(ContentRenderHelper.RenderContent(Model.Text))
+
+            @if (relatedNews.Any())
+            {
+                <p class="h3">Новости по теме:</p>
+                 foreach (var newsItem in relatedNews)
+                 {
+                     <ul><li><a href="@Url.RouteUrl("BlogItem", new {relativeUrl = newsItem.CanonicalUrl})">@newsItem.Title</a></li></ul>
+                 }
+            }
 
         </div>
 

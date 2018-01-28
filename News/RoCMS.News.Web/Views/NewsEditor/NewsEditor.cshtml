@@ -138,9 +138,9 @@
                 <li>
                     <select class="form-control news-related-item" name="RelatedNewsItemId">
                         <option value="" @(Model == null || !Model.RelatedNewsItemId.HasValue ? "selected=selected" : "")>Нет</option>
-                        @foreach (var news in allNews)
+                        @foreach (var news in allNews.OrderByDescending(x => x.CreationDate))
                         {
-                            <option value="@news.NewsId" @(Model != null && news.NewsId == Model.RelatedNewsItemId ? "selected=selected" : "")>@news.Title</option>
+                            <option value="@news.NewsId" @(Model != null && news.NewsId == Model.RelatedNewsItemId ? "selected=selected" : "")>@news.CreationDate.ToShortDateString(): @news.Title</option>
                         }
                     </select>
 

@@ -149,7 +149,7 @@ function albumEditorLoaded() {
         var description = $(this).val();
 
         postJSON("/api/album/" + albumId + "/image/" + imageId + "/description/update", { description: description }, function (result) {
-            if (result.succeed == true) {
+            if (result.succeed === true) {
 
             }
         }).done(function () {
@@ -163,11 +163,44 @@ function albumEditorLoaded() {
         var destinationUrl = $(this).val();
 
         postJSON("/api/album/" + albumId + "/image/" + imageId + "/destinationUrl/update", { destinationUrl: destinationUrl }, function (result) {
-            if (result.succeed == true) {
+            if (result.succeed === true) {
 
             }
         }).done(function () {
 
+        });
+    });
+
+
+
+    $(".album-editor").on("click", ".pick-watermark", function () {
+        pickImage($(".water-img"), function (imageData) {
+            blockUI();
+
+            var albumId = $(".album-editor").data("albumId");
+            postJSON("/api/album/" + albumId + "/" + imageData.ID + "/watermark/set", null, function (result) {
+                if (result.Succeed === true) {
+                    $(".pick-watermark").hide();
+                    $(".watermark-info").show();
+                }
+            }).always(function () {
+                unblockUI();
+            });
+        });
+    });
+
+    $(".album-editor").on("click", ".remove-watermark", function () {
+
+        blockUI();
+
+        var albumId = $(".album-editor").data("albumId");
+        postJSON("/api/album/" + albumId + "/watermark/remove", null, function (result) {
+            if (result.Succeed === true) {
+                $(".pick-watermark").show();
+                $(".watermark-info").hide();
+            }
+        }).always(function () {
+            unblockUI();
         });
     });
 }

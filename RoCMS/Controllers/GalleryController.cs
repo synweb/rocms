@@ -17,12 +17,14 @@ namespace RoCMS.Controllers
         private readonly IImageService _imageService;
         private readonly IAlbumService _albumService;
         private readonly ISettingsService _settingsService;
+        private readonly ILogService _logService;
 
-        public GalleryController(IImageService imageService, IAlbumService albumService, ISettingsService settingsService)
+        public GalleryController(IImageService imageService, IAlbumService albumService, ISettingsService settingsService, ILogService logService)
         {
             _imageService = imageService;
             _albumService = albumService;
             _settingsService = settingsService;
+            _logService = logService;
         }
 
         //
@@ -112,6 +114,57 @@ namespace RoCMS.Controllers
                     return "image/gif";
             }
             throw new ArgumentException("Not an image mimetype");
+        }
+
+        private void ClearAlbumOutputCache(int albumId)
+        {
+            var images = _albumService.GetAlbumImages(albumId);
+            foreach (var albumImageInfo in images)
+            {
+                //  Get the url for the action method:
+                var staleItem = Url.RouteUrl("Image", new
+                {
+                    id = albumImageInfo.ImageId,
+                });
+                Response.RemoveOutputCacheItem(staleItem);
+                var staleItem2 = Url.RouteUrl("Thumbnail", new
+                {
+                    id = albumImageInfo.ImageId,
+                });
+                Response.RemoveOutputCacheItem(staleItem2);
+            }
+        }
+
+        [System.Web.Http.HttpPost]
+        public JsonResult SetAlbumWatermark(int albumId, string watermarkImageId)
+        {
+            try
+            {
+                _albumService.SetAlbumWatermark(albumId, watermarkImageId);
+                ClearAlbumOutputCache(albumId);
+                return Json(ResultModel.Success);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return Json(new ResultModel(e));
+            }
+        }
+
+        [System.Web.Http.HttpPost]
+        public JsonResult RemoveAlbumWatermark(int albumId)
+        {
+            try
+            {
+                _albumService.SetAlbumWatermark(albumId, null);
+                ClearAlbumOutputCache(albumId);
+                return Json(ResultModel.Success);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return Json(new ResultModel(e));
+            }
         }
 
         [AuthorizeResources(RoCmsResources.Albums)]

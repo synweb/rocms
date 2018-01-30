@@ -245,5 +245,6 @@ ModelManifest.xml
 .fake/
 *.jfm
 RoCMS/Images
+RoCMS/Images_original
 RoCMS/Thumbnails
 Connections.config

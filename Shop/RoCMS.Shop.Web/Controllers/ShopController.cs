@@ -156,7 +156,7 @@ namespace RoCMS.Shop.Web.Controllers
 
             var routeValues = ParamExtractor.ExtractParamsForSEF(Request);
             var args = new RouteValueDictionary(routeValues);
-            args.Add("relativeUrl", cat.CannonicalUrl);
+            args.Add("relativeUrl", cat.CanonicalUrl);
             args.Remove("id");
             return RedirectPermanent(Url.RouteUrl("CatalogSEF", args));
         }
@@ -180,10 +180,10 @@ namespace RoCMS.Shop.Web.Controllers
 
             
 
-            if (cat.CannonicalUrl != relativeUrl)
+            if (cat.CanonicalUrl != relativeUrl)
             {
                 var routeValues = Request.RequestContext.RouteData.Values;
-                routeValues.Add("relativeUrl", cat.CannonicalUrl);
+                routeValues.Add("relativeUrl", cat.CanonicalUrl);
                 return RedirectPermanent(Url.RouteUrl("CatalogSEF", routeValues));
             }
 
@@ -302,7 +302,7 @@ namespace RoCMS.Shop.Web.Controllers
             }
             var goods = _shopService.GetGoods(id);
 
-            return RedirectToRoutePermanent("CatalogSEF", new { relativeURL = goods.CannonicalUrl });
+            return RedirectToRoutePermanent("CatalogSEF", new { relativeURL = goods.CanonicalUrl });
         }
 
         public ActionResult GoodsSEF(string relativeUrl)
@@ -316,9 +316,9 @@ namespace RoCMS.Shop.Web.Controllers
 
             var goodsItem = _shopService.GetGoods(pageUrl);
 
-            if (goodsItem.CannonicalUrl != relativeUrl)
+            if (goodsItem.CanonicalUrl != relativeUrl)
             {
-                return RedirectPermanent(Url.RouteUrl("CatalogSEF", new { relativeUrl = goodsItem.CannonicalUrl }));
+                return RedirectPermanent(Url.RouteUrl("CatalogSEF", new { relativeUrl = goodsItem.CanonicalUrl }));
             }
 
             return PartialView("Goods", (object)pageUrl);

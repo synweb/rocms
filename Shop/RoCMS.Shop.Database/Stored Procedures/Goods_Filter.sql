@@ -138,7 +138,7 @@ WHERE
 AND
 ( (@ManufacturerIdsExist = 0 AND @CountriesExist = 0) OR
 		
-	EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.HeartId AND (
+	EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.GoodsHeartId AND (
 	g.SupplierId IN (SELECT Val FROM @FinalManufacturerIds) 
 	OR g.ManufacturerId IN (SELECT Val FROM @FinalManufacturerIds))))
 AND

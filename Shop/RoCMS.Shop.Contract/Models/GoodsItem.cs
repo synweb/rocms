@@ -9,7 +9,7 @@ using RoCMS.Web.Contract.Models.Search;
 
 namespace RoCMS.Shop.Contract.Models
 {
-    public class GoodsItem: ISearchable
+    public class GoodsItem: Heart, ISearchable
     {
         public GoodsItem()
         {
@@ -22,7 +22,7 @@ namespace RoCMS.Shop.Contract.Models
             //this.GoodsReviews = new List<GoodsReview>();
         }
 
-        public int HeartId { get; set; }
+
         public System.Guid Guid { get; set; }
         public string Name { get; set; }
 
@@ -157,7 +157,7 @@ namespace RoCMS.Shop.Contract.Models
         public IList<CompatibleSet> CompatibleGoods { get; set; }
 
 
-        public string CannonicalUrl { get; set; }
+
         public string Filename { get; set; }
 
         //public IList<GoodsReview> GoodsReviews { get; set; }

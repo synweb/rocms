@@ -51,7 +51,7 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.OrderFormSpecs, x => x.Ignore())
                 .ForMember(x => x.ChildrenCategories, x => x.Ignore())
                 .ForMember(x => x.ParentCategory, x => x.Ignore())
-                .ForMember(x => x.CannonicalUrl, x => x.Ignore());
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore());
 
             Mapper.CreateMap<Data.Models.Category, IdNamePair<int>>()
                 .ForMember(x => x.ID, x => x.MapFrom(y => y.CategoryId))
@@ -135,8 +135,22 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.Supplier, x => x.Ignore())
                 .ForMember(x => x.Currency1, x => x.Ignore())
                 .ForMember(x => x.BasePack, x => x.Ignore())
-                .ForMember(x => x.CannonicalUrl, x => x.Ignore())
-                .ForMember(x => x.Rating, x => x.Ignore());
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore())
+                .ForMember(x => x.Rating, x => x.Ignore())
+                .ForMember(x => x.CreationDate, x => x.Ignore())
+                .ForMember(x => x.RelativeUrl, x => x.Ignore())
+                .ForMember(x => x.ParentHeartId, x => x.Ignore())
+                .ForMember(x => x.BreadcrumbsTitle, x => x.Ignore())
+                .ForMember(x => x.Noindex, x => x.Ignore())
+                .ForMember(x => x.Title, x => x.Ignore())
+                .ForMember(x => x.MetaDescription, x => x.Ignore())
+                .ForMember(x => x.MetaKeywords, x => x.Ignore())
+                .ForMember(x => x.Styles, x => x.Ignore())
+                .ForMember(x => x.Scripts, x => x.Ignore())
+                .ForMember(x => x.Layout, x => x.Ignore())
+                .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
+                .ForMember(x => x.Categories, x => x.Ignore())
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore());
 
             Mapper.CreateMap<CartItem, GoodsInOrder>()
                 .ForMember(x => x.OrderId, x => x.Ignore())

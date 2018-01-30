@@ -10,7 +10,7 @@
 }
 
 
-<form class="form-horizontal">
+<div class="form-horizontal">
 
     <div class="form-group">
         <div style="float: right">Длина заголовка: <span class="title-length" data-bind="text: titleLength"></span></div>
@@ -134,7 +134,7 @@
                       data-original-title="Дополнительные стили, которые будут добавлены в начале страницы. Тэг <style> не требуется.">
                     <em class="fa fa-question-circle"></em>
                 </span>
-                @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Styles, "page_styles", "page-styles", ACEModes.CSS))
+                @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Styles, "page_styles", "page-styles", ACEModes.CSS, false))
             </div>
             <div class="col-md-12">
                 <label>Скрипты</label>
@@ -142,7 +142,7 @@
                       data-original-title="Дополнительные скрипты, которые будут добавлены в конце страницы. Тэг <script> не требуется.">
                     <em class="fa fa-question-circle"></em>
                 </span>
-                @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Scripts, "page_scripts", "page-scripts", ACEModes.JavaScript))
+                @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.Scripts, "page_scripts", "page-scripts", ACEModes.JavaScript, false))
             </div>
             <div class="col-md-12">
                 <label>Доп. meta-заголовки</label>
@@ -150,8 +150,8 @@
                       data-original-title="Дополнительные meta-заголовки страницы.">
                     <em class="fa fa-question-circle"></em>
                 </span>
-                @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.AdditionalHeaders, "page_headers", "page-headers", ACEModes.XML))
+                @Html.Partial("ACE", new EditorVM(Model == null ? null : Model.AdditionalHeaders, "page_headers", "page-headers", ACEModes.XML, false))
             </div>
         </div>
     </div>
-</form>
+</div>

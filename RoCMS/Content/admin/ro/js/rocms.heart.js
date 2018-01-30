@@ -65,6 +65,10 @@ App.Admin.HeartFunctions = {
             }
         });
 
+        createACEEditor("page_scripts", $("#page_scripts").data("aceMode"));
+        createACEEditor("page_styles", $("#page_styles").data("aceMode"));
+        createACEEditor("page_headers", $("#page_headers").data("aceMode"));
+
         if (self.scripts()) {
             setTextToEditor("page_scripts", self.scripts());
         }

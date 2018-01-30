@@ -35,6 +35,7 @@ namespace RoCMS.Shop.Services
         private readonly IShopCompatiblesService _shopCompatiblesService;
         private readonly IShopManufacturerService _shopManufacturerService;
         private readonly IShopPackService _shopPackService;
+        private readonly IHeartService _heartService;
 
         private readonly GoodsItemGateway _goodsItemGateway = new GoodsItemGateway();
         private readonly GoodsSpecGateway _goodsSpecGateway = new GoodsSpecGateway();
@@ -47,7 +48,7 @@ namespace RoCMS.Shop.Services
         private readonly ActionGoodsGateway _actionGoodsGateway = new ActionGoodsGateway();
         private readonly CountryGateway _countryGateway = new CountryGateway();
 
-        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService)
+        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService)
         {
             _logService = logService;
             _shopActionService = shopActionService;
@@ -56,6 +57,7 @@ namespace RoCMS.Shop.Services
             _shopCompatiblesService = shopCompatiblesService;
             _shopPackService = shopPackService;
             _shopManufacturerService = shopManufacturerService;
+            _heartService = heartService;
             InitCache("ShopService");
 
             //GenerateRelativeUrls();
@@ -104,12 +106,21 @@ namespace RoCMS.Shop.Services
                 throw new GoodsNotFoundException(heartId);
             }
             var res = Mapper.Map<GoodsItem>(goods);
+
+            
+
             FillData(res, activeActionsOnly);
             return res;
         }
 
         private void FillData(GoodsItem goodsItem, bool activeActionsOnly = true)
         {
+
+            var heart = _heartService.GetHeart(goodsItem.HeartId);
+            goodsItem.FillHeart(heart);
+
+
+
             FillImages(goodsItem);
             FillCompatibles(goodsItem);
             FillCats(goodsItem);
@@ -123,8 +134,8 @@ namespace RoCMS.Shop.Services
                 goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
 
                 //TODO: разрулить через харты
-                //goodsItem.CannonicalUrl = goodsItem.Categories.Any()
-                //    ? GetGoodsCannonicalUrl(goodsItem.RelativeUrl, goodsItem.Categories.First().ID)
+                //goodsItem.CanonicalUrl = goodsItem.Categories.Any()
+                //    ? GetGoodsCanonicalUrl(goodsItem.RelativeUrl, goodsItem.Categories.First().ID)
                 //    : goodsItem.RelativeUrl;
             }
         }
@@ -206,8 +217,11 @@ namespace RoCMS.Shop.Services
             using (var ts = new TransactionScope())
             {
                 var dataGoods = Mapper.Map<Data.Models.GoodsItem>(goods);
+
+                int id = goods.HeartId = dataGoods.HeartId = _heartService.CreateHeart(goods);
+
                 dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
-                int id = _goodsItemGateway.Insert(dataGoods);
+                //int id = _goodsItemGateway.Insert(dataGoods);
                 foreach (var goodsCategory in goods.Categories)
                 {
                     _goodsCategoryGateway.Insert(new GoodsCategory()
@@ -246,6 +260,8 @@ namespace RoCMS.Shop.Services
             dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
             using (var ts = new TransactionScope())
             {
+                _heartService.UpdateHeart(goods);
+
                 _goodsItemGateway.Update(dataGoods);
 
                 var oldCats = _goodsCategoryGateway.SelectByGoods(heartId);
@@ -380,7 +396,9 @@ namespace RoCMS.Shop.Services
         {
             using (var ts = new TransactionScope())
             {
-                _goodsItemGateway.Delete(heartId);
+                //_goodsItemGateway.Delete(heartId);
+                _heartService.DeleteHeart(heartId);
+
                 foreach (var compatibleSetGoods in _compatibleSetGoodsGateway.SelectByGoods(heartId))
                 {
                     _compatibleSetGoodsGateway.Delete(compatibleSetGoods);
@@ -512,18 +530,18 @@ namespace RoCMS.Shop.Services
             throw new NotImplementedException();
         }
 
-        private string GetGoodsCannonicalUrlCacheKey(string url)
+        private string GetGoodsCanonicalUrlCacheKey(string url)
         {
             return String.Format(GOODS_CANNONICAL_URL_CACHE_KEY, url);
         }
 
-        public string GetGoodsCannonicalUrl(string relativeUrl, int categoryId)
+        public string GetGoodsCanonicalUrl(string relativeUrl, int categoryId)
         {
-            string cacheKey = GetGoodsCannonicalUrlCacheKey(relativeUrl);
+            string cacheKey = GetGoodsCanonicalUrlCacheKey(relativeUrl);
             return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
             {
 
-                string prefix = _shopCategoryService.GetCategoryCannonicalUrl(categoryId);
+                string prefix = _shopCategoryService.GetCategoryCanonicalUrl(categoryId);
                 return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
             });
 

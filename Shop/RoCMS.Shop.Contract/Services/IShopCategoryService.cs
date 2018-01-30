@@ -17,7 +17,7 @@ namespace RoCMS.Shop.Contract.Services
 
         bool CategoryExists(string relativeUrl);
         IList<GoodsItem> GetCategoryGoods(int categoryId, int? count);
-        string GetCategoryCannonicalUrl(int categoryId);
-        string GetCategoryCannonicalUrl(string relativeUrl);
+        string GetCategoryCanonicalUrl(int categoryId);
+        string GetCategoryCanonicalUrl(string relativeUrl);
     }
 }

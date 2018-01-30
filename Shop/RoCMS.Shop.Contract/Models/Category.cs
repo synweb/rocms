@@ -31,7 +31,7 @@ namespace RoCMS.Shop.Contract.Models
 
         public string RelativeUrl { get; set; }
 
-        public string CannonicalUrl { get; set; }
+        public string CanonicalUrl { get; set; }
         public int SortOrder { get; set; }
         public ICollection<Spec> OrderFormSpecs { get; set; } 
     }

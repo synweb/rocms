@@ -1,4 +1,6 @@
-﻿App.Admin.manufacturers = ko.observableArray();
+﻿/// <reference path="/Content/admin/ro/js/rocms.heart.js" />
+
+App.Admin.manufacturers = ko.observableArray();
 App.Admin.usedManufacturers = ko.observableArray();
 App.Admin.suppliers = ko.observableArray();
 App.Admin.packs = ko.observableArray();
@@ -274,8 +276,12 @@ App.Admin.GoodsItemValidationMapping = {
 
 };
 
+$.extend(App.Admin.GoodsItemValidationMapping, App.Admin.HeartValidationMapping);
+
 App.Admin.GoodsItem = function () {
     var self = this;
+
+    $.extend(self, new App.Admin.Heart());
 
     self.heartId = ko.observable();
     self.name = ko.observable().extend({ required: true });
@@ -316,6 +322,10 @@ App.Admin.GoodsItem = function () {
 
 
 App.Admin.GoodsItemFunctions = {
+    initGoodsItem: function() {
+        var self = this;
+        self.initHeart();
+    },
     addSpec: function () {
         var self = this;
         showSpecDialog(function (item) {
@@ -407,6 +417,7 @@ App.Admin.GoodsItemFunctions = {
     },
     save: function (url, onSuccess) {
         var self = this;
+        self.prepareHeartForUpdate();
         blockUI();
         $(self.goodsSpecs()).each(function () {
             if (this.inputValue()) {
@@ -509,8 +520,7 @@ App.Admin.GoodsItemFunctions = {
 
                 var dialog = this;
 
-
-
+                self.initGoodsItem();
 
                 ko.applyBindings({ vm: dm, manufacturers: App.Admin.manufacturers, packs: App.Admin.packs, currencies: App.Admin.currencies }, dialog);
 
@@ -518,19 +528,6 @@ App.Admin.GoodsItemFunctions = {
                     $("#goodsHtmlDescription", $(dialog)).val(dm().htmlDescription());
                     initContentEditor();
                 }
-                //if ($("#goodsHtmlDescription").length) {
-                //    //element exists
-                //    CKEDITOR.replace('goodsHtmlDescription', {
-                //        toolbar: [
-                //            // Line break - next group will be placed in new line.
-                //            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat'] },
-                //            { name: 'lists', items: ['NumberedList', 'BulletedList'] },
-                //            { name: 'styles', items: ['Format', 'Font', 'TextColor'] },
-                //            { name: 'links', items: ['Link', 'Unlink'] }
-                //        ]
-                //    });
-                //    CKEDITOR.config.removePlugins = 'elementspath';
-                //}
 
 
             },
@@ -577,7 +574,11 @@ App.Admin.GoodsItemFunctions = {
 
         return dialogContent;
     }
+
+    
 }
+
+$.extend(App.Admin.GoodsItemFunctions, App.Admin.HeartFunctions);
 
 function showGoodsDialog(onSelected) {
     var options = {

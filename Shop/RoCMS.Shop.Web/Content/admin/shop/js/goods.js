@@ -69,28 +69,28 @@ function goodsEditorLoaded(onSelected, context) {
         blockUI();
 
 
-        postJSON("/api/shop/goods/filter", data, function(result) {
-                $(result).each(function() {
-                    $(this.goodsSpecs).each(function() {
-                        if (this.spec.valueType != 'Enum') {
-                            this.inputValue = this.value;
-                        } else {
-                            this.inputValue = '';
-                        }
-                    });
-                    var res = $.extend(ko.mapping.fromJS(this, App.Admin.GoodsItemValidationMapping), App.Admin.GoodsItemFunctions);
-                    res.name.subscribe(function(val) {
-                        if (!res.relativeUrl() && val) {
-                            res.relativeUrl(textToUrl(val));
-                        }
-                    });
-                    vm.goods.push(res);
+        postJSON("/api/shop/goods/filter", data, function (result) {
+            $(result).each(function () {
+                $(this.goodsSpecs).each(function () {
+                    if (this.spec.valueType != 'Enum') {
+                        this.inputValue = this.value;
+                    } else {
+                        this.inputValue = '';
+                    }
                 });
-            })
-            .fail(function() {
+                var res = $.extend(ko.mapping.fromJS(this, App.Admin.GoodsItemValidationMapping), App.Admin.GoodsItemFunctions);
+                res.name.subscribe(function (val) {
+                    if (!res.relativeUrl() && val) {
+                        res.relativeUrl(textToUrl(val));
+                    }
+                });
+                vm.goods.push(res);
+            });
+        })
+            .fail(function () {
                 smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
             })
-            .always(function() {
+            .always(function () {
                 unblockUI();
             });
     }
@@ -322,7 +322,7 @@ App.Admin.GoodsItem = function () {
 
 
 App.Admin.GoodsItemFunctions = {
-    initGoodsItem: function() {
+    initGoodsItem: function () {
         var self = this;
         self.initHeart();
     },
@@ -441,11 +441,18 @@ App.Admin.GoodsItemFunctions = {
 
     create: function (onSuccess) {
         var self = this;
-        self.dialog(function () {
+        self.dialog(function (closeDialog) {
             self.save("/api/shop/goods/create", function (result) {
-                self.heartId(result.id);
-                if (onSuccess) {
-                    onSuccess();
+                if (result.succeed === true) {
+                    self.heartId(result.id);
+                    if (closeDialog) {
+                        closeDialog();
+                    }
+                    if (onSuccess) {
+                        onSuccess();
+                    }
+                } else {
+                    smartAlert("Произошла ошибка, проверьте правильность заполнения полей");
                 }
             });
         });
@@ -453,8 +460,18 @@ App.Admin.GoodsItemFunctions = {
 
     edit: function () {
         var self = this;
-        self.dialog(function () {
-            self.save("/api/shop/goods/update");
+        self.dialog(function (closeDialog) {
+            self.save("/api/shop/goods/update", function() {
+                if (result.succeed === true) {
+
+                    if (closeDialog) {
+                        closeDialog();
+                    }
+
+                } else {
+                    smartAlert("Произошла ошибка, проверьте правильность заполнения полей");
+                }
+            });
         });
     },
 
@@ -466,7 +483,7 @@ App.Admin.GoodsItemFunctions = {
             postJSON(url, "", function (result) {
                 if (result.succeed) {
                     parent.goods.remove(item);
-                }               
+                }
             })
                 .fail(function () {
                     smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
@@ -505,7 +522,7 @@ App.Admin.GoodsItemFunctions = {
         });
     },
 
-    dialog: function (onSuccess) {
+    dialog: function (onSave) {
         var self = this;
         var dm = ko.validatedObservable(this);
         var dialogContent = $("#goods-item-template").tmpl();
@@ -548,10 +565,12 @@ App.Admin.GoodsItemFunctions = {
                         }
 
                         if (dm.isValid()) {
-                            if (onSuccess) {
-                                onSuccess();
+                            if (onSave) {
+                                onSave(function() {
+                                    $(this).dialog("close");
+                                });
                             }
-                            $(this).dialog("close");
+                            
                         }
                         else {
                             dm.errors.showAllMessages();
@@ -575,10 +594,46 @@ App.Admin.GoodsItemFunctions = {
         return dialogContent;
     }
 
-    
+
 }
 
 $.extend(App.Admin.GoodsItemFunctions, App.Admin.HeartFunctions);
+
+//function goodsItemEditorLoaded(goodsId) {
+
+//    var vm = {
+//        goodsItem: ko.observable()
+//    };
+
+//    blockUI();
+//    getJSON("/api/shop/goods/" + goodsId + "/get", null, function(result) {
+
+//            $(result.goodsSpecs).each(function() {
+//                if (this.spec.valueType != 'Enum') {
+//                    this.inputValue = this.value;
+//                } else {
+//                    this.inputValue = '';
+//                }
+//            });
+
+//            var res = $.extend(ko.mapping.fromJS(result, App.Admin.GoodsItemValidationMapping), App.Admin.GoodsItemFunctions);
+//            res.name.subscribe(function(val) {
+//                if (!res.relativeUrl() && val) {
+//                    res.relativeUrl(textToUrl(val));
+//                }
+//            });
+//            vm.goodsItem(res);
+
+//        })
+//        .fail(function() {
+//            smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+//        })
+//        .always(function() {
+//            unblockUI();
+//        });
+
+
+//}
 
 function showGoodsDialog(onSelected) {
     var options = {

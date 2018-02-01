@@ -20,4 +20,4 @@
 AS
 	INSERT INTO [Shop].[GoodsItem] ([HeartId], [Name], [ManufacturerId], [SupplierId], [Price], [Currency], [Description], [HtmlDescription], [MainImageId], [Article], [NotAvailable], [BasePackId], [Deleted], [Filename])
 	VALUES (@HeartId, @Name, @ManufacturerId, @SupplierId, @Price, @Currency, @Description, @HtmlDescription, @MainImageId, @Article, @NotAvailable, @BasePackId, @Deleted, @Filename)
-	SELECT @@IDENTITY
+	SELECT @HeartId

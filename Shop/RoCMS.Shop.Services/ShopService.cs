@@ -214,6 +214,7 @@ namespace RoCMS.Shop.Services
 
         public int CreateGoods(GoodsItem goods)
         {
+            goods.Type = goods.GetType().FullName;
             using (var ts = new TransactionScope())
             {
                 var dataGoods = Mapper.Map<Data.Models.GoodsItem>(goods);
@@ -221,7 +222,8 @@ namespace RoCMS.Shop.Services
                 int id = goods.HeartId = dataGoods.HeartId = _heartService.CreateHeart(goods);
 
                 dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
-                //int id = _goodsItemGateway.Insert(dataGoods);
+                _goodsItemGateway.Insert(dataGoods);
+
                 foreach (var goodsCategory in goods.Categories)
                 {
                     _goodsCategoryGateway.Insert(new GoodsCategory()

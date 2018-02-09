@@ -40,12 +40,19 @@
     <Property Name="ElementType" Value="SqlSimpleColumn" />
     <Property Name="ParentElementName" Value="[Shop].[Goods_Category]" />
     <Property Name="ParentElementType" Value="SqlTable" />
-    <Property Name="NewName" Value="GoodsHeartId" />
+    <Property Name="NewName" Value="GoodsId" />
   </Operation>
   <Operation Name="Rename Refactor" Key="9bcc6302-e8a0-4f4c-b3ff-a53885d9223a" ChangeDateTime="01/09/2018 14:32:40">
     <Property Name="ElementName" Value="[Shop].[CartItem].[GoodsId]" />
     <Property Name="ElementType" Value="SqlSimpleColumn" />
     <Property Name="ParentElementName" Value="[Shop].[CartItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="73618cfa-def8-400a-be8f-556840108b62" ChangeDateTime="02/09/2018 14:18:11">
+    <Property Name="ElementName" Value="[Shop].[Category].[CategoryId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[Category]" />
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="HeartId" />
   </Operation>

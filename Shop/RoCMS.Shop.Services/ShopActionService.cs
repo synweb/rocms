@@ -53,7 +53,7 @@ namespace RoCMS.Shop.Services
         {
             var catIds = _actionCategoryGateway.SelectByAction(action.ActionId).Select(x => x.CategoryId);
             var cats = catIds.Select(x => _categoryGateway.SelectOne(x));
-            var idNames = cats.Select(x => new IdNamePair<int>(x.CategoryId, x.Name)).ToList();
+            var idNames = cats.Select(x => new IdNamePair<int>(x.HeartId, x.Name)).ToList();
             action.Categories = idNames;
         }
 

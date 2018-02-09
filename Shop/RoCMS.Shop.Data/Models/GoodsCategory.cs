@@ -2,7 +2,7 @@
 {
     public class GoodsCategory
     {
-        public int HeartId { get; set; }
+        public int GoodsId { get; set; }
         public int CategoryId { get; set; }
     }
 }

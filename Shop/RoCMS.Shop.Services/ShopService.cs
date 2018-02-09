@@ -227,7 +227,7 @@ namespace RoCMS.Shop.Services
                 foreach (var goodsCategory in goods.Categories)
                 {
                     _goodsCategoryGateway.Insert(new GoodsCategory()
-                    {CategoryId = goodsCategory.ID, HeartId = id});
+                    {CategoryId = goodsCategory.ID, GoodsId = id});
                 }
                 foreach (var goodsImageId in goods.Images)
                 {
@@ -281,7 +281,7 @@ namespace RoCMS.Shop.Services
                     {
                         _goodsCategoryGateway.Insert(new GoodsCategory()
                         {
-                            HeartId = heartId,
+                            GoodsId = heartId,
                             CategoryId = newCat.ID
                         });
                     }
@@ -537,16 +537,16 @@ namespace RoCMS.Shop.Services
             return String.Format(GOODS_CANNONICAL_URL_CACHE_KEY, url);
         }
 
-        public string GetGoodsCanonicalUrl(string relativeUrl, int categoryId)
-        {
-            string cacheKey = GetGoodsCanonicalUrlCacheKey(relativeUrl);
-            return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
-            {
+        //public string GetGoodsCanonicalUrl(string relativeUrl, int categoryId)
+        //{
+        //    string cacheKey = GetGoodsCanonicalUrlCacheKey(relativeUrl);
+        //    return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
+        //    {
 
-                string prefix = _shopCategoryService.GetCategoryCanonicalUrl(categoryId);
-                return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
-            });
+        //        string prefix = _shopCategoryService.GetCategoryCanonicalUrl(categoryId);
+        //        return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
+        //    });
 
-        }
+        //}
     }
 }

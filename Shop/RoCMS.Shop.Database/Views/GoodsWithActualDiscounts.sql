@@ -25,9 +25,9 @@ FROM            Shop.GoodsItem LEFT OUTER JOIN
                                                         GoodsItem_1.HtmlDescription, GoodsItem_1.MainImageId, GoodsItem_1.Article, GoodsItem_1.Currency, Action_1.Discount, Action_1.ActionId, Action_1.DateOfEnding
                                FROM            Shop.Action AS Action_1 INNER JOIN
                                                         Shop.Action_Category ON Action_1.ActionId = Shop.Action_Category.ActionId INNER JOIN
-                                                        Shop.Category ON Shop.Action_Category.CategoryId = Shop.Category.CategoryId INNER JOIN
-                                                        Shop.Goods_Category ON Shop.Category.CategoryId = Shop.Goods_Category.CategoryId INNER JOIN
-                                                        Shop.GoodsItem AS GoodsItem_1 ON Shop.Goods_Category.GoodsHeartId = GoodsItem_1.HeartId
+                                                        Shop.Category ON Shop.Action_Category.CategoryId = Shop.Category.HeartId INNER JOIN
+                                                        Shop.Goods_Category ON Shop.Category.HeartId = Shop.Goods_Category.CategoryId INNER JOIN
+                                                        Shop.GoodsItem AS GoodsItem_1 ON Shop.Goods_Category.GoodsId = GoodsItem_1.HeartId
                                WHERE        (Action_1.DateOfEnding > GETUTCDATE() OR
                                                         Action_1.DateOfEnding IS NULL) AND (Action_1.Active = 1)) AS t ON t.HeartId = Shop.GoodsItem.HeartId
 GROUP BY Shop.GoodsItem.HeartId, Shop.GoodsItem.Name, Shop.GoodsItem.ManufacturerId, Shop.GoodsItem.SupplierId, Shop.GoodsItem.NotAvailable, Shop.GoodsItem.Price, 

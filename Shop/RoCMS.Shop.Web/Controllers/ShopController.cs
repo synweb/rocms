@@ -189,7 +189,7 @@ namespace RoCMS.Shop.Web.Controllers
 
 
 
-            int id = cat.CategoryId;
+            int id = cat.HeartId;
 
             int page = ViewBag.Page;
             int pgsize = ViewBag.PageSize;
@@ -372,7 +372,7 @@ namespace RoCMS.Shop.Web.Controllers
             var goodsItem = _shopService.GetGoods(id, false);
             //TODO: единичку - в конфиг
             var cats = _shopCategoryService.GetCategory(1).ChildrenCategories;
-            var category = cats.First(x => goodsItem.Categories.Any(y => x.CategoryId==y.ID));
+            var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId==y.ID));
             return View(category);
         }
     }

@@ -2,4 +2,4 @@
 @HeartId int
 AS
 	SELECT * FROM [Shop].[Goods_Category]
-		WHERE [GoodsHeartId]=@HeartId
+		WHERE [GoodsId]=@HeartId

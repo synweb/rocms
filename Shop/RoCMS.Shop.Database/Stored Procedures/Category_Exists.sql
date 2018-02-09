@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [Shop].[Category_Exists]
-	@CategoryId int
+	@HeartId int
 AS
-	IF EXISTS( SELECT * FROM [Shop].[Category] WHERE [CategoryId]=@CategoryId )
+	IF EXISTS( SELECT * FROM [Shop].[Category] WHERE [HeartId]=@HeartId )
 		SELECT 1
 	ELSE
 		SELECT 0

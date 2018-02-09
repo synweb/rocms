@@ -67,8 +67,17 @@ function categoriesEditorLoaded(onSelected, context) {
 
 }
 
+App.Admin.CategoryValidationMapping = {
+
+};
+
+$.extend(App.Admin.CategoryValidationMapping, App.Admin.HeartValidationMapping);
+
 App.Admin.Category = function (data) {
     var self = this;
+
+
+    $.extend(self, new App.Admin.Heart());
 
     self.categoryId = ko.observable();
     self.name = ko.observable().extend({ required: true });
@@ -137,9 +146,12 @@ App.Admin.Category = function (data) {
         });
     };
     self.new = function (onCreate) {
-        self.dialog(function() {
+        self.dialog(function(closeDialog) {
             var url = "/api/shop/category/create";
-            self.save(url, function(result) {
+            self.save(url, function (result) {
+                if (closeDialog) {
+                    closeDialog();
+                }
                 self.categoryId(result.id);
                 if (onCreate) {
                     onCreate();
@@ -150,8 +162,12 @@ App.Admin.Category = function (data) {
 
     self.edit = function () {
         var url = "/api/shop/category/update";
-        self.dialog(function () {
-            self.save(url);
+        self.dialog(function (closeDialog) {
+            self.save(url, function () {
+                if (closeDialog) {
+                    closeDialog();
+                }
+            });
         });
     };
 
@@ -253,6 +269,8 @@ App.Admin.Category = function (data) {
                     initContentEditor();
                 }
 
+                self.initHeart();
+
                 var that = this;
                 
                 ko.applyBindings(dm, that);
@@ -268,6 +286,9 @@ App.Admin.Category = function (data) {
                             self.description(text);
                         }
 
+                        self.prepareHeartForUpdate();
+
+                        var $dialog = $(this);
 
                         if ($("#categoryDescription", $form).length) {
                             $("#categoryDescription", $form).val(self.description());
@@ -276,9 +297,11 @@ App.Admin.Category = function (data) {
                        
                         if (dm.isValid()) {
                             if (onSuccess) {
-                                onSuccess();
+                                onSuccess(function () {
+                                    $dialog.dialog("close");
+                                });
                             }
-                            $(this).dialog("close");
+                            
                         }
                         else {
                             dm.errors.showAllMessages();
@@ -306,6 +329,9 @@ App.Admin.Category = function (data) {
     if (data)
         self.init(data);
 }
+
+
+$.extend(App.Admin.Category, App.Admin.HeartFunctions);
 
 function showCategoriesDialog(onSelected) {
     var options = {

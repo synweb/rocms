@@ -43,16 +43,16 @@ DECLARE @FullCategoryIds TABLE(Val INT)
 IF @WithSubcategories = 1
 BEGIN
 	;WITH ret AS(
-    		SELECT	[CategoryId], [ParentCategoryId]
+    		SELECT	[HeartId], [ParentCategoryId]
     		FROM	[Shop].[Category]
-    		WHERE	([CategoryId] IN (SELECT Val FROM @CategoryIds)) -- OR (NOT EXISTS (SELECT * FROM @CategoryIds))
+    		WHERE	([HeartId] IN (SELECT Val FROM @CategoryIds)) -- OR (NOT EXISTS (SELECT * FROM @CategoryIds))
     		UNION ALL
-    		SELECT	t.[CategoryId], t.[ParentCategoryId]
+    		SELECT	t.[HeartId], t.[ParentCategoryId]
     		FROM	[Shop].[Category] t INNER JOIN
-    				ret r ON t.[ParentCategoryId] = r.[CategoryId]
+    				ret r ON t.[ParentCategoryId] = r.[HeartId]
 	)
 	INSERT INTO @FullCategoryIds
-	SELECT CategoryId
+	SELECT HeartId
 	FROM ret
 END
 ELSE BEGIN
@@ -75,14 +75,14 @@ BEGIN
 	;WITH ret AS(
     		SELECT	*
     		FROM	[Shop].[Category]
-    		WHERE	([CategoryId] IN (SELECT Val FROM @ActionCategoryIds))
+    		WHERE	([HeartId] IN (SELECT Val FROM @ActionCategoryIds))
     		UNION ALL
     		SELECT	t.*
     		FROM	[Shop].[Category] t INNER JOIN
-    				ret r ON t.[ParentCategoryId] = r.[CategoryId]
+    				ret r ON t.[ParentCategoryId] = r.[HeartId]
 	)
 	INSERT INTO @ActionFullCategoryIds (Val)
-	SELECT CategoryId
+	SELECT HeartId
 	FROM ret
 
 	
@@ -95,7 +95,7 @@ BEGIN
 	UNION
 	SELECT HeartId FROM [Shop].[GoodsItem] WHERE [ManufacturerId] IN (SELECT Val FROM @ActionManufacturerIds)
 	UNION
-	SELECT GoodsHeartId FROM [Shop].Goods_Category WHERE CategoryId IN (SELECT Val FROM @ActionFullCategoryIds)
+	SELECT GoodsId FROM [Shop].Goods_Category WHERE CategoryId IN (SELECT Val FROM @ActionFullCategoryIds)
 END
 
 
@@ -130,7 +130,7 @@ END
 DECLARE @UnsortedHeartIds [Int_Table]
 
 INSERT INTO @UnsortedHeartIds
-SELECT gc1.GoodsHeartId
+SELECT gc1.GoodsId
 FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.HeartId = g.HeartId
 WHERE
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))
@@ -138,16 +138,16 @@ WHERE
 AND
 ( (@ManufacturerIdsExist = 0 AND @CountriesExist = 0) OR
 		
-	EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.GoodsHeartId AND (
+	EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.GoodsId AND (
 	g.SupplierId IN (SELECT Val FROM @FinalManufacturerIds) 
 	OR g.ManufacturerId IN (SELECT Val FROM @FinalManufacturerIds))))
 AND
-(@ActionIdsExist = 0 OR gc1.GoodsHeartId IN (SELECT Val FROM @ActionHeartIds))
+(@ActionIdsExist = 0 OR gc1.GoodsId IN (SELECT Val FROM @ActionHeartIds))
 AND
-(@PackIdsExist = 0 OR gc1.GoodsHeartId IN (SELECT HeartId FROM [Goods_Pack] WHERE [PackId] IN (SELECT Val FROM @PackIds) ))
+(@PackIdsExist = 0 OR gc1.GoodsId IN (SELECT HeartId FROM [Goods_Pack] WHERE [PackId] IN (SELECT Val FROM @PackIds) ))
 	AND
 (@SpecIdsExist = 0
-OR gc1.GoodsHeartId IN (SELECT HeartId From [Goods_Spec] gs INNER JOIN @SpecIds sis ON gs.SpecId = sis.[Key] AND [Shop].CheckSpecValue(sis.[Val], gs.[Value]) = 1))
+OR gc1.GoodsId IN (SELECT HeartId From [Goods_Spec] gs INNER JOIN @SpecIds sis ON gs.SpecId = sis.[Key] AND [Shop].CheckSpecValue(sis.[Val], gs.[Value]) = 1))
 --OPTION (OPTIMIZE FOR (@CategoryIdsExist=1))
 
 IF (@SearchQuery IS NOT NULL AND @SearchQuery != '' AND @FulltextSearchQuery IS NOT NULL AND @FulltextSearchQuery != '')

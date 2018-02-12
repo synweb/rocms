@@ -151,7 +151,6 @@ namespace RoCMS.Shop.Services
                     FillData(category);
                 }
                 
-
                 SortCategories(cats);
 
                 return cats;

@@ -1,4 +1,5 @@
 ﻿/// <reference path="/Content/admin/ro/js/rocms.heart.js" />
+/// <reference path="base.js" />
 
 App.Admin.manufacturers = ko.observableArray();
 App.Admin.usedManufacturers = ko.observableArray();
@@ -6,7 +7,7 @@ App.Admin.suppliers = ko.observableArray();
 App.Admin.packs = ko.observableArray();
 App.Admin.currencies = ko.observableArray();
 
-App.Admin.GoodsFilter = {
+App.Admin.Shop.GoodsFilter = {
     categoryIds: ko.observable(),
     manufacturerIds: ko.observable(),
     supplierIds: ko.observable(),
@@ -78,12 +79,8 @@ function goodsEditorLoaded(onSelected, context) {
                         this.inputValue = '';
                     }
                 });
-                var res = $.extend(ko.mapping.fromJS(this, App.Admin.GoodsItemValidationMapping), App.Admin.GoodsItemFunctions);
-                res.name.subscribe(function (val) {
-                    if (!res.relativeUrl() && val) {
-                        res.relativeUrl(textToUrl(val));
-                    }
-                });
+                var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.GoodsItemValidationMapping), App.Admin.Shop.GoodsItemFunctions);
+                res.initGoodsItem();
                 vm.goods.push(res);
             });
         })
@@ -102,13 +99,13 @@ function goodsEditorLoaded(onSelected, context) {
         suppliers: ko.observable(App.Admin.suppliers),
 
         manufacturers: ko.observable(App.Admin.usedManufacturers),
-        filters: ko.observable(App.Admin.GoodsFilter),
+        filters: ko.observable(App.Admin.Shop.GoodsFilter),
         packs: ko.observableArray(),
         currencies: ko.observableArray(),
 
         createGoodsItem: function () {
 
-            var goodsItem = $.extend(new App.Admin.GoodsItem(), App.Admin.GoodsItemFunctions);
+            var goodsItem = $.extend(new App.Admin.Shop.GoodsItem(), App.Admin.Shop.GoodsItemFunctions);
             if (vm.filters().categoryIds()) {
                 goodsItem.categories.push(ko.mapping.fromJS({ id: vm.filters().categoryIds(), name: vm.filters().categoryName() }));
             }
@@ -157,7 +154,7 @@ function goodsEditorLoaded(onSelected, context) {
         }
 
         vm.filters().supplierIds.subscribe(function (newValue) {
-            if (App.Admin.GoodsFilter.clearingAll == false) {
+            if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
                 reloadGoods();
             }
         });
@@ -176,7 +173,7 @@ function goodsEditorLoaded(onSelected, context) {
         }
 
         vm.filters().manufacturerIds.subscribe(function (newValue) {
-            if (App.Admin.GoodsFilter.clearingAll == false) {
+            if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
                 reloadGoods();
             }
         });
@@ -217,19 +214,19 @@ function goodsEditorLoaded(onSelected, context) {
 
 
     vm.filters().categoryIds.subscribe(function (newValue) {
-        if (App.Admin.GoodsFilter.clearingAll == false) {
+        if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
             reloadGoods();
         }
     });
 
     vm.filters().searchPattern.subscribe(function (newValue) {
-        if (App.Admin.GoodsFilter.clearingAll == false) {
+        if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
             reloadGoods();
         }
     });
 
     vm.filters().sortBy.subscribe(function (newValue) {
-        if (App.Admin.GoodsFilter.clearingAll == false) {
+        if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
             reloadGoods();
         }
     });
@@ -246,7 +243,7 @@ function goodsEditorLoaded(onSelected, context) {
 
 
 
-App.Admin.GoodsItemValidationMapping = {
+App.Admin.Shop.GoodsItemValidationMapping = {
     name: {
         create: function (options) {
             var res = ko.observable(options.data).extend({ required: true });
@@ -276,9 +273,9 @@ App.Admin.GoodsItemValidationMapping = {
 
 };
 
-$.extend(App.Admin.GoodsItemValidationMapping, App.Admin.HeartValidationMapping);
+$.extend(App.Admin.Shop.GoodsItemValidationMapping, App.Admin.HeartValidationMapping);
 
-App.Admin.GoodsItem = function () {
+App.Admin.Shop.GoodsItem = function () {
     var self = this;
 
     $.extend(self, new App.Admin.Heart());
@@ -321,10 +318,17 @@ App.Admin.GoodsItem = function () {
 }
 
 
-App.Admin.GoodsItemFunctions = {
+App.Admin.Shop.GoodsItemFunctions = {
     initGoodsItem: function () {
         var self = this;
         self.initHeart();
+
+
+        self.name.subscribe(function (val) {
+            if (!res.relativeUrl() && val) {
+                res.relativeUrl(textToUrl(val));
+            }
+        });
     },
     addSpec: function () {
         var self = this;
@@ -441,37 +445,19 @@ App.Admin.GoodsItemFunctions = {
 
     create: function (onSuccess) {
         var self = this;
-        self.dialog(function (closeDialog) {
-            self.save("/api/shop/goods/create", function (result) {
-                if (result.succeed === true) {
-                    self.heartId(result.id);
-                    if (closeDialog) {
-                        closeDialog();
-                    }
-                    if (onSuccess) {
-                        onSuccess();
-                    }
-                } else {
-                    smartAlert("Произошла ошибка, проверьте правильность заполнения полей");
-                }
-            });
+        self.dialog("/api/shop/goods/create", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
     },
 
-    edit: function () {
+    edit: function (onSuccess) {
         var self = this;
-        self.dialog(function (closeDialog) {
-            self.save("/api/shop/goods/update", function() {
-                if (result.succeed === true) {
-
-                    if (closeDialog) {
-                        closeDialog();
-                    }
-
-                } else {
-                    smartAlert("Произошла ошибка, проверьте правильность заполнения полей");
-                }
-            });
+        self.dialog("/api/shop/goods/update", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
     },
 
@@ -565,11 +551,19 @@ App.Admin.GoodsItemFunctions = {
                         }
 
                         if (dm.isValid()) {
-                            if (onSave) {
-                                onSave(function() {
+
+                            self.save(url, function (result) {
+                                if (result.succeed === true) {
+                                    self.heartId(result.id);
+                                    if (onSave) {
+                                        onSave();
+                                    }
                                     $(this).dialog("close");
-                                });
-                            }
+
+                                } else {
+                                    smartAlert("Произошла ошибка, проверьте правильность заполнения полей");
+                                }
+                            });
                             
                         }
                         else {
@@ -597,7 +591,7 @@ App.Admin.GoodsItemFunctions = {
 
 }
 
-$.extend(App.Admin.GoodsItemFunctions, App.Admin.HeartFunctions);
+$.extend(App.Admin.Shop.GoodsItemFunctions, App.Admin.HeartFunctions);
 
 //function goodsItemEditorLoaded(goodsId) {
 
@@ -616,7 +610,7 @@ $.extend(App.Admin.GoodsItemFunctions, App.Admin.HeartFunctions);
 //                }
 //            });
 
-//            var res = $.extend(ko.mapping.fromJS(result, App.Admin.GoodsItemValidationMapping), App.Admin.GoodsItemFunctions);
+//            var res = $.extend(ko.mapping.fromJS(result, App.Admin.Shop.GoodsItemValidationMapping), App.Admin.Shop.GoodsItemFunctions);
 //            res.name.subscribe(function(val) {
 //                if (!res.relativeUrl() && val) {
 //                    res.relativeUrl(textToUrl(val));

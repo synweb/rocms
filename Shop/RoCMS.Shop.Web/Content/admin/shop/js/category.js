@@ -1,9 +1,10 @@
 ﻿/// <reference path="/Content/base/ro/js/rocms.helpers.js" />
+/// <reference path="base.js" />
 
 function mapCategoriesToIds(categories) {
     var result = $(categories).map(function () {
         return {
-            categoryId: this.categoryId,
+            categoryId: this.heartId,
             childrenCategories: this.childrenCategories ? mapCategoriesToIds(this.childrenCategories) : []
         }
     }).get();
@@ -15,14 +16,15 @@ function categoriesEditorLoaded(onSelected, context) {
     var vm = {
         childrenCategories: ko.observableArray(),
         orderEditingEnabled: ko.observable(false),
-        createCategory: function() {
+        createCategory: function () {
             var self = this;
-            var category = new App.Admin.Category();
-            category.new(function() {
+
+            var category = $.extend(new App.Admin.Shop.Category(), App.Admin.Shop.CategoryFunctions);
+            category.newCategory(function () {
                 self.childrenCategories.push(category);
             });
         },
-        selectCategory: function(item) {
+        selectCategory: function (item) {
             if (onSelected) {
                 onSelected(item);
             }
@@ -50,7 +52,8 @@ function categoriesEditorLoaded(onSelected, context) {
     };
     getJSON("/api/shop/categories/get", "", function (result) {
         $(result).each(function () {
-            vm.childrenCategories.push(new App.Admin.Category(this));
+            var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.CategoryValidationMapping), App.Admin.Shop.CategoryFunctions);
+            vm.childrenCategories.push(res);
         });
     })
         .fail(function () {
@@ -67,76 +70,127 @@ function categoriesEditorLoaded(onSelected, context) {
 
 }
 
-App.Admin.CategoryValidationMapping = {
-
+App.Admin.Shop.CategoryValidationMapping = {
+    name: {
+        create: function (options) {
+            var res = ko.observable(options.data).extend({ required: true });
+            return res;
+        }
+    },
+    childrenCategories: {
+        create: function (options) {
+            //пишется для одного элемента массива
+            var res = $.extend(ko.mapping.fromJS(options.data, App.Admin.Shop.CategoryValidationMapping), App.Admin.Shop.CategoryFunctions);
+            return res;
+        }
+    },
+    parentCategory: {
+        create: function (options) {
+            if (options.data) {
+                var res = ko.observable(options.data);
+                return res;
+            } else {
+                return ko.observable({ name: "" });
+            }
+        }
+    }
 };
 
-$.extend(App.Admin.CategoryValidationMapping, App.Admin.HeartValidationMapping);
+$.extend(App.Admin.Shop.CategoryValidationMapping, App.Admin.HeartValidationMapping);
 
-App.Admin.Category = function (data) {
+App.Admin.Shop.Category = function () {
     var self = this;
 
 
     $.extend(self, new App.Admin.Heart());
 
-    self.categoryId = ko.observable();
     self.name = ko.observable().extend({ required: true });
     self.description = ko.observable();
     self.parentCategoryId = ko.observable();
     self.imageId = ko.observable();
-    self.metaDescription = ko.observable();
+
     self.childrenCategories = ko.observableArray();
     self.parentCategory = ko.observable({ name: "" });
     self.hidden = ko.observable(false);
-    self.relativeUrl = ko.observable().extend({ required: true });
+
     self.orderFormSpecs = ko.observableArray();
 
 
-    self.name.subscribe(function(val) {
-        if (!self.relativeUrl() && val) {
-            self.relativeUrl(textToUrl(val));
-        }
-    });
 
-    self.init = function (data) {
-        self.categoryId(data.categoryId);
-        self.parentCategoryId(data.parentCategoryId);
-        self.name(data.name);
-        self.description(data.description);
-        self.metaDescription(data.metaDescription);
-        self.imageId(data.imageId);
-        self.hidden(data.hidden);
-        self.relativeUrl(data.relativeUrl);
-        if (data.parentCategory) {
-            self.parentCategory(data.parentCategory);
-        }
-        $(data.childrenCategories).each(function () {
-            self.childrenCategories.push(new App.Admin.Category(this));
+
+    //self.init = function (data) {
+    //    self.heartId(data.heartId);
+    //    self.parentCategoryId(data.parentCategoryId);
+    //    self.name(data.name);
+    //    self.description(data.description);
+
+    //    self.imageId(data.imageId);
+    //    self.hidden(data.hidden);
+
+    //    if (data.parentCategory) {
+    //        self.parentCategory(data.parentCategory);
+    //    }
+    //    $(data.childrenCategories).each(function () {
+    //        self.childrenCategories.push(new App.Admin.Shop.Category(this));
+    //    });
+    //    $(data.orderFormSpecs).each(function () {
+    //        self.orderFormSpecs.push(new App.Admin.Spec(this));
+    //    });
+    //};
+
+
+
+    //if (data)
+    //    self.init(data);
+}
+
+App.Admin.Shop.CategoryFunctions = {
+    initCategory: function () {
+        var self = this;
+        self.initHeart();
+
+        //var cats = self.childrenCategories();
+        //self.childrenCategories.removeAll();
+        //$(cats).each(function () {
+
+        //    var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.CategoryValidationMapping), App.Admin.Shop.CategoryFunctions);
+        //    res.initCategory();
+        //    self.childrenCategories.push(res);
+        //});
+
+        //$(data.orderFormSpecs).each(function () {
+        //    self.orderFormSpecs.push(new App.Admin.Spec(this));
+        //});
+
+
+
+        self.name.subscribe(function (val) {
+            if (!self.relativeUrl() && val) {
+                self.relativeUrl(textToUrl(val));
+            }
         });
-        $(data.orderFormSpecs).each(function () {
-            self.orderFormSpecs.push(new App.Admin.Spec(this));
-        });
-    };
+    },
 
-    self.fetch = function() {
-    };
-
-    self.addChild = function () {
-        var category = new App.Admin.Category();
-        category.parentCategoryId(self.categoryId());
+    addChild: function () {
+        var self = this;
+        var category = new App.Admin.Shop.Category();
+        category.parentCategoryId(self.heartId());
         category.parentCategory().name = self.name();
-        category.new(function () {
+        category.newCategory(function () {
             self.childrenCategories.push(category);
         });
-    };
+    },
 
-    self.clearParentCategory = function() {
-        self.parentCategory({name : ""});
+    clearParentCategory: function () {
+        var self = this;
+        self.parentCategory({ name: "" });
         self.parentCategoryId("");
-    };
-    self.editParentCategory = function () {
+    },
+
+    editParentCategory: function () {
+        var self = this;
         showCategoriesDialog(function (result) {
-            if (result.id != self.categoryId()) {
+            if (result.id != self.heartId()) {
                 self.parentCategory(result);
                 self.parentCategoryId(result.id);
             }
@@ -144,41 +198,35 @@ App.Admin.Category = function (data) {
                 alert("Нельзя установить родительской категорией текущую категорию");
             }
         });
-    };
-    self.new = function (onCreate) {
-        self.dialog(function(closeDialog) {
-            var url = "/api/shop/category/create";
-            self.save(url, function (result) {
-                if (closeDialog) {
-                    closeDialog();
-                }
-                self.categoryId(result.id);
-                if (onCreate) {
-                    onCreate();
-                }
-            });
+    },
+    newCategory: function (onCreate) {
+        var self = this;
+        self.dialog("/api/shop/category/create", function () {
+            if (onCreate) {
+                onCreate();
+            }
         });
-    };
 
-    self.edit = function () {
-        var url = "/api/shop/category/update";
-        self.dialog(function (closeDialog) {
-            self.save(url, function () {
-                if (closeDialog) {
-                    closeDialog();
-                }
-            });
+    },
+
+    edit: function (onSuccess) {
+        var self = this;
+        self.dialog("/api/shop/category/update", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
-    };
+    },
 
-    self.save = function (url, onSuccess) {
+    save: function (url, onSuccess) {
+        var self = this;
         blockUI();
         postJSON(url, ko.toJS(self), function (result) {
             if (result.succeed) {
                 if (onSuccess) {
                     onSuccess(result.data);
                 }
-            }           
+            }
         })
             .fail(function () {
                 smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
@@ -186,12 +234,13 @@ App.Admin.Category = function (data) {
             .always(function () {
                 unblockUI();
             });
-    };
+    },
 
-    self.remove = function (item, parent) {
-        if (self.categoryId()) {
+    remove: function (item, parent) {
+        var self = this;
+        if (self.heartId()) {
             blockUI();
-            var url = "/api/shop/category/" + self.categoryId() + "/delete";
+            var url = "/api/shop/category/" + self.heartId() + "/delete";
             postJSON(url, "", function (result) {
                 if (result.succeed) {
                     parent.childrenCategories.remove(item);
@@ -204,21 +253,24 @@ App.Admin.Category = function (data) {
                     unblockUI();
                 });
         }
-    };
+    },
 
-    self.pickImage = function () {
+    pickImage: function () {
+        var self = this;
         showImagePickDialog(function (imageData) {
             self.imageId(imageData.ID);
             $('.remove-image').show();
         });
-    };
+    },
 
-    self.removeImage = function() {
+    removeImage: function () {
+        var self = this;
         self.imageId("");
         $('.remove-image').hide();
-    };
+    },
 
-    self.addSpec= function () {
+    addSpec: function () {
+        var self = this;
         showSpecDialog(function (item) {
             var result = $.grep(self.orderFormSpecs(), function (e) {
                 return e.specId() === item.specId();
@@ -228,31 +280,35 @@ App.Admin.Category = function (data) {
             }
         });
     },
-    self.removeSpec= function (spec, parent) {
+    removeSpec: function (spec, parent) {
+        var self = this;
         parent.orderFormSpecs.remove(function (item) {
             return item.specId() === spec.specId();
         });
     },
 
-    self.moveUp = function (item, parent) {
+    moveUp: function (item, parent) {
+        var self = this;
         var index = parent.childrenCategories.indexOf(item);
         if (index <= 0) return false;
 
         parent.childrenCategories.remove(item);
         parent.childrenCategories.splice(index - 1, 0, item);
-    };
+    },
 
-    self.moveDown = function (item, parent) {
+    moveDown: function (item, parent) {
+        var self = this;
         var index = parent.childrenCategories.indexOf(item);
         if (index == parent.childrenCategories.length - 1) return false;
 
         parent.childrenCategories.remove(item);
         parent.childrenCategories.splice(index + 1, 0, item);
-    };
+    },
 
 
 
-    self.dialog = function (onSuccess) {
+    dialog: function (url, onSuccess) {
+        var self = this;
         var dm = ko.validatedObservable(self);
         var dialogContent = $("#categoryTemplate").tmpl();
         var options = {
@@ -269,10 +325,10 @@ App.Admin.Category = function (data) {
                     initContentEditor();
                 }
 
-                self.initHeart();
+                self.initCategory();
 
                 var that = this;
-                
+
                 ko.applyBindings(dm, that);
             },
             buttons: [
@@ -294,16 +350,17 @@ App.Admin.Category = function (data) {
                             $("#categoryDescription", $form).val(self.description());
                             initContentEditor();
                         }
-                       
+
                         if (dm.isValid()) {
-                            if (onSuccess) {
-                                onSuccess(function () {
+                            self.save(url,
+                                function (result) {
+                                    self.heartId(result.id);
+                                    if (onSuccess) {
+                                        onSuccess();
+                                    }
                                     $dialog.dialog("close");
                                 });
-                            }
-                            
-                        }
-                        else {
+                        } else {
                             dm.errors.showAllMessages();
                         }
                     }
@@ -324,14 +381,11 @@ App.Admin.Category = function (data) {
         return dialogContent;
 
 
-    };
+    }
 
-    if (data)
-        self.init(data);
-}
+};
 
-
-$.extend(App.Admin.Category, App.Admin.HeartFunctions);
+$.extend(App.Admin.Shop.CategoryFunctions, App.Admin.HeartFunctions);
 
 function showCategoriesDialog(onSelected) {
     var options = {
@@ -346,7 +400,7 @@ function showCategoriesDialog(onSelected) {
             var that = this;
             categoriesEditorLoaded(function (item) {
                 if (onSelected) {
-                    onSelected({ id: item.categoryId(), name: item.name() });
+                    onSelected({ id: item.heartId(), name: item.name() });
                 }
                 $(that).dialog("close");
             }, $dialog);

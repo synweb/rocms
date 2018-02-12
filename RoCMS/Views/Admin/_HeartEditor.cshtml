@@ -13,89 +13,104 @@
 <div class="form-horizontal">
 
     <div class="form-group">
-        <div style="float: right">Длина заголовка: <span class="title-length" data-bind="text: titleLength"></span></div>
-        <label>
-            Заголовок (title)
-        </label>
-        <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
-              data-original-title="Этот заголовок отображается во вкладке браузера и также может использоваться поисковиками при формировании заголовка в результатах поиска. Рекомендуемая длина - не более 70 символов.">
-            <em class="fa fa-question-circle"></em>
-        </span>
-        <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
+        <div class="col-xs-12">
+            <div style="float: right">
+                Длина заголовка: <span class="title-length" data-bind="text: titleLength"></span>
+            </div>
+            <label>
+                Заголовок (title)
+            </label>
+            <span class="rotooltip" data-toggle="tooltip" data-placement="bottom"
+                  data-original-title="Этот заголовок отображается во вкладке браузера и также может использоваться поисковиками при формировании заголовка в результатах поиска. Рекомендуемая длина - не более 70 символов.">
+                <em class="fa fa-question-circle"></em>
+            </span>
+            <span class="field-validation-valid" data-valmsg-for="Title" data-valmsg-replace="true"></span>
 
-    </div>
-    <div class="form-group">
-        <input type="text" id="Title" name="Title" data-bind="value: title" class="page-title form-control"
-               data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" />
-    </div>
+        </div>
 
-    <div class="form-group">
-        <div style="float: right">Длина заголовка: <span class="header-length" data-bind="text: breadcrumbsTitleLength"></span></div>
-        <label>Заголовок</label>
-        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-              data-original-title="Это главный заголовок страницы. Он отображается автоматически рядом с хлебными крошками, если шаблон предусматривает это. Если нет - поле можно не заполнять.">
-            <em class="fa fa-question-circle"></em>
-        </span>
-        <span class="field-validation-valid" data-valmsg-for="BreadcrumbsTitle" data-valmsg-replace="true"></span>
-    </div>
-    <div class="form-group">
-        <input type="text" id="BreadcrumbsTitle" name="BreadcrumbsTitle" data-bind="value: breadcrumbsTitle" class="page-h1 form-control"
-               data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" />
-    </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" id="Title" name="Title" data-bind="value: title" class="page-title form-control"
+                   data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" />
+        </div>
 
-    <div class="form-group">
-        <label for="RelativeUrl">@Strings.CreatePage_RelativeUrl</label>
-        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-              data-original-title="Это адрес, по которому будет отображаться страница. Например, http://domain.com/sample-page - здесь 'sample-page' является относительным адресом.">
-            <em class="fa fa-question-circle"></em>
-        </span>
-        <span class="field-validation-valid" data-valmsg-for="RelativeUrl" data-valmsg-replace="true"></span>
-        <a data-bind="visible: editMode, attr: {href: '/' + canonicalUrl()}">@Strings.CreatePage_OpenPage</a>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <div style="float: right">Длина заголовка: <span class="header-length" data-bind="text: breadcrumbsTitleLength"></span></div>
+            <label>Заголовок</label>
+            <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                  data-original-title="Это главный заголовок страницы. Он отображается автоматически рядом с хлебными крошками, если шаблон предусматривает это. Если нет - поле можно не заполнять.">
+                <em class="fa fa-question-circle"></em>
+            </span>
+            <span class="field-validation-valid" data-valmsg-for="BreadcrumbsTitle" data-valmsg-replace="true"></span>
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" id="BreadcrumbsTitle" name="BreadcrumbsTitle" data-bind="value: breadcrumbsTitle" class="page-h1 form-control"
+                   data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured" />
+        </div>
 
-    </div>
-    <div class="form-group">
-        <input type="text" id="RelativeUrl" name="RelativeUrl" data-bind="value: relativeUrl" class="page-relativeurl form-control"
-               data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured"
-               data-val-regex="@RoCMS.Web.Contract.Resources.Strings.Validation_LettersNumbersUnderscoreDash" data-val-regex-pattern="[a-zA-Zа-яА-Я0-9_-]+" />
-    </div>
-    <div class="form-group">
-        <label>Родительская страница</label>
-        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-              data-original-title="Относительный адрес родительской страницы подставляется в относительный адрес текущей страницы. Например, http://domain.com/parent-page/sample-page - здесь 'parent-page' - это относительный адрес родительской страницы, если 'sample-page' - относительный адрес текущей страницы">
-            <em class="fa fa-question-circle"></em>
-        </span>
-    </div>
-    <div class="form-group">
-        @*<select class="form-control parent-page-id" name="ParentHeartId" data-bind="options: $root.parents, optionsText: 'title', optionsValue: 'heartId', value: parentHeartId">
-        </select>*@
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <label for="RelativeUrl">@Strings.CreatePage_RelativeUrl</label>
+            <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                  data-original-title="Это адрес, по которому будет отображаться страница. Например, http://domain.com/sample-page - здесь 'sample-page' является относительным адресом.">
+                <em class="fa fa-question-circle"></em>
+            </span>
+            <span class="field-validation-valid" data-valmsg-for="RelativeUrl" data-valmsg-replace="true"></span>
+            <a data-bind="visible: editMode, attr: {href: '/' + canonicalUrl()}">@Strings.CreatePage_OpenPage</a>
 
-        <select class="withsearch parent-page-id"  name="ParentHeartId" data-live-search="true" data-bind="groupedOptions: $root.parents, optionsText: 'title', optionsValue: 'heartId', optionsGroup: 'type', value: parentHeartId"></select>
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <input type="text" id="RelativeUrl" name="RelativeUrl" data-bind="value: relativeUrl" class="page-relativeurl form-control"
+                   data-val="true" data-val-required="@RoCMS.Web.Contract.Resources.Strings.Validation_Reqiured"
+                   data-val-regex="@RoCMS.Web.Contract.Resources.Strings.Validation_LettersNumbersUnderscoreDash" data-val-regex-pattern="[a-zA-Zа-яА-Я0-9_-]+" />
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <label>Родительская страница</label>
+            <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                  data-original-title="Относительный адрес родительской страницы подставляется в относительный адрес текущей страницы. Например, http://domain.com/parent-page/sample-page - здесь 'parent-page' - это относительный адрес родительской страницы, если 'sample-page' - относительный адрес текущей страницы">
+                <em class="fa fa-question-circle"></em>
+            </span>
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            @*<select class="form-control parent-page-id" name="ParentHeartId" data-bind="options: $root.parents, optionsText: 'title', optionsValue: 'heartId', value: parentHeartId">
+                </select>*@
 
-    </div>
+            <select class="withsearch parent-page-id" name="ParentHeartId" data-live-search="true" data-bind="groupedOptions: $root.parents, optionsText: 'title', optionsValue: 'heartId', optionsGroup: 'type', value: parentHeartId"></select>
+
+        </div>
 
 
-    <div class="form-group">
-        <div style="float: right">Длина: <span class="annotation-length" data-bind="text: metaDescriptionLength"></span></div>
-        <label>Meta description</label>
-        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-              data-original-title="Описание страницы для поисковых систем. Может использоваться поисковиками для формирования описания сайта в поисковой выдаче. Должно быть длиной не более 130 символов.">
-            <em class="fa fa-question-circle"></em>
-        </span>
-        <span class="field-validation-valid" data-valmsg-for="MetaDescription" data-valmsg-replace="true"></span>
-    </div>
-    <div class="form-group">
-        <textarea name="MetaDescription" id="MetaDescription" class="page-annotation form-control" data-bind="value: metaDescription"></textarea>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <div style="float: right">Длина: <span class="annotation-length" data-bind="text: metaDescriptionLength"></span></div>
+            <label>Meta description</label>
+            <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                  data-original-title="Описание страницы для поисковых систем. Может использоваться поисковиками для формирования описания сайта в поисковой выдаче. Должно быть длиной не более 130 символов.">
+                <em class="fa fa-question-circle"></em>
+            </span>
+            <span class="field-validation-valid" data-valmsg-for="MetaDescription" data-valmsg-replace="true"></span>
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <textarea name="MetaDescription" id="MetaDescription" class="page-annotation form-control" data-bind="value: metaDescription"></textarea>
 
-    </div>
-    <div class="form-group">
-        <label>Meta keywords</label>&nbsp;
-        <span class="rotooltip" data-toggle="tooltip" data-placement="right"
-              data-original-title="Ключевые словосочетания, отражающие содержимое страницы. Не указывайте более 3 словосочетаний - это может привести к санкциям со стороны поисковых систем!">
-            <em class="fa fa-question-circle"></em>
-        </span>
-        <input type="text" id="MetaKeywords" name="MetaKeywords" data-bind="value: metaKeywords" class="page-keywords form-control" />
-    </div>
-    <div class="form-group">
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <label>Meta keywords</label>&nbsp;
+            <span class="rotooltip" data-toggle="tooltip" data-placement="right"
+                  data-original-title="Ключевые словосочетания, отражающие содержимое страницы. Не указывайте более 3 словосочетаний - это может привести к санкциям со стороны поисковых систем!">
+                <em class="fa fa-question-circle"></em>
+            </span>
+            <input type="text" id="MetaKeywords" name="MetaKeywords" data-bind="value: metaKeywords" class="page-keywords form-control" />
+        </div>
+    </div><div class="form-group">
+
         <div style="padding-top: 10px;">
             <div class="col-lg-6">
                 <div class="col-lg-4" style="padding: 6px 10px 0 0">
@@ -108,25 +123,28 @@
                 <div class="col-lg-8" style="padding: 0 !important;">
 
                     <select class="layout form-control" data-bind="value: layout" name="Layout">
-                            @{
-                                var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Views\\Shared\\PublicLayouts"));
-                                var files = dir.GetFiles();
-                            }
-                            @foreach (var file in files)
-                            {
-                                string name = file.Name.TrimStart('_').Replace(".cshtml", "");
-                                <option value="@name">@name</option>
-                            }
-                        </select>
+                        @{
+                            var dir = new DirectoryInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Views\\Shared\\PublicLayouts"));
+                            var files = dir.GetFiles();
+                        }
+                        @foreach (var file in files)
+                        {
+                            string name = file.Name.TrimStart('_').Replace(".cshtml", "");
+                            <option value="@name">@name</option>
+                        }
+                    </select>
                 </div>
             </div>
+
+        </div>
+    </div><div class="form-group">
+        <div class="col-xs-12">
+            <input type="checkbox" data-bind="checked: noindex" id="SitemapHide" />
+            <label for="sitemapHide">Запретить индексацию страницы</label>
         </div>
     </div>
-    <div class="form-group">
-        <input type="checkbox" data-bind="checked: noindex" id="SitemapHide" />
-        <label for="sitemapHide">Запретить индексацию страницы</label>
-    </div>
-    <div class="form-group">
+    <div>
+
         <div class="row">
             <div class="col-md-12">
                 <label>Стили</label>

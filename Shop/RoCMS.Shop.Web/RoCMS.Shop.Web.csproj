@@ -138,6 +138,9 @@
     <Compile Include="ApiControllers\ShopSettingsApiController.cs" />
     <Compile Include="ApiControllers\SpecApiController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Content Include="Content\admin\shop\js\base.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\admin\shop\js\currencies.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

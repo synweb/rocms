@@ -80,7 +80,7 @@ function goodsEditorLoaded(onSelected, context) {
                     }
                 });
                 var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.GoodsItemValidationMapping), App.Admin.Shop.GoodsItemFunctions);
-                res.initGoodsItem();
+
                 vm.goods.push(res);
             });
         })
@@ -290,7 +290,7 @@ App.Admin.Shop.GoodsItem = function () {
     self.supplierId = ko.observable();
     self.price = ko.observable(0);
     self.dateOfAddition = ko.observable();
-    self.keywords = ko.observable();
+
     self.description = ko.observable().extend({ required: true });
     self.htmlDescription = ko.observable(" ");
     self.article = ko.observable();
@@ -306,15 +306,9 @@ App.Admin.Shop.GoodsItem = function () {
     self.packs = ko.observableArray();
     self.compatibleGoods = ko.observableArray();
 
-    self.relativeUrl = ko.observable();
     self.filename = ko.observable();
 
 
-    self.name.subscribe(function (val) {
-        if (!self.relativeUrl() && val) {
-            self.relativeUrl(textToUrl(val));
-        }
-    });
 }
 
 
@@ -325,10 +319,11 @@ App.Admin.Shop.GoodsItemFunctions = {
 
 
         self.name.subscribe(function (val) {
-            if (!res.relativeUrl() && val) {
-                res.relativeUrl(textToUrl(val));
+            if (!self.relativeUrl() && val) {
+                self.relativeUrl(textToUrl(val));
             }
         });
+
     },
     addSpec: function () {
         var self = this;
@@ -508,7 +503,7 @@ App.Admin.Shop.GoodsItemFunctions = {
         });
     },
 
-    dialog: function (onSave) {
+    dialog: function (url, onSave) {
         var self = this;
         var dm = ko.validatedObservable(this);
         var dialogContent = $("#goods-item-template").tmpl();
@@ -552,19 +547,17 @@ App.Admin.Shop.GoodsItemFunctions = {
 
                         if (dm.isValid()) {
 
-                            self.save(url, function (result) {
-                                if (result.succeed === true) {
-                                    self.heartId(result.id);
+                            self.save(url, function (data) {
+                                if (data) {
+                                    self.heartId(data.id);
                                     if (onSave) {
                                         onSave();
                                     }
                                     $(this).dialog("close");
 
-                                } else {
-                                    smartAlert("Произошла ошибка, проверьте правильность заполнения полей");
                                 }
                             });
-                            
+
                         }
                         else {
                             dm.errors.showAllMessages();

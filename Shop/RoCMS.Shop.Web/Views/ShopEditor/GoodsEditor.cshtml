@@ -227,12 +227,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-xs-3">Относительный URL</label>
-                        <div class="col-xs-9">
-                            <input type="text" class="form-control" data-bind="value: relativeUrl">
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-xs-3" for="price">Категории</label>
                         <div class="col-xs-8">
                             <div class="row categories-row" data-bind="template: { name: 'category-item-template', foreach: categories }">
@@ -298,12 +292,6 @@
 
                             @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "goodsHtmlDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = false })
 
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Ключевые слова</label>
-                        <div class="col-xs-10">
-                            <input class="form-control" data-bind="value: keywords" type="text">
                         </div>
                     </div>
                     <div class="form-group">

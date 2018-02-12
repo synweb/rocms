@@ -56,6 +56,7 @@
     <Compile Include="NewsService.cs" />
     <Compile Include="NewsSettingsService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RssCrawlingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Base\RoCMS.Base.csproj">

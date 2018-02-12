@@ -116,6 +116,19 @@
     <Build Include="Stored Procedures\NewsItem_SelectIdsByTagName.sql" />
     <Build Include="Stored Procedures\NewsItem_SelectFilteredPage.sql" />
     <Build Include="Stored Procedures\NewsItem_IncreaseViewCount.sql" />
+    <Build Include="Tables\RssCrawler.sql" />
+    <Build Include="Tables\RssCrawlerFilter.sql" />
+    <Build Include="Stored Procedures\RssCrawler_Delete.sql" />
+    <Build Include="Stored Procedures\RssCrawler_Insert.sql" />
+    <Build Include="Stored Procedures\RssCrawler_Select.sql" />
+    <Build Include="Stored Procedures\RssCrawler_SelectOne.sql" />
+    <Build Include="Stored Procedures\RssCrawler_Update.sql" />
+    <Build Include="Stored Procedures\RssCrawlerFilter_Delete.sql" />
+    <Build Include="Stored Procedures\RssCrawlerFilter_Insert.sql" />
+    <Build Include="Stored Procedures\RssCrawlerFilter_Select.sql" />
+    <Build Include="Stored Procedures\RssCrawlerFilter_SelectOne.sql" />
+    <Build Include="Stored Procedures\RssCrawlerFilter_Update.sql" />
+    <Build Include="Stored Procedures\RssCrawlerFilter_SelectByRssCrawler.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">

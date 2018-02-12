@@ -51,6 +51,8 @@ namespace RoCMS.News.Web
 
             WebApiConfigHelper.ApiRoute(config.Routes, "news/settings/get", "NewsSettingsApi", "Get");
             WebApiConfigHelper.ApiRoute(config.Routes, "news/settings/update", "NewsSettingsApi", "Update");
+            WebApiConfigHelper.ApiRoute(config.Routes, "news/settings/crawlers/get", "NewsSettingsApi", "GetRssCrawlers");
+            WebApiConfigHelper.ApiRoute(config.Routes, "news/settings/crawlers/update", "NewsSettingsApi", "UpdateRssCrawlers");
         }
     }
 }

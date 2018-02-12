@@ -16,11 +16,43 @@
                 <input type="text" class="form-control" data-bind="value: blogUrl">
             </div>
         </div>
-        <div class="form-group text-center">
-            <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
-        </div>
     </form>
     <div class="alert-warning text-center">Для вступления изменений в силу необходимо перезагрузить сайт.</div>
+    
+    <h2>RSS-импорт</h2>
+    <div>
+
+        <div class="feed-settings" data-bind="foreach: crawlers">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Url фида</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: rssFeedUrl">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Интервал проверки (мин.)</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: checkInterval">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Рубрика</label>
+                    @*<div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: checkInterval">
+                    </div>*@
+                </div>
+                <button type="button" data-bind="click: function (e) { if(!confirmRemoval()) { return false;} $root.removeFeed($data);}, clickBubble: false">Удалить</button>
+            </form>
+        </div>
+
+
+        <button type="button" class="btn btn-success" data-bind="click: addFeed">Добавить фид</button>
+    </div>
+    
+    <div class="form-group text-center">
+        <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
+    </div>
     @JsInline(@<script>
         $(function () {
             newsSettingsLoaded();

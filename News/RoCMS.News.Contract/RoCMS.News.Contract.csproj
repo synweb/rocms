@@ -72,6 +72,8 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\NewsItemSortBy.cs" />
     <Compile Include="Models\NewsSettings.cs" />
+    <Compile Include="Models\RssCrawler.cs" />
+    <Compile Include="Models\RssCrawlerFilter.cs" />
     <Compile Include="Models\TagStat.cs" />
     <Compile Include="Models\NewsFilter.cs" />
     <Compile Include="Models\NewsItem.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Services\INewsItemService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\INewsSettings.cs" />
+    <Compile Include="Services\IRssCrawlingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Strings.resx">

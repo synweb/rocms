@@ -17,7 +17,7 @@ namespace RoCMS.Shop.Contract.Services
         IList<GoodsItem> GetNewGoodsItems(int count);
         bool GoodsExists(int id);
 
-        bool GoodsExists(string relativeUrl);
+        //bool GoodsExists(string relativeUrl);
 
         IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentGoodsId);
         

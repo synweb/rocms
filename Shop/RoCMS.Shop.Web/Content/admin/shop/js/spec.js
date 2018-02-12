@@ -201,7 +201,7 @@ App.Admin.Spec = function (data) {
                     }
                 },
                 {
-                    text: "Отмена",
+                    text: "Закрыть",
                     click: function () {
                         $(this).dialog("close");
                     }

@@ -103,6 +103,7 @@ function goodsEditorLoaded(onSelected, context) {
         packs: ko.observableArray(),
         currencies: ko.observableArray(),
 
+
         createGoodsItem: function () {
 
             var goodsItem = $.extend(new App.Admin.Shop.GoodsItem(), App.Admin.Shop.GoodsItemFunctions);
@@ -127,7 +128,6 @@ function goodsEditorLoaded(onSelected, context) {
                 onSelected(item);
             }
         }
-
 
     };
 
@@ -210,8 +210,6 @@ function goodsEditorLoaded(onSelected, context) {
     if (lastSortBy) {
         vm.filters().sortBy(lastSortBy);
     }
-
-
 
     vm.filters().categoryIds.subscribe(function (newValue) {
         if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
@@ -316,11 +314,15 @@ App.Admin.Shop.GoodsItemFunctions = {
     initGoodsItem: function () {
         var self = this;
         self.initHeart();
-
-
         self.name.subscribe(function (val) {
-            if (!self.relativeUrl() && val) {
-                self.relativeUrl(textToUrl(val));
+            if (val) {
+                if (!self.title()) {
+                    self.title(val);
+                }
+                if (!self.description()) {
+                    self.description(val);
+                }
+
             }
         });
 
@@ -356,8 +358,11 @@ App.Admin.Shop.GoodsItemFunctions = {
             var result = $.grep(self.categories(), function (e) {
                 return e.id() == category.id;
             });
-            if (result.length == 0) {
+            if (result.length === 0) {
                 self.categories.push(ko.mapping.fromJS(category));
+                if (self.categories.length === 1) {
+                    self.parentHeartId(category.id);
+                }
             }
         });
     },
@@ -365,6 +370,9 @@ App.Admin.Shop.GoodsItemFunctions = {
         parent.categories.remove(function (item) {
             return item.id() == category.id();
         });
+        if (parent.categories.length === 0) {
+            self.parentHeartId("");
+        }
     },
     addPack: function () {
         var self = this;
@@ -520,7 +528,22 @@ App.Admin.Shop.GoodsItemFunctions = {
 
                 self.initGoodsItem();
 
-                ko.applyBindings({ vm: dm, manufacturers: App.Admin.manufacturers, packs: App.Admin.packs, currencies: App.Admin.currencies }, dialog);
+                var parents = ko.observableArray();
+                $(self.categories()).each(function () {
+                    parents.push({ heartId: this.id, title: this.name, type: 'Категории'});
+                });
+
+                self.categories().subscribe("change", function() {
+                    
+                });
+
+                ko.applyBindings({
+                    vm: dm, manufacturers: App.Admin.manufacturers,
+                    packs: App.Admin.packs,
+                    currencies: App.Admin.currencies,
+                    parents: parents
+
+                }, dialog);
 
                 if ($("#goodsHtmlDescription", $(dialog)).length) {
                     $("#goodsHtmlDescription", $(dialog)).val(dm().htmlDescription());
@@ -533,6 +556,8 @@ App.Admin.Shop.GoodsItemFunctions = {
                 {
                     text: "Сохранить",
                     click: function () {
+                        var $dialog = $(this);
+
                         var $form = $(this).find('form');
 
                         //var e = CKEDITOR.instances['goodsHtmlDescription'];
@@ -553,7 +578,7 @@ App.Admin.Shop.GoodsItemFunctions = {
                                     if (onSave) {
                                         onSave();
                                     }
-                                    $(this).dialog("close");
+                                    $dialog.dialog("close");
 
                                 }
                             });
@@ -565,7 +590,7 @@ App.Admin.Shop.GoodsItemFunctions = {
                     }
                 },
                 {
-                    text: "Отмена",
+                    text: "Закрыть",
                     click: function () {
                         $(this).dialog("close");
                     }
@@ -628,8 +653,8 @@ function showGoodsDialog(onSelected) {
         modal: true,
         draggable: false,
         resizable: false,
-        width: 960,
-        height: 550,
+        width: 900,
+        height: 650,
         open: function () {
             var $dialog = $(this).dialog("widget");
             var that = this;

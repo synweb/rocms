@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using RoCMS.Base.ForWeb.Helpers;
+using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
 
 namespace Shop.Web
@@ -40,12 +42,16 @@ namespace Shop.Web
                 constraints: new {controller = constraint}
                 );
 
-            routes.MapRoute(
-                name: "CatalogSEF",
-                url: ShopUrl + "/{*relativeUrl}",
-                defaults: new {controller = "Shop", action = "CatalogSEF"},
-                constraints: new { relativeUrl = @"\S+" }
-                );
+            //routes.MapRoute(
+            //    name: "CatalogSEF",
+            //    url: ShopUrl + "/{*relativeUrl}",
+            //    defaults: new {controller = "Shop", action = "CatalogSEF"},
+            //    constraints: new { relativeUrl = @"\S+" }
+            //    );
+
+
+            RoutingHelper.RegisterHeartRoute(routes, typeof(Category), "Shop", "CategorySEF");
+            RoutingHelper.RegisterHeartRoute(routes, typeof(GoodsItem), "Shop", "GoodsSEF");
         }
     }
 }

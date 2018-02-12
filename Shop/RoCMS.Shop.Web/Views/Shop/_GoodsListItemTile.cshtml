@@ -10,8 +10,8 @@ NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", Number
 var currencyService = DependencyResolver.Current.GetService<IShopCurrencyService>();
 
 
-    <div class="image"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.HeartId})"><img src="@Url.Action("Thumbnail", "Gallery" , new { id=goodsItem.MainImageId })" title="@goodsItem.Name" alt="@goodsItem.Name"></a></div>
-    <div class="name"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.HeartId})">@goodsItem.Name</a></div>
+    <div class="image"><a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})"><img src="@Url.Action("Thumbnail", "Gallery" , new { id=goodsItem.MainImageId })" title="@goodsItem.Name" alt="@goodsItem.Name"></a></div>
+    <div class="name"><a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})">@goodsItem.Name</a></div>
 
         <div class="price">
             @if (goodsItem.HasDiscount)

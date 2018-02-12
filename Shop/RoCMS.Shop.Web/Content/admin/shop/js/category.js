@@ -165,8 +165,13 @@ App.Admin.Shop.CategoryFunctions = {
 
 
         self.name.subscribe(function (val) {
-            if (!self.relativeUrl() && val) {
-                self.relativeUrl(textToUrl(val));
+            if (val) {
+                if (!self.title()) {
+                    self.title(val);
+                }
+                if (!self.description()) {
+                    self.description(val);
+                }
             }
         });
     },
@@ -366,7 +371,7 @@ App.Admin.Shop.CategoryFunctions = {
                     }
                 },
                 {
-                    text: "Отмена",
+                    text: "Закрыть",
                     click: function () {
                         $(this).dialog("close");
                     }
@@ -393,8 +398,8 @@ function showCategoriesDialog(onSelected) {
         modal: true,
         draggable: false,
         resizable: false,
-        width: 760,
-        height: 550,
+        width: 900,
+        height: 650,
         open: function () {
             var $dialog = $(this).dialog("widget");
             var that = this;

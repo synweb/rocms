@@ -104,8 +104,8 @@ namespace RoCMS.Shop.Web
 
             var shopService = DependencyResolver.Current.GetService<IShopService>();
             var categoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
+            var heartService = DependencyResolver.Current.GetService<IHeartService>();
 
-            
             // для товаров и категорий
             BreadCrumbsHelper.RegisterPattern(new BreadCrumbPattern(
                 "^/" + SHOP_URL + @"(/[a-zA-Z_0-9а-яА-Я-]+)+", url =>
@@ -148,7 +148,8 @@ namespace RoCMS.Shop.Web
                         }
                         else  // последний элемент - Товар или категория
                         {
-                            if (shopService.GoodsExists(element))
+                            var heart = heartService.GetHeart(element);
+                            if (heart.Type == typeof(GoodsItem).FullName)
                             {
                                 var goodsItem = shopService.GetGoods(element, false);
                                 res.Add(new BreadCrumb()
@@ -158,7 +159,7 @@ namespace RoCMS.Shop.Web
                                     Url = url
                                 });
                             }
-                            else if (categoryService.CategoryExists(element))
+                            else if (heart.Type == typeof(Category).FullName)
                             {
                                 var cat = categoryService.GetCategory(element);
                                 res.Add(new BreadCrumb()

@@ -102,15 +102,15 @@ namespace RoCMS.Shop.Data.Gateways
             return Exec<bool>(GetProcedureString(), id);
         }
 
-        public bool ExistsByRelativeUrl(string relativeUrl)
-        {
-            return Exec<bool>(GetProcedureString(), relativeUrl);
-        }
+        //public bool ExistsByRelativeUrl(string relativeUrl)
+        //{
+        //    return Exec<bool>(GetProcedureString(), relativeUrl);
+        //}
 
-        public GoodsItem SelectOneByRelativeUrl(string relativeUrl)
-        {
-            return Exec<GoodsItem>(GetProcedureString(), relativeUrl);
-        }
+        //public GoodsItem SelectOneByRelativeUrl(string relativeUrl)
+        //{
+        //    return Exec<GoodsItem>(GetProcedureString(), relativeUrl);
+        //}
 
         public ICollection<GoodsItem> SelectNew(int count)
         {

@@ -12,7 +12,7 @@
     <div class="goods-item">
 
         <img src="@Url.Action("Thumbnail", "Gallery", new { id = goodsItem.MainImageId })" alt="@goodsItem.Description" class="img-responsive">
-        <a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.HeartId})">@goodsItem.Name</a>
+        <a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})">@goodsItem.Name</a>
         @if (goodsItem.Actions.Any())
         {
             <div class="goods-tag">

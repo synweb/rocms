@@ -19,20 +19,24 @@
     margin-bottom: 0;
 }
 
-/*.shop-action-list li,
-.shop-manufacturer-list li,*/
+.shop-spec-list li,
+.shop-action-list li,
+.shop-manufacturer-list li,
 .shop-categories-list .category-name {
     padding: 3px;
 }
 
-/*.shop-spec-list li:hover,
+.shop-spec-list li:hover,
 .shop-packs-list li:hover,
 .shop-action-list li:hover,
-.shop-manufacturer-list li:hover,*/
+.shop-manufacturer-list li:hover,
 .shop-categories-list .category-name:hover {
     background-color: #eaeaea;
     border-radius: 4px;
-    cursor: pointer;
+}
+
+.shop-spec-list .spec {
+    clear: both;
 }
 
 .goodsItem{

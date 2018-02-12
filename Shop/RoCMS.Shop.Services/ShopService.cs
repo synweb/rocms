@@ -107,8 +107,6 @@ namespace RoCMS.Shop.Services
             }
             var res = Mapper.Map<GoodsItem>(goods);
 
-            
-
             FillData(res, activeActionsOnly);
             return res;
         }
@@ -119,7 +117,7 @@ namespace RoCMS.Shop.Services
             var heart = _heartService.GetHeart(goodsItem.HeartId);
             goodsItem.FillHeart(heart);
 
-
+            goodsItem.CanonicalUrl = _heartService.GetCanonicalUrl(heart.HeartId);
 
             FillImages(goodsItem);
             FillCompatibles(goodsItem);
@@ -202,7 +200,10 @@ namespace RoCMS.Shop.Services
 
         public GoodsItem GetGoods(string relativeUrl, bool activeActionsOnly = true)
         {
-            var goods = _goodsItemGateway.SelectOneByRelativeUrl(relativeUrl);
+
+            var heart = _heartService.GetHeart(relativeUrl);
+
+            var goods = _goodsItemGateway.SelectOne(heart.HeartId);
             if (goods == null)
             {
                 throw new GoodsNotFoundException(relativeUrl);
@@ -522,10 +523,10 @@ namespace RoCMS.Shop.Services
             return _goodsItemGateway.Exists(id);
         }
 
-        public bool GoodsExists(string relativeUrl)
-        {
-            return _goodsItemGateway.ExistsByRelativeUrl(relativeUrl);
-        }
+        //public bool GoodsExists(string relativeUrl)
+        //{
+        //    return _goodsItemGateway.ExistsByRelativeUrl(relativeUrl);
+        //}
 
         public IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentHeartId)
         {

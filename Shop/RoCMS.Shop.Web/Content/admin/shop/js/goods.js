@@ -371,7 +371,7 @@ App.Admin.Shop.GoodsItemFunctions = {
             return item.id() == category.id();
         });
         if (parent.categories.length === 0) {
-            self.parentHeartId("");
+            parent.parentHeartId("");
         }
     },
     addPack: function () {
@@ -526,24 +526,32 @@ App.Admin.Shop.GoodsItemFunctions = {
 
                 var dialog = this;
 
-                self.initGoodsItem();
+                
 
                 var parents = ko.observableArray();
                 $(self.categories()).each(function () {
                     parents.push({ heartId: this.id, title: this.name, type: 'Категории'});
                 });
-
-                self.categories().subscribe("change", function() {
-                    
-                });
-
-                ko.applyBindings({
-                    vm: dm, manufacturers: App.Admin.manufacturers,
+                
+                var model = {
+                    vm: dm,
+                    manufacturers: App.Admin.manufacturers,
                     packs: App.Admin.packs,
                     currencies: App.Admin.currencies,
                     parents: parents
+                }
+                self.categories.subscribe(function () {
+                    model.parents.removeAll();
+                    $(self.categories()).each(function () {
+                        model.parents.push({ heartId: this.id, title: this.name, type: 'Категории' });
+                    });
+                    $(".withsearch").selectpicker('refresh');
+                });
 
-                }, dialog);
+                self.initGoodsItem();
+
+                ko.applyBindings(model, dialog);
+                $(".withsearch").selectpicker();
 
                 if ($("#goodsHtmlDescription", $(dialog)).length) {
                     $("#goodsHtmlDescription", $(dialog)).val(dm().htmlDescription());

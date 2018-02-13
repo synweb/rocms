@@ -162,7 +162,10 @@ App.Admin.Shop.CategoryFunctions = {
         //    self.orderFormSpecs.push(new App.Admin.Spec(this));
         //});
 
-
+        if ($("#categoryDescription").length) {
+            $("#categoryDescription").val(self.description());
+            initContentEditor();
+        }
 
         self.name.subscribe(function (val) {
             if (val) {
@@ -174,6 +177,22 @@ App.Admin.Shop.CategoryFunctions = {
                 }
             }
         });
+
+        self.parentCategoryId.subscribe(function(val) {
+            self.parentHeartId(val);
+        });
+
+    },
+
+    prepareCategoryForUpdate: function () {
+        var self = this;
+        self.prepareHeartForUpdate();
+
+        var text = getTextFromEditor('categoryDescription');
+        if (text) {
+            self.description(text);
+        }
+
     },
 
     addChild: function () {
@@ -325,16 +344,35 @@ App.Admin.Shop.CategoryFunctions = {
             open: function () {
                 var $form = $(this).find('form');
 
-                if ($("#categoryDescription", $form).length) {
-                    $("#categoryDescription", $form).val(self.description());
-                    initContentEditor();
-                }
+
 
                 self.initCategory();
+                var parents = ko.observableArray();
+
+                if (self.parentCategoryId() && self.parentCategory()) {
+                    alert(self.parentCategory);
+                    parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
+                }
+
+                $(".withsearch").addClass("form-control");
+                $(".withsearch").attr("disabled", "disabled");
 
                 var that = this;
 
-                ko.applyBindings(dm, that);
+                var vm = {
+                    dm: dm,
+                    parents: parents
+                }
+
+                self.parentCategory.subscribe(function () {
+                    vm.parents.removeAll();
+                    if (self.parentCategoryId() && self.parentCategory()) {
+                        vm.parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
+                    }
+                    $(".withsearch").selectpicker('refresh');
+                });
+
+                ko.applyBindings(vm, that);
             },
             buttons: [
                 {
@@ -342,19 +380,16 @@ App.Admin.Shop.CategoryFunctions = {
                     click: function () {
                         var $form = $(this).find('form');
 
-                        var text = getTextFromEditor('categoryDescription');
-                        if (text) {
-                            self.description(text);
-                        }
-
-                        self.prepareHeartForUpdate();
+                        self.prepareCategoryForUpdate();
 
                         var $dialog = $(this);
 
-                        if ($("#categoryDescription", $form).length) {
-                            $("#categoryDescription", $form).val(self.description());
-                            initContentEditor();
-                        }
+                        //if ($("#categoryDescription", $form).length) {
+                        //    $("#categoryDescription", $form).val(self.description());
+                        //    initContentEditor();
+                        //}
+
+
 
                         if (dm.isValid()) {
                             self.save(url,

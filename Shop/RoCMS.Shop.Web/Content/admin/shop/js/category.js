@@ -4,7 +4,7 @@
 function mapCategoriesToIds(categories) {
     var result = $(categories).map(function () {
         return {
-            categoryId: this.heartId,
+            heartId: this.heartId,
             childrenCategories: this.childrenCategories ? mapCategoriesToIds(this.childrenCategories) : []
         }
     }).get();
@@ -233,12 +233,10 @@ App.Admin.Shop.CategoryFunctions = {
 
     },
 
-    edit: function (onSuccess) {
+    edit: function () {
         var self = this;
         self.dialog("/api/shop/category/update", function () {
-            if (onSuccess) {
-                onSuccess();
-            }
+            
         });
     },
 
@@ -350,7 +348,7 @@ App.Admin.Shop.CategoryFunctions = {
                 var parents = ko.observableArray();
 
                 if (self.parentCategoryId() && self.parentCategory()) {
-                    alert(self.parentCategory);
+
                     parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
                 }
 
@@ -394,7 +392,9 @@ App.Admin.Shop.CategoryFunctions = {
                         if (dm.isValid()) {
                             self.save(url,
                                 function (result) {
-                                    self.heartId(result.id);
+                                    if (result) {
+                                        self.heartId(result.id);
+                                    }
                                     if (onSuccess) {
                                         onSuccess();
                                     }

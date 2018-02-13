@@ -4,10 +4,10 @@
 @ParentCategoryId int,
 @Description nvarchar(MAX),
 @SortOrder int,
-@MetaDescription nvarchar(MAX),
+
 @ImageId varchar(30),
 @Hidden bit,
-@RelativeUrl nvarchar(300),
+
 @HeartId int
 AS
 	UPDATE [Shop].[Category] SET

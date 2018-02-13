@@ -191,6 +191,9 @@ namespace RoCMS.Shop.Services
                         UpdateCategoriesSortOrder(cat.ChildrenCategories);
                     }
                 }
+
+                RemoveObjectFromCache("Categories");
+
                 ts.Complete();
             }
         }
@@ -306,6 +309,7 @@ namespace RoCMS.Shop.Services
         {
             var heart = _heartService.GetHeart(category.HeartId);
             category.FillHeart(heart);
+            category.CanonicalUrl = _heartService.GetCanonicalUrl(category.HeartId);
 
             foreach(var child in category.ChildrenCategories)
             {

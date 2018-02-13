@@ -176,7 +176,7 @@ namespace RoCMS.Shop.Web.Controllers
             //    throw new HttpException(404, "Not found");
             //}
 
-            var cat = _shopCategoryService.GetCategory(pageUrl);
+            var cat = _heartService.GetHeart(pageUrl);
 
             //if (cat.CanonicalUrl != relativeUrl)
             //{

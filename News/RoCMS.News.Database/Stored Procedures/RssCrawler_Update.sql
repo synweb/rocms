@@ -2,12 +2,12 @@
 @RssFeedUrl nvarchar(MAX),
 @IsEnabled bit,
 @CheckInterval int,
-@TargetCategory int,
+@TargetCategoryId int,
 @RssCrawlerId int
 AS
 	UPDATE [News].[RssCrawler] SET
 		[RssFeedUrl]=@RssFeedUrl,
 		[IsEnabled]=@IsEnabled,
 		[CheckInterval]=@CheckInterval,
-		[TargetCategory]=@TargetCategory
+		[TargetCategoryId]=@TargetCategoryId
 	WHERE [RssCrawlerId]=@RssCrawlerId

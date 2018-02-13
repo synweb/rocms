@@ -4,7 +4,7 @@
 	[RssFeedUrl] nvarchar(max) NOT NULL,
 	[IsEnabled] BIT DEFAULT 1 NOT NULL,
 	[CheckInterval] INT DEFAULT 720 NOT NULL, -- in minutes
-	[TargetCategory] INT NULL, 
-    CONSTRAINT [FK_RssCrawler_Category] FOREIGN KEY ([TargetCategory]) REFERENCES [News].[Category]([CategoryId]) ON DELETE SET NULL
+	[TargetCategoryId] INT NULL, 
+    CONSTRAINT [FK_RssCrawler_Category] FOREIGN KEY ([TargetCategoryId]) REFERENCES [News].[Category]([CategoryId]) ON DELETE SET NULL
 
 )

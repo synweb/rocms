@@ -5,15 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using RoCMS.Base.Helpers;
+using RoCMS.Base.Models;
 using RoCMS.News.Contract.Models;
 using RoCMS.News.Contract.Services;
 using RoCMS.News.Data.Gateways;
 
 namespace RoCMS.News.Services
 {
-    public class RssCrawlingService: NewsService, IRssCrawlingService
+    public class RssCrawlingService : NewsService, IRssCrawlingService
     {
         private readonly RssCrawlerGateway _rssCrawlerGateway = new RssCrawlerGateway();
+        private readonly CategoryGateway _categoryGateway = new CategoryGateway();
         private readonly RssCrawlerFilterGateway _rssCrawlerFilterGateway = new RssCrawlerFilterGateway();
 
         public ICollection<RssCrawler> GetCrawlers()
@@ -51,7 +53,7 @@ namespace RoCMS.News.Services
                 {
                     int id = _rssCrawlerGateway.Insert(x);
                     var dataFilters = Mapper.Map<ICollection<Data.Models.RssCrawlerFilter>>(
-                        crawlers.Single(y => x.RssCrawlerId==y.RssCrawlerId).Filters);
+                        crawlers.Single(y => x.RssCrawlerId == y.RssCrawlerId).Filters);
                     foreach (var filter in dataFilters)
                     {
                         _rssCrawlerFilterGateway.Insert(filter);
@@ -80,7 +82,7 @@ namespace RoCMS.News.Services
                     // фильтры выпилятся сами
                     return true;
                 }
-            ); 
+            );
 
 
         }
@@ -90,6 +92,11 @@ namespace RoCMS.News.Services
             var dataFilters = _rssCrawlerFilterGateway.SelectByRssCrawler(rssCrawler.RssCrawlerId);
             var filters = Mapper.Map<ICollection<RssCrawlerFilter>>(dataFilters);
             rssCrawler.Filters = filters;
+            if (rssCrawler.TargetCategoryId != null)
+            {
+                var cat = _categoryGateway.SelectOne(rssCrawler.TargetCategoryId.Value);
+                rssCrawler.TargetCategory = new IdNamePair<int>(cat.CategoryId, cat.Name);
+            }
         }
     }
 }

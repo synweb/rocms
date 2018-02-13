@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using RoCMS.Base.Models;
 
 namespace RoCMS.News.Contract.Models
 {
@@ -13,7 +14,8 @@ namespace RoCMS.News.Contract.Models
         public string RssFeedUrl { get; set; }
         public bool IsEnabled { get; set; }
         public int CheckInterval { get; set; }
-        public int TargetCategory { get; set; }
+        public int? TargetCategoryId { get; set; }
+        public IdNamePair<int> TargetCategory { get; set; }
 
         public ICollection<RssCrawlerFilter> Filters { get; set; }
     }

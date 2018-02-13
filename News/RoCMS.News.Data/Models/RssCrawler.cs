@@ -12,6 +12,6 @@ namespace RoCMS.News.Data.Models
         public string RssFeedUrl { get; set; }
         public bool IsEnabled { get; set; }
         public int CheckInterval { get; set; }
-        public int TargetCategory { get; set; }
+        public int? TargetCategoryId { get; set; }
     }
 }

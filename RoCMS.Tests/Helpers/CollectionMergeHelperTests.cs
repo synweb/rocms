@@ -38,10 +38,12 @@ namespace RoCMS.Tests.Helpers
 
             var resultCollection = oldCollection.ToList();
 
-            bool Comparer(TestClass x, TestClass y)
-            {
-                return x.Id == y.Id;
-            }
+            //bool Comparer(TestClass x, TestClass y)
+            //{
+            //    return x.Id == y.Id;
+            //}
+
+            var comparer = new Func<TestClass, TestClass, bool>((x, y) => x.Id == y.Id);
 
             int inserts = 0;
             int updates = 0;
@@ -50,7 +52,7 @@ namespace RoCMS.Tests.Helpers
             CollectionMergeHelper.MergeNewAndOld(
                 newItems: newCollection, 
                 existingItems: oldCollection, 
-                comparer: Comparer,
+                comparer: comparer,
                 create: x =>
                 {
                     resultCollection.Add(x);
@@ -58,7 +60,7 @@ namespace RoCMS.Tests.Helpers
                 },
                 update: (x) =>
                 {
-                    resultCollection.Single(y => Comparer(x, y)).Data = x.Data;
+                    resultCollection.Single(y => comparer(x, y)).Data = x.Data;
                     updates++;
                 },
                 delete: @class =>

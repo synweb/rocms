@@ -41,14 +41,12 @@ namespace RoCMS.News.Services
         {
             var existingCrawlers = _rssCrawlerGateway.Select();
             var dataRecs = Mapper.Map<ICollection<Data.Models.RssCrawler>>(crawlers);
-            bool Comparer(Data.Models.RssCrawler x, Data.Models.RssCrawler y)
-            {
-                return x.RssCrawlerId == y.RssCrawlerId;
-            }
+            var comparer = new Func<Data.Models.RssCrawler, Data.Models.RssCrawler, bool>((x, y) => x.RssCrawlerId == y.RssCrawlerId);
+
             CollectionMergeHelper.MergeNewAndOld(
                 newItems: dataRecs,
                 existingItems: existingCrawlers,
-                comparer: Comparer,
+                comparer: comparer,
                 create: (x) =>
                 {
                     int id = _rssCrawlerGateway.Insert(x);

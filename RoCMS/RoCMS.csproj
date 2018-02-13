@@ -614,6 +614,7 @@
     <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\base\vendor\Font-Awesome\fonts\FontAwesome.otf" />
+    <Content Include="Connections.config" />
     <None Include="INSTRUCTIONS.txt" />
     <Content Include="InstallData\RoCMS.Database_Create.sql" />
     <Content Include="Mvc.sitemap" />

@@ -309,6 +309,8 @@
     <Content Include="Content\admin\vendor\bootstrap-datepicker\js\bootstrap-datepicker.js" />
     <Content Include="Content\admin\vendor\bootstrap-select\bootstrap-select.min.css" />
     <Content Include="Content\admin\vendor\bootstrap-select\bootstrap-select.min.js" />
+    <Content Include="Content\admin\vendor\bootstrap-tagsinput\bootstrap-tagsinput.css" />
+    <Content Include="Content\admin\vendor\bootstrap-tagsinput\bootstrap-tagsinput.js" />
     <Content Include="Content\admin\vendor\bootstrap-timepicker\css\bootstrap-responsive.css" />
     <Content Include="Content\admin\vendor\bootstrap-timepicker\css\bootstrap-timepicker.css" />
     <Content Include="Content\admin\vendor\bootstrap-timepicker\js\bootstrap-timepicker.js" />

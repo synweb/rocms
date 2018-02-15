@@ -94,10 +94,14 @@ App.Admin.Spec = function (data) {
         self.specId(item.specId);
         self.name(item.name);
         self.valueType(item.valueType);
-        self.acceptableValues(item.acceptableValues);
+        
         self.prefix(item.prefix);
         self.postfix(item.postfix);
         self.sortOrder(item.sortOrder);
+
+
+        self.acceptableValues(item.acceptableValues);
+
     };
 
     if (data) {
@@ -121,8 +125,7 @@ App.Admin.Spec = function (data) {
 
     self.save = function (url, onSuccess) {
         blockUI();
-        self.acceptableValues($("#specVals").val());
-        postJSON(url, ko.toJS(self), function (result) {
+        postJSON(url, ko.mapping.toJS(self, { ignore: ["acceptableArray"] }), function (result) {
             if (result.succeed === true) {
                 if (onSuccess) {
                     onSuccess(result.data);
@@ -183,7 +186,9 @@ App.Admin.Spec = function (data) {
             modal: true,
             open: function () {
                 ko.applyBindings(dm, this);
-                $("#specVals").tagsInput();
+
+                $(this).find("#specVals").tagsinput();
+
             },
             buttons: [
                 {

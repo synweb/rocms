@@ -91,6 +91,8 @@ namespace RoCMS
                 "bootstrap-switch/js/bootstrap-switch.min.js",
                 "bootstrap-timepicker/js/bootstrap-timepicker.js",
                 "tagsinput/jquery.tagsinput.min.js",
+                "bootstrap-tagsinput/bootstrap-tagsinput.js",
+                
                 "clipboard/clipboard.min.js"
             }, bundle =>
             {
@@ -172,7 +174,8 @@ namespace RoCMS
                 "bootstrap-select/bootstrap-select.min.css",
                 "bootstrap-switch/css/bootstrap-switch.css",
                 "bootstrap-timepicker/css/bootstrap-timepicker.css",
-                "tagsinput/jquery.tagsinput.css"
+                "tagsinput/jquery.tagsinput.css",
+                "bootstrap-tagsinput/bootstrap-tagsinput.css"
             }, bundle => bundle.AddReference("~/Content/admin/vendor/bootstrap/css/bootstrap.css"));
 
             bundles.Add<StylesheetBundle>("Content/admin/ro/css");

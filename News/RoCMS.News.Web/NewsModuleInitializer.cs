@@ -26,6 +26,13 @@ namespace RoCMS.News.Web
             RegisterSearch();
             //InitBreadcrumbs();
             InitSessionUrls();
+            InitCrawlers();
+        }
+
+        private void InitCrawlers()
+        {
+            var crawlingService = DependencyResolver.Current.GetService<IRssCrawlingService>();
+            crawlingService.StartCrawling();
         }
 
         private void InitSessionUrls()

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using RoCMS.Web.Contract.Models;
 
 namespace RoCMS.Web.Contract.Services
@@ -35,5 +36,6 @@ namespace RoCMS.Web.Contract.Services
         void UpdateImageDestinationUrl(int albumId, string imageId, string destinationUrl);
 
         void SetAlbumWatermark(int albumId, string watermarkImageId);
+        Task<string> DownloadImage(string url);
     }
 }

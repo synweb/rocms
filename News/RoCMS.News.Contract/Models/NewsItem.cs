@@ -29,7 +29,7 @@ namespace RoCMS.News.Contract.Models
         [Required(ErrorMessageResourceType = typeof(Resources.Strings), ErrorMessageResourceName = "Validation_Reqiured")]
         public string Description { get; set; }
 
-        public int AuthorId { get; set; }
+        public int? AuthorId { get; set; }
 
         public string ImageId { get; set; }
 
@@ -38,6 +38,7 @@ namespace RoCMS.News.Contract.Models
         public RecordType RecordType { get; set; }
         public string Filename { get; set; }
         public string VideoId { get; set; }
+        public string RssSource { get; set; }
 
         public IEnumerable<string> SearchIndexKeys => new[]
         { SearchKeyTitle, SearchKeyDescription, SearchKeyText };

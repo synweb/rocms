@@ -14,13 +14,13 @@ namespace RoCMS.News.Data.Models
         public System.DateTime PostingDate { get; set; }
         public string Description { get; set; }
         public string Keywords { get; set; }
-        public int AuthorId { get; set; }
+        public int? AuthorId { get; set; }
         public string ImageId { get; set; }
         public Nullable<int> CommentTopicId { get; set; }
         public RecordType RecordType { get; set; }
         public string Filename { get; set; }
         public string VideoId { get; set; }
-
+        public string RssSource { get; set; }
         public int? BlogId { get; set; }
 
         public DateTime? EventDate { get; set; }

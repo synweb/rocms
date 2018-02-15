@@ -10,7 +10,9 @@ using System.Text;
 using System.Web;
 using RoCMS.Base.Helpers;
 using System.Drawing;
+using System.Net.Http;
 using System.Security.AccessControl;
+using System.Threading.Tasks;
 using RoCMS.Data.Gateways;
 using RoCMS.Web.Contract.Extensions;
 using RoCMS.Web.Contract.Models;
@@ -78,6 +80,8 @@ namespace RoCMS.Web.Services
             return null;
         }
 
+        #region Converters
+
         private ImageFormat ContentTypeToImageFormat(string contentType)
         {
             switch (contentType)
@@ -110,12 +114,13 @@ namespace RoCMS.Web.Services
             }
         }
 
-
         private ImageFormat FilenameToImageFormat(string filename)
         {
             string extenstion = filename.Split('.').Last().ToLower();
             return ExtensionToImageFormat(extenstion);
         }
+
+        #endregion
 
         private System.Drawing.Image GetBitmapImageOfDesiredSize(byte[] imageContent, int maxWidth, int maxHeight)
         {
@@ -458,6 +463,31 @@ namespace RoCMS.Web.Services
             DeleteThumbnails(imageId);
         }
 
+        public async Task<string> DownloadImage(string url)
+        {
+            try
+            {
+                using (var http = new HttpClient())
+                {
+                    var response = await http.GetAsync(url);
+                    var imgBytes = await response.Content.ReadAsByteArrayAsync();
+                    var contentType = response.Content.Headers.ContentType.MediaType;
+                    var img = new Contract.Models.Image()
+                    {
+                        Content = imgBytes,
+                        ContentType = contentType
+                    };
+                    var filename = url.Split('/').Last();
+                    return UploadImage(img, filename);
+                }
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+                return null;
+            }
+        }
+
         /// <summary>
         /// Получить все размеры миниатюр, которые используются в системе в текущий момент
         /// </summary>
@@ -520,26 +550,6 @@ namespace RoCMS.Web.Services
         public IEnumerable<ImageInfo> GetGalleryImageInfos()
         {
             return GetAllImageInfos();
-        }
-
-        private ImageFormat MimeTypeToImageFormat(string mimeType)
-        {
-            ImageFormat format;
-            switch (mimeType)
-            {
-                case MIMETYPE_JPG:
-                    format = ImageFormat.Jpeg;
-                    break;
-                case MIMETYPE_GIF:
-                    format = ImageFormat.Gif;
-                    break;
-                case MIMETYPE_PNG:
-                    format = ImageFormat.Png;
-                    break;
-                default:
-                    throw new ArgumentException("mimeType");
-            }
-            return format;
         }
 
         /// <summary>

@@ -9,10 +9,11 @@
 @Filename NVARCHAR(200),
 @VideoId varchar(50),
 @BlogId int,
-@EventDate datetime
+@EventDate datetime,
+@RssSource nvarchar(max)
 AS
-	INSERT INTO [News].[NewsItem] ([HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId],  [RecordType]
-	, [Filename], [VideoId], [BlogId], [EventDate])
+	INSERT INTO [News].[NewsItem] ([HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType]
+	, [Filename], [VideoId], [BlogId], [EventDate], [RssSource])
 	VALUES (@HeartId, @Text, @PostingDate, @Description, @AuthorId, @ImageId,  
-	@RecordType, @Filename, @VideoId, @BlogId, @EventDate)
+	@RecordType, @Filename, @VideoId, @BlogId, @EventDate, @RssSource)
 	SELECT @HeartId

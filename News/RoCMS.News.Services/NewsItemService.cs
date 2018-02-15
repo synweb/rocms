@@ -162,37 +162,42 @@ namespace RoCMS.News.Services
             return res;
         }
 
+        private static object _createNewsItemLockObj = new object();
+
         public int CreateNewsItem(NewsItem news)
         {
             news.Type = news.GetType().FullName;
             var dataRec = Mapper.Map<Data.Models.NewsItem>(news);
-            using (var ts = new TransactionScope())
+            lock (_createNewsItemLockObj)
             {
-                news.RelativeUrl = _heartService.GetNextAvailableRelativeUrl(news.RelativeUrl);
-                news.HeartId = dataRec.HeartId = _heartService.CreateHeart(news);
-                 _newsItemGateway.Insert(dataRec);
-                var tags = news.Tags.Split(',').Select(x => x.Trim().ToLower()).ToArray();
+                using (var ts = new TransactionScope())
+                {
+                    news.RelativeUrl = _heartService.GetNextAvailableRelativeUrl(news.RelativeUrl);
+                    news.HeartId = dataRec.HeartId = _heartService.CreateHeart(news);
+                    _newsItemGateway.Insert(dataRec);
+                    var tags = news.Tags?.Split(',').Select(x => x.Trim().ToLower()).ToArray() ?? new string[0];
 
-                var existingTags = _tagGateway.Select();
-                var existingTagNames = existingTags.Select(x => x.Name).ToArray();
-                foreach (var tag in tags.Except(existingTagNames))
-                {
-                    int tagId = _tagGateway.Insert(tag);
-                    _newsItemTagGateway.Insert(news.HeartId, tagId);
-                }
-                foreach (var tag in existingTags.Where(x => tags.Contains(x.Name)))
-                {
-                    _newsItemTagGateway.Insert(news.HeartId, tag.TagId);
-                }
+                    var existingTags = _tagGateway.Select();
+                    var existingTagNames = existingTags.Select(x => x.Name).ToArray();
+                    foreach (var tag in tags.Except(existingTagNames))
+                    {
+                        int tagId = _tagGateway.Insert(tag);
+                        _newsItemTagGateway.Insert(news.HeartId, tagId);
+                    }
+                    foreach (var tag in existingTags.Where(x => tags.Contains(x.Name)))
+                    {
+                        _newsItemTagGateway.Insert(news.HeartId, tag.TagId);
+                    }
 
-                var catIds = news.Categories.Select(x => x.ID);
-                foreach (var catId in catIds)
-                {
-                    _newsItemCategoryGateway.Insert(news.HeartId, catId);
+                    var catIds = news.Categories.Select(x => x.ID);
+                    foreach (var catId in catIds)
+                    {
+                        _newsItemCategoryGateway.Insert(news.HeartId, catId);
+                    }
+                    _searchService.UpdateIndex(news);
+                    ts.Complete();
+                    return news.HeartId;
                 }
-                _searchService.UpdateIndex(news);
-                ts.Complete();
-                return news.HeartId;
             }
         }
 

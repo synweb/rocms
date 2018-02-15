@@ -69,15 +69,16 @@ App.Admin.RssCrawler = function(data) {
     self.targetCategory = ko.observable();
     self.targetCategoryId = ko.observable();
     self.filters = ko.observableArray();
+    self.imageSelector = ko.observable();
     self.canUnsetCategory = ko.computed(function () {
-        return (self.targetCategory != undefined && self.targetCategory().length > 0);
+        return (self.targetCategory());
     });
     self.canSetCategory = ko.computed(function () {
         return !self.canUnsetCategory();
     });
     self.targetCategoryName = ko.computed(function () {
-        if (self.targetCategory() && self.targetCategory().name && typeof self.targetCategory().name == 'function') {
-            return self.targetCategory().name();
+        if (self.targetCategory() && self.targetCategory().name) {
+            return self.targetCategory().name;
         } else {
             return "";
         }
@@ -85,7 +86,7 @@ App.Admin.RssCrawler = function(data) {
     self.setCategory = function() {
         var self = this;
         showNewsCategoriesDialog(function (category) {
-            self.targetCategory(ko.mapping.fromJS(category));
+            self.targetCategory(category);
             self.targetCategoryId(category.id);
         });
     };
@@ -98,8 +99,10 @@ App.Admin.RssCrawler = function(data) {
         self.checkInterval(data.checkInterval);
         self.rssFeedUrl(data.rssFeedUrl);
         self.isEnabled(data.isEnabled);
-        self.targetCategory(ko.mapping.fromJS(data.targetCategory));
+        self.targetCategory(data.targetCategory);
+        self.targetCategoryId(data.targetCategoryId);
         self.filters(data.filters);
+        self.imageSelector(data.imageSelector);
     } else {
         self.checkInterval(30);
         self.isEnabled(true);

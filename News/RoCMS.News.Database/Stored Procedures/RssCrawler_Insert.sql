@@ -2,8 +2,9 @@
 @RssFeedUrl nvarchar(MAX),
 @IsEnabled bit,
 @CheckInterval int,
-@TargetCategoryId int
+@TargetCategoryId int,
+@ImageSelector nvarchar(max)
 AS
-	INSERT INTO [News].[RssCrawler] ([RssFeedUrl], [IsEnabled], [CheckInterval], [TargetCategoryId])
-	VALUES (@RssFeedUrl, @IsEnabled, @CheckInterval, @TargetCategoryId)
+	INSERT INTO [News].[RssCrawler] ([RssFeedUrl], [IsEnabled], [CheckInterval], [TargetCategoryId], [ImageSelector])
+	VALUES (@RssFeedUrl, @IsEnabled, @CheckInterval, @TargetCategoryId, @ImageSelector)
 	SELECT @@IDENTITY

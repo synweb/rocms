@@ -12,5 +12,6 @@ namespace RoCMS.News.Contract.Services
          ICollection<RssCrawler> GetCrawlers();
         RssCrawler GetCrawler(int id);
         void UpdateCrawlers(ICollection<RssCrawler> crawlers);
+        void StartCrawling();
     }
 }

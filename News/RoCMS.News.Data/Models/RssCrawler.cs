@@ -13,5 +13,6 @@ namespace RoCMS.News.Data.Models
         public bool IsEnabled { get; set; }
         public int CheckInterval { get; set; }
         public int? TargetCategoryId { get; set; }
+        public string ImageSelector { get; set; }
     }
 }

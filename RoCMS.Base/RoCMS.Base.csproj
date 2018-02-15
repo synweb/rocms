@@ -104,7 +104,6 @@
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Helpers\TextCutHelper.cs" />
-    <Compile Include="Helpers\TranslitHelper.cs" />
     <Compile Include="Infrastructure\MyDateTimeModelBinder.cs" />
     <Compile Include="Helpers\GrammarHelper.cs" />
     <Compile Include="Extentions\IQueryableFreeTextExtensions.cs" />

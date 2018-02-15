@@ -20,17 +20,9 @@ namespace RoCMS.Base.Helpers
             return keywords;
         }
 
-        public static string RemoveHtml(string src)
-        {
-            string result = HttpUtility.HtmlDecode(src);
-            const string HTML_TAG_PATTERN = "<.*?>";
-            result = Regex.Replace(result, HTML_TAG_PATTERN, string.Empty, RegexOptions.Singleline);
-            return result;
-        }
-
         public static string ToSearchIndexText(string text)
         {
-            string result = RemoveHtml(text).ToLower();
+            string result = ParsingHelper.RemoveHtml(text).ToLower();
             result = Regex.Replace(result, @"\[\[.+?\]\]", string.Empty); // спецблоки разметки
             result = Regex.Replace(result, @" [—–-]+ ", " "); // тире 
             result = Regex.Replace(result, @"[,!\.?—…©®""/\\]", string.Empty); // символы

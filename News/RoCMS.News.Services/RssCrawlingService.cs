@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using AngleSharp;
@@ -127,7 +128,7 @@ namespace RoCMS.News.Services
         {
             IScheduler scheduler = StdSchedulerFactory.GetDefaultScheduler();
             scheduler.Start();
-            var feeds = _rssCrawlerGateway.Select().Where(x => x.IsEnabled);
+            var feeds = GetCrawlers().Where(x => x.IsEnabled);
             foreach (var feed in feeds)
             {
                 var job = JobBuilder.Create<RssCrawlerJob>();
@@ -135,6 +136,7 @@ namespace RoCMS.News.Services
                 {
                     {FEED, feed},
                     {ALBUM_SERVICE, _albumService},
+                    {IMAGE_SERVICE, _imageService},
                     {NEWS_ITEM_SERVICE, _newsItemService},
                     {SETTINGS_SERVICE, _settingsService},
                 });
@@ -155,7 +157,7 @@ namespace RoCMS.News.Services
             public async void Execute(IJobExecutionContext context)
             {
                 var dataMap = context.JobDetail.JobDataMap;
-                var feed = (Data.Models.RssCrawler) dataMap[FEED];
+                var feed = (RssCrawler) dataMap[FEED];
                 var albumService = (IAlbumService) dataMap[ALBUM_SERVICE];
                 var imageService = (IImageService) dataMap[IMAGE_SERVICE];
                 var newsItemService = (INewsItemService) dataMap[NEWS_ITEM_SERVICE];
@@ -167,6 +169,26 @@ namespace RoCMS.News.Services
                 {
                     if (!CheckIfItemIsNew(item, newsItemService))
                         continue;
+
+                    // проверка текста по фильтрам
+                    string title = item.Title.Text.Trim();
+                    string textWithoutHtml = ParsingHelper.RemoveHtml(item.Summary.Text).Trim();
+                    bool filterOk = true;
+                    foreach (var filter in feed.Filters)
+                    {
+                        // фильтры реализованы по логическому "И"
+                        // пройдут только те записи, которые соответствуют всем фильтрам
+                        var titleMatches = Regex.IsMatch(title, filter.Filter);
+                        var descriptionMatches = Regex.IsMatch(title, filter.Filter);
+                        // если совпадение по регулярке найдено в заголовке или описании, считаем, что фильтр пройден
+                        var match = (titleMatches || descriptionMatches);
+                        filterOk &= match;
+                        if (!match)
+                            break;
+                    }
+                    if(!filterOk)
+                        continue;
+
                     string imageId = null;
                     if (!string.IsNullOrEmpty(feed.ImageSelector))
                     {
@@ -198,11 +220,9 @@ namespace RoCMS.News.Services
                             continue;
                         }
                             
-                        var textWithoutHtml = ParsingHelper.RemoveHtml(item.Summary.Text);
                         const int NEWS_DESCRIPTION_LENGTH = 200;
                         var cuttedText = TextCutHelper.Cut(textWithoutHtml, NEWS_DESCRIPTION_LENGTH).Trim();
                         bool translitUrls = settingsService.GetSettings<bool>(nameof(Setting.TranslitEnabled));
-                        string title = item.Title.Text.Trim();
                         var relativeUrl = translitUrls
                             ? FormattingHelper.ToTranslitedUrl(title)
                             : FormattingHelper.ToRussianURL(title);

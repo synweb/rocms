@@ -1006,3 +1006,7 @@ header.head .rocms-logo {
     width: 100% !important;
     border-radius: 0 !important;
 }
+
+.monospace {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}

@@ -46,5 +46,8 @@ div.tagsinput {
 .news-content {
     height:561px !important;
     width: 100%;
-    
+}
+
+.rss-filters .filter-item {
+    margin-bottom: 5px;
 }

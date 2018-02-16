@@ -36,8 +36,6 @@
             }
         },
     };
-    //TODO
-    currentVm = vm;
     blockUI();
     $.when(
         getJSON("/api/news/settings/get", "", function (result) {
@@ -58,6 +56,18 @@
     ).always(function () {
         unblockUI();
     });
+}
+
+App.Admin.RssCrawlerFilter = function (data) {
+    var self = this;
+    self.rssCrawlerFilterId = ko.observable();
+    self.rssCrawlerId = ko.observable();
+    self.filter = ko.observable();
+    if (data) {
+        self.rssCrawlerFilterId(data.rssCrawlerFilterId);
+        self.rssCrawlerId(data.rssCrawlerId);
+        self.filter(data.filter);
+    }
 }
 
 App.Admin.RssCrawler = function(data) {
@@ -93,6 +103,12 @@ App.Admin.RssCrawler = function(data) {
     self.unsetCategory = function () {
         self.targetCategory(null);
         self.targetCategoryId(null);
+    };
+    self.addFilter = function () {
+        self.filters.push(new App.Admin.RssCrawlerFilter());
+    };
+    self.removeFilter = function (item) {
+        self.filters.remove(item);
     };
     if (data) {
         self.rssCrawlerId(data.rssCrawlerId);

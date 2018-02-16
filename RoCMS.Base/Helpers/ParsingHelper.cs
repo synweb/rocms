@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RoCMS.Base.Helpers
 {
@@ -21,7 +23,7 @@ namespace RoCMS.Base.Helpers
             T defaultValue = default(T);
             string value = dict[key];
 
-            if (string.IsNullOrWhiteSpace(value))
+            if (String.IsNullOrWhiteSpace(value))
             {
                 return defaultValue;
             }
@@ -30,7 +32,7 @@ namespace RoCMS.Base.Helpers
             if (type.IsEnum)
             {
                 int intValue;
-                if (int.TryParse(value, out intValue))
+                if (Int32.TryParse(value, out intValue))
                 {
                     return (T)Enum.ToObject(type, intValue);
                 }
@@ -41,10 +43,10 @@ namespace RoCMS.Base.Helpers
             if (type == typeof(bool) || type == typeof(bool?))
             {
                 bool bVal;
-                if (!bool.TryParse(value, out bVal))
+                if (!Boolean.TryParse(value, out bVal))
                 {
                     int iVal;
-                    if (!int.TryParse(value, out iVal))
+                    if (!Int32.TryParse(value, out iVal))
                     {
                         return defaultValue;
                     }
@@ -57,7 +59,7 @@ namespace RoCMS.Base.Helpers
             if (type == typeof(int) || type == typeof(int?))
             {
                 int iVal;
-                if (!int.TryParse(value, out iVal))
+                if (!Int32.TryParse(value, out iVal))
                 {
                     return defaultValue;
                 }
@@ -71,6 +73,14 @@ namespace RoCMS.Base.Helpers
             }
 
             throw new NotSupportedException();
+        }
+
+        public static string RemoveHtml(string src)
+        {
+            string result = HttpUtility.HtmlDecode(src);
+            const string HTML_TAG_PATTERN = "<.*?>";
+            result = Regex.Replace(result, HTML_TAG_PATTERN, String.Empty, RegexOptions.Singleline);
+            return result;
         }
     }
 }

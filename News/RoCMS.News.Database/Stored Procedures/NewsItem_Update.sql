@@ -7,7 +7,8 @@
 @Filename NVARCHAR(200),
 @VideoId varchar(50),
 @HeartId int,
-@EventDate datetime
+@EventDate datetime,
+@RssSource nvarchar(max)
 AS
 	UPDATE [News].[NewsItem] SET
 		[Text]=@Text,
@@ -17,5 +18,6 @@ AS
 		[RecordType]=@RecordType,
 		[Filename]=@Filename,
 		[VideoId]=@VideoId,
-		[EventDate]=@EventDate
+		[EventDate]=@EventDate,
+		[RssSource]=@RssSource
 	WHERE [HeartId]=@HeartId

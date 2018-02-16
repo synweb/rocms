@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <xs:schema
 		targetNamespace="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
 		elementFormDefault="qualified"
@@ -302,7 +302,7 @@
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="updatePriority" type="updatepriority_type" default="Undefined" use="optional">
+		<xs:attribute name="forBothPriority" type="forBothpriority_type" default="Undefined" use="optional">
 			<xs:annotation>
 				<xs:documentation>
 					Update priority for the node. Will be output to sitemaps XML for search engines.
@@ -335,7 +335,7 @@
 		</xs:restriction>
 	</xs:simpleType>
 
-	<xs:simpleType name="updatepriority_type">
+	<xs:simpleType name="forBothpriority_type">
 		<xs:restriction base="xs:NMTOKEN">
 			<xs:enumeration value="Undefined" />
 			<xs:enumeration value="Automatic" />

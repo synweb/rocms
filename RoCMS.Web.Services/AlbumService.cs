@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using RoCMS.Base.Helpers;
 using RoCMS.Data.Gateways;
@@ -221,6 +222,26 @@ namespace RoCMS.Web.Services
             var dataAlbum = _albumGateway.SelectOne(albumId);
             dataAlbum.WatermarkImageId = watermarkImageId;
             _albumGateway.Update(dataAlbum);
+        }
+
+        public async Task<string> DownloadImage(string url)
+        {
+            string imageId = await _imageService.DownloadImage(url);
+
+            var albums = GetAlbums();
+            const string ALBUM_NAME = "Импортированные изображения";
+            var album = albums.SingleOrDefault(x => x.Name.Equals(ALBUM_NAME));
+            int albumId;
+            if (album == null)
+            {
+                albumId = CreateAlbum(ALBUM_NAME, null);
+            }
+            else
+            {
+                albumId = album.AlbumId;
+            }
+            AddImageToAlbum(albumId, imageId);
+            return imageId;
         }
 
         public void UpdateImageTitle(int albumId, string imageId, string title)

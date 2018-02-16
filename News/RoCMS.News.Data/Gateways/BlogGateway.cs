@@ -8,10 +8,8 @@ using RoCMS.News.Data.Models;
 
 namespace RoCMS.News.Data.Gateways
 {
-    public class BlogGateway: BasicGateway<Blog>
+    public class BlogGateway: NewsBasicGateway<Blog>
     {
-        protected override string DefaultScheme => "News";
-
         public Blog SelectOneByRelativeUrl(string relativeUrl)
         {
             return Exec<Blog>(GetProcedureString(), relativeUrl);

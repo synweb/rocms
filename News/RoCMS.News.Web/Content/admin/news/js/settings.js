@@ -1,48 +1,146 @@
 ﻿function newsSettingsLoaded() {
     var vm = {
         settings: ko.validatedObservable(),
+        crawlers: ko.observableArray(),
+        addFeed: function () {
+            var item = new App.Admin.RssCrawler();
+            vm.crawlers.push(item);
+        },
+        removeFeed: function (data) {
+            vm.crawlers.remove(data);
+        },
+        save: function () {
+            var dm = ko.validatedObservable(self.settings);
+            if (dm.isValid()) {
+                blockUI();
+                $.when(
+                    vm.settings().save(),
+                    postJSON("/api/news/settings/crawlers/update",
+                        { crawlers: ko.toJS(vm.crawlers) },
+                        function(result) {
+                            if (result.succeed === true) {
+                                smartAlert("Настройки сохранены.");
+                            }
+                        })
+                ).then(
+                    function() {
+                    },
+                    function() {
+                        smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+                    }
+                ).always(function() {
+                    unblockUI();
+                });
+            } else {
+                dm.errors.showAllMessages();
+            }
+        },
     };
-
-    getJSON("/api/news/settings/get", "", function (result) {
-        vm.settings(new App.Admin.NewsSettings(result));
-    })
-        .fail(function () {
-            smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+    blockUI();
+    $.when(
+        getJSON("/api/news/settings/get", "", function (result) {
+            vm.settings(new App.Admin.NewsSettings(result));
+        }),
+        getJSON("/api/news/settings/crawlers/get", "", function (result2) {
+            result2.data.forEach(function(item) {
+                vm.crawlers.push(new App.Admin.RssCrawler(item));
+            });
         })
-        .always(function () {
-            unblockUI();
-        });
+    ).then(
+        function () {
+            ko.applyBindings(vm);
+        },
+        function () {
+            smartAlert("Произошла ошибка");
+        }
+    ).always(function () {
+        unblockUI();
+    });
+}
 
-    ko.applyBindings(vm);
+App.Admin.RssCrawlerFilter = function (data) {
+    var self = this;
+    self.rssCrawlerFilterId = ko.observable();
+    self.rssCrawlerId = ko.observable();
+    self.filter = ko.observable();
+    if (data) {
+        self.rssCrawlerFilterId(data.rssCrawlerFilterId);
+        self.rssCrawlerId(data.rssCrawlerId);
+        self.filter(data.filter);
+    }
+}
+
+App.Admin.RssCrawler = function(data) {
+    var self = this;
+    self.rssCrawlerId = ko.observable();
+    self.rssFeedUrl = ko.observable();
+    self.isEnabled = ko.observable();
+    self.checkInterval = ko.observable();
+    self.targetCategory = ko.observable();
+    self.targetCategoryId = ko.observable();
+    self.filters = ko.observableArray();
+    self.imageSelector = ko.observable();
+    self.canUnsetCategory = ko.computed(function () {
+        return (self.targetCategory());
+    });
+    self.canSetCategory = ko.computed(function () {
+        return !self.canUnsetCategory();
+    });
+    self.targetCategoryName = ko.computed(function () {
+        if (self.targetCategory() && self.targetCategory().name) {
+            return self.targetCategory().name;
+        } else {
+            return "";
+        }
+    });
+    self.setCategory = function() {
+        var self = this;
+        showNewsCategoriesDialog(function (category) {
+            self.targetCategory(category);
+            self.targetCategoryId(category.id);
+        });
+    };
+    self.unsetCategory = function () {
+        self.targetCategory(null);
+        self.targetCategoryId(null);
+    };
+    self.addFilter = function () {
+        self.filters.push(new App.Admin.RssCrawlerFilter());
+    };
+    self.removeFilter = function (item) {
+        self.filters.remove(item);
+    };
+    if (data) {
+        self.rssCrawlerId(data.rssCrawlerId);
+        self.checkInterval(data.checkInterval);
+        self.rssFeedUrl(data.rssFeedUrl);
+        self.isEnabled(data.isEnabled);
+        self.targetCategory(data.targetCategory);
+        self.targetCategoryId(data.targetCategoryId);
+        self.filters(data.filters);
+        self.imageSelector(data.imageSelector);
+    } else {
+        self.checkInterval(30);
+        self.isEnabled(true);
+    }
 }
 
 App.Admin.NewsSettings = function (data) {
     var self = this;
-
-    self.blogUrl = ko.observable().extend({required: true});
-
+    self.blogUrl = ko.observable().extend({ required: true });
+    self.save = function () {
+        blockUI();
+        return postJSON("/api/news/settings/update",
+            ko.toJS(self),
+            function (result) {
+                if (result.succeed === true) {
+                }
+            });
+    };
+    
     if (data) {
         if (data.blogUrl) {
             self.blogUrl(data.blogUrl);
         }
     }
-
-    self.save = function () {
-        var dm = ko.validatedObservable(self);
-        if (dm.isValid()) {
-            blockUI();
-            postJSON("/api/news/settings/update", ko.toJS(self), function(result) {
-                    if (result.succeed === true) {
-                    }
-                })
-                .fail(function() {
-                    smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
-                })
-                .always(function() {
-                    unblockUI();
-                });
-        } else {
-            dm.errors.showAllMessages();
-        }
-    };
 }

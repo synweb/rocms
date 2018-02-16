@@ -121,6 +121,7 @@
     <Compile Include="Data\IdValueGateway.cs" />
     <Compile Include="Data\RandomInts.cs" />
     <Compile Include="Data\RandomIntsGateway.cs" />
+    <Compile Include="Helpers\CollectionMergeHelperTests.cs" />
     <Compile Include="Helpers\FormattingHelperTests.cs" />
     <Compile Include="Models\ResultModelTests.cs" />
     <Compile Include="Models\ThumbnailSizeTests.cs" />

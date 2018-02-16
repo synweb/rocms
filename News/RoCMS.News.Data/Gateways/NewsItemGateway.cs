@@ -6,10 +6,8 @@ using NewsItem = RoCMS.News.Data.Models.NewsItem;
 
 namespace RoCMS.News.Data.Gateways
 {
-    public class NewsItemGateway : BasicGateway<Models.NewsItem>
+    public class NewsItemGateway : NewsBasicGateway<Models.NewsItem>
     {
-        protected override string DefaultScheme => "News";
-
         public ICollection<int> SelectRelated(int newsId, bool withSubnews, int count, bool onlyPosted = false)
         {
             return ExecSelect<int>(GetProcedureString(), new { newsId, withSubnews, count, onlyPosted });

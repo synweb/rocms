@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Web;
 using RoCMS.Web.Contract.Models;
 
@@ -18,5 +19,6 @@ namespace RoCMS.Web.Contract.Services
         ThumbnailSize? GetSmallestThumbnailSize();
         void ApplyWatermark(string imageId, string watermarkImageId);
         void RestoreImage(string imageId);
+        Task<string> DownloadImage(string url);
     }
 }

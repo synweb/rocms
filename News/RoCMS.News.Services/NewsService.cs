@@ -52,6 +52,13 @@ namespace RoCMS.News.Services
 
             Mapper.CreateMap<TagStat, Contract.Models.TagStat>();
 
+            Mapper.CreateMap<Data.Models.RssCrawler, Contract.Models.RssCrawler>()
+                .ForMember(x => x.Filters, x => x.Ignore())
+                .ForMember(x => x.TargetCategory, x => x.Ignore());
+            Mapper.CreateMap<Contract.Models.RssCrawler, Data.Models.RssCrawler>();
+            Mapper.CreateMap<Data.Models.RssCrawlerFilter, Contract.Models.RssCrawlerFilter>();
+            Mapper.CreateMap<Contract.Models.RssCrawlerFilter, Data.Models.RssCrawlerFilter>();
+
             Mapper.AssertConfigurationIsValid();
         }
     }

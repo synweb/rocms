@@ -16,11 +16,84 @@
                 <input type="text" class="form-control" data-bind="value: blogUrl">
             </div>
         </div>
-        <div class="form-group text-center">
-            <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
-        </div>
     </form>
     <div class="alert-warning text-center">Для вступления изменений в силу необходимо перезагрузить сайт.</div>
+    
+    <h2>RSS-импорт</h2>
+    <div>
+
+        <div class="feed-settings" data-bind="foreach: crawlers">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Url фида</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: rssFeedUrl">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Интервал проверки (мин.)</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: checkInterval">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Селектор изображения</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control monospace" data-bind="value: imageSelector">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Рубрика</label>
+
+                    <div class="col-lg-8 form-control-static">
+                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: setCategory, visible: canSetCategory"><em class="fa fa-plus"></em></a>
+
+                        <span class="category-item">
+                            <span data-bind="text: targetCategoryName"></span>
+                            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: unsetCategory, visible: canUnsetCategory"><em class="fa fa-trash-o"></em></a>
+                        </span>
+                    </div>
+                </div>
+                
+                
+                <script type="text/html" id="rss-filter-template">
+                    <div class="row filter-item">
+                        <div class="col-xs-10">
+                            <input type="text" class="form-control monospace" data-bind="value: filter">
+                        </div>
+                        <div class="col-xs-2">
+                            <div class="form-control-static">
+                                <a class="remove-item btn btn-danger btn-xs" data-bind="click: $parent.removeFilter" title="Удалить фильтр"><i class="fa fa-trash-o"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+
+                <div class="form-group rss-filters">
+                    <label class="control-label col-lg-4">Фильтры</label>
+                    <div class="col-lg-8 form-control-static">
+                        <div class="filter-items" data-bind="template: { name: 'rss-filter-template', foreach: filters }"></div>
+                        <a class="btn btn-xs btn-success btn-add" onclick="true" data-bind="click: addFilter"><em class="fa fa-plus"></em></a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-offset-4 col-lg-8">
+                        <button type="button" class="btn btn-sm btn-danger" data-bind="click: function (e) { if(!confirmRemoval()) { return false;} $root.removeFeed($data);}, clickBubble: false">Удалить фид</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-offset-4 col-lg-8">
+                <button type="button" class="btn btn-success" data-bind="click: addFeed">Добавить фид</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group text-center">
+        <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
+    </div>
     @JsInline(@<script>
         $(function () {
             newsSettingsLoaded();

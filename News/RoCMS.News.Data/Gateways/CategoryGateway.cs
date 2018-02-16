@@ -10,8 +10,6 @@ namespace RoCMS.News.Data.Gateways
 {
     public class CategoryGateway: NewsBaseGateway
     {
-        protected override string DefaultScheme => "News";
-
         public ICollection<Category> Select(int? parentId=null)
         {
             return ExecSelect<Category>(GetProcedureString(), parentId);

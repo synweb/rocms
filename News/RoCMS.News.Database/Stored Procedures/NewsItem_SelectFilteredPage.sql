@@ -19,7 +19,7 @@ AS
     [Text]         NVARCHAR (MAX) NOT NULL,
     [PostingDate]  DATETIME       NOT NULL,
     [Description]  NVARCHAR (MAX) NOT NULL,
-    [AuthorId]     INT            NOT NULL,
+    [AuthorId]     INT            NULL,
     [ImageId]      VARCHAR (30)   NULL,
 	[RecordType] VARCHAR(20) NOT NULL DEFAULT 'Default',
 	[Filename] NVARCHAR(200) NULL,
@@ -27,11 +27,12 @@ AS
     [BlogId] INT NULL, 
     [EventDate] DATETIME NULL, 
 	[ViewCount] BIGINT NOT NULL DEFAULT 0,
-	[CreationDate] DATETIME NOT NULL
+	[CreationDate] DATETIME NOT NULL,
+	[RssSource] nvarchar(max) NULL
 	)
 	
-		INSERT INTO @news ([HeartId],  [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], [CreationDate] )
-	SELECT DISTINCT ni.[HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], h.[CreationDate]
+		INSERT INTO @news ([HeartId],  [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], [CreationDate], [RssSource] )
+	SELECT DISTINCT ni.[HeartId], [Text], [PostingDate], [Description], [AuthorId], [ImageId], [RecordType], [Filename], [VideoId], [BlogId], [EventDate], [ViewCount], h.[CreationDate], [RssSource]
 		FROM [News].[NewsItem] ni join [dbo].[Heart] h on ni.HeartId=h.HeartId
 			JOIN @NewsIds ids ON ni.[HeartId]=ids.Val
 		WHERE 

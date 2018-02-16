@@ -6,12 +6,12 @@
         <div class="cart-goods-item">
             <div class="row">
                 <div class="col-sm-2 col-xs-4">
-                    <a data-bind="attr: { href: '/Shop/Goods/' + goodsItem.goodsId(), title: goodsItem.name }">
+                    <a data-bind="attr: { href: '/Shop/Goods/' + goodsItem.heartId(), title: goodsItem.name }">
                         <img class="img-responsive" data-bind="attr: { src: '/Gallery/Thumbnail/' + goodsItem.mainImageId(), alt: goodsItem.name, title: goodsItem.name}" />
                     </a>
                 </div>
                 <div class="col-xs-8">
-                    <div class="cart-goods-item-header"><a data-bind="attr: { href: '/Shop/Goods/' + goodsItem.goodsId(), title: goodsItem.name }, text: packId() != null ? goodsItem.name() + ' ' + pack.packInfo.name() : goodsItem.name"></a></div>
+                    <div class="cart-goods-item-header"><a data-bind="attr: { href: '/Shop/Goods/' + goodsItem.heartId(), title: goodsItem.name }, text: packId() != null ? goodsItem.name() + ' ' + pack.packInfo.name() : goodsItem.name"></a></div>
                     <div class="small">Артикул: <span data-bind="text: goodsItem.article"></span></div>
                 </div>
                 <div class="col-sm-2 col-xs-12">
@@ -23,7 +23,7 @@
                         <button class="btn plus" data-bind="click: function(){ $root.increaseItemCount($data, true ); }">+</button>
                     </div>
                     <div class="small">
-                        <a href="#" data-bind="click: function(){ $root.removeItem(goodsItem.goodsId()); }">Удалить</a>
+                        <a href="#" data-bind="click: function(){ $root.removeItem(goodsItem.heartId()); }">Удалить</a>
                     </div>
                 </div>
             </div>

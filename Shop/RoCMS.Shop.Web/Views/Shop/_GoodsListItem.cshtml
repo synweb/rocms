@@ -12,7 +12,7 @@
     <div class="goods-item">
 
         <img src="@Url.Action("Thumbnail", "Gallery", new { id = goodsItem.MainImageId })" alt="@goodsItem.Description" class="img-responsive">
-        <a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})">@goodsItem.Name</a>
+        <a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})">@goodsItem.Name</a>
         @if (goodsItem.Actions.Any())
         {
             <div class="goods-tag">
@@ -30,7 +30,7 @@
         <p>@goodsItem.Description</p>
         <div class="buttons cart">
             <a href="#" class="btn btn-light">Купить в один клик</a>
-            <a href="#" class="btn btn-dark pull-right" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.GoodsId, 1) }"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+            <a href="#" class="btn btn-dark pull-right" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.HeartId, 1) }"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
         </div>
     </div>
 </div>
@@ -93,7 +93,7 @@
                 </sppan>
                 
 
-                <a class="green-btn" data-bind="click: function(){ addItem(@goodsItem.GoodsId, 1) }" href="#">Купить</a>
+                <a class="green-btn" data-bind="click: function(){ addItem(@goodsItem.HeartId, 1) }" href="#">Купить</a>
             </p>
         </div>
     </div>*@

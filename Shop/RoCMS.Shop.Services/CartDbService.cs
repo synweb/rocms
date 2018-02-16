@@ -38,12 +38,12 @@ namespace RoCMS.Shop.Services
             res.CartItems = Mapper.Map<List<CartItem>>(items);
             foreach (var cartItem in res.CartItems)
             {
-                cartItem.GoodsItem = _shopService.GetGoods(cartItem.GoodsId);
+                cartItem.GoodsItem = _shopService.GetGoods(cartItem.HeartId);
             }
             return res;
         }
 
-        public void AddItemToCart(Guid cartId, int goodsId, int count, int? packId)
+        public void AddItemToCart(Guid cartId, int heartId, int count, int? packId)
         {
             var cart = _cartGateway.SelectOne(cartId);
             using (var ts = new TransactionScope())
@@ -56,7 +56,7 @@ namespace RoCMS.Shop.Services
                 else
                 {
                     var item = _cartItemGateway.SelectByCart(cartId)
-                        .SingleOrDefault(x => x.GoodsId == goodsId && x.CartId == cartId
+                        .SingleOrDefault(x => x.HeartId == heartId && x.CartId == cartId
                                               && (x.PackId == packId || x.PackId == null && packId == null));
                     if (item != null)
                     {
@@ -70,7 +70,7 @@ namespace RoCMS.Shop.Services
                 var newCartItem = new Data.Models.CartItem()
                 {
                     CartId = cartId,
-                    GoodsId = goodsId,
+                    HeartId = heartId,
                     Quantity = count,
                     PackId = packId
                 };
@@ -79,9 +79,9 @@ namespace RoCMS.Shop.Services
             }
         }
 
-        public void RemoveItemFromCart(Guid cartId, int goodsId, int? packId)
+        public void RemoveItemFromCart(Guid cartId, int heartId, int? packId)
         {
-            var cartItem = _cartItemGateway.SelectByCart(cartId).FirstOrDefault(x => x.CartId == cartId && x.GoodsId == goodsId
+            var cartItem = _cartItemGateway.SelectByCart(cartId).FirstOrDefault(x => x.CartId == cartId && x.HeartId == heartId
                     && (x.PackId == packId || x.PackId == null && packId == null));
             if(cartItem != null)
             {
@@ -89,9 +89,9 @@ namespace RoCMS.Shop.Services
             }
         }
 
-        public void UpdatItemCount(Guid cartId, int goodsId, int count, int? packId)
+        public void UpdatItemCount(Guid cartId, int heartId, int count, int? packId)
         {
-            var cartItem = _cartItemGateway.SelectByCart(cartId).FirstOrDefault(x => x.CartId == cartId && x.GoodsId == goodsId
+            var cartItem = _cartItemGateway.SelectByCart(cartId).FirstOrDefault(x => x.CartId == cartId && x.HeartId == heartId
                     && (x.PackId == packId || x.PackId == null && packId == null));
             if(cartItem == null)
                 return;

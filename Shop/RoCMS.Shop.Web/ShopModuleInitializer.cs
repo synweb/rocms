@@ -54,13 +54,13 @@ namespace RoCMS.Shop.Web
                     {
                         SearchItemKey = item.SearchKeyName,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.GoodsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Name),
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 2,
                         Text = item.Description,
-                        Url = item.CannonicalUrl
+                        Url = item.CanonicalUrl
                     };
                 },
                 x =>
@@ -70,13 +70,13 @@ namespace RoCMS.Shop.Web
                     {
                         SearchItemKey = item.SearchKeyDescription,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.GoodsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Description),
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 1,
                         Text = item.Description,
-                        Url = item.CannonicalUrl
+                        Url = item.CanonicalUrl
                     };
                 },
                 x =>
@@ -86,13 +86,13 @@ namespace RoCMS.Shop.Web
                     {
                         SearchItemKey = item.SearchKeyHtmlDescription,
                         EntityName = x.GetType().FullName,
-                        EntityId = item.GoodsId.ToString(),
+                        EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.HtmlDescription),
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 1,
                         Text = item.Description,
-                        Url = item.CannonicalUrl
+                        Url = item.CanonicalUrl
                     };
                 }
             });
@@ -104,8 +104,8 @@ namespace RoCMS.Shop.Web
 
             var shopService = DependencyResolver.Current.GetService<IShopService>();
             var categoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
+            var heartService = DependencyResolver.Current.GetService<IHeartService>();
 
-            
             // для товаров и категорий
             BreadCrumbsHelper.RegisterPattern(new BreadCrumbPattern(
                 "^/" + SHOP_URL + @"(/[a-zA-Z_0-9а-яА-Я-]+)+", url =>
@@ -148,7 +148,8 @@ namespace RoCMS.Shop.Web
                         }
                         else  // последний элемент - Товар или категория
                         {
-                            if (shopService.GoodsExists(element))
+                            var heart = heartService.GetHeart(element);
+                            if (heart.Type == typeof(GoodsItem).FullName)
                             {
                                 var goodsItem = shopService.GetGoods(element, false);
                                 res.Add(new BreadCrumb()
@@ -158,7 +159,7 @@ namespace RoCMS.Shop.Web
                                     Url = url
                                 });
                             }
-                            else if (categoryService.CategoryExists(element))
+                            else if (heart.Type == typeof(Category).FullName)
                             {
                                 var cat = categoryService.GetCategory(element);
                                 res.Add(new BreadCrumb()

@@ -5,9 +5,9 @@ namespace RoCMS.Shop.Data.Gateways
 {
     public class GoodsReviewGateway: ShopBasicGateway<GoodsReview>
     {
-        public ICollection<GoodsReview> SelectByGoods(int goodsId)
+        public ICollection<GoodsReview> SelectByGoods(int heartId)
         {
-            return ExecSelect<GoodsReview>(GetProcedureString(), goodsId);
+            return ExecSelect<GoodsReview>(GetProcedureString(), heartId);
         }
     }
 }

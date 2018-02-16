@@ -4,11 +4,11 @@
 @ParentCategoryId int,
 @Description nvarchar(MAX),
 @SortOrder int,
-@MetaDescription nvarchar(MAX),
+
 @ImageId varchar(30),
 @Hidden bit,
-@RelativeUrl nvarchar(300),
-@CategoryId int
+
+@HeartId int
 AS
 	UPDATE [Shop].[Category] SET
 		[Guid]=@Guid,
@@ -16,8 +16,8 @@ AS
 		[ParentCategoryId]=@ParentCategoryId,
 		[Description]=@Description,
 		[SortOrder]=@SortOrder,
-		[MetaDescription]=@MetaDescription,
+		
 		[ImageId]=@ImageId,
-		[Hidden]=@Hidden,
-		[RelativeUrl]=@RelativeUrl
-	WHERE [CategoryId]=@CategoryId
+		[Hidden]=@Hidden
+		
+	WHERE [HeartId]=@HeartId

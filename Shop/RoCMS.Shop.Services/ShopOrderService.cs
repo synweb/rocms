@@ -64,7 +64,7 @@ namespace RoCMS.Shop.Services
             var gios = Mapper.Map<List<GoodsInOrder>>(dataGios);
             foreach (var goodsInOrder in gios)
             {
-                goodsInOrder.Goods = _shopService.GetGoods(goodsInOrder.GoodsId);
+                goodsInOrder.Goods = _shopService.GetGoods(goodsInOrder.HeartId);
             }
             order.GoodsInOrder = gios;
         }

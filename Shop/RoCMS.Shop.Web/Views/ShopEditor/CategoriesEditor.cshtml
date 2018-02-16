@@ -64,11 +64,12 @@
 
 
     <script type="text/html" id="categoryTemplate">
-        <div class="shop-category">
+        <div class="shop-category" data-bind="with: dm;">
             <form class="form-horizontal">
 
                 <ul id="myTab" class="nav nav-tabs" role="tablist">
                     <li class="active"><a href="#mainCatSettings" role="tab" data-toggle="tab">Главные настройки</a></li>
+                    <li class=""><a href="#categoryHeartSettings" role="tab" data-toggle="tab">Ядро</a></li>
                     <li class=""><a href="#orderFormSettings" role="tab" data-toggle="tab">Форма заказа</a></li>
                 </ul>
 
@@ -79,12 +80,6 @@
                                 <label class="control-label col-xs-2">Название</label>
                                 <div class="col-xs-10">
                                     <input type="text" class="form-control" data-bind="value: name">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-xs-2">Относительный URL</label>
-                                <div class="col-xs-10">
-                                    <input type="text" class="form-control" data-bind="value: relativeUrl">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -110,12 +105,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-xs-2">Meta Description</label>
-                                <div class="col-xs-10">
-                                    <textarea class="category-meta-description form-control" data-bind="value: metaDescription"></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="control-label col-xs-2">Изображение</label>
                                 <div class="col-xs-10">
 
@@ -129,6 +118,9 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="tab-pane fade" id="categoryHeartSettings">
+                        @Html.Partial("~/Views/Admin/_HeartEditor.cshtml")
                     </div>
                     <div class="tab-pane fade" id="orderFormSettings">
                         <div class="specs-rows" data-bind="template: { name: 'spec-item-category-template', foreach: orderFormSpecs }">

@@ -1,9 +1,9 @@
 ﻿CREATE PROCEDURE [Shop].[CartItem_Insert]
 @CartId uniqueidentifier,
-@GoodsId int,
+@HeartId int,
 @PackId int,
 @Quantity int
 AS
-	INSERT INTO [Shop].[CartItem] ([CartId], [GoodsId], [PackId], [Quantity])
-	VALUES (@CartId, @GoodsId, @PackId, @Quantity)
+	INSERT INTO [Shop].[CartItem] ([CartId], [HeartId], [PackId], [Quantity])
+	VALUES (@CartId, @HeartId, @PackId, @Quantity)
 	SELECT @@IDENTITY

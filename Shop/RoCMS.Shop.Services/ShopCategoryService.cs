@@ -22,15 +22,18 @@ namespace RoCMS.Shop.Services
 
         private readonly ISettingsService _settingsService;
         private readonly IShopActionService _shopActionService;
+        private readonly IHeartService _heartService;
+
         private readonly CategoryGateway _categoryGateway = new CategoryGateway();
         private readonly SpecCategoryGateway _specCategoryGateway = new SpecCategoryGateway();
         private readonly GoodsCategoryGateway _goodsCategoryGateway = new GoodsCategoryGateway();
         private readonly GoodsItemGateway _goodsItemGateway = new GoodsItemGateway();
-        public ShopCategoryService(ISettingsService settingsService, IShopActionService shopActionService)
+        public ShopCategoryService(ISettingsService settingsService, IShopActionService shopActionService, IHeartService heartService)
         {
             InitCache("ShopCategoryService");
             _settingsService = settingsService;
             _shopActionService = shopActionService;
+            _heartService = heartService;
         }
 
         public Category GetCategory(int categoryId)
@@ -38,8 +41,8 @@ namespace RoCMS.Shop.Services
             // добавить кэширование
             Data.Models.Category category = _categoryGateway.SelectOne(categoryId);
             var res = Mapper.Map<Category>(category);
-            res.CannonicalUrl = GetCategoryCannonicalUrl(category.RelativeUrl);
-            FillCanonicalUrls(res.ChildrenCategories);
+
+            FillData(res);
             return res;
         }
 
@@ -48,26 +51,39 @@ namespace RoCMS.Shop.Services
             // добавить кэширование
             Data.Models.Category category = _categoryGateway.SelectOneByRelativeUrl(relativeUrl);
             var res = Mapper.Map<Category>(category);
-            res.CannonicalUrl = GetCategoryCannonicalUrl(category.RelativeUrl);
-            FillCanonicalUrls(res.ChildrenCategories);
+            FillData(res);
+
             return res;
         }
 
         public int CreateCategory(Category category)
         {
+
+            category.Type = category.GetType().FullName;
+
             var dataCategory = Mapper.Map<Data.Models.Category>(category);
-            int id = _categoryGateway.Insert(dataCategory);
-            RemoveObjectFromCache("Categories");
-            return id;
+
+            using(var ts = new TransactionScope())
+            {
+                int id = category.HeartId = dataCategory.HeartId = _heartService.CreateHeart(category);
+                _categoryGateway.Insert(dataCategory);
+                RemoveObjectFromCache("Categories");
+                ts.Complete();
+                return id;
+            }
+
         }
 
         public void UpdateCategory(Category category)
         {
             var dataRec = Mapper.Map<Data.Models.Category>(category);
-            var oldSpecCats = _specCategoryGateway.SelectByCategory(category.CategoryId);
+            var oldSpecCats = _specCategoryGateway.SelectByCategory(category.HeartId);
 
             using (var ts = new TransactionScope())
             {
+
+                _heartService.UpdateHeart(category);
+
                 _categoryGateway.Update(dataRec);
                 foreach (var spec in oldSpecCats.Where(x => category.OrderFormSpecs.All(y => x.SpecId != y.SpecId)).ToList())
                 {
@@ -78,39 +94,43 @@ namespace RoCMS.Shop.Services
                 {
                     _specCategoryGateway.Insert(new SpecCategory()
                     {
-                        CategoryId = category.CategoryId,
+                        CategoryId = category.HeartId,
                         SpecId = spec.SpecId
                     });
                 }
                 ts.Complete();
             }
             RemoveObjectFromCache("Categories");
-            RemoveObjectFromCache(GetCategoryCannonicalUrlCacheKey(category.RelativeUrl));
-            RemoveObjectFromCache(GetCategoryIDCannonicalUrlCacheKey(category.CategoryId));
+            RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(category.RelativeUrl));
+            RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(category.HeartId));
         }
 
-        public void DeleteCategory(int categoryId)
+        public void DeleteCategory(int heartId)
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                Data.Models.Category dataCategory = _categoryGateway.SelectOne(categoryId);
-                var goodsIds = _goodsCategoryGateway.SelectByCategory(categoryId).Select(x => x.GoodsId);
+                Data.Models.Category dataCategory = _categoryGateway.SelectOne(heartId);
+                var goodsIds = _goodsCategoryGateway.SelectByCategory(heartId).Select(x => x.GoodsId);
                 foreach (var goodsId in goodsIds)
                 {
                     _goodsItemGateway.Delete(goodsId);
                 }
-                var childCats = _categoryGateway.Select(categoryId);
+                var childCats = _categoryGateway.Select(heartId);
                 foreach (var child in childCats)
                 {
-                    _categoryGateway.Delete(child.CategoryId);
+                    _categoryGateway.Delete(child.HeartId);
                 }
-                _categoryGateway.Delete(categoryId);
+                _categoryGateway.Delete(heartId);
+                var heart = _heartService.GetHeart(heartId);
+                _heartService.DeleteHeart(heartId);
+
+
                 RemoveObjectFromCache("Categories");
-                RemoveObjectFromCache(GetCategoryCannonicalUrlCacheKey(dataCategory.RelativeUrl));
-                RemoveObjectFromCache(GetCategoryIDCannonicalUrlCacheKey(dataCategory.CategoryId));
+                RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(heart.RelativeUrl));
+                RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(dataCategory.HeartId));
 
                 int? lastCat = _settingsService.GetSettings<int?>("LastGoodsCategory");
-                if (lastCat.HasValue && lastCat.Value == categoryId)
+                if (lastCat.HasValue && lastCat.Value == heartId)
                 {
                     _settingsService.Set<int?>("LastGoodsCategory", null);
                 }
@@ -128,9 +148,11 @@ namespace RoCMS.Shop.Services
                 foreach (var category in cats)
                 {
                     FillChildren(category);
+                    FillData(category);
                 }
+                
                 SortCategories(cats);
-                FillCannonicalUrls(cats);
+
                 return cats;
             });
         }
@@ -142,14 +164,14 @@ namespace RoCMS.Shop.Services
             var category = _categoryGateway.SelectOne(categoryId);
             while (category != null)
             {
-                result.Add(Mapper.Map<Category>(category));
-                category = category.ParentCategoryId != null ? _categoryGateway.SelectOne(category.ParentCategoryId.Value) : null;
+                var cat = Mapper.Map<Category>(category);
+                FillData(cat);
+                result.Add(cat);
+                
+                //category = category.ParentCategoryId != null ? _categoryGateway.SelectOne(category.ParentCategoryId.Value) : null;
             }
             result.Reverse();
-            foreach (var cat in result)
-            {
-                cat.CannonicalUrl = GetCategoryCannonicalUrl(cat.RelativeUrl);
-            }
+
             return result;
         }
 
@@ -160,7 +182,7 @@ namespace RoCMS.Shop.Services
                 int i = 0;
                 foreach (var cat in categories)
                 {
-                    var category = _categoryGateway.SelectOne(cat.CategoryId);
+                    var category = _categoryGateway.SelectOne(cat.HeartId);
                     category.SortOrder = i;
                     _categoryGateway.Update(category);
                     i++;
@@ -169,6 +191,9 @@ namespace RoCMS.Shop.Services
                         UpdateCategoriesSortOrder(cat.ChildrenCategories);
                     }
                 }
+
+                RemoveObjectFromCache("Categories");
+
                 ts.Complete();
             }
         }
@@ -188,46 +213,34 @@ namespace RoCMS.Shop.Services
             throw new NotImplementedException();
         }
 
-        public string GetCategoryCannonicalUrl(int categoryId)
-        {
-            string cacheKey = GetCategoryIDCannonicalUrlCacheKey(categoryId);
-            return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
-            {
-                var cat = GetCategory(categoryId);
-                return GetCategoryCannonicalUrl(cat.RelativeUrl);
-            });
-        }
-        public string GetCategoryCannonicalUrl(string relativeUrl)
-        {
-            string cacheKey = GetCategoryCannonicalUrlCacheKey(relativeUrl);
-            return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
-            {
-                string prefix = GetCannonicalCategoryUrlPrefix(relativeUrl);
-                return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
-            });
-        }
-
-        private void FillCannonicalUrls(ICollection<Category> categories)
-        {
-            foreach (var category in categories)
-            {
-                category.CannonicalUrl = GetCategoryCannonicalUrl(category.RelativeUrl);
-                if (category.ChildrenCategories.Any())
-                {
-                    FillCannonicalUrls(category.ChildrenCategories);
-                }
-            }
-        }
+        //public string GetCategoryCanonicalUrl(int categoryId)
+        //{
+        //    string cacheKey = GetCategoryIDCanonicalUrlCacheKey(categoryId);
+        //    return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
+        //    {
+        //        var cat = GetCategory(categoryId);
+        //        return GetCategoryCanonicalUrl(cat.RelativeUrl);
+        //    });
+        //}
+        //public string GetCategoryCanonicalUrl(string relativeUrl)
+        //{
+        //    string cacheKey = GetCategoryCanonicalUrlCacheKey(relativeUrl);
+        //    return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
+        //    {
+        //        string prefix = GetCannonicalCategoryUrlPrefix(relativeUrl);
+        //        return String.IsNullOrEmpty(prefix) ? relativeUrl : String.Format("{0}/{1}", prefix, relativeUrl);
+        //    });
+        //}
 
         private void FillChildren(Category category, bool recursive = true)
         {
-            var children = _categoryGateway.Select(category.CategoryId);
+            var children = _categoryGateway.Select(category.HeartId);
             var resChildren = Mapper.Map<ICollection<Category>>(children);
             category.ChildrenCategories = resChildren;
             foreach (var child in resChildren)
             {
-                child.CannonicalUrl = GetCategoryCannonicalUrl(child.CategoryId);
-                child.ParentCategory = new IdNamePair<int>(category.CategoryId, category.Name);
+                
+                child.ParentCategory = new IdNamePair<int>(category.HeartId, category.Name);
                 if (recursive)
                 {
                     FillChildren(child);
@@ -250,46 +263,59 @@ namespace RoCMS.Shop.Services
             RemoveObjectFromCache("Categories");
         }
 
-        private string GetCategoryCannonicalUrlCacheKey(string url)
+        private string GetCategoryCanonicalUrlCacheKey(string url)
         {
             return String.Format(CATEGORY_CANNONICAL_URL_CACHE_KEY, url);
         }
 
-        private string GetCategoryIDCannonicalUrlCacheKey(int categoryId)
+        private string GetCategoryIDCanonicalUrlCacheKey(int categoryId)
         {
             return String.Format(CATEGORY_ID_CANNONICAL_URL_CACHE_KEY, categoryId);
         }
 
-        private string GetCannonicalCategoryUrlPrefix(string relativeUrl)
-        {
-            string res = String.Empty;
-            bool hasParent = false;
-            {
-                var rec = _categoryGateway.SelectOneByRelativeUrl(relativeUrl);
-                if (rec.ParentCategoryId.HasValue)
-                {
-                    var parent = _categoryGateway.SelectOne(rec.ParentCategoryId.Value);
-                    res = parent.RelativeUrl;
-                    hasParent = parent.ParentCategoryId.HasValue;
-                }
-            }
-            if (String.IsNullOrEmpty(res) || !hasParent)
-            {
-                return res;
-            }
-            return String.Format("{0}/{1}", GetCannonicalCategoryUrlPrefix(res), res);
-        }
+        //private string GetCannonicalCategoryUrlPrefix(string relativeUrl)
+        //{
+        //    string res = String.Empty;
+        //    bool hasParent = false;
+        //    {
+        //        var rec = _categoryGateway.SelectOneByRelativeUrl(relativeUrl);
+        //        if (rec.ParentCategoryId.HasValue)
+        //        {
+        //            var parent = _categoryGateway.SelectOne(rec.ParentCategoryId.Value);
+        //            res = parent.RelativeUrl;
+        //            hasParent = parent.ParentCategoryId.HasValue;
+        //        }
+        //    }
+        //    if (String.IsNullOrEmpty(res) || !hasParent)
+        //    {
+        //        return res;
+        //    }
+        //    return String.Format("{0}/{1}", GetCannonicalCategoryUrlPrefix(res), res);
+        //}
 
-        private void FillCanonicalUrls(ICollection<Category> categories)
+        //private void FillCanonicalUrls(ICollection<Category> categories)
+        //{
+        //    foreach (var category in categories)
+        //    {
+        //        category.CanonicalUrl = GetCategoryCanonicalUrl(category.RelativeUrl);
+        //        if (category.ChildrenCategories.Any())
+        //        {
+        //            FillCanonicalUrls(category.ChildrenCategories);
+        //        }
+        //    }
+        //}
+
+        public void FillData(Category category)
         {
-            foreach (var category in categories)
+            var heart = _heartService.GetHeart(category.HeartId);
+            category.FillHeart(heart);
+            category.CanonicalUrl = _heartService.GetCanonicalUrl(category.HeartId);
+
+            foreach(var child in category.ChildrenCategories)
             {
-                category.CannonicalUrl = GetCategoryCannonicalUrl(category.RelativeUrl);
-                if (category.ChildrenCategories.Any())
-                {
-                    FillCanonicalUrls(category.ChildrenCategories);
-                }
+                FillData(child);
             }
+
         }
     }
 }

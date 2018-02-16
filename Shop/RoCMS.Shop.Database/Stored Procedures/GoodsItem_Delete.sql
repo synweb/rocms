@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [Shop].[GoodsItem_Delete]
-@GoodsId int
+@HeartId int
 AS
 	UPDATE [Shop].[GoodsItem]
 	SET Deleted=1
-	WHERE [GoodsId]=@GoodsId
+	WHERE [HeartId]=@HeartId

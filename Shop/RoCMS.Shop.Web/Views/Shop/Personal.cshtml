@@ -155,12 +155,12 @@
 
                                 <tr>
                                     <td class="thumb">
-                                        <a href="/Shop/Goods/@goodsItem.GoodsId">
+                                        <a href="/Shop/Goods/@goodsItem.HeartId">
                                             <img src="/Gallery/Thumbnail/@goodsItem.Goods.MainImageId" alt="@goodsItem.Goods.Name" />
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/Shop/Goods/@goodsItem.GoodsId">
+                                        <a href="/Shop/Goods/@goodsItem.HeartId">
                                             @(goodsItem.PackId.HasValue && goodsItem.Goods.Packs.Any(x => x.PackInfo.PackId == goodsItem.PackId) ?
                                                       String.Format("{0} {1}", goodsItem.Goods.Name, goodsItem.Goods.Packs.First(x => x.PackInfo.PackId == goodsItem.PackId).PackInfo.Name) : goodsItem.Goods.Name)
                                         </a>

@@ -8,6 +8,6 @@
 
         public decimal? Price { get; set; }
         public int PackId { get; set; }
-        public int GoodsId { get; set; }
+        public int HeartId { get; set; }
     }
 }

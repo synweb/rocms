@@ -30,7 +30,7 @@ namespace RoCMS.Shop.Services
             var goodsIds = _compatibleSetGoodsGateway.SelectByCompatibleSet(set.CompatibleSetId);
             var goodsIdNames =
                 goodsIds
-                .Select(x => new IdNamePair<int>(x.GoodsId, _goodsItemGateway.SelectOne(x.GoodsId).Name))
+                .Select(x => new IdNamePair<int>(x.HeartId, _goodsItemGateway.SelectOne(x.HeartId).Name))
                 .ToList();
             set.CompatibleGoods = goodsIdNames;
         }
@@ -46,7 +46,7 @@ namespace RoCMS.Shop.Services
 
                     _compatibleSetGoodsGateway.Insert(new CompatibleSetGoods()
                     {
-                        GoodsId = compatibleGood.ID,
+                        HeartId = compatibleGood.ID,
                         CompatibleSetId = id
                     });
                 }
@@ -64,7 +64,7 @@ namespace RoCMS.Shop.Services
             var newGoods = compatibleSet.CompatibleGoods;
             foreach (var oldGoodsItem in oldGoods)
             {
-                if (newGoods.All(x => x.ID != oldGoodsItem.GoodsId))
+                if (newGoods.All(x => x.ID != oldGoodsItem.HeartId))
                 {
                     _compatibleSetGoodsGateway.Delete(oldGoodsItem);
                 }
@@ -73,10 +73,10 @@ namespace RoCMS.Shop.Services
             {
                 var compatibleSetGoodsItem = new CompatibleSetGoods()
                 {
-                    GoodsId = newGoodsItem.ID,
+                    HeartId = newGoodsItem.ID,
                     CompatibleSetId = compatibleSet.CompatibleSetId
                 };
-                if (oldGoods.All(x => x.GoodsId != newGoodsItem.ID))
+                if (oldGoods.All(x => x.HeartId != newGoodsItem.ID))
                 {
                     _compatibleSetGoodsGateway.Insert(compatibleSetGoodsItem);
                 }

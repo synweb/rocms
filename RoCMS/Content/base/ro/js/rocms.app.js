@@ -83,6 +83,55 @@ if (typeof(ko) != "undefined") {
         }
     };
 
+    ko.bindingHandlers.tagsinput = {
+        init: function (element, valueAccessor, allBindings) {
+            var options = allBindings().tagsinputOptions || {};
+            var value = valueAccessor();
+            var valueUnwrapped = ko.unwrap(value);
+
+            var el = $(element);
+
+            el.tagsinput(options);
+
+            for (var i = 0; i < valueUnwrapped.length; i++) {
+                el.tagsinput('add', valueUnwrapped[i]);
+            }
+
+            el.on('itemAdded', function (event) {
+                if (valueUnwrapped.indexOf(event.item) === -1) {
+                    value.push(event.item);
+                }
+            })
+
+            el.on('itemRemoved', function (event) {
+                value.remove(event.item);
+            });
+        },
+        update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+            var value = valueAccessor();
+            var valueUnwrapped = ko.unwrap(value);
+
+            var el = $(element);
+            var prev = el.tagsinput('items');
+
+            var added = valueUnwrapped.filter(function (i) { return prev.indexOf(i) === -1; });
+            var removed = prev.filter(function (i) { return valueUnwrapped.indexOf(i) === -1; });
+
+            // Remove tags no longer in bound model
+            for (var i = 0; i < removed.length; i++) {
+                el.tagsinput('remove', removed[i]);
+            }
+
+            // Refresh remaining tags
+            el.tagsinput('refresh');
+
+            // Add new items in model as tags
+            for (i = 0; i < added.length; i++) {
+                el.tagsinput('add', added[i]);
+            }
+        }
+    };
+
     ko.validation.rules['isPhone'] = {
         validator: function (value) {
             var phone = value;

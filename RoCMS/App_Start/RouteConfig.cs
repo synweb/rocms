@@ -59,12 +59,12 @@ namespace RoCMS
 
             routes.MapRoute(
                 name: "Thumbnail",
-                url: "Thumbnail/{id}",
-                defaults: new { controller = "Image", action = "Thumbnail" });
+                url: "Gallery/Thumbnail/{id}",
+                defaults: new { controller = "Gallery", action = "Thumbnail", id = UrlParameter.Optional });
             routes.MapRoute(
                 name: "Image",
-                url: "Image/{id}",
-                defaults: new { controller = "Image", action = "Image" });
+                url: "Gallery/Image/{id}",
+                defaults: new { controller = "Gallery", action = "Image", id = UrlParameter.Optional });
             routes.MapRoute(
                 name: "SetAlbumWatermark",
                 url: "api/album/{albumId}/{watermarkImageId}/watermark/set",

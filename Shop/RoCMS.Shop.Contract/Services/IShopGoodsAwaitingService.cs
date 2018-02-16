@@ -9,7 +9,7 @@ namespace RoCMS.Shop.Contract.Services
 {
     public interface IShopGoodsAwaitingService
     {
-        void SendNotifications(int goodsId);
+        void SendNotifications(int heartId);
 
         void SendNotifications(int[] goodsId);
 

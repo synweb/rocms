@@ -3,7 +3,7 @@
     public class GoodsReview
     {
         public int GoodsReviewId { get; set; }
-        public int GoodsId { get; set; }
+        public int HeartId { get; set; }
         public GoodsItem GoodsItem { get; set; }
         public System.DateTime CreationDate { get; set; }
         public string Author { get; set; }

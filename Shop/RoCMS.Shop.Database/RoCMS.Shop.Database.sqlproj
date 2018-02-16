@@ -244,8 +244,6 @@
     <Build Include="Stored Procedures\Action_Category_SelectByCategory.sql" />
     <Build Include="Stored Procedures\GoodsReview_SelectByGoods.sql" />
     <Build Include="Stored Procedures\GoodsItem_Exists.sql" />
-    <Build Include="Stored Procedures\GoodsItem_ExistsByRelativeUrl.sql" />
-    <Build Include="Stored Procedures\GoodsItem_SelectOneByRelativeUrl.sql" />
     <Build Include="Stored Procedures\GoodsItem_SelectNew.sql" />
     <Build Include="Stored Procedures\Goods_Spec_Update.sql" />
     <Build Include="Stored Procedures\Goods_Pack_Update.sql" />

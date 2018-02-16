@@ -73,277 +73,271 @@
 
 
 <div>
-<div data-bind="with: filters">
+    <div data-bind="with: filters">
 
-    <div class="row" style="margin-bottom: 5px;">
-        <div class="col-xs-4" style="white-space: nowrap;">
-            <a class="btn" href="#" data-bind="click: $root.selectCategory, attr: {title: categoryName}" style="width: 200px; text-overflow: ellipsis; overflow: hidden">
-                <span data-bind="text: categoryName"></span>
-            </a>
-            <a class="btn btn-danger btn-xs" data-bind="click: clearCategory, if: categoryName != 'Выберите категорию', visible: categoryName() != 'Выберите категорию'"><em class="fa fa-times"></em></a>
+        <div class="row" style="margin-bottom: 5px;">
+            <div class="col-xs-4" style="white-space: nowrap;">
+                <a class="btn" href="#" data-bind="click: $root.selectCategory, attr: {title: categoryName}" style="width: 200px; text-overflow: ellipsis; overflow: hidden">
+                    <span data-bind="text: categoryName"></span>
+                </a>
+                <a class="btn btn-danger btn-xs" data-bind="click: clearCategory, if: categoryName != 'Выберите категорию', visible: categoryName() != 'Выберите категорию'"><em class="fa fa-times"></em></a>
+            </div>
+            <div class="col-xs-6">
+                <input placeholder="Поисковый запрос" class="form-control" type="text" data-bind="value: searchPattern">
+            </div>
+            <div class="col-xs-2">
+                <a style="float: right;" class="btn btn-danger" data-bind="click: clearFilter"><em class="fa fa-trash-o"></em>&nbsp;Очистить</a>
+            </div>
         </div>
-        <div class="col-xs-6"><input class="form-control" type="text" data-bind="value: searchPattern">
-        </div>
-        <div class="col-xs-2">
-            <a style="float: right;" class="btn btn-danger" data-bind="click: clearFilter"><em class="fa fa-trash-o"></em>&nbsp;Очистить</a>
+        <div class="row">
+            <div class="col-xs-4">
+                <select class="form-control" data-bind="options: $root.manufacturers(), optionsText: 'name', optionsValue: 'manufacturerId', value: manufacturerIds"></select>
+            </div>
+            @*<div class="col-xs-4">
+                    <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'manufacturerId', value: supplierIds"></select>
+                </div>*@
+            <div class="col-xs-4">
+                <select class="form-control" data-bind="value: sortBy">
+                    <option value="Article">@SortCriterion.Article.Description()</option>
+                    <option value="CreationDateDesc">@SortCriterion.CreationDateDesc.Description()</option>
+                    <option value="CreationDateAsc">@SortCriterion.CreationDateAsc.Description()</option>
+                    <option value="PriceAsc">@SortCriterion.PriceAsc.Description()</option>
+                    <option value="PriceDesc">@SortCriterion.PriceDesc.Description()</option>
+                    <option value="RatingAsc">@SortCriterion.RatingAsc.Description()</option>
+                    <option value="RatingDesc">@SortCriterion.RatingDesc.Description()</option>
+                    @*<option value="Relevance">@SortCriterion.Relevance.Description()</option>*@
+                </select>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-4">
-            <select class="form-control" data-bind="options: $root.manufacturers(), optionsText: 'name', optionsValue: 'manufacturerId', value: manufacturerIds"></select>
-        </div>
-        @*<div class="col-xs-4">
-                <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'manufacturerId', value: supplierIds"></select>
-            </div>*@
-        <div class="col-xs-4">
-            <select class="form-control" data-bind="value: sortBy">
-                <option value="Article">@SortCriterion.Article.Description()</option>
-                <option value="CreationDateDesc">@SortCriterion.CreationDateDesc.Description()</option>
-                <option value="CreationDateAsc">@SortCriterion.CreationDateAsc.Description()</option>
-                <option value="PriceAsc">@SortCriterion.PriceAsc.Description()</option>
-                <option value="PriceDesc">@SortCriterion.PriceDesc.Description()</option>
-                <option value="RatingAsc">@SortCriterion.RatingAsc.Description()</option>
-                <option value="RatingDesc">@SortCriterion.RatingDesc.Description()</option>
-                @*<option value="Relevance">@SortCriterion.Relevance.Description()</option>*@
-            </select>
+    <div class="box">
+        <header data-bind="with: filters">
+            <div class="toolbar">
+                <a class="btn btn-xs btn-success" href="#" data-bind="click: $root.createGoodsItem">
+                    Создать
+                </a>
+            </div>
+            @*<h5 data-bind="text: description()"></h5>*@
+        </header>
+        <div class="in body">
+            <div class="row" data-bind="template: { name: 'goods-list-item-template', foreach: goods }">
+
+            </div>
         </div>
     </div>
-</div>
-<div class="box">
-    <header data-bind="with: filters">
-        <div class="toolbar">
-            <a class="btn btn-xs" href="#" data-bind="click: $root.createGoodsItem">
-                Добавить новый товар
-            </a>
-        </div>
-        @*<h5 data-bind="text: description()"></h5>*@
-    </header>
-    <div class="in body">
-        <div class="row" data-bind="template: { name: 'goods-list-item-template', foreach: goods }">
-
-        </div>
-    </div>
-</div>
 
 
-<script type="text/x-jquery-tmpl" id="category-item-template">
-    <span class="category-item">
+    <script type="text/x-jquery-tmpl" id="category-item-template">
+        <span class="category-item">
             <span data-bind="text: name"></span>
             <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeCategory($data, $parent);}"><em class="fa fa-trash-o"></em></a>
         </span>
-</script>
+    </script>
 
-<script type="text/x-jquery-tmpl" id="spec-item-goods-template">
-    <div class="row spec-item">
-        <div class="col-xs-5">
-            <span data-bind="text: spec.name"></span>
+    <script type="text/x-jquery-tmpl" id="spec-item-goods-template">
+        <div class="row spec-item">
+            <div class="col-xs-5">
+                <span data-bind="text: spec.name"></span>
+            </div>
+            <div class="col-xs-4">
+                <input class="form-control" type="text" data-bind="value: inputValue, style: {display: spec.valueType() === 'Enum' ? 'none': 'block'}" />
+                <select class="form-control" data-bind="options: spec.acceptableValues() ? spec.acceptableValues().split(','):'', value: value, style: {display: spec.valueType() === 'Enum' ? 'block': 'none'}"></select>
+            </div>
+            <div class="col-xs-1">
+                <input type="checkbox" data-bind="checked: isPrimary" />
+            </div>
+            <div class="col-xs-2">
+                <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeSpec($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+            </div>
         </div>
-        <div class="col-xs-4">
-            <input class="form-control" type="text" data-bind="value: inputValue, style: {display: spec.valueType() === 'Enum' ? 'none': 'block'}"/>
-            <select class="form-control" data-bind="options: spec.acceptableValues() ? spec.acceptableValues().split(','):'', value: value, style: {display: spec.valueType() === 'Enum' ? 'block': 'none'}"></select>
-        </div>
-        <div class="col-xs-1">
-            <input type="checkbox" data-bind="checked: isPrimary"/>
-        </div>
-        <div class="col-xs-2">
-            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeSpec($data, $parent);}"><em class="fa fa-trash-o"></em></a>
-        </div>
-    </div>
-</script>
+    </script>
 
-<script type="text/x-jquery-tmpl" id="action-item-goods-template">
-    <span class="action-item name-block">
+    <script type="text/x-jquery-tmpl" id="action-item-goods-template">
+        <span class="action-item name-block">
             <span data-bind="text: name"></span>
             <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeAction($data, $parent);}"><em class="fa fa-trash-o"></em></a>
         </span>
-</script>
+    </script>
 
-<script type="text/x-jquery-tmpl" id="pack-item-goods-template">
-    <span class="pack-item name-block">
+    <script type="text/x-jquery-tmpl" id="pack-item-goods-template">
+        <span class="pack-item name-block">
             <span data-bind="text: packInfo.name"></span>
             <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removePack($data, $parent);}"><em class="fa fa-trash-o"></em></a>
         </span>
-</script>
+    </script>
 
-<script type="text/x-jquery-tmpl" id="compatible-goods-template">
-    <span class="compatible-goods-item name-block">
+    <script type="text/x-jquery-tmpl" id="compatible-goods-template">
+        <span class="compatible-goods-item name-block">
             <span data-bind="text: name"></span>
             <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeCompatibleGoods($data, $parent);}"><em class="fa fa-trash-o"></em></a>
         </span>
-</script>
+    </script>
 
-<script type="text/x-jquery-tmpl" id="goods-list-item-template">
-    <div class="goodsItem col-xs-4" data-bind="click: $root.selectGoods">
-        <div class="box">
-            <header style="white-space: nowrap;">
-                <div class="toolbar">
-                    <a data-bind="click: edit, clickBubble: false, attr:{title: name} " class="btn btn-xs btn-warning" onclick="true"><i class="fa fa-pencil"></i></a>
+    <script type="text/x-jquery-tmpl" id="goods-list-item-template">
+        <div class="goodsItem col-xs-4 col-sm-3 col-md-2" data-bind="click: $root.selectGoods">
+            <div class="box">
+                <header style="white-space: nowrap;">
+                    <div class="toolbar">
+                        <a data-bind="click: edit, clickBubble: false, attr:{title: name} " class="btn btn-xs btn-warning" onclick="true"><i class="fa fa-pencil"></i></a>
 
-                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
-                    {
-                        <a data-bind="click: function () {if(!confirmRemoval()) { return false;}  remove($data, $parent); }, clickBubble: false" class="btn btn-xs btn-danger" onclick="true"><i class="fa fa-trash-o"></i></a>
-                    }
-                </div>
-                <h5 data-bind="text: name"></h5>
-            </header>
-            <div class="body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <div class="col-xs-12" style="text-align: center;">
-                            <img alt="Изображение" data-bind="thumbnailSrc: mainImageId"/>
-                        </div>
+                        @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                        {
+                            <a data-bind="click: function () {if(!confirmRemoval()) { return false;}  remove($data, $parent); }, clickBubble: false" class="btn btn-xs btn-danger" onclick="true"><i class="fa fa-trash-o"></i></a>
+                        }
                     </div>
-                    @*<div class="form-group">
+                    <h5 data-bind="text: name"></h5>
+                </header>
+                <div class="body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-xs-12" style="text-align: center;">
+                                <img alt="Изображение" data-bind="thumbnailSrc: mainImageId" />
+                            </div>
+                        </div>
+                        @*<div class="form-group">
                                 <label class="control-label col-xs-2" for="price">Цена</label>
                                 <div class="col-xs-10">
                                     <input data-bind="value: price, click: function(){}, clickBubble: false" id="price" class="form-control" type="text">
                                 </div>
                             </div>*@
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-</script>
+    </script>
 
-<script type="text/x-jquery-tmpl" id="goods-item-template">
-    <form class="form-horizontal goods-item-template" data-bind="with: vm" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
+    <script type="text/x-jquery-tmpl" id="goods-item-template">
+        <form class="form-horizontal goods-item-template" data-bind="with: vm" role="dialog" aria-hidden="true" aria-labelledby="myModalLabel">
 
-        <ul id="myTab" class="nav nav-tabs" role="tablist">
-            <li class="active"><a href="#mainGoodsSettings" role="tab" data-toggle="tab">Главные настройки</a></li>
-            <li class=""><a href="#goodsDescription" role="tab" data-toggle="tab">Описание</a></li>
-            <li class=""><a href="#goodsImages" role="tab" data-toggle="tab">Изображения</a></li>
-            <li class=""><a href="#goodsSpecs" role="tab" data-toggle="tab">Характеристики</a></li>
-            <li class=""><a href="#additionalGoodsSettings" role="tab" data-toggle="tab">Прочее</a></li>
-        </ul>
+            <ul id="myTab" class="nav nav-tabs" role="tablist">
+                <li class="active"><a href="#mainGoodsSettings" role="tab" data-toggle="tab">Главные настройки</a></li>
+                <li class=""><a href="#goodsDescription" role="tab" data-toggle="tab">Описание</a></li>
+                <li class=""><a href="#heart" role="tab" data-toggle="tab">Ядро</a></li>
+                <li class=""><a href="#goodsImages" role="tab" data-toggle="tab">Изображения</a></li>
+                <li class=""><a href="#goodsSpecs" role="tab" data-toggle="tab">Характеристики</a></li>
+                <li class=""><a href="#additionalGoodsSettings" role="tab" data-toggle="tab">Прочее</a></li>
 
-        <div class="tab-content">
-            <div class="tab-pane fade active in" id="mainGoodsSettings" data-bind="validationOptions: {insertMessages: false}">
-                <div class="form-group">
-                    <label class="control-label col-xs-3" for="name">Наименование</label>
-                    <div class="col-xs-9">
-                        <input data-bind="value: name" id="name" class="form-control" type="text">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Относительный URL</label>
-                    <div class="col-xs-9">
-                        <input type="text" class="form-control" data-bind="value: relativeUrl">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3" for="price">Категории</label>
-                    <div class="col-xs-8">
-                        <div class="row categories-row" data-bind="template: { name: 'category-item-template', foreach: categories }">
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="mainGoodsSettings" data-bind="validationOptions: {insertMessages: false}">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" for="name">Наименование</label>
+                        <div class="col-xs-9">
+                            <input data-bind="value: name" id="name" class="form-control" type="text">
                         </div>
                     </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Нет в наличии</label>
-                    <div class="col-xs-9">
-                        <input type="checkbox" data-bind="checked: notAvailable"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Изображение</label>
-                    <div class="col-xs-9">
-                        <img alt="Изображение" data-bind="click: pickLogo, thumbnailSrc: mainImageId"/>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-xs-2" for="price">Производитель</label>
-                    <div class="col-xs-10">
-                        <select class="form-control" data-bind="options: $root.manufacturers, optionsText: 'name', optionsValue: 'manufacturerId', value: manufacturerId"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2" for="price">Поставщик</label>
-                    <div class="col-xs-10">
-                        <select class="form-control" data-bind="options: $root.manufacturers, optionsText: 'name', optionsValue: 'manufacturerId', value: supplierId"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2" for="price">Цена</label>
-                    <div class="col-xs-2">
-                        <input data-bind="value: price" id="price" class="form-control" type="text">
-                    </div>
-                    <div class="col-xs-3">
-                        <select class="form-control" data-bind="options: $root.currencies, optionsText: 'shortName', optionsValue: 'currencyId', value: currency"></select>
-                    </div>
-                    <div class="col-xs-1" style="padding: 7px;">за</div>
-                    <div class="col-xs-4">
-                        <select class="form-control" data-bind="options: $root.packs, optionsText: 'name', optionsValue: 'packId', value: basePackId"></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Артикул</label>
-                    <div class="col-xs-10">
-                        <input id="article" data-bind="value: article" class="form-control" type="text"/>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="goodsDescription">
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Описание</label>
-                    
-                    <div class="col-xs-10">
-
-                        @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "goodsHtmlDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = false })
-                        
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Ключевые слова</label>
-                    <div class="col-xs-10">
-                        <input class="form-control" data-bind="value: keywords" type="text">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Короткое описание</label>
-                    <div class="col-xs-10">
-                        <textarea class="form-control goods-short-description" data-bind="value: description"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2" for="">Файл</label>
-                    <div class="col-xs-9">
-                        <div class="form-control-static">
-                            <span data-bind="text: filename"></span>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3" for="price">Категории</label>
+                        <div class="col-xs-8">
+                            <div class="row categories-row" data-bind="template: { name: 'category-item-template', foreach: categories }">
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
                         </div>
                     </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: pickFile, visible: !(filename())"><em class="fa fa-plus"></em></a>
-                        <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function(){ filename(null); }, visible: filename()"><em class="fa fa-times"></em></a>
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Нет в наличии</label>
+                        <div class="col-xs-9">
+                            <input type="checkbox" data-bind="checked: notAvailable" />
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="goodsImages">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Изображение</label>
+                        <div class="col-xs-9">
+                            <img alt="Изображение" data-bind="click: pickLogo, thumbnailSrc: mainImageId" />
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label class="control-label col-xs-3">Дополнительные изображения</label>
-                    <div class="col-xs-8">
-                        <ul class="extendedImages" data-bind="foreach: images">
-                            <li><img alt="Изображение" data-bind="click: function() {$parent.removeImage($data, $parent);}, thumbnailSrc: $data"/></li>
-                        </ul>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2" for="price">Производитель</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" data-bind="options: $root.manufacturers, optionsText: 'name', optionsValue: 'manufacturerId', value: manufacturerId"></select>
+                        </div>
                     </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addImage"><em class="fa fa-plus"></em></a>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2" for="price">Поставщик</label>
+                        <div class="col-xs-10">
+                            <select class="form-control" data-bind="options: $root.manufacturers, optionsText: 'name', optionsValue: 'manufacturerId', value: supplierId"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2" for="price">Цена</label>
+                        <div class="col-xs-2">
+                            <input data-bind="value: price" id="price" class="form-control" type="text">
+                        </div>
+                        <div class="col-xs-3">
+                            <select class="form-control" data-bind="options: $root.currencies, optionsText: 'shortName', optionsValue: 'currencyId', value: currency"></select>
+                        </div>
+                        <div class="col-xs-1" style="padding: 7px;">за</div>
+                        <div class="col-xs-4">
+                            <select class="form-control" data-bind="options: $root.packs, optionsText: 'name', optionsValue: 'packId', value: basePackId"></select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Артикул</label>
+                        <div class="col-xs-10">
+                            <input id="article" data-bind="value: article" class="form-control" type="text" />
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="tab-pane fade" id="heart">
+                    @Html.Partial("~/Views/Admin/_HeartEditor.cshtml")
+                </div>
+                <div class="tab-pane fade" id="goodsDescription">
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Описание</label>
 
-           <div class="tab-pane fade" id="goodsSpecs">
-                <div class="">
-                    <div class="row text-center" style="margin-bottom:20px;">
-                        <div class="col-xs-5"><strong>Название</strong></div>
-                        <div class="col-xs-4"><strong>Значение</strong></div>
-                        <div class="col-xs-1"><strong title="Появится в карточке товара">Основная</strong></div>
-                        <div class="col-xs-2"></div>
+                        <div class="col-xs-10">
+
+                            @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "goodsHtmlDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = false })
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Короткое описание</label>
+                        <div class="col-xs-10">
+                            <textarea class="form-control goods-short-description" data-bind="value: description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2" for="">Файл</label>
+                        <div class="col-xs-9">
+                            <div class="form-control-static">
+                                <span data-bind="text: filename"></span>
+                            </div>
+                        </div>
+                        <div class="col-xs-1">
+                            <a class="btn btn-xs btn-success" onclick="true" data-bind="click: pickFile, visible: !(filename())"><em class="fa fa-plus"></em></a>
+                            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function(){ filename(null); }, visible: filename()"><em class="fa fa-times"></em></a>
+                        </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="goodsImages">
+
+                    <div class="form-group">
+                        <label class="control-label col-xs-3">Дополнительные изображения</label>
+                        <div class="col-xs-8">
+                            <ul class="extendedImages" data-bind="foreach: images">
+                                <li><img alt="Изображение" data-bind="click: function() {$parent.removeImage($data, $parent);}, thumbnailSrc: $data" /></li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-1">
+                            <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addImage"><em class="fa fa-plus"></em></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="goodsSpecs">
+                    <div class="">
+                        <div class="row text-center" style="margin-bottom:20px;">
+                            <div class="col-xs-5"><strong>Название</strong></div>
+                            <div class="col-xs-4"><strong>Значение</strong></div>
+                            <div class="col-xs-1"><strong title="Появится в карточке товара">Основная</strong></div>
+                            <div class="col-xs-2"></div>
+                        </div>
+                    </div>
                     <div class="specs-rows" data-bind="template: { name: 'spec-item-goods-template', foreach: goodsSpecs }">
                     </div>
 
@@ -351,9 +345,9 @@
                 </div>
 
 
-            <div class="tab-pane fade" id="additionalGoodsSettings">
+                <div class="tab-pane fade" id="additionalGoodsSettings">
 
-                <div class="form-group">
+                    <div class="form-group">
                         <label class="control-label col-xs-2" for="price">Акции</label>
                         <div class="col-xs-9">
                             <div class="row actions-row name-blocks-row" data-bind="template: { name: 'action-item-goods-template', foreach: actions }">
@@ -383,11 +377,11 @@
                             <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCompatibleGoods"><em class="fa fa-plus"></em></a>
                         </div>
                     </div>
+                </div>
             </div>
-        </div>
 
-    </form>
-</script>
+        </form>
+    </script>
 
     @Js("Content/admin/vendor/FU/short")
     @JsInline(@<script>
@@ -396,25 +390,27 @@
             InitFileUploader();
         });
     </script>)
-@JsInline(@<script type="text/javascript">
+    @JsInline(@<script type="text/javascript">
 
 
-               var lastCategoryId = '@(catId.HasValue ? catId.Value.ToString() : "")';
-               var lastCategoryName = '@catName';
+        var lastCategoryId = '@(catId.HasValue ? catId.Value.ToString() : "")';
+        var lastCategoryName = '@catName';
 
-               var lastManufacturerId = '@(manId.HasValue ? manId.Value.ToString() : "")';
-               var lastManufacturerName = '@manName';
+        var lastManufacturerId = '@(manId.HasValue ? manId.Value.ToString() : "")';
+        var lastManufacturerName = '@manName';
 
-               var lastSupplierId = '@(supId.HasValue ? supId.Value.ToString() : "")';
-               var lastSupplierName = '@supName';
+        var lastSupplierId = '@(supId.HasValue ? supId.Value.ToString() : "")';
+        var lastSupplierName = '@supName';
 
-               var lastSortBy = '@sortBy.ToString()';
-        
-               @if (!Request.IsAjaxRequest())
+        var lastSortBy = '@sortBy.ToString()';
+
+        @if (!Request.IsAjaxRequest())
                {<text>
-               $(function() {
-                   goodsEditorLoaded();
-               });
-               </text>}
-           </script>)
+        $(function () {
+            goodsEditorLoaded(function (item) {
+                item.edit();
+            });
+        });
+        </text>}
+    </script>)
 </div>

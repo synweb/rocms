@@ -138,6 +138,9 @@
     <Compile Include="ApiControllers\ShopSettingsApiController.cs" />
     <Compile Include="ApiControllers\SpecApiController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Content Include="Content\admin\shop\js\base.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\admin\shop\js\currencies.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -546,6 +549,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shop\_GoodsPage.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ShopEditor\GoodsItemEditor.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

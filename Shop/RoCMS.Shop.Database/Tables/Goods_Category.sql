@@ -2,8 +2,8 @@
     [GoodsId]       INT NOT NULL,
     [CategoryId] INT NOT NULL,
     CONSTRAINT [PK_GoodsCategory] PRIMARY KEY NONCLUSTERED ([GoodsId] ASC, [CategoryId] ASC),
-    CONSTRAINT [FK_GoodsCategory_Category] FOREIGN KEY ([CategoryId]) REFERENCES [Shop].[Category] ([CategoryId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_GoodsCategory_Goods] FOREIGN KEY ([GoodsId]) REFERENCES [Shop].[GoodsItem] ([GoodsId]) ON DELETE CASCADE
+    CONSTRAINT [FK_GoodsCategory_Category] FOREIGN KEY ([CategoryId]) REFERENCES [Shop].[Category] ([HeartId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_GoodsCategory_Goods] FOREIGN KEY ([GoodsId]) REFERENCES [Shop].[GoodsItem] ([HeartId]) ON DELETE CASCADE
 );
 
 

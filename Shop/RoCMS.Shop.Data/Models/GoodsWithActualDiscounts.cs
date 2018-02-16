@@ -4,7 +4,7 @@ namespace RoCMS.Shop.Data.Models
 {
     public class GoodsWithActualDiscounts
     {
-        public int GoodsId { get; set; }
+        public int HeartId { get; set; }
         public string Name { get; set; }
         public Nullable<int> ManufacturerId { get; set; }
         public Nullable<decimal> Price { get; set; }

@@ -14,4 +14,46 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="AwaitingId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="bc748c91-1e6c-4c39-861a-121191f4ffb2" ChangeDateTime="01/09/2018 13:46:20">
+    <Property Name="ElementName" Value="[Shop].[GoodsItem].[Name]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[GoodsItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ShortName" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="0757c0c1-8559-4fe5-8d45-f7679e119d18" ChangeDateTime="01/09/2018 14:06:28">
+    <Property Name="ElementName" Value="[Shop].[GoodsItem].[ShortName]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[GoodsItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Name" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f8153b1f-322a-4f13-9f50-c6c29fcabf53" ChangeDateTime="01/09/2018 14:14:20">
+    <Property Name="ElementName" Value="[Shop].[GoodsAwaiting].[GoodsId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[GoodsAwaiting]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="238120cc-3053-41b9-a764-99157ada294d" ChangeDateTime="01/09/2018 14:16:03">
+    <Property Name="ElementName" Value="[Shop].[Goods_Category].[HeartId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[Goods_Category]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="GoodsId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9bcc6302-e8a0-4f4c-b3ff-a53885d9223a" ChangeDateTime="01/09/2018 14:32:40">
+    <Property Name="ElementName" Value="[Shop].[CartItem].[GoodsId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[CartItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="73618cfa-def8-400a-be8f-556840108b62" ChangeDateTime="02/09/2018 14:18:11">
+    <Property Name="ElementName" Value="[Shop].[Category].[CategoryId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[Category]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
 </Operations>

@@ -331,16 +331,16 @@ var shopCartViewModel = {
         });
     },
 
-    addItem: function (goodsId, count, packId) {
-        postJSON("/api/shop/cart/" + goodsId + "/" + packId + "/" + count + "/add", "", function (result) {
+    addItem: function (heartId, count, packId) {
+        postJSON("/api/shop/cart/" + heartId + "/" + packId + "/" + count + "/add", "", function (result) {
             if (result.succeed === true) {
                 shopCartViewModel.refreshCartSummary();
             }
         });
     },
 
-    changeItemCount: function (goodsId, count, packId) {
-        postJSON("/api/shop/cart/" + goodsId + "/" + count + "/change", "", function (result) {
+    changeItemCount: function (heartId, count, packId) {
+        postJSON("/api/shop/cart/" + heartId + "/" + count + "/change", "", function (result) {
             if (result.succeed === true) {
                 shopCartViewModel.refreshCartSummary();
                 shopCartViewModel.refreshCart();
@@ -357,7 +357,7 @@ var shopCartViewModel = {
         increase === true ? count++ : count--;
 
         cartItem.quantity(count);
-        postJSON("/api/shop/cart/" + cartItem.goodsItem.goodsId() + "/" + cartItem.packId() + "/" + count + "/change", "", function (result) {
+        postJSON("/api/shop/cart/" + cartItem.goodsItem.heartId() + "/" + cartItem.packId() + "/" + count + "/change", "", function (result) {
             if (result.succeed === true) {
                 shopCartViewModel.refreshCartSummary();
                 shopCartViewModel.refreshCart();
@@ -365,8 +365,8 @@ var shopCartViewModel = {
         });
     },
 
-    removeItem: function (goodsId, packId) {
-        postJSON("/api/shop/cart/" + goodsId + "/" + packId + "/remove", "", function (result) {
+    removeItem: function (heartId, packId) {
+        postJSON("/api/shop/cart/" + heartId + "/" + packId + "/remove", "", function (result) {
             if (result.succeed === true) {
                 shopCartViewModel.refreshCartSummary();
                 shopCartViewModel.refreshCart();

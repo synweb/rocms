@@ -3,10 +3,10 @@
 	[CartItemId] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
 	[CreationDate] DATETIME NOT NULL DEFAULT GETUTCDATE(),
 	[CartId] UNIQUEIDENTIFIER NOT NULL,
-	[GoodsId] INT NOT NULL,
+	[HeartId] INT NOT NULL,
 	[PackId] INT NULL,
 	[Quantity] INT NOT NULL DEFAULT 1, 
     CONSTRAINT [FK_CartItem_Cart] FOREIGN KEY ([CartId]) REFERENCES [Shop].[Cart]([CartId]) ON DELETE CASCADE, 
-    CONSTRAINT [FK_CartItem_Goods] FOREIGN KEY ([GoodsId]) REFERENCES [Shop].[GoodsItem]([GoodsId]) ON DELETE CASCADE, 
+    CONSTRAINT [FK_CartItem_Goods] FOREIGN KEY ([HeartId]) REFERENCES [Shop].[GoodsItem]([HeartId]) ON DELETE CASCADE, 
     CONSTRAINT [FK_CartItem_Pack] FOREIGN KEY ([PackId]) REFERENCES [Shop].[Pack]([PackId])
 )

@@ -40,7 +40,7 @@ namespace RoCMS.Shop.Web.ApiControllers
                             UserId = _principalResolver.GetUserIdIfAuthenticated(),
                             Contact = model.Email,
                             ContactType = ContactType.Email,
-                            GoodsId = model.GoodsId
+                            HeartId = model.HeartId
                         };
                         _shopGoodsAwaitingService.CreateGoodsAwaiting(ga);
                     }
@@ -58,7 +58,7 @@ namespace RoCMS.Shop.Web.ApiControllers
                             UserId = _principalResolver.GetUserIdIfAuthenticated(),
                             Contact = model.Phone,
                             ContactType = ContactType.Phone,
-                            GoodsId = model.GoodsId
+                            HeartId = model.HeartId
                         };
                         _shopGoodsAwaitingService.CreateGoodsAwaiting(ga);
                     }
@@ -78,7 +78,7 @@ namespace RoCMS.Shop.Web.ApiControllers
 
         public class CreateAwaitingModel
         {
-            public int GoodsId { get; set; }
+            public int HeartId { get; set; }
             public string Email { get; set; }
             public string Phone { get; set; }
         }

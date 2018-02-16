@@ -19,6 +19,20 @@
 
     List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
 
+    if (category != null)
+    {
+        ViewBag.Title = category.Title;
+        ViewBag.Header = category.BreadcrumbsTitle;
+
+        ViewBag.Styles = category.Styles;
+        ViewBag.Scripts = category.Scripts;
+
+        ViewBag.DisableIndexation = category.Noindex;
+
+        ViewBag.CanonicalUrl = Url.RouteUrl(typeof(Category).FullName, new {relativeUrl = category.CanonicalUrl});
+    }
+
+
     //Для отделения тысяч в ценах
 
 }
@@ -28,15 +42,7 @@
 
 @if (category != null)
 {
-    <div class="row">
-        <div class="col-xs-12">
-            @if (breadCrumbs.Any())
-            {
-                Html.RenderPartial("_BreadCrumbs", breadCrumbs);
-            }
-            <h1>@category.Name</h1>
-        </div>
-    </div>
+    <h1>@category.Name</h1>
     @Html.Partial("_CategoriesPage", categoryId)
 }
 

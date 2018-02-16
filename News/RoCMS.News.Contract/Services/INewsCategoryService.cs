@@ -21,7 +21,7 @@ namespace RoCMS.News.Contract.Services
         void UpdateCategoriesSortOrder(ICollection<Category> categories);
         bool CategoryExists(int id);
         bool CategoryExists(string relativeUrl);
-        string GetCategoryCannonicalUrl(int categoryId);
+        string GetCategoryCanonicalUrl(int categoryId);
         
     }
 }

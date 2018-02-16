@@ -1,39 +1,38 @@
 ﻿@using System.Globalization
 @using RoCMS.Base.ForWeb.Models
+@using RoCMS.Shop.Contract.Models
 @using RoCMS.Shop.Contract.Services
 @model string
 @{
     var shopService = DependencyResolver.Current.GetService<IShopService>();
 
     var goodsItem = shopService.GetGoods(Model);
-    int goodsId = goodsItem.GoodsId;
+    int heartId = goodsItem.HeartId;
 
     if (!Request.IsAjaxRequest())
     {
         Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
     }
 
-    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
+    
 
     NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalDigits = 0 };
 
-    ViewBag.Title = goodsItem.Name;
+    ViewBag.Title = goodsItem.Title;
+    ViewBag.Header = goodsItem.BreadcrumbsTitle;
+
+    ViewBag.Styles = goodsItem.Styles;
+    ViewBag.Scripts = goodsItem.Scripts;
+
+    ViewBag.DisableIndexation = goodsItem.Noindex;
+
+    ViewBag.CanonicalUrl = Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl = goodsItem.CanonicalUrl });
+
+
     var compatibles = goodsItem.CompatibleGoods.SelectMany(x => x.CompatibleGoods);
 }
 
 
-@*@if (breadCrumbs.Any())
-{
-    Html.RenderPartial("_BreadCrumbs", breadCrumbs);
-}*@
-
-
-<div class="breadcrumbs">
-    <ul>
-        <li><a href="#"><em class="fa fa-home"></em></a></li>
-        <li><a href="#">Каталог</a></li>
-    </ul>
-</div>
 <h1>@goodsItem.Name</h1>
 <div class="goods">
     <div class="row">

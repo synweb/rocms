@@ -10,8 +10,8 @@ NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", Number
 var currencyService = DependencyResolver.Current.GetService<IShopCurrencyService>();
 
 
-    <div class="image"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})"><img src="@Url.Action("Thumbnail", "Gallery" , new { id=goodsItem.MainImageId })" title="@goodsItem.Name" alt="@goodsItem.Name"></a></div>
-    <div class="name"><a href="@Url.Action("Goods", "Shop" , new { id=goodsItem.GoodsId})">@goodsItem.Name</a></div>
+    <div class="image"><a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})"><img src="@Url.Action("Thumbnail", "Gallery" , new { id=goodsItem.MainImageId })" title="@goodsItem.Name" alt="@goodsItem.Name"></a></div>
+    <div class="name"><a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})">@goodsItem.Name</a></div>
 
         <div class="price">
             @if (goodsItem.HasDiscount)
@@ -59,7 +59,7 @@ var currencyService = DependencyResolver.Current.GetService<IShopCurrencyService
 
         </div>
         <div class="cart order-btn-container buttons">
-            <a onclick="true" class="button addToCart order-link" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.GoodsId, 1) }">
+            <a onclick="true" class="button addToCart order-link" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.HeartId, 1) }">
                 <span>Заказать</span>
             </a>
         </div>

@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[GoodsReview_Update]
-@GoodsId int,
+@HeartId int,
 @Author nvarchar(70),
 @AuthorContact nvarchar(150),
 @Rating int,
@@ -9,7 +9,7 @@
 @GoodsReviewId int
 AS
 	UPDATE [Shop].[GoodsReview] SET
-		[GoodsId]=@GoodsId,
+		[HeartId]=@HeartId,
 		[Author]=@Author,
 		[AuthorContact]=@AuthorContact,
 		[Rating]=@Rating,

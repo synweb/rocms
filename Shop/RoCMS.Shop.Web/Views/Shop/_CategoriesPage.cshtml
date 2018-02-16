@@ -15,12 +15,12 @@
 
             <div class="col-md-3 col-sm-4 col-xs-6">
                 <div class="image">
-                    <a href="/Shop/Category/@cat.CategoryId">
-                        <img src="@Url.Action("Thumbnail", "Gallery", new {id = cat.ImageId})" alt="@cat.Name">
+                    <a href="@Url.RouteUrl(typeof(Category).FullName, new { relativeUrl = cat.RelativeUrl })">
+                    <img src="@Url.Action("Thumbnail", "Gallery", new { id = cat.ImageId })" alt="@cat.Name">
                     </a>
                 </div>
                 <div class="name">
-                    <a href="/Shop/Category/@cat.CategoryId">@cat.Name</a>
+                    <a href="@Url.RouteUrl(typeof(Category).FullName, new { relativeUrl = cat.RelativeUrl })">@cat.Name</a>
                 </div>
             </div>
 

@@ -31,7 +31,7 @@ namespace RoCMS.News.Services
         {
             var dataRes = _categoryGateway.SelectOne(categoryId);
             var res = Mapper.Map<Category>(dataRes);
-            res.CanonicalUrl = GetCategoryCannonicalUrl(res.CategoryId);
+            res.CanonicalUrl = GetCategoryCanonicalUrl(res.CategoryId);
             FillParent(res);
             FillChildren(res, false);
             //TODO: скоро здесь будет кэширование :)
@@ -62,7 +62,7 @@ namespace RoCMS.News.Services
             _categoryGateway.Update(dataRec);
             //RemoveObjectFromCache("Categories");
             _searchService.UpdateIndex(category);
-            RemoveObjectFromCache(GetCategoryIDCannonicalUrlCacheKey(category.CategoryId));
+            RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(category.CategoryId));
         }
 
         public void DeleteCategory(int categoryId)
@@ -79,7 +79,7 @@ namespace RoCMS.News.Services
             foreach (var category in resRoot)
             {
                 FillChildren(category);
-                category.CanonicalUrl = GetCategoryCannonicalUrl(category.CategoryId);
+                category.CanonicalUrl = GetCategoryCanonicalUrl(category.CategoryId);
             }
             SortCategories(resRoot);
             return resRoot;
@@ -91,7 +91,7 @@ namespace RoCMS.News.Services
             var resRoot = Mapper.Map<List<Category>>(root);
             foreach (var category in resRoot)
             {
-                category.CanonicalUrl = GetCategoryCannonicalUrl(category.CategoryId);
+                category.CanonicalUrl = GetCategoryCanonicalUrl(category.CategoryId);
             }
             return resRoot;
         }
@@ -117,7 +117,7 @@ namespace RoCMS.News.Services
             category.ChildrenCategories = resChildren;
             foreach (var child in resChildren)
             {
-                child.CanonicalUrl = GetCategoryCannonicalUrl(child.CategoryId);
+                child.CanonicalUrl = GetCategoryCanonicalUrl(child.CategoryId);
                 child.ParentCategory = new IdNamePair<int>(category.CategoryId, category.Name);
                 if (recursive)
                 {
@@ -179,10 +179,10 @@ namespace RoCMS.News.Services
             return cat != null;
         }
 
-        public string GetCategoryCannonicalUrl(int categoryId)
+        public string GetCategoryCanonicalUrl(int categoryId)
         {
 
-            string cacheKey = GetCategoryIDCannonicalUrlCacheKey(categoryId);
+            string cacheKey = GetCategoryIDCanonicalUrlCacheKey(categoryId);
             return GetFromCacheOrLoadAndAddToCache<string>(cacheKey, () =>
             {
 
@@ -190,7 +190,7 @@ namespace RoCMS.News.Services
                 string result;
                 if (cat.ParentCategoryId.HasValue)
                 {
-                    result = $"{GetCategoryCannonicalUrl(cat.ParentCategoryId.Value)}/{cat.RelativeUrl}";
+                    result = $"{GetCategoryCanonicalUrl(cat.ParentCategoryId.Value)}/{cat.RelativeUrl}";
                 }
                 else
                 {
@@ -200,7 +200,7 @@ namespace RoCMS.News.Services
             });
         }
 
-        private string GetCategoryIDCannonicalUrlCacheKey(int categoryId)
+        private string GetCategoryIDCanonicalUrlCacheKey(int categoryId)
         {
             return string.Format(CATEGORY_ID_CANNONICAL_URL_CACHE_KEY, categoryId);
         }
@@ -209,7 +209,7 @@ namespace RoCMS.News.Services
         {
             var dataRes = _categoryGateway.SelectByUrl(relativeUrl);
             var res = Mapper.Map<Category>(dataRes);
-            res.CanonicalUrl = GetCategoryCannonicalUrl(res.CategoryId);
+            res.CanonicalUrl = GetCategoryCanonicalUrl(res.CategoryId);
             FillParent(res);
             FillChildren(res, false);
             //TODO: скоро здесь будет кэширование :)

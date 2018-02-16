@@ -21,7 +21,7 @@ namespace RoCMS.Shop.Web.Helpers
             {
                 result.Add(new BreadCrumb() {
                      Title = category.Name,
-                     Url = helper.RouteUrl("CatalogSEF", new {relativeURL = category.CannonicalUrl}),
+                     Url = helper.RouteUrl("CatalogSEF", new {relativeURL = category.CanonicalUrl}),
                      IsLast = categories.Last() == category
                 });
             }

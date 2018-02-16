@@ -6,12 +6,13 @@
         {
 
         }
-        public EditorVM(string content, string elementId, string elementClass, string aceMode) : this()
+        public EditorVM(string content, string elementId, string elementClass, string aceMode, bool autoInit = true) : this()
         {
             ElementId = elementId;
             ElementClass = elementClass;
             Content = content;
             ACEMode = aceMode;
+            AutoInit = autoInit;
         }
 
         public string ElementId { get; set; }
@@ -20,7 +21,7 @@
         public string ACEMode { get; set; }
         public bool ShowCommonButtons { get; set; }
 
-
+        public bool AutoInit { get; set; }
         public bool DefaultIsWYSIWYG { get; set; }
         
         // TODO: можно сделать настройку переключаемости редакторов и конфигурируемые тексты кнопок прям здесь

@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [Shop].[Goods_Spec_Delete]
-@GoodsId int,
+@HeartId int,
 @SpecId int
 AS
 	DELETE FROM [Shop].[Goods_Spec]
-	WHERE [GoodsId]=@GoodsId
+	WHERE [HeartId]=@HeartId
 		 AND [SpecId]=@SpecId

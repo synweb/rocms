@@ -33,12 +33,14 @@ namespace RoCMS.Shop.Web.Controllers
         private readonly IShopCategoryService _shopCategoryService;
         private readonly IShopManufacturerService _shopManufacturerService;
 
+        private readonly IHeartService _heartService;
+
         private readonly IPrincipalResolver _principalResolver;
 
         public ShopController(ISessionValueProviderService sessionService, IShopService shopService,
             ISearchService searchService, IShopClientService clientService, IShopActionService shopActionService,
             IShopCategoryService shopCategoryService, IShopManufacturerService shopManufacturerService,
-            IPrincipalResolver principalResolver)
+            IPrincipalResolver principalResolver, IHeartService heartService)
         {
             _sessionService = sessionService;
             _shopService = shopService;
@@ -48,6 +50,7 @@ namespace RoCMS.Shop.Web.Controllers
             _shopCategoryService = shopCategoryService;
             _shopManufacturerService = shopManufacturerService;
             _principalResolver = principalResolver;
+            _heartService = heartService;
         }
 
         //хз почему не работает
@@ -118,28 +121,28 @@ namespace RoCMS.Shop.Web.Controllers
             return PartialView("_GoodsPage", goods);
         }
 
-        [PagingFilter]
-        [GoodsFilter]
-        public ActionResult CatalogSEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
-        {
-            string pageUrl = relativeUrl.Split('/').Last();
-            bool categoryExists = _shopCategoryService.CategoryExists(pageUrl);
-            bool goodsExists = _shopService.GoodsExists(pageUrl);
-            if (!categoryExists && ! goodsExists)
-            {
-                throw new HttpException(404, "Not found");
-            }
-            var routeValues = Request.RequestContext.RouteData.Values;
-            ViewBag.PagingRoute = "CatalogSEF";
-            if (categoryExists)
-            {
-                return CategorySEF(relativeUrl, country, manufacturerId, packId, specs, sort);
-            }
+        //[PagingFilter]
+        //[GoodsFilter]
+        //public ActionResult CatalogSEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
+        //{
+        //    string pageUrl = relativeUrl.Split('/').Last();
+        //    bool categoryExists = _shopCategoryService.CategoryExists(pageUrl);
+        //    bool goodsExists = _shopService.GoodsExists(pageUrl);
+        //    if (!categoryExists && ! goodsExists)
+        //    {
+        //        throw new HttpException(404, "Not found");
+        //    }
+        //    var routeValues = Request.RequestContext.RouteData.Values;
+        //    ViewBag.PagingRoute = "CatalogSEF";
+        //    if (categoryExists)
+        //    {
+        //        return CategorySEF(relativeUrl, country, manufacturerId, packId, specs, sort);
+        //    }
 
 
-            return GoodsSEF(relativeUrl);
+        //    return GoodsSEF(relativeUrl);
 
-        }
+        //}
 
         [PagingFilter]
         [GoodsFilter]
@@ -156,7 +159,7 @@ namespace RoCMS.Shop.Web.Controllers
 
             var routeValues = ParamExtractor.ExtractParamsForSEF(Request);
             var args = new RouteValueDictionary(routeValues);
-            args.Add("relativeUrl", cat.CannonicalUrl);
+            args.Add("relativeUrl", cat.CanonicalUrl);
             args.Remove("id");
             return RedirectPermanent(Url.RouteUrl("CatalogSEF", args));
         }
@@ -166,30 +169,25 @@ namespace RoCMS.Shop.Web.Controllers
         public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
         {
 
-
-
             string pageUrl = relativeUrl.Split('/').Last();
-            bool exists = _shopCategoryService.CategoryExists(pageUrl);
-            if (!exists)
-            {
-                throw new HttpException(404, "Not found");
-            }
+            //bool exists = _heartService.CheckIfUrlExists(pageUrl);
+            //if (!exists)
+            //{
+            //    throw new HttpException(404, "Not found");
+            //}
 
+            var cat = _heartService.GetHeart(pageUrl);
 
-            var cat = _shopCategoryService.GetCategory(pageUrl);
-
-            
-
-            if (cat.CannonicalUrl != relativeUrl)
-            {
-                var routeValues = Request.RequestContext.RouteData.Values;
-                routeValues.Add("relativeUrl", cat.CannonicalUrl);
-                return RedirectPermanent(Url.RouteUrl("CatalogSEF", routeValues));
-            }
+            //if (cat.CanonicalUrl != relativeUrl)
+            //{
+            //    var routeValues = Request.RequestContext.RouteData.Values;
+            //    routeValues.Add("relativeUrl", cat.CanonicalUrl);
+            //    return RedirectPermanent(Url.RouteUrl("CatalogSEF", routeValues));
+            //}
 
 
 
-            int id = cat.CategoryId;
+            int id = cat.HeartId;
 
             int page = ViewBag.Page;
             int pgsize = ViewBag.PageSize;
@@ -302,24 +300,24 @@ namespace RoCMS.Shop.Web.Controllers
             }
             var goods = _shopService.GetGoods(id);
 
-            return RedirectToRoutePermanent("CatalogSEF", new { relativeURL = goods.CannonicalUrl });
+            return RedirectToRoutePermanent(typeof(GoodsItem).FullName, new { relativeURL = goods.CanonicalUrl });
         }
 
         public ActionResult GoodsSEF(string relativeUrl)
         {
             string pageUrl = relativeUrl.Split('/').Last();
-            bool exists = _shopService.GoodsExists(pageUrl);
-            if (!exists)
-            {
-                throw new HttpException(404, "Not found");
-            }
+            //bool exists = _shopService.GoodsExists(pageUrl);
+            //if (!exists)
+            //{
+            //    throw new HttpException(404, "Not found");
+            //}
 
             var goodsItem = _shopService.GetGoods(pageUrl);
 
-            if (goodsItem.CannonicalUrl != relativeUrl)
-            {
-                return RedirectPermanent(Url.RouteUrl("CatalogSEF", new { relativeUrl = goodsItem.CannonicalUrl }));
-            }
+            //if (goodsItem.CanonicalUrl != relativeUrl)
+            //{
+            //    return RedirectPermanent(Url.RouteUrl("CatalogSEF", new { relativeUrl = goodsItem.CanonicalUrl }));
+            //}
 
             return PartialView("Goods", (object)pageUrl);
         }
@@ -372,7 +370,7 @@ namespace RoCMS.Shop.Web.Controllers
             var goodsItem = _shopService.GetGoods(id, false);
             //TODO: единичку - в конфиг
             var cats = _shopCategoryService.GetCategory(1).ChildrenCategories;
-            var category = cats.First(x => goodsItem.Categories.Any(y => x.CategoryId==y.ID));
+            var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId==y.ID));
             return View(category);
         }
     }

@@ -177,11 +177,6 @@ App.Admin.Shop.CategoryFunctions = {
                 }
             }
         });
-
-        self.parentCategoryId.subscribe(function(val) {
-            self.parentHeartId(val);
-        });
-
     },
 
     prepareCategoryForUpdate: function () {
@@ -197,9 +192,10 @@ App.Admin.Shop.CategoryFunctions = {
 
     addChild: function () {
         var self = this;
-        var category = new App.Admin.Shop.Category();
+        var category = $.extend(new App.Admin.Shop.Category(), App.Admin.Shop.CategoryFunctions);
         category.parentCategoryId(self.heartId());
         category.parentCategory().name = self.name();
+        
         category.newCategory(function () {
             self.childrenCategories.push(category);
         });
@@ -207,8 +203,8 @@ App.Admin.Shop.CategoryFunctions = {
 
     clearParentCategory: function () {
         var self = this;
-        self.parentCategory({ name: "" });
         self.parentCategoryId("");
+        self.parentCategory({ name: "" });
     },
 
     editParentCategory: function () {
@@ -346,14 +342,14 @@ App.Admin.Shop.CategoryFunctions = {
 
                 self.initCategory();
                 var parents = ko.observableArray();
+                parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
 
                 if (self.parentCategoryId() && self.parentCategory()) {
 
                     parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
                 }
 
-                $(".withsearch").addClass("form-control");
-                $(".withsearch").attr("disabled", "disabled");
+                
 
                 var that = this;
 
@@ -363,14 +359,25 @@ App.Admin.Shop.CategoryFunctions = {
                 }
 
                 self.parentCategory.subscribe(function () {
+
                     vm.parents.removeAll();
-                    if (self.parentCategoryId() && self.parentCategory()) {
-                        vm.parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
+                    vm.parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
+                    if (self.parentCategory().name) {
+                        vm.parents.push({
+                            heartId: self.parentCategory().id,
+                            title: self.parentCategory().name,
+                            type: 'Категории'
+                        });
+                        self.parentHeartId(self.parentCategory().id);
                     }
+
+                    self.parentHeartId.notifySubscribers();
+
                     $(".withsearch").selectpicker('refresh');
                 });
 
                 ko.applyBindings(vm, that);
+                $(".withsearch").selectpicker();
             },
             buttons: [
                 {

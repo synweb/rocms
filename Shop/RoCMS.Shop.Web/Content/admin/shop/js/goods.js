@@ -360,9 +360,13 @@ App.Admin.Shop.GoodsItemFunctions = {
             });
             if (result.length === 0) {
                 self.categories.push(ko.mapping.fromJS(category));
-                if (self.categories.length === 1) {
-                    self.parentHeartId(category.id);
-                }
+                setTimeout(function () {
+                    if (self.categories().length === 1) {
+                        self.parentHeartId(category.id);
+                        $(".withsearch").selectpicker('refresh');
+                    }
+                }, 300);
+                
             }
         });
     },
@@ -370,7 +374,7 @@ App.Admin.Shop.GoodsItemFunctions = {
         parent.categories.remove(function (item) {
             return item.id() == category.id();
         });
-        if (parent.categories.length === 0) {
+        if (parent.categories().length === 0) {
             parent.parentHeartId("");
         }
     },
@@ -529,22 +533,29 @@ App.Admin.Shop.GoodsItemFunctions = {
                 
 
                 var parents = ko.observableArray();
+                parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
                 $(self.categories()).each(function () {
                     parents.push({ heartId: this.id, title: this.name, type: 'Категории'});
                 });
-                
+
+
+
                 var model = {
                     vm: dm,
                     manufacturers: App.Admin.manufacturers,
                     packs: App.Admin.packs,
                     currencies: App.Admin.currencies,
                     parents: parents
-                }
+                };
+
                 self.categories.subscribe(function () {
                     model.parents.removeAll();
+                    model.parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
                     $(self.categories()).each(function () {
                         model.parents.push({ heartId: this.id, title: this.name, type: 'Категории' });
                     });
+
+                    self.parentHeartId.notifySubscribers();
                     $(".withsearch").selectpicker('refresh');
                 });
 

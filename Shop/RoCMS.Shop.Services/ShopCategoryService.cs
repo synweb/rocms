@@ -317,5 +317,22 @@ namespace RoCMS.Shop.Services
             }
 
         }
+
+        public bool IsChild(int currentCategoryId, int parentCategoryId)
+        {
+            string cacheKey = $"ChildCategory:{currentCategoryId}:{parentCategoryId}";
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var cat = _categoryGateway.SelectOne(currentCategoryId);
+                if (cat.ParentCategoryId == parentCategoryId) return true;
+
+                if (cat.ParentCategoryId.HasValue)
+                {
+                    return IsChild(cat.ParentCategoryId.Value, parentCategoryId);
+                }
+
+                return false;
+            });
+        }
     }
 }

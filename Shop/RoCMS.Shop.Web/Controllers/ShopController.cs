@@ -177,13 +177,14 @@ namespace RoCMS.Shop.Web.Controllers
             //}
 
             var cat = _heartService.GetHeart(pageUrl);
+            var requestPath = Request.Path.Substring(1);
+            if (!cat.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var routeValues = Request.RequestContext.RouteData.Values;
+                //routeValues["relativeUrl"] = cat.CanonicalUrl;
 
-            //if (cat.CanonicalUrl != relativeUrl)
-            //{
-            //    var routeValues = Request.RequestContext.RouteData.Values;
-            //    routeValues.Add("relativeUrl", cat.CanonicalUrl);
-            //    return RedirectPermanent(Url.RouteUrl("CatalogSEF", routeValues));
-            //}
+                return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
+            }
 
 
 
@@ -314,10 +315,14 @@ namespace RoCMS.Shop.Web.Controllers
 
             var goodsItem = _shopService.GetGoods(pageUrl);
 
-            //if (goodsItem.CanonicalUrl != relativeUrl)
-            //{
-            //    return RedirectPermanent(Url.RouteUrl("CatalogSEF", new { relativeUrl = goodsItem.CanonicalUrl }));
-            //}
+            var requestPath = Request.Path.Substring(1);
+            if (!goodsItem.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var routeValues = Request.RequestContext.RouteData.Values;
+                //routeValues["relativeUrl"] = goodsItem.CanonicalUrl;
+
+                return RedirectPermanent(Url.RouteUrl(typeof(GoodsItem).FullName, routeValues));
+            }
 
             return PartialView("Goods", (object)pageUrl);
         }

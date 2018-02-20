@@ -37,7 +37,7 @@ namespace RoCMS.Shop.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             
-            InitBreadcrumbs();
+            //InitBreadcrumbs();
             RegisterSearch();
         }
 

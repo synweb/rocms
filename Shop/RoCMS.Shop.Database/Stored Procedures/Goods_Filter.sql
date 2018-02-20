@@ -130,7 +130,7 @@ END
 DECLARE @UnsortedHeartIds [Int_Table]
 
 INSERT INTO @UnsortedHeartIds
-SELECT gc1.GoodsId
+SELECT DISTINCT gc1.GoodsId
 FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.HeartId = g.HeartId
 WHERE
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))

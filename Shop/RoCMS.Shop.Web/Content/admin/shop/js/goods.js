@@ -440,6 +440,8 @@ App.Admin.Shop.GoodsItemFunctions = {
                 if (onSuccess) {
                     onSuccess(result.data);
                 }
+            } else {
+                smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
             }
         })
             .fail(function () {

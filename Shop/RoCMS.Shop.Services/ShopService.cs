@@ -248,6 +248,7 @@ namespace RoCMS.Shop.Services
                 }
                 foreach (var specVal in goods.GoodsSpecs)
                 {
+                    specVal.HeartId = id;
                     var dataGoodsSpec = Mapper.Map<GoodsSpec>(specVal);
                     _goodsSpecGateway.Insert(dataGoodsSpec);
                 }

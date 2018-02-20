@@ -174,6 +174,7 @@ namespace RoCMS.Web.Services
         public void UpdateHeart(Heart heart)
         {
             var originalHeart = _heartGateway.SelectOne(heart.HeartId);
+            heart.Type = originalHeart.Type; //небольшие костыли для товаров и категорий
             var dataHeart = Mapper.Map<Data.Models.Heart>(heart);
             _heartGateway.Update(dataHeart);
             RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));

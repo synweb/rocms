@@ -1,5 +1,4 @@
 ﻿@using System.Globalization
-@using RoCMS.Base.ForWeb.Models
 @using RoCMS.Shop.Contract.Models
 @using RoCMS.Shop.Contract.Services
 @model string
@@ -14,7 +13,7 @@
         Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
     }
 
-    
+
 
     NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalDigits = 0 };
 
@@ -30,10 +29,13 @@
 
 
     var compatibles = goodsItem.CompatibleGoods.SelectMany(x => x.CompatibleGoods);
+
+
 }
 
 
 <h1>@goodsItem.Name</h1>
+
 <div class="goods">
     <div class="row">
         <div class="col-md-6">

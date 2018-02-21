@@ -1,0 +1,28 @@
+﻿@using RoCMS.Helpers
+@using RoCMS.Shop.Contract.Services
+@using RoCMS.Web.Contract.Services
+@{
+    IFavouriteItemsService favouriteItemsService = DependencyResolver.Current.GetService<IFavouriteItemsService>();
+    ISessionValueProviderService sessionService = DependencyResolver.Current.GetService<ISessionValueProviderService>();
+    IBlockService blockService = DependencyResolver.Current.GetService<IBlockService>();
+    var items = favouriteItemsService.GetFavouriteItems(sessionService.Get<Guid>(ConstantStrings.SessionId));
+
+}
+
+@if (items.Any())
+{
+    var goodsItems = items.Select(x => x.Item).ToList();
+    @Html.Partial("_GoodsSet", goodsItems)
+}
+else
+{
+    var noItemsBlock = blockService.GetBlock(8);
+
+    @Block(noItemsBlock)
+}
+
+@JsInline(@<script type="text/javascript">
+    $(function () {
+        
+    });
+    </script>)

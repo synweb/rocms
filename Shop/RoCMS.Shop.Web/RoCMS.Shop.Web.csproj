@@ -127,6 +127,7 @@
     <Compile Include="ApiControllers\CurrencyApiController.cs" />
     <Compile Include="ApiControllers\DimensionApiController.cs" />
     <Compile Include="ApiControllers\ExportYmlApiController.cs" />
+    <Compile Include="ApiControllers\FavouriteItemApiController.cs" />
     <Compile Include="ApiControllers\GoodsApiController.cs" />
     <Compile Include="ApiControllers\GoodsAwaitingApiController.cs" />
     <Compile Include="ApiControllers\ManufacturerApiController.cs" />
@@ -222,6 +223,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\client\shop\js\rocms.shop.cart.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\client\shop\js\rocms.shop.favourites.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\client\shop\js\rocms.shop.goodsItem.js">
@@ -554,6 +558,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShopEditor\GoodsItemEditor.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shop\_Favourites.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

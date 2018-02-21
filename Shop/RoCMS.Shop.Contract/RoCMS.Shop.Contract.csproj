@@ -83,6 +83,7 @@
     <Compile Include="Models\Dimension.cs" />
     <Compile Include="Models\Email\ShopOrderEmail.cs" />
     <Compile Include="Models\Exceptions\GoodsNotFoundException.cs" />
+    <Compile Include="Models\FavouriteItem.cs" />
     <Compile Include="Models\FilterCollections.cs" />
     <Compile Include="Models\GoodsAwaiting.cs" />
     <Compile Include="Models\GoodsFilter.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Models\SpecValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ICartService.cs" />
+    <Compile Include="Services\IFavouriteItemsService.cs" />
     <Compile Include="Services\IShopActionService.cs" />
     <Compile Include="Services\IShopCurrencyService.cs" />
     <Compile Include="Services\IShopGoodsAwaitingService.cs" />

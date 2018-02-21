@@ -18,6 +18,7 @@ using Client = RoCMS.Shop.Contract.Models.Client;
 using CompatibleSet = RoCMS.Shop.Contract.Models.CompatibleSet;
 using Currency = RoCMS.Shop.Contract.Models.Currency;
 using Dimension = RoCMS.Shop.Contract.Models.Dimension;
+using FavouriteItem = RoCMS.Shop.Contract.Models.FavouriteItem;
 using GoodsFilter = RoCMS.Shop.Contract.Models.GoodsFilter;
 using GoodsInOrder = RoCMS.Shop.Data.Models.GoodsInOrder;
 using GoodsItem = RoCMS.Shop.Contract.Models.GoodsItem;
@@ -187,6 +188,10 @@ namespace RoCMS.Shop.Services
             Mapper.CreateMap<CartItem, Data.Models.CartItem>();
             Mapper.CreateMap<Data.Models.CartItem, CartItem>()
                 .ForMember(x => x.GoodsItem, x => x.Ignore());
+
+            Mapper.CreateMap<FavouriteItem, Data.Models.FavouriteItem>();
+            Mapper.CreateMap<Data.Models.FavouriteItem, FavouriteItem>()
+                .ForMember(x => x.Item, x => x.Ignore());
 
             Mapper.CreateMap<Cart, Data.Models.Cart>();
             Mapper.CreateMap<Data.Models.Cart, Cart>()

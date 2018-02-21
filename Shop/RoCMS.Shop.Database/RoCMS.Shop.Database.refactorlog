@@ -56,4 +56,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="HeartId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="41ca2780-5f95-457b-ba85-4e2d2784d6c3" ChangeDateTime="02/21/2018 10:53:05">
+    <Property Name="ElementName" Value="[Shop].[FacouriteItem].[Id]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[FacouriteItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="SessionId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="1b83260f-fa3c-47a9-b5e0-54fa845c424a" ChangeDateTime="02/21/2018 10:53:23">
+    <Property Name="ElementName" Value="[Shop].[FacouriteItem].[GoodsId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[FacouriteItem]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
 </Operations>

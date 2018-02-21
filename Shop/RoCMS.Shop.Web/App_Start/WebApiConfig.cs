@@ -130,6 +130,11 @@ namespace Shop.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/currency/create", "CurrencyApi", "CreateCurrency");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/currency/update", "CurrencyApi", "UpdateCurrency");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/currency/setdefault/{id}", "CurrencyApi", "SetDefaultCurrency");
+
+
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/favourite/{heartId}/add", "FavouriteItemApi", "Add");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/favourite/{heartId}/delete", "FavouriteItemApi", "Delete");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/favourite/any", "FavouriteItemApi", "HasItems");
         }
     }
 }

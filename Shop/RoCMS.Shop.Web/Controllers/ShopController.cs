@@ -329,7 +329,7 @@ namespace RoCMS.Shop.Web.Controllers
 
         public ActionResult Cart()
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             return PartialView(cartId);
         }
 

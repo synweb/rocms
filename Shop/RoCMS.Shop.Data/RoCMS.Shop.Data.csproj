@@ -53,6 +53,7 @@
     <Compile Include="Gateways\CompatibleSetGoodsGateway.cs" />
     <Compile Include="Gateways\CurrencyGateway.cs" />
     <Compile Include="Gateways\DimensionGateway.cs" />
+    <Compile Include="Gateways\FavouriteItemGateway.cs" />
     <Compile Include="Gateways\GoodsPackGateway.cs" />
     <Compile Include="Gateways\GoodsReviewGateway.cs" />
     <Compile Include="Gateways\GoodsSpecGateway.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Models\CompatibleSetGoods.cs" />
     <Compile Include="Models\Currency.cs" />
     <Compile Include="Models\Dimension.cs" />
+    <Compile Include="Models\FavouriteItem.cs" />
     <Compile Include="Models\GoodsAwaiting.cs" />
     <Compile Include="Models\GoodsCategory.cs" />
     <Compile Include="Models\GoodsFilter.cs" />

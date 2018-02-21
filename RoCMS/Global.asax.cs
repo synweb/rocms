@@ -246,13 +246,13 @@ namespace RoCMS
             //Айдишник корзины
             string cookieName = ConstantStrings.SessionId;
             HttpCookie requestCookie = httpContext.Request.Cookies[cookieName];
-            Guid cartId = requestCookie != null ? Guid.Parse(requestCookie.Value) : Guid.NewGuid();
-            var cookie = new System.Web.HttpCookie(cookieName, cartId.ToString());
+            Guid sessionId = requestCookie != null ? Guid.Parse(requestCookie.Value) : Guid.NewGuid();
+            var cookie = new System.Web.HttpCookie(cookieName, sessionId.ToString());
             cookie.Expires = DateTime.UtcNow.AddHours(AppSettingsHelper.HoursToExpireCartCache);
             httpContext.Response.SetCookie(cookie);
 
             var sessionService = DependencyResolver.Current.GetService<ISessionValueProviderService>();
-            sessionService.Set(ConstantStrings.CartId, cartId);
+            sessionService.Set(ConstantStrings.SessionId, sessionId);
         }
 
 

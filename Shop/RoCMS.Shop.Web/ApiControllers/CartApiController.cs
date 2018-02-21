@@ -31,14 +31,14 @@ namespace RoCMS.Shop.Web.ApiControllers
         [System.Web.Http.HttpGet]
         public Cart GetCart()
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             return _cartService.GetCart(cartId);
         }
 
         [System.Web.Http.HttpPost]
         public ResultModel AddItem(int heartId, int count, int? packId)
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             _cartService.AddItemToCart(cartId, heartId, count, packId);
             return ResultModel.Success;
         }
@@ -46,7 +46,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         [System.Web.Http.HttpPost]
         public ResultModel ChangeItemCount(int heartId, int count, int? packId)
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             _cartService.UpdatItemCount(cartId, heartId, count, packId);
             return ResultModel.Success;
         }
@@ -54,7 +54,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         [System.Web.Http.HttpPost]
         public ResultModel RemoveItem(int heartId, int? packId)
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             _cartService.RemoveItemFromCart(cartId, heartId, packId);
             return ResultModel.Success;
         }
@@ -62,7 +62,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         [System.Web.Http.HttpPost]
         public ResultModel Clear()
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             _cartService.RemoveCart(cartId);
             return ResultModel.Success;
         }
@@ -70,7 +70,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         [System.Web.Http.HttpGet]
         public CartSummary CartSummary()
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             if(cartId.Equals(Guid.Empty))
                 return new CartSummary();
             return _cartService.GetCartSummary(cartId);
@@ -79,7 +79,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         [System.Web.Http.HttpPost]
         public ResultModel UpdateUserDiscount()
         {
-            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+            Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
             _cartService.UpdateUserDiscount(cartId);
             return ResultModel.Success;
         }
@@ -100,7 +100,7 @@ namespace RoCMS.Shop.Web.ApiControllers
                     req.Client.UserId = dbUser.UserId;
                 }
 
-                Guid cartId = _sessionService.Get<Guid>(ConstantStrings.CartId);
+                Guid cartId = _sessionService.Get<Guid>(ConstantStrings.SessionId);
                 var cart = _cartService.GetCart(cartId);
 
                 _shopOrderService.ProcessOrder(req.Order, req.Client, cart);

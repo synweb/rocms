@@ -83,6 +83,7 @@
     <Compile Include="BaseShopService.cs" />
     <Compile Include="CartCacheService.cs" />
     <Compile Include="CartDbService.cs" />
+    <Compile Include="FavouriteItemsService.cs" />
     <Compile Include="ShopActionService.cs" />
     <Compile Include="ShopCategoryService.cs" />
     <Compile Include="ShopClientService.cs" />

@@ -74,7 +74,7 @@ namespace RoCMS.Web.Services
                 throw new UrlNotFoundException();
             var res = Mapper.Map<Page>(page);
             var heart = _heartService.GetHeart(id);
-            Mapper.Map(res, heart);
+            res.FillHeart(heart);
             return res;
         }
         

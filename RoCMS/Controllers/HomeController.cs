@@ -127,6 +127,12 @@ namespace RoCMS.Controllers
         }
 
         [AllowAnonymous]
+        public ActionResult OrderForm(int id)
+        {
+            return PartialView("_OrderForm", id);
+        }
+
+        [AllowAnonymous]
         public ActionResult WYSIWYG(string name, string content)
         {
             ViewBag.Name = name;

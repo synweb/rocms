@@ -525,6 +525,7 @@
     <Content Include="Content\base\vendor\jquery\ui\jquery-ui-1.10.3.js" />
     <Content Include="Content\base\vendor\knockout\knockout.groupedOptions.js" />
     <Content Include="Content\base\vendor\knockout\ru-RU.js" />
+    <Content Include="Content\client\ro\js\rocms.client.orderform.js" />
     <Content Include="Content\login\login.css" />
     <Content Include="Content\base\vendor\typeahead\bootstrap3-typeahead.js" />
     <Content Include="Content\base\ro\css\message-dialog.css" />

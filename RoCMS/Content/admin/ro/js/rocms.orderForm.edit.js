@@ -68,6 +68,8 @@ function onOrderFormEditorLoad(orderFormId) {
     }
 
     ko.applyBindings(vm);
+
+    //$(".acceptableValues").tagsinput();
 }
 
 
@@ -103,7 +105,7 @@ App.Admin.OrderFormField = function () {
     self.required = ko.observable();
     self.orderFormId = ko.observable();
     self.sortOrder = ko.observable(1);
-
+    self.acceptableValues = ko.observable();
 }
 
 App.Admin.OrderFormValidationMapping = {
@@ -170,6 +172,10 @@ App.Admin.OrderFormFunctions = {
         var field = new App.Admin.OrderFormField();
         field.sortOrder(self.fields().length);
         self.fields.push(field);
+
+        //setTimeout(function() {
+        //    $($(".acceptableValues")[$(".acceptableValues").length-1]).tagsinput();
+        //}, 100);
     },
 
     removeField: function (item, parent) {

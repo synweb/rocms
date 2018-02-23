@@ -14,6 +14,6 @@ namespace RoCMS.Web.Contract.Models
         public bool Required { get; set; }
         public int OrderFormId { get; set; }
         public int SortOrder { get; set; }
-
+        public string AcceptableValues { get; set; }
     }
 }

@@ -15,5 +15,6 @@ namespace RoCMS.Data.Models
         public int OrderFormId { get; set; }
         public int SortOrder { get; set; }
 
+        public string AcceptableValues { get; set; }
     }
 }

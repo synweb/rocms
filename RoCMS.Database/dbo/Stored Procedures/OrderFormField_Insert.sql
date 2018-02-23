@@ -3,8 +3,9 @@
 @ValueType varchar(20),
 @Required bit,
 @OrderFormId int,
-@SortOrder int
+@SortOrder int,
+@AcceptableValues nvarchar(max)
 AS
-	INSERT INTO [dbo].[OrderFormField] ([LabelText], [ValueType], [Required], [OrderFormId], [SortOrder])
-	VALUES (@LabelText, @ValueType, @Required, @OrderFormId, @SortOrder)
+	INSERT INTO [dbo].[OrderFormField] ([LabelText], [ValueType], [Required], [OrderFormId], [SortOrder], [AcceptableValues])
+	VALUES (@LabelText, @ValueType, @Required, @OrderFormId, @SortOrder, @AcceptableValues)
 	SELECT @@IDENTITY

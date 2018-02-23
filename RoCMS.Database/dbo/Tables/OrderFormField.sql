@@ -7,5 +7,6 @@
 	[OrderFormId] int NOT NULL, 
     
 	[SortOrder] INT NOT NULL DEFAULT 0, 
+    [AcceptableValues] NVARCHAR(MAX) NULL, 
     CONSTRAINT [FK_OrderFormField_ToOrderForm] FOREIGN KEY ([OrderFormId]) REFERENCES [OrderForm]([OrderFormId]) ON DELETE CASCADE
 )

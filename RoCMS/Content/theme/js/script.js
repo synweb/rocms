@@ -14,5 +14,9 @@ $(function() {
         return false
     });
 
+    $(".simple-mail").click(function () {
+        showFormInDialog(1);
+        return false;
+    });
 });
 

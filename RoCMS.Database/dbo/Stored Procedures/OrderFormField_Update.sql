@@ -4,12 +4,14 @@
 @Required bit,
 @OrderFormId int,
 @OrderFormFieldId int,
-@SortOrder int
+@SortOrder int,
+@AcceptableValues nvarchar(max)
 AS
 	UPDATE [dbo].[OrderFormField] SET
 		[LabelText]=@LabelText,
 		[ValueType]=@ValueType,
 		[Required]=@Required,
 		[OrderFormId]=@OrderFormId,
-		[SortOrder]=@SortOrder
+		[SortOrder]=@SortOrder,
+		[AcceptableValues]=@AcceptableValues
 	WHERE [OrderFormFieldId]=@OrderFormFieldId

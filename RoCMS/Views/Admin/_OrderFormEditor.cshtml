@@ -169,8 +169,10 @@
                     <option value="@OrderFormFieldType.Name">Имя</option>
                     <option value="@OrderFormFieldType.Phone">Телефон</option>
                     <option value="@OrderFormFieldType.Number">Число</option>
+                    <option value="@OrderFormFieldType.List">Список</option>
                     <option value="@OrderFormFieldType.TextArea">Широкое текстовое поле</option>
                 </select>
+                <input class="form-control acceptableValues" placeholder="Список значений через запятую" data-bind="value: acceptableValues, visible: valueType() === 'List'" />
             </div>
             <div class="col-sm-2">
                 <input class="form-control" title="Обязательно" type="checkbox" data-bind="checked: required"/>

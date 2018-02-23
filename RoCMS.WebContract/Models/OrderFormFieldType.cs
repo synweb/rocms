@@ -13,6 +13,7 @@ namespace RoCMS.Web.Contract.Models
         Number,
         TextArea,
         Name,
-        Phone
+        Phone,
+        List
     }
 }

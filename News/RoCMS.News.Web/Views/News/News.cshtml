@@ -17,7 +17,6 @@
 
 
     var userService = DependencyResolver.Current.GetService<ISecurityService>();
-    var author = userService.GetUser(Model.AuthorId).Username;
 
     if (!String.IsNullOrEmpty(Model.Layout))
     {

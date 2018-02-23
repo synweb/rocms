@@ -34,7 +34,7 @@ namespace RoCMS.News.Contract.Services
         ICollection<NewsItem> GetRelatedNews(int newsId, bool withSubnews, int count, bool onlyPosted, int? excludeId);
         int CreateClientPost(NewsItem post);
         void UpdateClientPost(NewsItem post);
-        ICollection<NewsItem> GetRandomNews(int count);
+        ICollection<NewsItem> GetRandomNews(int count, int? except = null);
 
         ICollection<RoCMS.News.Contract.Models.TagStat> GetTagStats(int tagCount);
 

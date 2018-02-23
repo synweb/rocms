@@ -399,23 +399,21 @@ namespace RoCMS.News.Services
             return result;
         }
 
-        public ICollection<NewsItem> GetRandomNews(int count)
+        public ICollection<NewsItem> GetRandomNews(int count, int? except)
         {
             if (count < 0)
                 throw new ArgumentException("Count is less than zero", nameof(count));
             var res = new List<NewsItem>(count);
             if (count == 0)
                 return res;
-            var ids = _newsItemGateway.SelectIds(true);
+            var ids = _newsItemGateway.SelectIds(true).Where(x => x != except).ToList();
             if (!ids.Any())
                 return res;
 
             var rndIds = ids.TakeRandom(count);
             foreach (var rndId in rndIds)
             {
-                var dataRec = _newsItemGateway.SelectOne(rndId);
-                var rec = Mapper.Map<NewsItem>(dataRec);
-                FillTags(rec);
+                var rec = GetNewsItem(rndId);
                 res.Add(rec);
             }
             return res;

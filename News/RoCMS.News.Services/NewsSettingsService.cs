@@ -19,14 +19,14 @@ namespace RoCMS.News.Services
 
         public NewsSettings GetNewsSettings()
         {
-            string blogUrl = _settingsService.GetSettings<string>("BlogUrl");
+            string blogUrl = _settingsService.GetSettings<string>(nameof(NewsSettings.BlogUrl));
 
             return new NewsSettings() { BlogUrl = blogUrl };
         }
 
         public void UpdateNewsSettings(NewsSettings settings)
         {
-            _settingsService.Set("BlogUrl", settings.BlogUrl);
+            _settingsService.Set(nameof(NewsSettings.BlogUrl), settings.BlogUrl);
         }
     }
 }

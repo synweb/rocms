@@ -43,6 +43,18 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="control-label col-lg-4">Селектор контента</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control monospace" data-bind="value: contentContainerSelector">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Текст ссылки на источник</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" data-bind="value: linkText">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="control-label col-lg-4">Рубрика</label>
 
                     <div class="col-lg-8 form-control-static">
@@ -54,8 +66,14 @@
                         </span>
                     </div>
                 </div>
-                
-                
+                <div class="form-group">
+                    <label class="control-label col-lg-4">Теги</label>
+                    <div class="col-lg-8">
+                        <input data-bind="value: tags" class="form-control news-tags form-control" />
+                    </div>
+                </div>
+
+
                 <script type="text/html" id="rss-filter-template">
                     <div class="row filter-item">
                         <div class="col-xs-10">

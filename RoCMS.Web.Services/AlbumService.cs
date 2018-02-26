@@ -227,18 +227,13 @@ namespace RoCMS.Web.Services
         public async Task<string> DownloadImage(string url)
         {
             string imageId = await _imageService.DownloadImage(url);
-
             var albums = GetAlbums();
-            const string ALBUM_NAME = "Импортированные изображения";
-            var album = albums.SingleOrDefault(x => x.Name.Equals(ALBUM_NAME));
             int albumId;
-            if (album == null)
+            lock (this)
             {
-                albumId = CreateAlbum(ALBUM_NAME, null);
-            }
-            else
-            {
-                albumId = album.AlbumId;
+                const string ALBUM_NAME = "Импортированные изображения";
+                var album = albums.FirstOrDefault(x => x.Name.Equals(ALBUM_NAME));
+                albumId = album == null ? CreateAlbum(ALBUM_NAME, null) : album.AlbumId;
             }
             AddImageToAlbum(albumId, imageId);
             return imageId;

@@ -16,6 +16,9 @@ namespace RoCMS.News.Contract.Models
         public int CheckInterval { get; set; }
         public int? TargetCategoryId { get; set; }
         public string ImageSelector { get; set; }
+        public string ContentContainerSelector { get; set; }
+        public string LinkText { get; set; }
+        public string Tags { get; set; }
         public IdNamePair<int> TargetCategory { get; set; }
 
         public ICollection<RssCrawlerFilter> Filters { get; set; }

@@ -29,13 +29,17 @@ namespace RoCMS.News.Services
         private readonly IAlbumService _albumService;
         private readonly IImageService _imageService;
         private readonly ISettingsService _settingsService;
+        private readonly ILogService _logService;
+        private readonly IHeartService _heartService;
 
-        public RssCrawlingService(INewsItemService newsItemService, IAlbumService albumService, ISettingsService settingsService, IImageService imageService)
+        public RssCrawlingService(INewsItemService newsItemService, IAlbumService albumService, ISettingsService settingsService, IImageService imageService, ILogService logService, IHeartService heartService)
         {
             _newsItemService = newsItemService;
             _albumService = albumService;
             _settingsService = settingsService;
             _imageService = imageService;
+            _logService = logService;
+            _heartService = heartService;
         }
 
         public ICollection<RssCrawler> GetCrawlers()
@@ -86,6 +90,7 @@ namespace RoCMS.News.Services
                         crawlers.Single(y => x.RssCrawlerId == y.RssCrawlerId).Filters);
                     foreach (var filter in dataFilters)
                     {
+                        filter.RssCrawlerId = id;
                         _rssCrawlerFilterGateway.Insert(filter);
                     }
                 },
@@ -123,6 +128,8 @@ namespace RoCMS.News.Services
         private const string IMAGE_SERVICE = "imageService";
         private const string NEWS_ITEM_SERVICE = "newsItemService";
         private const string SETTINGS_SERVICE = "settingsService";
+        private const string LOG_SERVICE = "logService";
+        private const string HEART_SERVICE = "heartService";
 
         public void StartCrawling()
         {
@@ -139,6 +146,8 @@ namespace RoCMS.News.Services
                     {IMAGE_SERVICE, _imageService},
                     {NEWS_ITEM_SERVICE, _newsItemService},
                     {SETTINGS_SERVICE, _settingsService},
+                    {LOG_SERVICE, _logService},
+                    {HEART_SERVICE, _heartService}
                 });
                 var builtJob = job.Build();
                 var trigger = TriggerBuilder.Create()
@@ -157,99 +166,146 @@ namespace RoCMS.News.Services
             public async void Execute(IJobExecutionContext context)
             {
                 var dataMap = context.JobDetail.JobDataMap;
-                var feed = (RssCrawler) dataMap[FEED];
-                var albumService = (IAlbumService) dataMap[ALBUM_SERVICE];
-                var imageService = (IImageService) dataMap[IMAGE_SERVICE];
-                var newsItemService = (INewsItemService) dataMap[NEWS_ITEM_SERVICE];
-                var settingsService = (ISettingsService) dataMap[SETTINGS_SERVICE];
-
-                XmlReader reader = XmlReader.Create(feed.RssFeedUrl);
-                SyndicationFeed syndicationFeed = SyndicationFeed.Load(reader);
-                foreach (SyndicationItem item in syndicationFeed.Items)
+                var logService = (ILogService) dataMap[LOG_SERVICE];
+                try
                 {
-                    if (!CheckIfItemIsNew(item, newsItemService))
-                        continue;
+                    var feed = (RssCrawler) dataMap[FEED];
+                    var albumService = (IAlbumService) dataMap[ALBUM_SERVICE];
+                    var imageService = (IImageService) dataMap[IMAGE_SERVICE];
+                    var newsItemService = (INewsItemService) dataMap[NEWS_ITEM_SERVICE];
+                    var settingsService = (ISettingsService) dataMap[SETTINGS_SERVICE];
+                    var heartService = (IHeartService)dataMap[HEART_SERVICE];
 
-                    // проверка текста по фильтрам
-                    string title = item.Title.Text.Trim();
-                    string textWithoutHtml = ParsingHelper.RemoveHtml(item.Summary.Text).Trim();
-                    bool filterOk = true;
-                    foreach (var filter in feed.Filters)
-                    {
-                        // фильтры реализованы по логическому "И"
-                        // пройдут только те записи, которые соответствуют всем фильтрам
-                        var titleMatches = Regex.IsMatch(title, filter.Filter);
-                        var descriptionMatches = Regex.IsMatch(title, filter.Filter);
-                        // если совпадение по регулярке найдено в заголовке или описании, считаем, что фильтр пройден
-                        var match = (titleMatches || descriptionMatches);
-                        filterOk &= match;
-                        if (!match)
-                            break;
-                    }
-                    if(!filterOk)
-                        continue;
-
-                    string imageId = null;
-                    if (!string.IsNullOrEmpty(feed.ImageSelector))
-                    {
-                        // есть селектор для парсинга картинок
-                        // Setup the configuration to support document loading
-                        var config = Configuration.Default.WithDefaultLoader();
-                        var address = item.Links.First().Uri;
-                        // Asynchronously get the document in a new context using the configuration
-                        var document = await BrowsingContext.New(config).OpenAsync(address.ToString());
-                        // Perform the query to get all cells with the content
-                        var cell = document.QuerySelector(feed.ImageSelector);
-                        if (cell != null)
-                        {
-                            var url = cell.Attributes["src"].Value;
-                            if (url.StartsWith("//"))
-                            {
-                                // ссылку вида //site.ru/img.jpg преобразуем в http://site.ru/img.jpg
-                                url = $"http:{url}";
-                            }
-                            imageId = await albumService.DownloadImage(url);
-                        }
-                    }
-                    lock (feed)
+                    logService.TraceMessage($"Starting crawling {feed.RssFeedUrl}");
+                    var feedUrl = feed.RssFeedUrl.StartsWith("//") ? $"https:{feed.RssFeedUrl}" : feed.RssFeedUrl;
+                    XmlReader reader = XmlReader.Create(feedUrl);
+                    SyndicationFeed syndicationFeed = SyndicationFeed.Load(reader);
+                    logService.TraceMessage($"Got {syndicationFeed.Items.Count()} items");
+                    foreach (SyndicationItem item in syndicationFeed.Items)
                     {
                         if (!CheckIfItemIsNew(item, newsItemService))
-                        {
-                            // если вдруг за время скачивания картинки другой поток успел добавить эту же новость
-                            imageService.RemoveImage(imageId);
                             continue;
+
+                        // проверка текста по фильтрам
+                        string title = item.Title.Text.Trim();
+                        string textWithoutHtml = ParsingHelper.RemoveHtml(item.Summary.Text).Trim();
+                        bool filterOk = true;
+                        foreach (var filter in feed.Filters)
+                        {
+                            // фильтры реализованы по логическому "И"
+                            // пройдут только те записи, которые соответствуют всем фильтрам
+                            var titleMatches = Regex.IsMatch(title, filter.Filter);
+                            var descriptionMatches = Regex.IsMatch(title, filter.Filter);
+                            // если совпадение по регулярке найдено в заголовке или описании, считаем, что фильтр пройден
+                            var match = (titleMatches || descriptionMatches);
+                            filterOk &= match;
+                            if (!match)
+                                break;
                         }
-                            
-                        const int NEWS_DESCRIPTION_LENGTH = 200;
-                        var cuttedText = TextCutHelper.Cut(textWithoutHtml, NEWS_DESCRIPTION_LENGTH).Trim();
-                        bool translitUrls = settingsService.GetSettings<bool>(nameof(Setting.TranslitEnabled));
-                        var relativeUrl = translitUrls
-                            ? FormattingHelper.ToTranslitedUrl(title)
-                            : FormattingHelper.ToRussianURL(title);
-                        var newNewsItem = new NewsItem()
+                        logService.TraceMessage(
+                            $@"Item with title ""{item.Title.Text}"" {(filterOk ? "matches" : "does not match")}");
+                        if (!filterOk)
+                            continue;
+
+                        string imageId = null;
+                        var newsItemTextStringBuilder = new StringBuilder();
+                        if (!string.IsNullOrEmpty(feed.ImageSelector))
                         {
-                            RssSource = item.Id,
-                            AuthorId = null,
-                            BreadcrumbsTitle = title,
-                            Text = item.Summary.Text.Trim(),
-                            ImageId = imageId,
-                            PostingDate = item.PublishDate.DateTime,
-                            Description = cuttedText,
-                            MetaDescription = cuttedText,
-                            Title = title,
-                            RecordType = RecordType.Default,
-                            Layout = "clientLayout",
-                            RelativeUrl = relativeUrl
-                        };
-                        if (feed.TargetCategoryId != null)
-                        {
-                            newNewsItem.Categories = new List<IdNamePair<int>>()
+                            // есть селектор для парсинга картинок
+                            // Setup the configuration to support document loading
+                            var config = Configuration.Default.WithDefaultLoader();
+                            var address = item.Links.First().Uri;
+                            // Asynchronously get the document in a new context using the configuration
+                            var document = await BrowsingContext.New(config).OpenAsync(address.ToString());
+                            // Perform the query to get all cells with the content
+                            var cell = document.QuerySelector(feed.ImageSelector);
+                            if (cell != null)
                             {
-                                new IdNamePair<int>(feed.TargetCategoryId.Value, string.Empty)
-                            };
+                                var url = cell.Attributes["src"].Value;
+                                if (url.StartsWith("//"))
+                                {
+                                    // ссылку вида //site.ru/img.jpg преобразуем в http://site.ru/img.jpg
+                                    url = $"http:{url}";
+                                }
+                                logService.TraceMessage($"Starting downloading image {url}");
+                                imageId = await albumService.DownloadImage(url);
+                                logService.TraceMessage($"Downloading image {url} OK");
+                            }
+
+                            if (string.IsNullOrEmpty(feed.ContentContainerSelector))
+                            {
+                                newsItemTextStringBuilder.Append(item.Summary.Text.Trim());
+                            }
+                            else
+                            {
+                                var content = document.QuerySelector(feed.ContentContainerSelector).InnerHtml;
+                                // удаляем все изображения
+                                var images = document.QuerySelectorAll($"{feed.ContentContainerSelector} img");
+                                foreach (var img in images)
+                                {
+                                    content = content.Replace(img.OuterHtml, "");
+                                }
+                                content = content.Replace("<p></p>", "").Trim();
+                                newsItemTextStringBuilder.Append(content);
+                            }
                         }
-                        newsItemService.CreateNewsItem(newNewsItem);
+                        lock (feed)
+                        {
+                            if (!CheckIfItemIsNew(item, newsItemService))
+                            {
+                                // если вдруг за время скачивания картинки другой поток успел добавить эту же новость
+                                imageService.RemoveImage(imageId);
+                                continue;
+                            }
+
+                            const int NEWS_DESCRIPTION_LENGTH = 200;
+                            var cuttedText = TextCutHelper.Cut(textWithoutHtml, NEWS_DESCRIPTION_LENGTH).Trim();
+                            bool translitUrls = settingsService.GetSettings<bool>(nameof(Setting.TranslitEnabled));
+                            var relativeUrl = translitUrls
+                                ? FormattingHelper.ToTranslitedUrl(title)
+                                : FormattingHelper.ToRussianURL(title);
+                            if (item.Links.Any())
+                            {
+                                newsItemTextStringBuilder.Append("<br>");
+                                newsItemTextStringBuilder.Append("<br>");
+                                var linkText = !string.IsNullOrEmpty(feed.LinkText) ? feed.LinkText : "Читать в источнике";
+                                newsItemTextStringBuilder.Append($@"<a href=""{item.Links.First().Uri.AbsoluteUri}"" target=""_blank"">{linkText}</a>");
+                            }
+                            var newsItemText = newsItemTextStringBuilder.ToString();
+                            var blogUrl = settingsService.GetSettings<string>(nameof(NewsSettings.BlogUrl));
+                            var parentHeart = heartService.GetHeart(blogUrl);
+                            var newNewsItem = new NewsItem()
+                            {
+                                RssSource = item.Id,
+                                AuthorId = null,
+                                BreadcrumbsTitle = title,
+                                Text = newsItemText,
+                                ImageId = imageId,
+                                PostingDate = item.PublishDate.DateTime,
+                                Description = cuttedText,
+                                MetaDescription = cuttedText,
+                                Title = title,
+                                RecordType = RecordType.Default,
+                                Layout = "clientLayout",
+                                RelativeUrl = relativeUrl,
+                                ParentHeartId = parentHeart?.HeartId,
+                                Tags = feed.Tags
+                            };
+                            if (feed.TargetCategoryId != null)
+                            {
+                                newNewsItem.Categories = new List<IdNamePair<int>>()
+                                {
+                                    new IdNamePair<int>(feed.TargetCategoryId.Value, string.Empty)
+                                };
+                            }
+                            logService.TraceMessage($"Creating NewsItem for {item.Id}");
+                            newsItemService.CreateNewsItem(newNewsItem);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    logService.LogError(e);
                 }
             }
 
@@ -257,7 +313,7 @@ namespace RoCMS.News.Services
             {
                 // можно оптимизировать, вынимая новость по конкретному RssSource
                 var news = newsItemService.GetAllNews();
-                return news.All(x => !x.RssSource.Equals(item.Id));
+                return news.Where(x => x.RssSource != null).All(x => !x.RssSource.Equals(item.Id));
             }
         }
     }

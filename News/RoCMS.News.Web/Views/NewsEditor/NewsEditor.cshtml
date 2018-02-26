@@ -13,8 +13,7 @@
     {
         Layout = "~/Views/Shared/_adminLayout.cshtml";
     }
-
-    if (((string)ViewBag.Action) == "Create")
+    if ((string)ViewBag.Action == "Create")
     {
         ViewBag.PageTitle = Strings.CreateNews_CreateTitle;
     }
@@ -23,9 +22,6 @@
         ViewBag.PageTitle = Strings.CreateNews_EditTitle + " '" + Model.Title + "'";
     }
     string emptyImg = Url.Content("~/Content/admin/ro/img/no-image.png");
-
-
-
 }
 
 
@@ -196,7 +192,7 @@
     <a data-bind="click: save" class="button-accept btn btn-success" title="@Strings.EditNews_AcceptButton" href="#"><i class="fa fa-check"></i> @Strings.EditNews_AcceptButton</a>
 
     <a data-bind="visible: newsItem().editMode, attr: {href: '/' + newsItem().canonicalUrl()}" class="btn btn-warning"><i class="fa fa-share"></i> Перейти</a>
-    <a class="btn btn-default" href="/Admin/Pages">@Strings.EditNews_ReturnToNews</a>
+    <a class="btn btn-default" href="/NewsEditor/AllUserNews">@Strings.EditNews_ReturnToNews</a>
 </div>
 
 

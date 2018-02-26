@@ -14,5 +14,8 @@ namespace RoCMS.News.Data.Models
         public int CheckInterval { get; set; }
         public int? TargetCategoryId { get; set; }
         public string ImageSelector { get; set; }
+        public string ContentContainerSelector { get; set; }
+        public string LinkText { get; set; }
+        public string Tags { get; set; }
     }
 }

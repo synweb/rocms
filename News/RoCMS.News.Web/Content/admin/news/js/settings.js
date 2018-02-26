@@ -49,6 +49,9 @@
     ).then(
         function () {
             ko.applyBindings(vm);
+            $(".news-tags").tagsinput({
+                //autocomplete_url: '/api/news/tag/pattern/get'
+            });
         },
         function () {
             smartAlert("Произошла ошибка");
@@ -80,6 +83,9 @@ App.Admin.RssCrawler = function(data) {
     self.targetCategoryId = ko.observable();
     self.filters = ko.observableArray();
     self.imageSelector = ko.observable();
+    self.contentContainerSelector = ko.observable();
+    self.linkText = ko.observable();
+    self.tags = ko.observable();
     self.canUnsetCategory = ko.computed(function () {
         return (self.targetCategory());
     });
@@ -119,9 +125,13 @@ App.Admin.RssCrawler = function(data) {
         self.targetCategoryId(data.targetCategoryId);
         self.filters(data.filters);
         self.imageSelector(data.imageSelector);
+        self.contentContainerSelector(data.contentContainerSelector);
+        self.linkText(data.linkText);
+        self.tags(data.tags);
     } else {
         self.checkInterval(30);
         self.isEnabled(true);
+        self.linkText("Читать в источнике");
     }
 }
 

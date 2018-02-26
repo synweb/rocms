@@ -4,12 +4,18 @@
 @CheckInterval int,
 @TargetCategoryId int,
 @RssCrawlerId int,
-@ImageSelector nvarchar(max)
+@ImageSelector nvarchar(max),
+@ContentContainerSelector nvarchar(max),
+@LinkText nvarchar(max),
+@Tags nvarchar(max)
 AS
 	UPDATE [News].[RssCrawler] SET
 		[RssFeedUrl]=@RssFeedUrl,
 		[IsEnabled]=@IsEnabled,
 		[CheckInterval]=@CheckInterval,
 		[TargetCategoryId]=@TargetCategoryId,
-		[ImageSelector]=@ImageSelector
+		[ImageSelector]=@ImageSelector,
+		[ContentContainerSelector]=@ContentContainerSelector,
+		[LinkText]=@LinkText,
+		[Tags]=@Tags
 	WHERE [RssCrawlerId]=@RssCrawlerId

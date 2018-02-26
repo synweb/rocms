@@ -68,6 +68,7 @@ namespace RoCMS.Shop.Services
                 int id = category.HeartId = dataCategory.HeartId = _heartService.CreateHeart(category);
                 _categoryGateway.Insert(dataCategory);
                 RemoveObjectFromCache("Categories");
+                RemoveObjectFromCache("AllCategories");
                 ts.Complete();
                 return id;
             }
@@ -101,6 +102,7 @@ namespace RoCMS.Shop.Services
                 ts.Complete();
             }
             RemoveObjectFromCache("Categories");
+            RemoveObjectFromCache("AllCategories");
             RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(category.RelativeUrl));
             RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(category.HeartId));
         }
@@ -126,6 +128,7 @@ namespace RoCMS.Shop.Services
 
 
                 RemoveObjectFromCache("Categories");
+                RemoveObjectFromCache("AllCategories");
                 RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(heart.RelativeUrl));
                 RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(dataCategory.HeartId));
 
@@ -153,6 +156,21 @@ namespace RoCMS.Shop.Services
                 
                 SortCategories(cats);
 
+                return cats;
+            });
+        }
+
+        public IList<Category> GetAllCategories()
+        {
+            string cacheKey = "AllCategories";
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var dataCats = _categoryGateway.SelectAll();
+                var cats = Mapper.Map<List<Category>>(dataCats);
+                foreach (var category in cats)
+                {
+                    FillData(category);
+                }
                 return cats;
             });
         }

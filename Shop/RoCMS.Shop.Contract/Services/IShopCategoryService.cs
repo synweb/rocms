@@ -19,6 +19,8 @@ namespace RoCMS.Shop.Contract.Services
         IList<GoodsItem> GetCategoryGoods(int categoryId, int? count);
 
         bool IsChild(int currentCategoryId, int parentCategoryId);
+
+        IList<Category> GetAllCategories();
         //string GetCategoryCanonicalUrl(int categoryId);
         //string GetCategoryCanonicalUrl(string relativeUrl);
     }

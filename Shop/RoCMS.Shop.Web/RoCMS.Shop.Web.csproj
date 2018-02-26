@@ -155,6 +155,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\BreadCrumbsHelper.cs" />
+    <Compile Include="Helpers\GoodsItemDynamicNodeProvider.cs" />
+    <Compile Include="Helpers\CategoryDynamicNodeProvider.cs" />
     <Compile Include="Helpers\EnumExtentions.cs" />
     <Compile Include="Models\Filters\GoodsFilterAttribute.cs" />
     <Compile Include="Resources\ShopStrings.Designer.cs">

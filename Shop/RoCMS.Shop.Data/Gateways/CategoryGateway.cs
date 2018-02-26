@@ -43,5 +43,10 @@ namespace RoCMS.Shop.Data.Gateways
         {
             return Exec<bool>(GetProcedureString(), relativeUrl);
         }
+
+        public ICollection<Category> SelectAll()
+        {
+            return ExecSelect<Category>(GetProcedureString());
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using MvcSiteMapProvider;
 using RoCMS.Base.ForWeb.Helpers;
 //using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Base.ForWeb.Models.Filters;
@@ -164,6 +165,7 @@ namespace RoCMS.Shop.Web.Controllers
             return RedirectPermanent(Url.RouteUrl("CatalogSEF", args));
         }
 
+        [MvcSiteMapNode(ParentKey = "Home", Key = "CategorySEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.CategoryDynamicNodeProvider, RoCMS.Shop.Web")]
         [PagingFilter]
         [GoodsFilter]
         public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
@@ -304,6 +306,7 @@ namespace RoCMS.Shop.Web.Controllers
             return RedirectToRoutePermanent(typeof(GoodsItem).FullName, new { relativeURL = goods.CanonicalUrl });
         }
 
+        [MvcSiteMapNode(ParentKey = "Home", Key = "GoodsSEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.GoodsItemDynamicNodeProvider, RoCMS.Shop.Web")]
         public ActionResult GoodsSEF(string relativeUrl)
         {
             string pageUrl = relativeUrl.Split('/').Last();

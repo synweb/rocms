@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[Goods_Filter]
-	@CategoryIds [Int_Table] readonly,
+	@CategoryIds [String_Table] readonly,
 	@WithSubcategories bit,
 	@ManufacturerIds [Int_Table] readonly,
 	@Countries [Int_Table] readonly,
@@ -37,28 +37,64 @@ SET NOCOUNT ON
 --SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
 DECLARE @HeartIds TABLE(RowNumber INT IDENTITY PRIMARY KEY, HeartId INT)
-
 DECLARE @FullCategoryIds TABLE(Val INT)
-
+DECLARE @CurrentCategorySet varchar(255)
 IF @WithSubcategories = 1
 BEGIN
-	;WITH ret AS(
+		-- foreach @CurrentCategorySet in @CategoryIds
+		DECLARE MY_CURSOR CURSOR 
+		  LOCAL STATIC READ_ONLY FORWARD_ONLY
+		FOR 
+		SELECT Val 
+		FROM @CategoryIds
+		OPEN MY_CURSOR
+		FETCH NEXT FROM MY_CURSOR INTO @CurrentCategorySet
+		WHILE @@FETCH_STATUS = 0
+		BEGIN 
+			--Do something with @CurrentCategorySet here
+			
+				;WITH ret AS(
     		SELECT	[HeartId], [ParentCategoryId]
     		FROM	[Shop].[Category]
-    		WHERE	([HeartId] IN (SELECT Val FROM @CategoryIds)) -- OR (NOT EXISTS (SELECT * FROM @CategoryIds))
+    		WHERE	([HeartId] IN (SELECT Val FROM SplitStringToInts(@CurrentCategorySet))) -- OR (NOT EXISTS (SELECT * FROM @CategoryIds))
     		UNION ALL
     		SELECT	t.[HeartId], t.[ParentCategoryId]
     		FROM	[Shop].[Category] t INNER JOIN
     				ret r ON t.[ParentCategoryId] = r.[HeartId]
-	)
-	INSERT INTO @FullCategoryIds
-	SELECT HeartId
-	FROM ret
+			)
+			INSERT INTO @FullCategoryIds
+			SELECT HeartId
+			FROM ret
+
+		FETCH NEXT FROM MY_CURSOR INTO @CurrentCategorySet
+		END
+		CLOSE MY_CURSOR
+		DEALLOCATE MY_CURSOR
+
+
+
 END
 ELSE BEGIN
-	INSERT INTO @FullCategoryIds
-	SELECT [Val]
+	-- foreach @CurrentCategorySet in @CategoryIds
+	DECLARE MY_CURSOR CURSOR 
+		LOCAL STATIC READ_ONLY FORWARD_ONLY
+	FOR 
+	SELECT Val 
 	FROM @CategoryIds
+	OPEN MY_CURSOR
+	FETCH NEXT FROM MY_CURSOR INTO @CurrentCategorySet
+	WHILE @@FETCH_STATUS = 0
+	BEGIN 
+		--Do something with @CurrentCategorySet here
+
+		INSERT INTO @FullCategoryIds
+		SELECT [Val]
+		FROM SplitStringToInts(@CurrentCategorySet)
+
+	FETCH NEXT FROM MY_CURSOR INTO @CurrentCategorySet
+	END
+	CLOSE MY_CURSOR
+	DEALLOCATE MY_CURSOR
 END
 
 -- Вытаскиваем айдишники товаров с акциями

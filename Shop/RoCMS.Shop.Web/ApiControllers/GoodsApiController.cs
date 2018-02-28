@@ -37,7 +37,7 @@ namespace RoCMS.Shop.Web.ApiControllers
 
             _settingsService.Set<int?>(SettingKey.LastGoodsCategory.ToString(), categoryId);
             FilterCollections col;
-            return _shopService.GetGoodsSet(new GoodsFilter() {CategoryIds = new[]{categoryId}}, 0, int.MaxValue, out total, out col, false);
+            return _shopService.GetGoodsSet(new GoodsFilter() {CategoryIds = new[]{new []{categoryId}}}, 0, int.MaxValue, out total, out col, false);
         }
 
         //[HttpGet]
@@ -56,7 +56,11 @@ namespace RoCMS.Shop.Web.ApiControllers
             int total;
             FilterCollections col;
 
-            _settingsService.Set<int?>(SettingKey.LastGoodsCategory.ToString(), filter.CategoryIds != null && filter.CategoryIds.Any() ? filter.CategoryIds.First() : (int?)null);
+            _settingsService.Set<int?>(SettingKey.LastGoodsCategory.ToString(), 
+                filter.CategoryIds != null 
+                && filter.CategoryIds.Any()
+                && filter.CategoryIds.SelectMany(x => x).Any()
+                ? filter.CategoryIds.First().First() : (int?)null);
             _settingsService.Set<int?>(SettingKey.LastGoodsSupplier.ToString(), filter.SupplierIds != null && filter.SupplierIds.Any() ? filter.SupplierIds.First() : (int?)null);
             _settingsService.Set<int?>(SettingKey.LastGoodsManufacturer.ToString(), filter.ManufacturerIds != null && filter.ManufacturerIds.Any() ? filter.ManufacturerIds.First() : (int?)null);
             _settingsService.Set<SortCriterion>(SettingKey.LastGoodsSortBy.ToString(), filter.SortBy);

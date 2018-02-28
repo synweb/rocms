@@ -11,7 +11,7 @@ namespace RoCMS.Shop.Web.Models.Filters
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             //var par = ParamExtractor.ExtractUrlParams(filterContext.HttpContext.Request);
-
+            string catFilter = ParsingHelper.ParseObject<string>(filterContext.HttpContext.Request.QueryString, "cats");
             int? pack = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "pack");
             int? country = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "country");
             int? manufacturer = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "mnf");
@@ -31,6 +31,7 @@ namespace RoCMS.Shop.Web.Models.Filters
             filterContext.ActionParameters["countryId"] = country;
             filterContext.ActionParameters["manufacturerId"] = manufacturer;
             filterContext.ActionParameters["sort"] = sort;
+            filterContext.ActionParameters["catFilter"] = catFilter;
 
             base.OnActionExecuting(filterContext);
         }

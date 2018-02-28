@@ -228,6 +228,7 @@
     <Build Include="dbo\Stored Procedures\Heart_Update.sql" />
     <Build Include="dbo\Stored Procedures\Heart_SelectByType.sql" />
     <Build Include="dbo\Stored Procedures\Heart_SelectByIds.sql" />
+    <Build Include="dbo\Functions\SplitStringToInts.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExportImages.sql" />

@@ -17,7 +17,9 @@ namespace RoCMS.Shop.Data.Gateways
             {
                 ActionIds=filter.ActionIds,
                 Articles=filter.Articles,
-                CategoryIds=filter.CategoryIds,
+                // уходит коллекция строк в виде { "1,2,3", "4,5" }
+                // значения внутри строк объединяются по И
+                CategoryIds=filter.CategoryIds.Select(x => string.Join(",", x)),
                 WithSubcategories=filter.WithSubcategories,
                 Countries=filter.Countries,
                 ManufacturerIds=filter.ManufacturerIds,
@@ -41,7 +43,7 @@ namespace RoCMS.Shop.Data.Gateways
         {
             public IEnumerable<int> ActionIds { get; set; }
             public IEnumerable<string> Articles { get; set; }
-            public IEnumerable<int> CategoryIds { get; set; }
+            public IEnumerable<string> CategoryIds { get; set; }
             public bool WithSubcategories { get; set; }
             public IEnumerable<int> Countries { get; set; }
             public IEnumerable<int> ManufacturerIds { get; set; }

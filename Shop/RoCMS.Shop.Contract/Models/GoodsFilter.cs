@@ -7,7 +7,7 @@ namespace RoCMS.Shop.Contract.Models
     {
         public GoodsFilter()
         {
-            CategoryIds = new List<int>();
+            CategoryIds = new List<List<int>>();
             ManufacturerIds = new List<int>();
             SupplierIds = new List<int>();
             Countries = new List<int>();
@@ -16,7 +16,8 @@ namespace RoCMS.Shop.Contract.Models
             Articles = new List<string>();
             SpecIdValues = new Dictionary<int, string>();
         }
-        public IEnumerable<int> CategoryIds { get; set; }
+        //public IEnumerable<int> CategoryIds { get; set; }
+        public IEnumerable<IEnumerable<int>> CategoryIds { get; set; }
         /// <summary>
         /// Если true, то вынимаются товары из всех дочерних категорий, кроме скрытых.
         /// Товары скрытых категорий не возвращаются

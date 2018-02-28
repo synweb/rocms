@@ -57,14 +57,7 @@ namespace RoCMS.Shop.Contract.Models
                 if (Filter.CategoryIds.Any())
                 {
                     sb.Append("в категориях: ");
-                    foreach (int id in Filter.CategoryIds)
-                    {
-                        sb.Append(id);
-                        if (id != Filter.CategoryIds.Last())
-                        {
-                            sb.Append(", ");
-                        }
-                    }
+                    sb.Append(string.Join(", ", Filter.CategoryIds.SelectMany(x => x)));
                 }
                 sb.Append(".");
             }

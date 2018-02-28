@@ -54,12 +54,6 @@ namespace RoCMS.Shop.Web.Controllers
             _heartService = heartService;
         }
 
-        //хз почему не работает
-        //public ActionResult Index()
-        //{
-        //    return RedirectToRoute(Url.RouteUrl("PageSEF", new {relativeUrl = "catalog"}));
-        //}
-
         public ActionResult Categories()
         {
             return PartialView();
@@ -83,67 +77,40 @@ namespace RoCMS.Shop.Web.Controllers
             return PartialView("_GoodsAwaitingDialog");
         }
 
-        //public ActionResult Search(string query, int page = 1, int pgsize = 10)
-        //{
-        //    ViewBag.BreadCrumbs = RoCMS.Base.ForWeb.Helpers.BreadCrumbsHelper.ForSearch();
-        //    int totalCount;
-        //    int startIndex = (page - 1) * pgsize + 1;
+        private List<List<int>> ParseCategoryFilter(string catFilter)
+        {
+            List<List<int>> cats = new List<List<int>>();
+            if (catFilter != null)
+            {
+                // вид:             1,2;3
+                // расшифровка:     1&2|3
+                var orGroups = catFilter.Split(';');
+                // сначала разбиваем на группы по "или"
+                foreach (var orGroup in orGroups)
+                {
+                    var intGroup = new List<int>();
+                    // формируем группы по "и"
+                    intGroup.AddRange(orGroup.Split(',').Select(int.Parse));
+                    cats.Add(intGroup);
+                }
+            }
+            return cats;
+        }
 
-        //    var results = _searchService.Search(query, startIndex, pgsize, out totalCount);
-
-        //    //foreach (var item in results)
-        //    //{
-        //    //    switch (item.ItemType)
-        //    //    {
-        //    //        case SearchItemType.Article:
-        //    //            item.Url = Url.Action("GetPage", "Page", new { relativeUrl = item.Url });
-        //    //            break;
-        //    //        case SearchItemType.Goods:
-        //    //            item.Url = Url.Action("Goods", "Shop", new { id = item.ItemId });
-        //    //            break;
-        //    //        default:
-        //    //            throw new NotSupportedException();
-        //    //    }
-        //    //}
-
-        //    ViewBag.TotalCount = totalCount;
-
-        //    return PartialView("SearchResult", results);
-
-        //}
         [PagingFilter]
-        public ActionResult AllGoods(int page = 1, int pgsize = 10)
+        [GoodsFilter]
+        public ActionResult AllGoods(int page = 1, int pgsize = 10, int? country = null, int? manufacturerId = null,
+            int? packId = null, string specs = null, SortCriterion? sort = null, string catFilter = null)
         {
             int totalCount;
             FilterCollections filters;
+
             //TODO: ЭТО ЯВНО КОСЯК. Передается page, ожидается - startIndex !!! Перепроверить всё
-            var goods = _shopService.GetGoodsSet(new GoodsFilter() { ClientMode = true }, page, pgsize, out totalCount, out filters, true);
+            var goods = _shopService.GetGoodsSet(new GoodsFilter() {ClientMode = true, CategoryIds = ParseCategoryFilter(catFilter) }, page, pgsize, out totalCount,
+                out filters, true);
             ViewBag.TotalCount = totalCount;
             return PartialView("_GoodsPage", goods);
         }
-
-        //[PagingFilter]
-        //[GoodsFilter]
-        //public ActionResult CatalogSEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
-        //{
-        //    string pageUrl = relativeUrl.Split('/').Last();
-        //    bool categoryExists = _shopCategoryService.CategoryExists(pageUrl);
-        //    bool goodsExists = _shopService.GoodsExists(pageUrl);
-        //    if (!categoryExists && ! goodsExists)
-        //    {
-        //        throw new HttpException(404, "Not found");
-        //    }
-        //    var routeValues = Request.RequestContext.RouteData.Values;
-        //    ViewBag.PagingRoute = "CatalogSEF";
-        //    if (categoryExists)
-        //    {
-        //        return CategorySEF(relativeUrl, country, manufacturerId, packId, specs, sort);
-        //    }
-
-
-        //    return GoodsSEF(relativeUrl);
-
-        //}
 
         [PagingFilter]
         [GoodsFilter]
@@ -197,7 +164,7 @@ namespace RoCMS.Shop.Web.Controllers
 
             var filter = new GoodsFilter()
             {
-                CategoryIds = new[] { id },
+                CategoryIds = new[] { new [] {id} },
                 ClientMode = true
             };
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);

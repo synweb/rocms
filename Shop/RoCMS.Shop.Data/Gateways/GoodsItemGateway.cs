@@ -34,7 +34,9 @@ namespace RoCMS.Shop.Data.Gateways
                     SortOrder = sortOrder,
                     StartIndex = startIndex,
                     TotalCount = total,
-                    Count = count
+                    Count = count,
+                    MinPrice = filter.MinPrice,
+                    MaxPrice = filter.MaxPrice
                 };
                 var procedureResult = ExecSelect<int>("[Shop].[Goods_Filter]", param);
                 totalCount = param.TotalCount;
@@ -61,7 +63,9 @@ namespace RoCMS.Shop.Data.Gateways
                     SortOrder = sortOrder,
                     StartIndex = startIndex,
                     TotalCount = total,
-                    Count = count
+                    Count = count,
+                    MinPrice = filter.MinPrice,
+                    MaxPrice = filter.MaxPrice
                 };
                 var procedureResult = ExecSelect<int>("[Shop].[Goods_Filter]", param);
                 if (totalCount == -1)
@@ -100,6 +104,8 @@ namespace RoCMS.Shop.Data.Gateways
             public int StartIndex { get; set; }
             public int TotalCount { get; set; }
             public int Count { get; set; }
+            public decimal? MinPrice { get; set; }
+            public decimal? MaxPrice { get; set; }
         }
 
         public ICollection<IdNamePair<int>> GetManufacturers(ICollection<int> heartIds)

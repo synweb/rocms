@@ -17,6 +17,8 @@ namespace RoCMS.Shop.Web.Models.Filters
             int? pack = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "pack");
             int? country = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "country");
             int? manufacturer = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "mnf");
+            int? minPrice = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "minp");
+            int? maxPrice = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "maxp");
             SortCriterion? sort = null;
             if (filterContext.HttpContext.Request.QueryString["sort"] != null)
             {
@@ -34,6 +36,8 @@ namespace RoCMS.Shop.Web.Models.Filters
             filterContext.ActionParameters["manufacturerId"] = manufacturer;
             filterContext.ActionParameters["sort"] = sort;
             filterContext.ActionParameters["catFilter"] = ParseCategoryFilter(catFilter);
+            filterContext.ActionParameters["minPrice"] = minPrice;
+            filterContext.ActionParameters["maxPrice"] = maxPrice;
 
             base.OnActionExecuting(filterContext);
         }

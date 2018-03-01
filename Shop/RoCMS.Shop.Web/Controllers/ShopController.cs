@@ -80,13 +80,18 @@ namespace RoCMS.Shop.Web.Controllers
         [PagingFilter]
         [GoodsFilter]
         public ActionResult AllGoods(int page = 1, int pgsize = 10, int? country = null, int? manufacturerId = null,
-            int? packId = null, string specs = null, SortCriterion? sort = null, List<List<int>> catFilter = null)
+            int? packId = null, string specs = null, SortCriterion? sort = null, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null)
         {
             int totalCount;
             FilterCollections filters;
+            int startIndex = (page - 1) * pgsize + 1;
 
-            //TODO: ЭТО ЯВНО КОСЯК. Передается page, ожидается - startIndex !!! Перепроверить всё
-            var goods = _shopService.GetGoodsSet(new GoodsFilter() {ClientMode = true, CategoryIds = catFilter }, page, pgsize, out totalCount,
+            var goods = _shopService.GetGoodsSet(new GoodsFilter()
+                {
+                    ClientMode = true, CategoryIds = catFilter,
+                    MinPrice = minPrice,
+                    MaxPrice = maxPrice
+                }, startIndex, pgsize, out totalCount,
                 out filters, true);
             ViewBag.TotalCount = totalCount;
             return PartialView("_GoodsPage", goods);
@@ -94,7 +99,7 @@ namespace RoCMS.Shop.Web.Controllers
 
         [PagingFilter]
         [GoodsFilter]
-        public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
+        public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, int? minPrice = null, int? maxPrice = null)
         {
             bool exists = _shopCategoryService.CategoryExists(id);
             if (!exists)
@@ -115,7 +120,7 @@ namespace RoCMS.Shop.Web.Controllers
         [MvcSiteMapNode(ParentKey = "Home", Key = "CategorySEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.CategoryDynamicNodeProvider, RoCMS.Shop.Web")]
         [PagingFilter]
         [GoodsFilter]
-        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
+        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, int? minPrice = null, int? maxPrice = null)
         {
 
             string pageUrl = relativeUrl.Split('/').Last();
@@ -145,7 +150,9 @@ namespace RoCMS.Shop.Web.Controllers
             var filter = new GoodsFilter()
             {
                 CategoryIds = new[] { new [] {id} },
-                ClientMode = true
+                ClientMode = true,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice
             };
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
             return PartialView("GoodsPage", goods);
@@ -213,7 +220,7 @@ namespace RoCMS.Shop.Web.Controllers
 
         [PagingFilter]
         [GoodsFilter]
-        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page = 1, int pgsize = 10)
+        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page = 1, int pgsize = 10, int? minPrice = null, int? maxPrice = null)
         {
             bool exists = _shopActionService.ActionExists(id);
             if (!exists)

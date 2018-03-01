@@ -9,6 +9,9 @@
     @SearchQuery NVARCHAR(500),
     @FulltextSearchQuery NVARCHAR(2000),
 
+	@MinPrice decimal,
+	@MaxPrice decimal,
+
     @SortBy VARCHAR(20),
     @SortOrder VARCHAR(4),
     
@@ -134,7 +137,14 @@ SELECT DISTINCT gc1.GoodsId
 FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.HeartId = g.HeartId
 WHERE
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))
-        
+AND
+(
+	@MaxPrice IS NULL OR EXISTS(SELECT * FROM GoodsWithActualDiscounts gwad WHERE  gwad.HeartId = gc1.GoodsId AND gwad.ActualPrice <= @MaxPrice)
+)
+AND
+(
+	@MinPrice IS NULL OR EXISTS(SELECT * FROM GoodsWithActualDiscounts gwad WHERE  gwad.HeartId = gc1.GoodsId AND gwad.ActualPrice >= @MinPrice)
+)            
 AND
 ( (@ManufacturerIdsExist = 0 AND @CountriesExist = 0) OR
         

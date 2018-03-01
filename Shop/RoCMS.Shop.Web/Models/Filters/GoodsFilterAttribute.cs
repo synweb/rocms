@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Web.Mvc;
 using RoCMS.Base.Helpers;
 using RoCMS.Shop.Contract.Models;
@@ -31,11 +33,31 @@ namespace RoCMS.Shop.Web.Models.Filters
             filterContext.ActionParameters["countryId"] = country;
             filterContext.ActionParameters["manufacturerId"] = manufacturer;
             filterContext.ActionParameters["sort"] = sort;
-            filterContext.ActionParameters["catFilter"] = catFilter;
+            filterContext.ActionParameters["catFilter"] = ParseCategoryFilter(catFilter);
 
             base.OnActionExecuting(filterContext);
         }
 
-        
+
+        private List<List<int>> ParseCategoryFilter(string catFilter)
+        {
+            List<List<int>> cats = new List<List<int>>();
+            if (catFilter != null)
+            {
+                // вид:             1,2;3
+                // расшифровка:     (1|2)&3
+                var orGroups = catFilter.Split(';');
+                // сначала разбиваем на группы по "и"
+                foreach (var orGroup in orGroups)
+                {
+                    var intGroup = new List<int>();
+                    // формируем группы по "или"
+                    intGroup.AddRange(orGroup.Split(',').Select(int.Parse));
+                    cats.Add(intGroup);
+                }
+            }
+            return cats;
+        }
+
     }
 }

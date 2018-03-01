@@ -438,29 +438,31 @@ namespace RoCMS.Shop.Services
             var dataFilter = Mapper.Map<Data.Models.GoodsFilter>(filter);
             var heartIds = _goodsItemGateway.FilterGoods(dataFilter, startIndex, count, out totalCount);
             collections = new FilterCollections();
-            collections.Manufacturers = _goodsItemGateway.GetManufacturers(heartIds);
-            collections.Countries = _goodsItemGateway.GetCountries(heartIds);
-            collections.Packs = _goodsItemGateway.GetPacks(heartIds);
-            var specValues = _goodsItemGateway.GetSpecs(heartIds);
-
-            foreach (var spec in specValues)
+            if (heartIds != null && heartIds.Any())
             {
-                var colSpec = collections.SpecValues.Keys.SingleOrDefault(x => x.SpecId == spec.Key);
-                if (colSpec == null)
+                collections.Manufacturers = _goodsItemGateway.GetManufacturers(heartIds);
+                collections.Countries = _goodsItemGateway.GetCountries(heartIds);
+                collections.Packs = _goodsItemGateway.GetPacks(heartIds);
+                var specValues = _goodsItemGateway.GetSpecs(heartIds);
+
+                foreach (var spec in specValues)
                 {
-                    var filterSpec = _shopSpecService.GetSpec(spec.Key);
-                    if (filterSpec == null)
+                    var colSpec = collections.SpecValues.Keys.SingleOrDefault(x => x.SpecId == spec.Key);
+                    if (colSpec == null)
                     {
-                        continue;
+                        var filterSpec = _shopSpecService.GetSpec(spec.Key);
+                        if (filterSpec == null)
+                        {
+                            continue;
+                        }
+                        collections.SpecValues.Add(filterSpec, new List<string>() {spec.Value});
                     }
-                    collections.SpecValues.Add(filterSpec, new List<string>() { spec.Value });
-                }
-                else
-                {
-                    collections.SpecValues[colSpec].Add(spec.Value);
+                    else
+                    {
+                        collections.SpecValues[colSpec].Add(spec.Value);
+                    }
                 }
             }
-
 
             var goodsPage = startIndex > 1 ? heartIds.Skip(startIndex - 1).Take(count) : heartIds.Take(count);
 

@@ -77,36 +77,16 @@ namespace RoCMS.Shop.Web.Controllers
             return PartialView("_GoodsAwaitingDialog");
         }
 
-        private List<List<int>> ParseCategoryFilter(string catFilter)
-        {
-            List<List<int>> cats = new List<List<int>>();
-            if (catFilter != null)
-            {
-                // вид:             1,2;3
-                // расшифровка:     1&2|3
-                var orGroups = catFilter.Split(';');
-                // сначала разбиваем на группы по "или"
-                foreach (var orGroup in orGroups)
-                {
-                    var intGroup = new List<int>();
-                    // формируем группы по "и"
-                    intGroup.AddRange(orGroup.Split(',').Select(int.Parse));
-                    cats.Add(intGroup);
-                }
-            }
-            return cats;
-        }
-
         [PagingFilter]
         [GoodsFilter]
         public ActionResult AllGoods(int page = 1, int pgsize = 10, int? country = null, int? manufacturerId = null,
-            int? packId = null, string specs = null, SortCriterion? sort = null, string catFilter = null)
+            int? packId = null, string specs = null, SortCriterion? sort = null, List<List<int>> catFilter = null)
         {
             int totalCount;
             FilterCollections filters;
 
             //TODO: ЭТО ЯВНО КОСЯК. Передается page, ожидается - startIndex !!! Перепроверить всё
-            var goods = _shopService.GetGoodsSet(new GoodsFilter() {ClientMode = true, CategoryIds = ParseCategoryFilter(catFilter) }, page, pgsize, out totalCount,
+            var goods = _shopService.GetGoodsSet(new GoodsFilter() {ClientMode = true, CategoryIds = catFilter }, page, pgsize, out totalCount,
                 out filters, true);
             ViewBag.TotalCount = totalCount;
             return PartialView("_GoodsPage", goods);

@@ -14,6 +14,7 @@ namespace RoCMS.Shop.Web.Models.Filters
         {
             //var par = ParamExtractor.ExtractUrlParams(filterContext.HttpContext.Request);
             string catFilter = ParsingHelper.ParseObject<string>(filterContext.HttpContext.Request.QueryString, "cats");
+            string specs = ParsingHelper.ParseObject<string>(filterContext.HttpContext.Request.QueryString, "specs");
             int? pack = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "pack");
             int? country = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "country");
             int? manufacturer = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "mnf");
@@ -36,10 +37,36 @@ namespace RoCMS.Shop.Web.Models.Filters
             filterContext.ActionParameters["manufacturerId"] = manufacturer;
             filterContext.ActionParameters["sort"] = sort;
             filterContext.ActionParameters["catFilter"] = ParseCategoryFilter(catFilter);
+            //filterContext.ActionParameters["specs"] = ParseSpecs(specs);
             filterContext.ActionParameters["minPrice"] = minPrice;
             filterContext.ActionParameters["maxPrice"] = maxPrice;
 
             base.OnActionExecuting(filterContext);
+        }
+
+        private IDictionary<int, string> ParseSpecs(string specsString)
+        {
+            Dictionary<int, string> specs = new Dictionary<int, string>();
+            if (!String.IsNullOrEmpty(specsString))
+            {
+                //format: 1:150_200,2:_100,5:100_
+                var groups = specsString.Split(',');
+                foreach (var group in groups)
+                {
+                    try
+                    {
+                        var parts = group.Split(':');
+                        specs.Add(Int32.Parse(parts[0]), parts[1]);
+                    }
+                    catch
+                    {
+                    }
+                }
+
+            }
+
+
+            return specs;
         }
 
 

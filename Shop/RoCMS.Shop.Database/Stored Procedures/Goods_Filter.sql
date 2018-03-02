@@ -191,7 +191,7 @@ BEGIN
 
     DELETE FROM @UnsortedHeartIds
     INSERT INTO @UnsortedHeartIds -- нужно для сохранения порядка по релевантности
-    SELECT Val FROM @searchHeartIds
+    SELECT DISTINCT Val FROM @searchHeartIds
 END
         
 SELECT @TotalCount = COUNT(*) FROM @UnsortedHeartIds

@@ -151,8 +151,6 @@ namespace RoCMS.Shop.Web.Controllers
                 return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
             }
 
-
-
             int id = cat.HeartId;
 
             int page = ViewBag.Page;

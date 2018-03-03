@@ -38,6 +38,8 @@ namespace RoCMS.Shop.Web.Controllers
 
         private readonly IPrincipalResolver _principalResolver;
 
+        private readonly string _shopUrl;
+
         public ShopController(ISessionValueProviderService sessionService, IShopService shopService,
             ISearchService searchService, IShopClientService clientService, IShopActionService shopActionService,
             IShopCategoryService shopCategoryService, IShopManufacturerService shopManufacturerService,
@@ -52,6 +54,18 @@ namespace RoCMS.Shop.Web.Controllers
             _shopManufacturerService = shopManufacturerService;
             _principalResolver = principalResolver;
             _heartService = heartService;
+
+
+            var service = DependencyResolver.Current.GetService<IShopSettingsService>();
+            try
+            {
+                var settings = service.GetShopSettings();
+                _shopUrl = String.IsNullOrEmpty(settings.ShopUrl) ? "catalog" : settings.ShopUrl;
+            }
+            catch
+            {
+                _shopUrl = "catalog";
+            }
         }
 
         public ActionResult Categories()
@@ -84,6 +98,21 @@ namespace RoCMS.Shop.Web.Controllers
         {
             //int totalCount;
             //FilterCollections filters;
+
+            //Не дает, так как child action
+            //var routeValues = Request.RequestContext.RouteData.Values;
+            //if (catFilter != null && (catFilter.Count() == 1 && catFilter.First().Count() == 1))
+            //{
+            //    var heart = _heartService.GetHeart(catFilter.First().First());
+
+            //    routeValues["relativeUrl"] = heart.RelativeUrl;
+            //    return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
+            //}
+
+
+
+
+
             int startIndex = (page - 1) * pgsize + 1;
 
 
@@ -110,7 +139,7 @@ namespace RoCMS.Shop.Web.Controllers
 
         [PagingFilter]
         [GoodsFilter]
-        public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, int? minPrice = null, int? maxPrice = null, string query = null)
+        public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             bool exists = _shopCategoryService.CategoryExists(id);
             if (!exists)
@@ -131,7 +160,7 @@ namespace RoCMS.Shop.Web.Controllers
         [MvcSiteMapNode(ParentKey = "Home", Key = "CategorySEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.CategoryDynamicNodeProvider, RoCMS.Shop.Web")]
         [PagingFilter]
         [GoodsFilter]
-        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, int? minPrice = null, int? maxPrice = null, string query = null)
+        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
 
             string pageUrl = relativeUrl.Split('/').Last();
@@ -140,12 +169,19 @@ namespace RoCMS.Shop.Web.Controllers
             //{
             //    throw new HttpException(404, "Not found");
             //}
+            var routeValues = Request.RequestContext.RouteData.Values;
+            if (catFilter != null && (catFilter.Count() > 1 || catFilter.Any(x => x.Count() > 1)))
+            {
+                routeValues["relativeUrl"] = _shopUrl;
+                return RedirectPermanent(Url.RouteUrl(typeof(Page).FullName, routeValues));
+            }
+
 
             var cat = _heartService.GetHeart(pageUrl);
             var requestPath = Request.Path.Substring(1);
             if (!cat.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
             {
-                var routeValues = Request.RequestContext.RouteData.Values;
+                
                 //routeValues["relativeUrl"] = cat.CanonicalUrl;
 
                 return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
@@ -208,9 +244,9 @@ namespace RoCMS.Shop.Web.Controllers
             IList<GoodsItem> goods = _shopService.GetGoodsSet(filter,
             startIndex, pgsize, out totalCount, out collections);
             ViewBag.TotalCount = totalCount;
-            if (filter.CategoryIds.Count() == 1)
+            if (filter.CategoryIds.Count() == 1 && filter.CategoryIds.First().Count() == 1)
             {
-                ViewBag.CategoryId = filter.CategoryIds.First();
+                ViewBag.CategoryId = filter.CategoryIds.First().First();
             }
             if (filter.ActionIds.Count() == 1)
             {

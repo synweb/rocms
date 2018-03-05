@@ -53,7 +53,7 @@ function goodsEditorLoaded(onSelected, context) {
 
 
         var data = {
-            categoryIds: vm.filters().categoryIds() ? [vm.filters().categoryIds()] : [],
+            categoryIds: vm.filters().categoryIds() ? [[vm.filters().categoryIds()]] : [],
             manufacturerIds: vm.filters().manufacturerIds() ? [vm.filters().manufacturerIds()] : [],
             supplierIds: vm.filters().supplierIds() ? [vm.filters().supplierIds()] : [],
             searchPattern: vm.filters().searchPattern() ? vm.filters().searchPattern() : "",
@@ -109,6 +109,7 @@ function goodsEditorLoaded(onSelected, context) {
             var goodsItem = $.extend(new App.Admin.Shop.GoodsItem(), App.Admin.Shop.GoodsItemFunctions);
             if (vm.filters().categoryIds()) {
                 goodsItem.categories.push(ko.mapping.fromJS({ id: vm.filters().categoryIds(), name: vm.filters().categoryName() }));
+                goodsItem.parentHeartId(vm.filters().categoryIds());
             }
             goodsItem.create(function () {
                 vm.goods.push(goodsItem);

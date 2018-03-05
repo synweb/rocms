@@ -352,5 +352,27 @@ namespace RoCMS.Shop.Services
                 return false;
             });
         }
+
+        public Dictionary<int, int> GetCategoryStats()
+        {
+            string cacheKey = "CategoryStats";
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var data = _goodsCategoryGateway.Select();
+                Dictionary <int, int> dict = new Dictionary<int, int>();
+                foreach (var item in data)
+                {
+                    if (dict.ContainsKey(item.CategoryId))
+                    {
+                        dict[item.CategoryId]++;
+                    }
+                    else
+                    {
+                        dict.Add(item.CategoryId, 1);
+                    }
+                }
+                return dict;
+            });
+        }
     }
 }

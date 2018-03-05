@@ -257,6 +257,7 @@
     <Build Include="Stored Procedures\FavouriteItem_Insert.sql" />
     <Build Include="Stored Procedures\FavouriteItem_Delete.sql" />
     <Build Include="Stored Procedures\Category_SelectAll.sql" />
+    <Build Include="Stored Procedures\Goods_Category_Select.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">

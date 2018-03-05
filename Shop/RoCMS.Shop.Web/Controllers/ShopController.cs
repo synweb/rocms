@@ -110,9 +110,6 @@ namespace RoCMS.Shop.Web.Controllers
             //}
 
 
-
-
-
             int startIndex = (page - 1) * pgsize + 1;
 
 
@@ -178,6 +175,20 @@ namespace RoCMS.Shop.Web.Controllers
 
 
             var cat = _heartService.GetHeart(pageUrl);
+
+            if (catFilter != null && catFilter.Count() == 1 && catFilter.First().Count() == 1)
+            {
+                int catFilterId = catFilter.First().First();
+                if (cat.HeartId != catFilterId)
+                {
+                    var filterCat = _heartService.GetHeart(catFilterId);
+                    routeValues["relativeUrl"] = filterCat.RelativeUrl;
+                    routeValues.Remove("cats");
+                    return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
+                }
+            }
+
+
             var requestPath = Request.Path.Substring(1);
             if (!cat.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
             {

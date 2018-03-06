@@ -192,7 +192,7 @@ namespace RoCMS.Shop.Web.Controllers
             var requestPath = Request.Path.Substring(1);
             if (!cat.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
             {
-                
+
                 //routeValues["relativeUrl"] = cat.CanonicalUrl;
 
                 return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
@@ -205,13 +205,16 @@ namespace RoCMS.Shop.Web.Controllers
 
             var filter = new GoodsFilter()
             {
-                CategoryIds = new[] { new [] {id} },
+                CategoryIds = new[] { new[] { id } },
                 ClientMode = true,
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,
                 SearchPattern = query
             };
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
+
+            ViewBag.PagingRoute = typeof(Category).FullName;
+
             return PartialView("GoodsPage", goods);
         }
 
@@ -390,7 +393,7 @@ namespace RoCMS.Shop.Web.Controllers
             var goodsItem = _shopService.GetGoods(id, false);
             //TODO: единичку - в конфиг
             var cats = _shopCategoryService.GetCategory(1).ChildrenCategories;
-            var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId==y.ID));
+            var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId == y.ID));
             return View(category);
         }
     }

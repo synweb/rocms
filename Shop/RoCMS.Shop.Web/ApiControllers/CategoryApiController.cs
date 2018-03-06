@@ -54,6 +54,8 @@ namespace RoCMS.Shop.Web.ApiControllers
             return ResultModel.Success;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         public IList<CategoryWithStats> GetCategoriesWithStats(int? parentId)
         {
             var allCats = _shopCategoryService.GetAllCategories();

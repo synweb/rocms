@@ -9,7 +9,7 @@ using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Shop.Services
 {
-    public class ShopSettingsService: IShopSettingsService
+    public class ShopSettingsService : IShopSettingsService
     {
         private ISettingsService _settingsService;
         public ShopSettingsService(ISettingsService settingsService)
@@ -22,9 +22,20 @@ namespace RoCMS.Shop.Services
             decimal deliveryCost = _settingsService.GetSettings<decimal>("DeliveryCost");
             decimal selfPickupCost = _settingsService.GetSettings<decimal>("SelfPickupCost");
             string courierCities = _settingsService.GetSettings<string>("CourierCities");
-            
+
             string shopUrl = _settingsService.GetSettings<string>("ShopUrl");
-            return new ShopSettings() { DeliveryCost = deliveryCost, SelfPickupCost = selfPickupCost, ShopUrl = shopUrl, CourierCities = courierCities };
+            int defaultPageSize = _settingsService.GetSettings<int>("DefaultPageSize");
+
+
+            return new ShopSettings()
+            {
+                DeliveryCost = deliveryCost,
+                SelfPickupCost = selfPickupCost,
+                ShopUrl = shopUrl,
+                CourierCities = courierCities,
+                DefaultPageSize = defaultPageSize
+
+            };
         }
 
         public void UpdateShopSettings(ShopSettings settings)
@@ -33,6 +44,7 @@ namespace RoCMS.Shop.Services
             _settingsService.Set("SelfPickupCost", settings.SelfPickupCost);
             _settingsService.Set("CourierCities", settings.CourierCities);
             _settingsService.Set("ShopUrl", settings.ShopUrl);
+            _settingsService.Set("DefaultPageSize", settings.DefaultPageSize);
         }
     }
 }

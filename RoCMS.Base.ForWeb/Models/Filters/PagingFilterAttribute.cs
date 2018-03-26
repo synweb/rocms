@@ -6,7 +6,7 @@ namespace RoCMS.Base.ForWeb.Models.Filters
 {
     public class PagingFilterAttribute : ActionFilterAttribute
     {
-
+        protected int _defaultPageSize = 10;
 
         #region Methods
 
@@ -24,10 +24,12 @@ namespace RoCMS.Base.ForWeb.Models.Filters
             else
             {
                 page = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "page") ?? 1;
-                pageSize = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "pgsize") ?? 10;
+                pageSize = ParsingHelper.ParseObject<int?>(filterContext.HttpContext.Request.QueryString, "pgsize") ?? _defaultPageSize;
             }
             filterContext.Controller.ViewBag.Page = page;
             filterContext.Controller.ViewBag.PageSize = pageSize;
+            filterContext.Controller.ViewBag.DefaultPageSize = _defaultPageSize;
+
 
             filterContext.ActionParameters["pageSize"] = (int)pageSize;
             filterContext.ActionParameters["pageNumber"] = page;

@@ -91,9 +91,9 @@ namespace RoCMS.Shop.Web.Controllers
             return PartialView("_GoodsAwaitingDialog");
         }
 
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult AllGoods(int page = 1, int pgsize = 10, int? country = null, int? manufacturerId = null,
+        public ActionResult AllGoods(int pageNumber, int pageSize, int? country = null, int? manufacturerId = null,
             int? packId = null, string specs = null, SortCriterion? sort = null, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             //int totalCount;
@@ -110,7 +110,7 @@ namespace RoCMS.Shop.Web.Controllers
             //}
 
 
-            int startIndex = (page - 1) * pgsize + 1;
+            int startIndex = (pageNumber - 1) * pageSize + 1;
 
 
             var goods = GetGoodsPage(new GoodsFilter()
@@ -120,21 +120,12 @@ namespace RoCMS.Shop.Web.Controllers
                 MinPrice = minPrice,
                 MaxPrice = maxPrice,
                 SearchPattern = query
-            }, sort, specs, packId, country, manufacturerId, page, pgsize);
+            }, sort, specs, packId, country, manufacturerId, pageNumber, pageSize);
 
-
-            //var goods = _shopService.GetGoodsSet(new GoodsFilter()
-            //    {
-            //        ClientMode = true, CategoryIds = catFilter,
-            //        MinPrice = minPrice,
-            //        MaxPrice = maxPrice
-            //    }, startIndex, pgsize, out totalCount,
-            //    out filters, true);
-            //ViewBag.TotalCount = totalCount;
             return PartialView("_GoodsPage", goods);
         }
 
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
         public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
@@ -155,9 +146,10 @@ namespace RoCMS.Shop.Web.Controllers
         }
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "CategorySEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.CategoryDynamicNodeProvider, RoCMS.Shop.Web")]
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
+        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, 
+            List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
 
             string pageUrl = relativeUrl.Split('/').Last();
@@ -220,10 +212,10 @@ namespace RoCMS.Shop.Web.Controllers
 
         private const SortCriterion DEFAULT_SORT = SortCriterion.Article;
 
-        private IList<GoodsItem> GetGoodsPage(GoodsFilter filter, SortCriterion? sort, string specs, int? packId, int? country, int? manufacturerId, int page, int pgsize)
+        private IList<GoodsItem> GetGoodsPage(GoodsFilter filter, SortCriterion? sort, string specs, int? packId, int? country, int? manufacturerId, int pageNumber, int pageSize)
         {
             int totalCount;
-            int startIndex = (page - 1) * pgsize + 1;
+            int startIndex = (pageNumber - 1) * pageSize + 1;
 
             filter.SortBy = sort.HasValue ? sort.Value : DEFAULT_SORT;
             ViewBag.Sort = filter.SortBy;
@@ -256,7 +248,7 @@ namespace RoCMS.Shop.Web.Controllers
 
             FilterCollections collections;
             IList<GoodsItem> goods = _shopService.GetGoodsSet(filter,
-            startIndex, pgsize, out totalCount, out collections);
+            startIndex, pageSize, out totalCount, out collections);
             ViewBag.TotalCount = totalCount;
             if (filter.CategoryIds.Count() == 1 && filter.CategoryIds.First().Count() == 1)
             {
@@ -278,9 +270,9 @@ namespace RoCMS.Shop.Web.Controllers
 
 
 
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page = 1, int pgsize = 10, int? minPrice = null, int? maxPrice = null, string query = null)
+        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page, int pgsize, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             bool exists = _shopActionService.ActionExists(id);
             if (!exists)

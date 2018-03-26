@@ -159,6 +159,7 @@
     <Compile Include="Helpers\CategoryDynamicNodeProvider.cs" />
     <Compile Include="Helpers\EnumExtentions.cs" />
     <Compile Include="Models\Filters\GoodsFilterAttribute.cs" />
+    <Compile Include="Models\Filters\ShopPagingFilterAttribute.cs" />
     <Compile Include="Resources\ShopStrings.Designer.cs">
       <DependentUpon>ShopStrings.resx</DependentUpon>
       <AutoGen>True</AutoGen>

@@ -191,3 +191,17 @@ textarea.shop-item-description {
 .tab-content {
     padding: 5px;
 }
+
+
+
+
+
+
+
+.ui-dialog .categoryEditor .button-add {
+    display: none;
+}
+
+.ui-dialog .categoryEditor .category .btn-warning {
+    display: none;
+}

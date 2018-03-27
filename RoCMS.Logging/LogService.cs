@@ -24,8 +24,9 @@ namespace RoCMS.Logging
         public Guid LogError(Exception e)
         {
             Guid code = Guid.NewGuid();
-            if (e is ReflectionTypeLoadException exception)
+            if (e is ReflectionTypeLoadException)
             {
+                var exception = e as ReflectionTypeLoadException;
                 _logger.Error(new Exception($"ErrorCode: {code}", e));
                 var loaderExceptions = exception.LoaderExceptions;
                 if (loaderExceptions.Any())

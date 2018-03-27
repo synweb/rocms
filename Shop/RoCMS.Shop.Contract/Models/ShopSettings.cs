@@ -8,5 +8,7 @@
         public string CourierCities { get; set; }
 
         public string ShopUrl { get; set; }
+
+        public int DefaultPageSize { get; set; }
     }
 }

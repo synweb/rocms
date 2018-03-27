@@ -6,15 +6,17 @@
     int pageSize = ViewBag.PageSize;
     int totalCount = ViewBag.TotalCount;
 
+    int defaultPageSize = ViewBag.DefaultPageSize;
+
     string pagingRoute = ViewBag.PagingRoute ?? typeof(RoCMS.Web.Contract.Models.Page).FullName;
 }
 
 @if (totalCount > pageSize)
 {
-    <text>@Pager(totalCount, pageSize, page, pagingParams, pagingRoute)</text>
+    <text>@Pager(totalCount, pageSize, page, pagingParams, pagingRoute, defaultPageSize)</text>
 }
 
-@helper Pager(int totalCount, int pageSize, int page, IDictionary<string, object> pagingParams, string routeName)
+@helper Pager(int totalCount, int pageSize, int page, IDictionary<string, object> pagingParams, string routeName, int defaultPageSize)
 {
 
     <ul class="pagination">
@@ -104,7 +106,7 @@
                 {
                     args.Remove("pgsize");
                 }
-                if (pageSize != 10)
+                if (pageSize != defaultPageSize)
                 {
                     args.Add("pgsize", pageSize);
                 }

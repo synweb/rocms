@@ -13,37 +13,84 @@ namespace RoCMS.Shop.Data.Gateways
             string sortOrder = filter.SortBy.ToString().EndsWith("Desc") ? "DESC" : "ASC";
             string sortBy = filter.SortBy.ToString().Replace("Asc", "").Replace("Desc", "");
             int total = 0;
-            var param = new GoodsFilterParam()
+            List<int> ids = null;
+            totalCount = -1; // переопределится при вызове хранимки
+            if (filter.CategoryIds == null || !filter.CategoryIds.Any())
             {
-                ActionIds=filter.ActionIds,
-                Articles=filter.Articles,
-                // уходит коллекция строк в виде { "1,2,3", "4,5" }
-                // значения внутри строк объединяются по И
-                CategoryIds=filter.CategoryIds.Select(x => string.Join(",", x)),
-                WithSubcategories=filter.WithSubcategories,
-                Countries=filter.Countries,
-                ManufacturerIds=filter.ManufacturerIds,
-                SearchQuery=filter.SearchPattern,
-                FulltextSearchQuery = GetFulltextSearchQuery(filter.SearchPattern),
-                SortBy = sortBy,
-                SpecIds = filter.SpecIds,
-                PackIds = filter.PackIds,
-                SupplierIds = filter.SupplierIds,
-                SortOrder = sortOrder,
-                StartIndex = startIndex,
-                TotalCount=total,
-                Count = count
-            };
-            ICollection<int> ids = ExecSelect<int>("[Shop].[Goods_Filter]", param);
-            totalCount = param.TotalCount;
-            return ids;
+                // если по категориям не фильтруем
+                var param = new GoodsFilterParam()
+                {
+                    ActionIds = filter.ActionIds,
+                    Articles = filter.Articles,
+                    Countries = filter.Countries,
+                    CategoryIds = new List<int>(),
+                    ManufacturerIds = filter.ManufacturerIds,
+                    SearchQuery = filter.SearchPattern,
+                    FulltextSearchQuery = GetFulltextSearchQuery(filter.SearchPattern),
+                    SortBy = sortBy,
+                    SpecIds = filter.SpecIds,
+                    PackIds = filter.PackIds,
+                    SupplierIds = filter.SupplierIds,
+                    SortOrder = sortOrder,
+                    StartIndex = startIndex,
+                    TotalCount = total,
+                    Count = count,
+                    MinPrice = filter.MinPrice,
+                    MaxPrice = filter.MaxPrice
+                };
+                var procedureResult = ExecSelect<int>("[Shop].[Goods_Filter]", param);
+                totalCount = param.TotalCount;
+                return procedureResult;
+            }
+
+            // если по категориям фильтруем
+            foreach (var catGroup in filter.CategoryIds)
+            {
+                var param = new GoodsFilterParam()
+                {
+                    ActionIds = filter.ActionIds,
+                    Articles = filter.Articles,
+                    CategoryIds = catGroup,
+                    WithSubcategories = filter.WithSubcategories,
+                    Countries = filter.Countries,
+                    ManufacturerIds = filter.ManufacturerIds,
+                    SearchQuery = filter.SearchPattern,
+                    FulltextSearchQuery = GetFulltextSearchQuery(filter.SearchPattern),
+                    SortBy = sortBy,
+                    SpecIds = filter.SpecIds,
+                    PackIds = filter.PackIds,
+                    SupplierIds = filter.SupplierIds,
+                    SortOrder = sortOrder,
+                    StartIndex = startIndex,
+                    TotalCount = total,
+                    Count = count,
+                    MinPrice = filter.MinPrice,
+                    MaxPrice = filter.MaxPrice
+                };
+                var procedureResult = ExecSelect<int>("[Shop].[Goods_Filter]", param);
+                if (totalCount == -1)
+                {
+                    totalCount = param.TotalCount;
+                }
+                if (ids == null)
+                {
+                    ids = new List<int>(procedureResult);
+                }
+                else
+                {
+                    ids = ids.Intersect(procedureResult).ToList();
+                }
+                if (!ids.Any())
+                    break;
+            }
+            return ids??new List<int>();
         }
 
         private class GoodsFilterParam
         {
             public IEnumerable<int> ActionIds { get; set; }
             public IEnumerable<string> Articles { get; set; }
-            public IEnumerable<string> CategoryIds { get; set; }
+            public IEnumerable<int> CategoryIds { get; set; }
             public bool WithSubcategories { get; set; }
             public IEnumerable<int> Countries { get; set; }
             public IEnumerable<int> ManufacturerIds { get; set; }
@@ -57,6 +104,8 @@ namespace RoCMS.Shop.Data.Gateways
             public int StartIndex { get; set; }
             public int TotalCount { get; set; }
             public int Count { get; set; }
+            public decimal? MinPrice { get; set; }
+            public decimal? MaxPrice { get; set; }
         }
 
         public ICollection<IdNamePair<int>> GetManufacturers(ICollection<int> heartIds)

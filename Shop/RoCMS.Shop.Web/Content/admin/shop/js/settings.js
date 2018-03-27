@@ -22,6 +22,8 @@ App.Admin.ShopSettings = function (data) {
     self.deliveryCost = ko.observable().extend({ number: true });
     self.selfPickupCost = ko.observable().extend({ number: true });
     self.shopUrl = ko.observable().extend({ required: true });
+    self.defaultPageSize = ko.observable(10).extend({ required: true });
+
 
     self.courierCities = ko.observable().extend({ required: true });
 
@@ -37,6 +39,9 @@ App.Admin.ShopSettings = function (data) {
         }
         if (data.shopUrl) {
             self.shopUrl(data.shopUrl);
+        }
+        if (data.defaultPageSize) {
+            self.defaultPageSize(data.defaultPageSize);
         }
     }
 

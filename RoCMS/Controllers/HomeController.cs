@@ -55,8 +55,11 @@ namespace RoCMS.Controllers
         [AjaxValidateAntiForgeryToken]
         public JsonResult Login(User user, string ReturnUrl)
         {
-            ViewBag.ReturnUrl = ReturnUrl;
-            
+            if (Url.IsLocalUrl(ReturnUrl))
+            {
+                ViewBag.ReturnUrl = ReturnUrl;
+            }
+
             if (user != null && !String.IsNullOrWhiteSpace(user.Username) && !String.IsNullOrWhiteSpace(user.Password))
             {
                 try
@@ -159,11 +162,17 @@ namespace RoCMS.Controllers
             try
             {
                 AuthenticationHelper.GetInstance().Login(System.Web.HttpContext.Current, user.Username, user.Password);
-                if (string.IsNullOrEmpty(ReturnUrl))
+
+
+
+                if (string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                {
+                    return new RedirectResult(ReturnUrl);
+                }
+                else
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                return new RedirectResult(ReturnUrl);
             }
             catch (AuthenticationException)
             {

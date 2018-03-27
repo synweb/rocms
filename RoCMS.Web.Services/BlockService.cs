@@ -12,7 +12,8 @@ namespace RoCMS.Web.Services
 {
     public class BlockService : BaseCoreService, IBlockService
     {
-        private const string BLOCK_CACHE_KEY_TEMPLATE = "Block:{0}";
+        private const string BLOCK_CACHE_KEY_TEMPLATE = "Block:Id:{0}";
+        private const string BLOCK_CACHE_BY_NAME_KEY_TEMPLATE = "Block:Name:{0}";
         private readonly BlockGateway _blockGateway = new BlockGateway();
        
         protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
@@ -100,7 +101,7 @@ namespace RoCMS.Web.Services
 
         private string GetBlockCacheKey(string blockName)
         {
-            return String.Format(BLOCK_CACHE_KEY_TEMPLATE, blockName);
+            return String.Format(BLOCK_CACHE_BY_NAME_KEY_TEMPLATE, blockName);
         }
     }
 }

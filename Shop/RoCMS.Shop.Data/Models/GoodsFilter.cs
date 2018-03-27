@@ -49,5 +49,8 @@ namespace RoCMS.Shop.Data.Models
         /// Сортировка производится по: ...
         /// </summary>
         public SortCriterion SortBy { get; set; }
+
+        public decimal? MinPrice { get; set; }
+        public decimal? MaxPrice { get; set; }
     }
 }

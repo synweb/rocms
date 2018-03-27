@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using RoCMS.Base;
 using RoCMS.Base.ForWeb.Models.Filters;
@@ -23,7 +24,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         public ResultModel Create(Category category)
         {
             int id = _shopCategoryService.CreateCategory(category);
-            return new ResultModel(true, new {id = id});
+            return new ResultModel(true, new { id = id });
         }
 
         [HttpPost]
@@ -51,6 +52,30 @@ namespace RoCMS.Shop.Web.ApiControllers
         {
             _shopCategoryService.UpdateCategoriesSortOrder(categories);
             return ResultModel.Success;
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IList<CategoryWithStats> GetCategoriesWithStats(int? parentId)
+        {
+            var allCats = _shopCategoryService.GetAllCategories();
+            var allStats = _shopCategoryService.GetCategoryStats();
+
+            var stats = parentId.HasValue ? allStats.Where(x => _shopCategoryService.IsChild(x.Key, parentId.Value)) : allStats;
+
+            var result = new List<CategoryWithStats>();
+
+            foreach (var st in stats)
+            {
+                result.Add(new CategoryWithStats() { Category = allCats.Single(x => x.HeartId == st.Key), Count = st.Value});
+            }
+            return result;
+        }
+
+        public class CategoryWithStats
+        {
+            public Category Category { get; set; }
+            public int Count { get; set; }
         }
     }
 }

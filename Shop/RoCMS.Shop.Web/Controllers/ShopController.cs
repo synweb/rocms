@@ -38,6 +38,8 @@ namespace RoCMS.Shop.Web.Controllers
 
         private readonly IPrincipalResolver _principalResolver;
 
+        private readonly string _shopUrl;
+
         public ShopController(ISessionValueProviderService sessionService, IShopService shopService,
             ISearchService searchService, IShopClientService clientService, IShopActionService shopActionService,
             IShopCategoryService shopCategoryService, IShopManufacturerService shopManufacturerService,
@@ -52,6 +54,18 @@ namespace RoCMS.Shop.Web.Controllers
             _shopManufacturerService = shopManufacturerService;
             _principalResolver = principalResolver;
             _heartService = heartService;
+
+
+            var service = DependencyResolver.Current.GetService<IShopSettingsService>();
+            try
+            {
+                var settings = service.GetShopSettings();
+                _shopUrl = String.IsNullOrEmpty(settings.ShopUrl) ? "catalog" : settings.ShopUrl;
+            }
+            catch
+            {
+                _shopUrl = "catalog";
+            }
         }
 
         public ActionResult Categories()
@@ -77,44 +91,43 @@ namespace RoCMS.Shop.Web.Controllers
             return PartialView("_GoodsAwaitingDialog");
         }
 
-        private List<List<int>> ParseCategoryFilter(string catFilter)
-        {
-            List<List<int>> cats = new List<List<int>>();
-            if (catFilter != null)
-            {
-                // вид:             1,2;3
-                // расшифровка:     1&2|3
-                var orGroups = catFilter.Split(';');
-                // сначала разбиваем на группы по "или"
-                foreach (var orGroup in orGroups)
-                {
-                    var intGroup = new List<int>();
-                    // формируем группы по "и"
-                    intGroup.AddRange(orGroup.Split(',').Select(int.Parse));
-                    cats.Add(intGroup);
-                }
-            }
-            return cats;
-        }
-
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult AllGoods(int page = 1, int pgsize = 10, int? country = null, int? manufacturerId = null,
-            int? packId = null, string specs = null, SortCriterion? sort = null, string catFilter = null)
+        public ActionResult AllGoods(int pageNumber, int pageSize, int? country = null, int? manufacturerId = null,
+            int? packId = null, string specs = null, SortCriterion? sort = null, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
-            int totalCount;
-            FilterCollections filters;
+            //int totalCount;
+            //FilterCollections filters;
 
-            //TODO: ЭТО ЯВНО КОСЯК. Передается page, ожидается - startIndex !!! Перепроверить всё
-            var goods = _shopService.GetGoodsSet(new GoodsFilter() {ClientMode = true, CategoryIds = ParseCategoryFilter(catFilter) }, page, pgsize, out totalCount,
-                out filters, true);
-            ViewBag.TotalCount = totalCount;
+            //Не дает, так как child action
+            //var routeValues = Request.RequestContext.RouteData.Values;
+            //if (catFilter != null && (catFilter.Count() == 1 && catFilter.First().Count() == 1))
+            //{
+            //    var heart = _heartService.GetHeart(catFilter.First().First());
+
+            //    routeValues["relativeUrl"] = heart.RelativeUrl;
+            //    return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
+            //}
+
+
+            int startIndex = (pageNumber - 1) * pageSize + 1;
+
+
+            var goods = GetGoodsPage(new GoodsFilter()
+            {
+                ClientMode = true,
+                CategoryIds = catFilter,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                SearchPattern = query
+            }, sort, specs, packId, country, manufacturerId, pageNumber, pageSize);
+
             return PartialView("_GoodsPage", goods);
         }
 
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
+        public ActionResult Category(int id, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             bool exists = _shopCategoryService.CategoryExists(id);
             if (!exists)
@@ -133,9 +146,10 @@ namespace RoCMS.Shop.Web.Controllers
         }
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "CategorySEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.CategoryDynamicNodeProvider, RoCMS.Shop.Web")]
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort)
+        public ActionResult CategorySEF(string relativeUrl, int? country, int? manufacturerId, int? packId, string specs, SortCriterion? sort, 
+            List<List<int>> catFilter = null, int? minPrice = null, int? maxPrice = null, string query = null)
         {
 
             string pageUrl = relativeUrl.Split('/').Last();
@@ -144,18 +158,37 @@ namespace RoCMS.Shop.Web.Controllers
             //{
             //    throw new HttpException(404, "Not found");
             //}
+            var routeValues = Request.RequestContext.RouteData.Values;
+            if (catFilter != null && (catFilter.Count() > 1 || catFilter.Any(x => x.Count() > 1)))
+            {
+                routeValues["relativeUrl"] = _shopUrl;
+                return RedirectPermanent(Url.RouteUrl(typeof(Page).FullName, routeValues));
+            }
+
 
             var cat = _heartService.GetHeart(pageUrl);
+
+            if (catFilter != null && catFilter.Count() == 1 && catFilter.First().Count() == 1)
+            {
+                int catFilterId = catFilter.First().First();
+                if (cat.HeartId != catFilterId)
+                {
+                    var filterCat = _heartService.GetHeart(catFilterId);
+                    routeValues["relativeUrl"] = filterCat.RelativeUrl;
+                    routeValues.Remove("cats");
+                    return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
+                }
+            }
+
+
             var requestPath = Request.Path.Substring(1);
             if (!cat.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
             {
-                var routeValues = Request.RequestContext.RouteData.Values;
+
                 //routeValues["relativeUrl"] = cat.CanonicalUrl;
 
                 return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, routeValues));
             }
-
-
 
             int id = cat.HeartId;
 
@@ -164,19 +197,25 @@ namespace RoCMS.Shop.Web.Controllers
 
             var filter = new GoodsFilter()
             {
-                CategoryIds = new[] { new [] {id} },
-                ClientMode = true
+                CategoryIds = new[] { new[] { id } },
+                ClientMode = true,
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                SearchPattern = query
             };
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
+
+            ViewBag.PagingRoute = typeof(Category).FullName;
+
             return PartialView("GoodsPage", goods);
         }
 
         private const SortCriterion DEFAULT_SORT = SortCriterion.Article;
 
-        private IList<GoodsItem> GetGoodsPage(GoodsFilter filter, SortCriterion? sort, string specs, int? packId, int? country, int? manufacturerId, int page, int pgsize)
+        private IList<GoodsItem> GetGoodsPage(GoodsFilter filter, SortCriterion? sort, string specs, int? packId, int? country, int? manufacturerId, int pageNumber, int pageSize)
         {
             int totalCount;
-            int startIndex = (page - 1) * pgsize + 1;
+            int startIndex = (pageNumber - 1) * pageSize + 1;
 
             filter.SortBy = sort.HasValue ? sort.Value : DEFAULT_SORT;
             ViewBag.Sort = filter.SortBy;
@@ -209,11 +248,11 @@ namespace RoCMS.Shop.Web.Controllers
 
             FilterCollections collections;
             IList<GoodsItem> goods = _shopService.GetGoodsSet(filter,
-            startIndex, pgsize, out totalCount, out collections);
+            startIndex, pageSize, out totalCount, out collections);
             ViewBag.TotalCount = totalCount;
-            if (filter.CategoryIds.Count() == 1)
+            if (filter.CategoryIds.Count() == 1 && filter.CategoryIds.First().Count() == 1)
             {
-                ViewBag.CategoryId = filter.CategoryIds.First();
+                ViewBag.CategoryId = filter.CategoryIds.First().First();
             }
             if (filter.ActionIds.Count() == 1)
             {
@@ -231,9 +270,9 @@ namespace RoCMS.Shop.Web.Controllers
 
 
 
-        [PagingFilter]
+        [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page = 1, int pgsize = 10)
+        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page, int pgsize, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             bool exists = _shopActionService.ActionExists(id);
             if (!exists)
@@ -243,7 +282,8 @@ namespace RoCMS.Shop.Web.Controllers
             ViewBag.BreadCrumbs = BreadCrumbsHelper.ForShopAction(id);
             var filter = new GoodsFilter()
             {
-                ActionIds = new[] { id }
+                ActionIds = new[] { id },
+                SearchPattern = query
             };
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
             return PartialView("GoodsPage", goods);
@@ -345,7 +385,7 @@ namespace RoCMS.Shop.Web.Controllers
             var goodsItem = _shopService.GetGoods(id, false);
             //TODO: единичку - в конфиг
             var cats = _shopCategoryService.GetCategory(1).ChildrenCategories;
-            var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId==y.ID));
+            var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId == y.ID));
             return View(category);
         }
     }

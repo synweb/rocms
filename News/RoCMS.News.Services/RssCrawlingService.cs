@@ -163,6 +163,19 @@ namespace RoCMS.News.Services
 
         private class RssCrawlerJob : IJob
         {
+            private static string GetRssItemExtensionValue(SyndicationItem item, string extensionName)
+            {
+                if (item.ElementExtensions.Count == 0)
+                    return null; // расширений нет, получать нечего
+                var ext = item.ElementExtensions.FirstOrDefault(x =>
+                    x.OuterName.Equals(extensionName, StringComparison.InvariantCultureIgnoreCase));
+                if (ext == null)
+                    return null; // нужного расширения нет, получать нечего
+                return
+                    item.ElementExtensions.ReadElementExtensions<string>(ext.OuterName,
+                        ext.OuterNamespace).FirstOrDefault();
+            }
+
             public async void Execute(IJobExecutionContext context)
             {
                 var dataMap = context.JobDetail.JobDataMap;
@@ -188,16 +201,18 @@ namespace RoCMS.News.Services
 
                         // проверка текста по фильтрам
                         string title = item.Title.Text.Trim();
-                        string textWithoutHtml = ParsingHelper.RemoveHtml(item.Summary.Text).Trim();
+                        string description = ParsingHelper.RemoveHtml(item.Summary.Text).Trim();
+                        string fulltext = ParsingHelper.RemoveHtml(GetRssItemExtensionValue(item, "fulltext"));
                         bool filterOk = true;
                         foreach (var filter in feed.Filters)
                         {
                             // фильтры реализованы по логическому "И"
                             // пройдут только те записи, которые соответствуют всем фильтрам
                             var titleMatches = Regex.IsMatch(title, filter.Filter);
-                            var descriptionMatches = Regex.IsMatch(title, filter.Filter);
-                            // если совпадение по регулярке найдено в заголовке или описании, считаем, что фильтр пройден
-                            var match = (titleMatches || descriptionMatches);
+                            var descriptionMatches = Regex.IsMatch(description, filter.Filter);
+                            var fulltextMatches = fulltext != null && Regex.IsMatch(fulltext, filter.Filter);
+                            // если совпадение по регулярке найдено в заголовке, описании или полном тексте, считаем, что фильтр пройден
+                            var match = (titleMatches || descriptionMatches || fulltextMatches);
                             filterOk &= match;
                             if (!match)
                                 break;
@@ -259,7 +274,7 @@ namespace RoCMS.News.Services
                             }
 
                             const int NEWS_DESCRIPTION_LENGTH = 200;
-                            var cuttedText = TextCutHelper.Cut(textWithoutHtml, NEWS_DESCRIPTION_LENGTH).Trim();
+                            var cuttedDescription = TextCutHelper.Cut(description, NEWS_DESCRIPTION_LENGTH).Trim();
                             bool translitUrls = settingsService.GetSettings<bool>(nameof(Setting.TranslitEnabled));
                             var relativeUrl = translitUrls
                                 ? FormattingHelper.ToTranslitedUrl(title)
@@ -282,8 +297,8 @@ namespace RoCMS.News.Services
                                 Text = newsItemText,
                                 ImageId = imageId,
                                 PostingDate = item.PublishDate.DateTime,
-                                Description = cuttedText,
-                                MetaDescription = cuttedText,
+                                Description = cuttedDescription,
+                                MetaDescription = cuttedDescription,
                                 Title = title,
                                 RecordType = RecordType.Default,
                                 Layout = "clientLayout",

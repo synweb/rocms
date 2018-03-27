@@ -75,8 +75,17 @@ namespace RoCMS.Base.Helpers
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Убрать всю html-разметку и оставить голый текст
+        /// </summary>
+        /// <param name="src">Текст с разметкой. Может быть null.</param>
+        /// <returns></returns>
         public static string RemoveHtml(string src)
         {
+            if (string.IsNullOrEmpty(src))
+            {
+                return src;
+            }
             string result = HttpUtility.HtmlDecode(src);
             const string HTML_TAG_PATTERN = "<.*?>";
             result = Regex.Replace(result, HTML_TAG_PATTERN, String.Empty, RegexOptions.Singleline);

@@ -10,6 +10,7 @@ using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
 using RoCMS.Shop.Data.Gateways;
 using RoCMS.Shop.Data.Models;
+using RoCMS.Web.Contract.Services;
 using Action = RoCMS.Shop.Contract.Models.Action;
 
 namespace RoCMS.Shop.Services
@@ -23,35 +24,46 @@ namespace RoCMS.Shop.Services
         private readonly ActionManufacturerGateway _actionManufacturerGateway = new ActionManufacturerGateway();
         private readonly GoodsItemGateway _goodsGateway = new GoodsItemGateway();
         private readonly GoodsCategoryGateway _goodsCategoryGateway = new GoodsCategoryGateway();
+        private readonly IHeartService _heartService;
+
 
         private readonly IShopManufacturerService _shopManufacturerService;
 
-        public ShopActionService(IShopManufacturerService shopManufacturerService)
+        public ShopActionService(IShopManufacturerService shopManufacturerService, IHeartService heartService)
         {
             _shopManufacturerService = shopManufacturerService;
+            _heartService = heartService;
         }
 
         public Action GetAction(int actionId)
         {
             var dataRes = _actionGateway.SelectOne(actionId);
             var res = Mapper.Map<Action>(dataRes);
-            FillGoods(res);
-            FillCats(res);
-            FillManufaturers(res);
+            FillData(res);
             return res;
+        }
+
+        private void FillData(Action action)
+        {
+            var heart = _heartService.GetHeart(action.HeartId);
+            action.FillHeart(heart);
+
+            FillGoods(action);
+            FillCats(action);
+            FillManufaturers(action);
         }
 
         private void FillManufaturers(Action action)
         {
-            var manIds = _actionManufacturerGateway.SelectByAction(action.ActionId).Select(x => x.ManufacturerId);
+            var manIds = _actionManufacturerGateway.SelectByAction(action.HeartId).Select(x => x.ManufacturerId);
             var mans = manIds.Select(x => _shopManufacturerService.GetManufacturer(x));
-            var idNames = mans.Select(x => new IdNamePair<int>(x.ManufacturerId, x.Name)).ToList();
+            var idNames = mans.Select(x => new IdNamePair<int>(x.HeartId, x.Name)).ToList();
             action.Manufacturers = idNames;
         }
 
         private void FillCats(Action action)
         {
-            var catIds = _actionCategoryGateway.SelectByAction(action.ActionId).Select(x => x.CategoryId);
+            var catIds = _actionCategoryGateway.SelectByAction(action.HeartId).Select(x => x.CategoryId);
             var cats = catIds.Select(x => _categoryGateway.SelectOne(x));
             var idNames = cats.Select(x => new IdNamePair<int>(x.HeartId, x.Name)).ToList();
             action.Categories = idNames;
@@ -59,7 +71,7 @@ namespace RoCMS.Shop.Services
 
         private void FillGoods(Action action)
         {
-            var ids = _actionGoodsGateway.SelectByAction(action.ActionId).Select(x => x.HeartId);
+            var ids = _actionGoodsGateway.SelectByAction(action.HeartId).Select(x => x.HeartId);
             var goods = ids.Select(x => _goodsGateway.SelectOne(x));
             var idNames = goods.Select(x => new IdNamePair<int>(x.HeartId, x.Name)).ToList();
             action.Goods = idNames;
@@ -67,10 +79,17 @@ namespace RoCMS.Shop.Services
 
         public int CreateAction(Action action)
         {
+            action.Type = action.GetType().FullName;
+
             var dataRec = Mapper.Map<Data.Models.Action>(action);
             using (var ts = new TransactionScope())
             {
-                int id = _actionGateway.Insert(dataRec);
+
+                int id = action.HeartId = dataRec.HeartId = _heartService.CreateHeart(action);
+
+                _actionGateway.Insert(dataRec);
+
+
                 foreach (var catId in action.Categories.Select(x => x.ID))
                 {
                     _actionCategoryGateway.Insert(new ActionCategory() {ActionId = id, CategoryId = catId});
@@ -93,7 +112,10 @@ namespace RoCMS.Shop.Services
             var dataAction = Mapper.Map<Data.Models.Action>(action);
             using (var ts = new TransactionScope())
             {
-                int actionId = action.ActionId;
+                int actionId = action.HeartId;
+
+                _heartService.UpdateHeart(action);
+
                 _actionGateway.Update(dataAction);
 
                 var oldCats = _actionCategoryGateway.SelectByAction(actionId);
@@ -166,7 +188,7 @@ namespace RoCMS.Shop.Services
 
         public void DeleteAction(int actionId)
         {
-            _actionGateway.Delete(actionId);
+            _heartService.DeleteHeart(actionId);
         }
 
         public IList<Action> GetActions()
@@ -175,9 +197,7 @@ namespace RoCMS.Shop.Services
             var res = Mapper.Map<IList<Action>>(dataRes);
             foreach (var action in res)
             {
-                FillGoods(action);
-                FillCats(action);
-                FillManufaturers(action);
+                FillData(action);
             }
             return res;
         }
@@ -216,7 +236,7 @@ namespace RoCMS.Shop.Services
             var actions = actionIds.Select(x => _actionGateway.SelectOne(x));
             var res = actions.Where(x => x.Active &&
                                            (!x.DateOfEnding.HasValue || x.DateOfEnding >= DateTime.UtcNow))
-                                           .Select(x => new ActionShortInfo(x.ActionId, x.Name, x.Discount))
+                                           .Select(x => new ActionShortInfo(x.HeartId, x.Name, x.Discount))
                                            .ToList();
             return res;
         }

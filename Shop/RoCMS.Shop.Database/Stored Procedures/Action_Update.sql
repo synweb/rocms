@@ -6,7 +6,7 @@
 @ImageId varchar(30),
 @ShowInSlider bit,
 @Active bit,
-@ActionId int
+@HeartId int
 AS
 	UPDATE [Shop].[Action] SET
 		[DateOfEnding]=@DateOfEnding,
@@ -16,4 +16,4 @@ AS
 		[ImageId]=@ImageId,
 		[ShowInSlider]=@ShowInSlider,
 		[Active]=@Active
-	WHERE [ActionId]=@ActionId
+	WHERE [HeartId]=@HeartId

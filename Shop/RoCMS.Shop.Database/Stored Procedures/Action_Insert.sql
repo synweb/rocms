@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[Action_Insert]
+@HeartId int,
 @DateOfEnding datetime,
 @Description nvarchar(MAX),
 @Discount int,
@@ -7,6 +8,6 @@
 @ShowInSlider bit,
 @Active bit
 AS
-	INSERT INTO [Shop].[Action] ([DateOfEnding], [Description], [Discount], [Name], [ImageId], [ShowInSlider], [Active])
-	VALUES (@DateOfEnding, @Description, @Discount, @Name, @ImageId, @ShowInSlider, @Active)
-	SELECT @@IDENTITY
+	INSERT INTO [Shop].[Action] ([HeartId], [DateOfEnding], [Description], [Discount], [Name], [ImageId], [ShowInSlider], [Active])
+	VALUES (@HeartId, @DateOfEnding, @Description, @Discount, @Name, @ImageId, @ShowInSlider, @Active)
+	SELECT @HeartId

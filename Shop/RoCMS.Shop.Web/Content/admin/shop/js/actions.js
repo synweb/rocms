@@ -1,10 +1,14 @@
-﻿function actionsEditorLoaded(onSelected, context) {
+﻿/// <reference path="base.js" />
+/// <reference path="/Content/admin/ro/js/rocms.heart.js" />
+
+function actionsEditorLoaded(onSelected, context) {
     blockUI();
     var vm = {
         actions: ko.observableArray(),
         createAction: function() {
             var self = this;
-            var action = $.extend(new App.Admin.Action(), App.Admin.ActionFunctions);
+            var action = $.extend(new App.Admin.Shop.Action(), App.Admin.Shop.ActionFunctions);
+            
             action.create(function() {
                 self.actions.push(action);
             });
@@ -19,7 +23,7 @@
 
     getJSON("/api/shop/actions/get", "", function (result) {
         $(result).each(function () {
-            var obj = $.extend(ko.mapping.fromJS(this), App.Admin.ActionFunctions);
+            var obj = $.extend(ko.mapping.fromJS(this), App.Admin.Shop.ActionFunctions);
 			if(obj.dateOfEnding()) {
 				obj.dateOfEnding(dateFormat(obj.dateOfEnding(), 'dd.mm.yyyy'));
 			}
@@ -41,7 +45,7 @@
     }
 }
 
-App.Admin.ActionValidationMapping = {
+App.Admin.Shop.ActionValidationMapping = {
     name: {
         create: function(options) {
             return ko.observable(options.data).extend({ required: true });
@@ -59,10 +63,14 @@ App.Admin.ActionValidationMapping = {
     }
 };
 
-App.Admin.Action = function() {
+$.extend(App.Admin.Shop.ActionValidationMapping, App.Admin.HeartValidationMapping);
+
+App.Admin.Shop.Action = function () {
     var self = this;
 
-    self.actionId = ko.observable();
+    $.extend(self, new App.Admin.Heart());
+
+    self.heartId = ko.observable();
     self.name = ko.observable().extend({ required: true });;
     self.description = ko.observable().extend({ required: true });;
     self.dateOfEnding = ko.observable();
@@ -75,7 +83,27 @@ App.Admin.Action = function() {
     self.showInSlider = ko.observable(true);
 }
 
-App.Admin.ActionFunctions = {
+
+
+App.Admin.Shop.ActionFunctions = {
+    initAction: function() {
+        var self = this;
+        self.initHeart();
+
+
+        self.name.subscribe(function (val) {
+            if (val) {
+                if (!self.title()) {
+                    self.title(val);
+                }
+                if (!self.description()) {
+                    self.description(val);
+                }
+
+            }
+        });
+    },
+
     save: function (url, onSuccess) {
         var self = this;
         blockUI();
@@ -95,18 +123,21 @@ App.Admin.ActionFunctions = {
             });
     },
 
-    edit: function () {
+    edit: function (onSuccess) {
         var self = this;
-        self.dialog(function () {
-            self.save("/api/shop/action/update");
+
+        self.dialog("/api/shop/action/update", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
     },
 
     remove: function (item, parent) {
         var self = this;
-        if (self.actionId()) {
+        if (self.heartId()) {
             blockUI();
-            var url = "/api/shop/action/" + self.actionId() + "/delete";
+            var url = "/api/shop/action/" + self.heartId() + "/delete";
             postJSON(url, "", function (result) {
                 if (result.succeed) {
                     parent.actions.remove(item);
@@ -123,13 +154,10 @@ App.Admin.ActionFunctions = {
 
     create: function (onSuccess) {
         var self = this;
-        self.dialog(function () {
-            self.save("/api/shop/action/create", function (result) {
-                self.actionId(result.id);
-                if (onSuccess) {
-                    onSuccess();
-                }
-            });
+        self.dialog("/api/shop/action/create", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
     },
     pickImage: function () {
@@ -138,8 +166,10 @@ App.Admin.ActionFunctions = {
             self.imageId(imageData.ID);
         });
     },
-    dialog: function (onSuccess) {
-        var self = ko.validatedObservable(this);
+
+    dialog: function (url, onSave) {
+        var self = this;
+        var dm = ko.validatedObservable(this);
         var dialogContent = $("#actionTemplate").tmpl();
         var options = {
             title: "Акция",
@@ -153,9 +183,11 @@ App.Admin.ActionFunctions = {
                 var $form = $(this).find('form');
 
                 if ($("#actionDescription", $form).length) {
-                    $("#actionDescription", $form).val(self().description());
+                    $("#actionDescription", $form).val(self.description());
                     initContentEditor();
                 }
+
+                self.initAction();
 
                 ko.applyBindings(self, this);
             },
@@ -167,17 +199,24 @@ App.Admin.ActionFunctions = {
 
                         var text = getTextFromEditor('actionDescription');
                         if (text) {
-                            self().description(text);
+                            self.description(text);
                         }
 
-                        if (self.isValid()) {
-                            if (onSuccess) {
-                                onSuccess();
-                            }
-                            $(this).dialog("close");
+
+                        if (dm.isValid()) {
+                            self.save(url, function (data) {
+                                if (data) {
+                                    self.heartId(data.id);
+                                    if (onSave) {
+                                        onSave();
+                                    }
+                                    $dialog.dialog("close");
+
+                                }
+                            });
                         }
                         else {
-                            self.errors.showAllMessages();
+                            dm.errors.showAllMessages();
                         }
                     }
                     
@@ -247,6 +286,8 @@ App.Admin.ActionFunctions = {
     }
 }
 
+$.extend(App.Admin.Shop.ActionFunctions, App.Admin.HeartFunctions);
+
 function showActionsDialog(onSelected) {
     var options = {
         title: "Акции",
@@ -260,7 +301,7 @@ function showActionsDialog(onSelected) {
             var that = this;
             actionsEditorLoaded(function (item) {
                 if (onSelected) {
-                    onSelected({ id: item.actionId(), name: item.name() });
+                    onSelected({ id: item.heartId(), name: item.name() });
                 }
                 $(that).dialog("close");
             }, $dialog);

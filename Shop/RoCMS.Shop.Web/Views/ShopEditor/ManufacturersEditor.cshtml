@@ -50,40 +50,37 @@
     <script type="text/html" id="manufacturerTemplate">
         <div class="shop-manufacturer">
             <form class="form-horizontal" data-bind="with: vm">
-                <div class="col-xs-12">
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Название</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control" data-bind="value: name">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Название</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: name">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Страна</label>
-                        <div class="col-xs-10">
-                            <select id="fuckingSelect" class="form-control" data-bind="options: $root.countries, optionsText: 'name', optionsValue: 'countryId', value: countryId"></select>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Страна</label>
+                            <div class="col-xs-10">
+                                <select id="fuckingSelect" class="form-control" data-bind="options: $root.countries, optionsText: 'name', optionsValue: 'countryId', value: countryId"></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Адрес сайта</label>
-                        <div class="col-xs-10">
-                            <input type="text" class="form-control" data-bind="value: url">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Логотип</label>
+                            <div class="col-xs-10">
+                                <img alt="Логотип" data-bind="click: pickImage, thumbnailSrc: logoImageId" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Логотип</label>
-                        <div class="col-xs-10">
-                            <img alt="Логотип" data-bind="click: pickImage, thumbnailSrc: logoImageId"/>
-                        </div>
-                    </div>
 
-
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Описание</label>
-                        <div class="col-xs-10">
-                            @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "manufacturerDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Описание</label>
+                            <div class="col-xs-10">
+                                @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "manufacturerDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-6">@Html.Partial("~/Views/Admin/_HeartEditor.cshtml")</div>
                 </div>
+
             </form>
         </div>
 

@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[Manufacturer_Delete]
-@ManufacturerId int
+@HeartId int
 AS
 	DELETE FROM [Shop].[Manufacturer]
-	WHERE [ManufacturerId]=@ManufacturerId
+	WHERE [HeartId]=@HeartId

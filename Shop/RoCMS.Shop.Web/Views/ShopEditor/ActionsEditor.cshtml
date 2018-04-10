@@ -122,78 +122,86 @@
     <script type="text/html" id="actionTemplate">
         <div class="shop-action">
             <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Name</label>
-                    <div class="col-xs-10">
-                        <input type="text" class="form-control" data-bind="value: name">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_EndDate</label>
-                    <div class="col-xs-10">
-                        <input type="text" class="form-control" data-bind="value: dateOfEnding">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Discount</label>
-                    <div class="col-xs-10">
-                        <input type="text" class="form-control" data-bind="value: discount">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2" for="price">@ShopStrings.Shop_Action_Goods</label>
-                    <div class="col-xs-9">
-                        <div class="row goods-row name-blocks-row" data-bind="template: { name: 'goods-item-action-template', foreach: goods }">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Name</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">@ShopStrings.Shop_Action_EndDate</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: dateOfEnding">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Discount</label>
+                            <div class="col-xs-10">
+                                <input type="text" class="form-control" data-bind="value: discount">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2" for="price">@ShopStrings.Shop_Action_Goods</label>
+                            <div class="col-xs-9">
+                                <div class="row goods-row name-blocks-row" data-bind="template: { name: 'goods-item-action-template', foreach: goods }">
+                                </div>
+                            </div>
+                            <div class="col-xs-1">
+                                <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addGoods"><em class="fa fa-plus"></em></a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2" for="price">@ShopStrings.Shop_Action_Categories</label>
+                            <div class="col-xs-9">
+                                <div class="row categories-row name-blocks-row" data-bind="template: { name: 'category-item-action-template', foreach: categories }">
+                                </div>
+                            </div>
+                            <div class="col-xs-1">
+                                <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-3" for="price">@ShopStrings.Shop_Action_Manufacturers</label>
+                            <div class="col-xs-8">
+                                <div class="row manufacturers-row name-blocks-row" data-bind="template: { name: 'manufacturer-item-action-template', foreach: manufacturers }">
+                                </div>
+                            </div>
+                            <div class="col-xs-1">
+                                <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addManufacturer"><em class="fa fa-plus"></em></a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Description</label>
+                            <div class="col-xs-10">
+                                @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "actionDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Изображение</label>
+                            <div class="col-xs-10">
+                                <img alt="Изображение" data-bind="click: pickImage, thumbnailSrc: imageId" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Отображать в слайдере</label>
+                            <div class="col-xs-10">
+                                <input type="checkbox" data-bind="checked: showInSlider" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Акция активна</label>
+                            <div class="col-xs-10">
+                                <input type="checkbox" data-bind="checked: active" />
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addGoods"><em class="fa fa-plus"></em></a>
+                    <div class="col-md-6">
+                        @Html.Partial("~/Views/Admin/_HeartEditor.cshtml")
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2" for="price">@ShopStrings.Shop_Action_Categories</label>
-                    <div class="col-xs-9">
-                        <div class="row categories-row name-blocks-row" data-bind="template: { name: 'category-item-action-template', foreach: categories }">
-                        </div>
-                    </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addCategory"><em class="fa fa-plus"></em></a>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-3" for="price">@ShopStrings.Shop_Action_Manufacturers</label>
-                    <div class="col-xs-8">
-                        <div class="row manufacturers-row name-blocks-row" data-bind="template: { name: 'manufacturer-item-action-template', foreach: manufacturers }">
-                        </div>
-                    </div>
-                    <div class="col-xs-1">
-                        <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addManufacturer"><em class="fa fa-plus"></em></a>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">@ShopStrings.Shop_Action_Description</label>
-                    <div class="col-xs-10">
-                        @Html.Partial("WYSIWYG_Dialog", new EditorVM(null, "actionDescription", "shop-item-description", ACEModes.HTML) { ShowCommonButtons = true })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Изображение</label>
-                    <div class="col-xs-10">
-                        <img alt="Изображение" data-bind="click: pickImage, thumbnailSrc: imageId" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Отображать в слайдере</label>
-                    <div class="col-xs-10">
-                        <input type="checkbox" data-bind="checked: showInSlider" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Акция активна</label>
-                    <div class="col-xs-10">
-                        <input type="checkbox" data-bind="checked: active" />
-                    </div>
-                </div>
+                
             </form>
         </div>
 

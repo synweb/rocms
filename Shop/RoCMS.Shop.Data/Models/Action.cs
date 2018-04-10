@@ -4,7 +4,7 @@ namespace RoCMS.Shop.Data.Models
 {
     public class Action
     {
-        public int ActionId { get; set; }
+        public int HeartId { get; set; }
         public Nullable<System.DateTime> DateOfEnding { get; set; }
         public string Description { get; set; }
         public int Discount { get; set; }

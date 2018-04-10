@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using RoCMS.Base.Models;
+using RoCMS.Web.Contract.Models;
 
 namespace RoCMS.Shop.Contract.Models
 {
-    public class Action
+    public class Action:Heart
     {
         public Action()
         {
@@ -13,7 +14,6 @@ namespace RoCMS.Shop.Contract.Models
             Manufacturers = new List<IdNamePair<int>>();
         }
 
-        public int ActionId { get; set; }
         public DateTime? DateOfEnding { get; set; }
         public string Description { get; set; }
         public string Name { get; set; }

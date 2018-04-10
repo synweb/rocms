@@ -2,7 +2,7 @@
     [ActionId] INT NOT NULL,
     [HeartId]   INT NOT NULL,
     CONSTRAINT [PK_ActionGoods] PRIMARY KEY NONCLUSTERED ([ActionId] ASC, [HeartId] ASC),
-    CONSTRAINT [FK_ActionGoods_Action] FOREIGN KEY ([ActionId]) REFERENCES [Shop].[Action] ([ActionId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_ActionGoods_Action] FOREIGN KEY ([ActionId]) REFERENCES [Shop].[Action] ([HeartId]) ON DELETE CASCADE,
     CONSTRAINT [FK_ActionGoods_Goods] FOREIGN KEY ([HeartId]) REFERENCES [Shop].[GoodsItem] ([HeartId]) ON DELETE CASCADE
 );
 

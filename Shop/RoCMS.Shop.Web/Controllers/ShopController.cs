@@ -272,7 +272,7 @@ namespace RoCMS.Shop.Web.Controllers
 
         [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page, int pgsize, int? minPrice = null, int? maxPrice = null, string query = null)
+        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page, int pageSize, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             bool exists = _shopActionService.ActionExists(id);
             if (!exists)
@@ -285,14 +285,32 @@ namespace RoCMS.Shop.Web.Controllers
                 ActionIds = new[] { id },
                 SearchPattern = query
             };
-            var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
+            var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pageSize);
             return PartialView("GoodsPage", goods);
         }
 
+        [MvcSiteMapNode(ParentKey = "Home", Key = "ActionSEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.ActionDynamicNodeProvider, RoCMS.Shop.Web")]
+        [ShopPagingFilter]
+        [GoodsFilter]
+        public ActionResult ActionSEF(string relativeUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        [ShopPagingFilter]
+        [GoodsFilter]
         public ActionResult Manufacturer(int id)
         {
             Manufacturer man = _shopManufacturerService.GetManufacturer(id);
             return View(man);
+        }
+
+        [MvcSiteMapNode(ParentKey = "Home", Key = "ManufacturerSEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.ManufacturerDynamicNodeProvider, RoCMS.Shop.Web")]
+        [ShopPagingFilter]
+        [GoodsFilter]
+        public ActionResult ManufacturerSEF(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public ActionResult BestSellers(int count)

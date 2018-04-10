@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using AutoMapper;
 using RoCMS.Base.Models;
 using RoCMS.Data.Gateways;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
 using RoCMS.Shop.Data.Gateways;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Shop.Services
 {
@@ -16,12 +18,28 @@ namespace RoCMS.Shop.Services
     {
         private readonly ManufacturerGateway _manufacturerGateway = new ManufacturerGateway();
         private readonly CountryGateway _countryGateway = new CountryGateway();
+
+        private readonly IHeartService _heartService;
+
+        public ShopManufacturerService(IHeartService heartService)
+        {
+            _heartService = heartService;
+        }
+
         public Manufacturer GetManufacturer(int manufacturerId)
         {
             var dataRes = _manufacturerGateway.SelectOne(manufacturerId);
             var res = Mapper.Map<Manufacturer>(dataRes);
-            FillCountry(res);
+            FillData(res);
             return res;
+        }
+
+        private void FillData(Manufacturer manufacturer)
+        {
+            var heart = _heartService.GetHeart(manufacturer.HeartId);
+            manufacturer.FillHeart(heart);
+
+            FillCountry(manufacturer);
         }
 
         private void FillCountry(Manufacturer manufacturer)
@@ -34,21 +52,37 @@ namespace RoCMS.Shop.Services
 
         public int CreateManufacturer(Manufacturer manufacturer)
         {
-            var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
-            dataRec.Guid = Guid.NewGuid();
-            int id = _manufacturerGateway.Insert(dataRec);
-            return id;
+            manufacturer.Type = manufacturer.GetType().FullName;
+
+            using (TransactionScope ts = new TransactionScope())
+            {
+                var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
+                dataRec.Guid = Guid.NewGuid();
+
+                int id = manufacturer.HeartId = dataRec.HeartId = _heartService.CreateHeart(manufacturer);
+
+                _manufacturerGateway.Insert(dataRec);
+
+                ts.Complete();
+                return id;
+            }
+            
         }
 
         public void UpdateManufacturer(Manufacturer manufacturer)
         {
-            var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
-            _manufacturerGateway.Update(dataRec);
+            using (TransactionScope ts = new TransactionScope())
+            {
+                _heartService.UpdateHeart(manufacturer);
+
+                var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
+                _manufacturerGateway.Update(dataRec);
+            }
         }
 
         public void DeleteManufacturer(int manufacturerId)
         {
-            _manufacturerGateway.Delete(manufacturerId);
+            _heartService.DeleteHeart(manufacturerId);
         }
 
         public IList<Manufacturer> GetManufacturers()
@@ -57,7 +91,7 @@ namespace RoCMS.Shop.Services
             var res = Mapper.Map<IList<Manufacturer>>(dataRes);
             foreach (var manufacturer in res)
             {
-                FillCountry(manufacturer);
+                FillData(manufacturer);
             }
             return res;
         }
@@ -75,7 +109,7 @@ namespace RoCMS.Shop.Services
             var res = Mapper.Map<IList<Manufacturer>>(dataRes);
             foreach (var manufacturer in res)
             {
-                FillCountry(manufacturer);
+                FillData(manufacturer);
             }
             return res;
         }
@@ -86,7 +120,7 @@ namespace RoCMS.Shop.Services
             var res = Mapper.Map<IList<Manufacturer>>(dataRes);
             foreach (var manufacturer in res)
             {
-                FillCountry(manufacturer);
+                FillData(manufacturer);
             }
             return res;
         }

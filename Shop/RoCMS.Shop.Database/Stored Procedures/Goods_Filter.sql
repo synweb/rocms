@@ -108,7 +108,7 @@ DECLARE @CountryManufacturerIds [Int_Table]
 IF @CountriesExist=1
 BEGIN
     INSERT INTO @CountryManufacturerIds (Val)
-    SELECT [ManufacturerId] FROM [Shop].[Manufacturer] WHERE [CountryId] IN (SELECT Val FROM @Countries)
+    SELECT [HeartId] FROM [Shop].[Manufacturer] WHERE [CountryId] IN (SELECT Val FROM @Countries)
 END
 
 IF @CountriesExist=1 OR @ManufacturerIdsExist = 1

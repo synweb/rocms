@@ -17,8 +17,8 @@
     CONSTRAINT [PK_Goods] PRIMARY KEY CLUSTERED ([HeartId] ASC),
 	CONSTRAINT [FK_Goods_Heart] FOREIGN KEY ([HeartId]) REFERENCES [Heart]([HeartId]) ON DELETE CASCADE,
 
-    CONSTRAINT [FK_GoodsManufacturer] FOREIGN KEY ([ManufacturerId]) REFERENCES [Shop].[Manufacturer] ([ManufacturerId]),
-	CONSTRAINT [FK_Goods_Supplier_Manufacturer] FOREIGN KEY ([SupplierId]) REFERENCES [Shop].[Manufacturer] ([ManufacturerId]),
+    CONSTRAINT [FK_GoodsManufacturer] FOREIGN KEY ([ManufacturerId]) REFERENCES [Shop].[Manufacturer] ([HeartId]),
+	CONSTRAINT [FK_Goods_Supplier_Manufacturer] FOREIGN KEY ([SupplierId]) REFERENCES [Shop].[Manufacturer] ([HeartId]),
 	CONSTRAINT [FK_GoodsImage] FOREIGN KEY ([MainImageId]) REFERENCES [dbo].[Image] ([ImageId]) ON UPDATE CASCADE ON DELETE SET NULL,
 	CONSTRAINT [FK_Goods_Pack] FOREIGN KEY ([BasePackId]) REFERENCES [Shop].[Pack] ([PackId]) ON DELETE SET NULL, 
     CONSTRAINT [FK_Goods_Currency] FOREIGN KEY ([Currency]) REFERENCES [Shop].[Currency]([CurrencyId])

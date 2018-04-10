@@ -1,4 +1,7 @@
-﻿App.Admin.countries = ko.observableArray();
+﻿/// <reference path="/Content/admin/ro/js/rocms.heart.js" />
+/// <reference path="base.js" />
+
+App.Admin.countries = ko.observableArray();
 
 function manufacturersEditorLoaded(onSelected, context) {
     blockUI();
@@ -6,8 +9,8 @@ function manufacturersEditorLoaded(onSelected, context) {
         manufacturers: ko.observableArray(),
         createManufacturer: function () {
             var self = this;
-            var manufacturer = new App.Admin.Manufacturer();
-            manufacturer.new(function () {
+            var manufacturer = $.extend(new App.Admin.Shop.Manufacturer(), App.Admin.Shop.ManufacturerFunctions);
+            manufacturer.create(function () {
                 self.manufacturers.push(manufacturer);
             });
         },
@@ -21,9 +24,9 @@ function manufacturersEditorLoaded(onSelected, context) {
     var blocks = 2;
     getJSON("/api/shop/manufacturers/get", "", function (result) {
         $(result).each(function () {
-            vm.manufacturers.push(new App.Admin.Manufacturer(this));
+            var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions);
+            vm.manufacturers.push(res);
         });
-       
     })
         .fail(function () {
             smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
@@ -47,10 +50,10 @@ function manufacturersEditorLoaded(onSelected, context) {
         .always(function () {
             blocks--;
             if (blocks == 0) {
-            unblockUI();
-        }
+                unblockUI();
+            }
         });
-    
+
     if (context) {
         ko.applyBindings(vm, context[0]);
     } else {
@@ -59,36 +62,55 @@ function manufacturersEditorLoaded(onSelected, context) {
 }
 
 
+App.Admin.Shop.ManufacturerValidationMapping = {
+    name: {
+        create: function (options) {
+            var res = ko.observable(options.data).extend({ required: true });
+            return res;
+        }
+    }
+};
 
+$.extend(App.Admin.Shop.ManufacturerValidationMapping, App.Admin.HeartValidationMapping);
 
-App.Admin.Manufacturer = function (data) {
+App.Admin.Shop.Manufacturer = function () {
     var self = this;
 
-    self.manufacturerId = ko.observable();
+    $.extend(self, new App.Admin.Heart());
+
+    self.heartId = ko.observable();
     self.name = ko.observable().extend({ required: true });;
     self.countryId = ko.observable();
     self.logoImageId = ko.observable();
     self.description = ko.observable();
-    self.url = ko.observable();
 
-    self.init = function (item) {
-        self.manufacturerId(item.manufacturerId);
-        self.name(item.name);
-        self.countryId(item.countryId);
-        self.logoImageId(item.logoImageId);
-        self.description(item.description);
-        self.url(item.url);
-    };
+}
 
-    if (data) {
-        self.init(data);
-    }
+App.Admin.Shop.ManufacturerFunctions = {
+    initManufacturer: function () {
+        var self = this;
+        self.initHeart();
 
-    self.fetch = function () {
-        if (self.manufacturerId()) {
+        self.name.subscribe(function (val) {
+            if (val) {
+                if (!self.title()) {
+                    self.title(val);
+                }
+                if (!self.description()) {
+                    self.description(val);
+                }
+
+            }
+        });
+
+    },
+
+    fetch: function () {
+        var self = this;
+        if (self.heartId()) {
             blockUI();
-            postJSON("/api/shop/manufacturer/" + self.manufacturerId() + "/get", "", function (result) {
-                self.init(result); 
+            postJSON("/api/shop/manufacturer/" + self.heartId() + "/get", "", function (result) {
+                self.init(result);
             })
                 .fail(function () {
                     smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
@@ -97,15 +119,16 @@ App.Admin.Manufacturer = function (data) {
                     unblockUI();
                 });
         }
-    };
+    },
 
-    self.save = function (url, onSuccess) {
+    save: function (url, onSuccess) {
+        var self = this;
         blockUI();
         postJSON(url, ko.toJS(self), function (result) {
             if (result.succeed === true) {
                 if (onSuccess) {
                     onSuccess(result.data);
-                } 
+                }
             }
         })
             .fail(function () {
@@ -114,18 +137,22 @@ App.Admin.Manufacturer = function (data) {
             .always(function () {
                 unblockUI();
             });
-    };
+    },
 
-    self.edit = function () {
-        self.dialog(function () {
-            self.save("/api/shop/manufacturer/update");
+    edit: function (onSuccess) {
+        var self = this;
+        self.dialog("/api/shop/manufacturer/update", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
-    };
+    },
 
-    self.remove = function (item, parent) {
-        if (self.manufacturerId()) {
+    remove: function (item, parent) {
+        var self = this;
+        if (self.heartId()) {
             blockUI();
-            var url = "/api/shop/manufacturer/" + self.manufacturerId() + "/delete";
+            var url = "/api/shop/manufacturer/" + self.heartId() + "/delete";
             postJSON(url, "", function (result) {
                 if (result.succeed) {
                     parent.manufacturers.remove(item);
@@ -138,26 +165,27 @@ App.Admin.Manufacturer = function (data) {
                     unblockUI();
                 });
         }
-    };
+    },
 
-    self.pickImage = function () {
+    pickImage: function () {
+        var self = this;
         showImagePickDialog(function (imageData) {
             self.logoImageId(imageData.ID);
         });
-    };
+    },
 
-    self.new = function (onSuccess) {
-        self.dialog(function () {
-            self.save("/api/shop/manufacturer/create", function (result) {
-                self.manufacturerId(result.id);
-                if (onSuccess) {
-                    onSuccess();
-                }
-            });
+    create: function (onSuccess) {
+        var self = this;
+
+        self.dialog("/api/shop/manufacturer/create", function () {
+            if (onSuccess) {
+                onSuccess();
+            }
         });
-    };
+    },
 
-    self.dialog = function (onSuccess) {
+    dialog: function (url, onSave) {
+        var self = this;
         var dm = ko.validatedObservable(self);
         var dialogContent = $("#manufacturerTemplate").tmpl();
         var options = {
@@ -173,11 +201,11 @@ App.Admin.Manufacturer = function (data) {
                     $("#manufacturerDescription", $form).val(self.description());
                     initContentEditor();
                 }
-
+                self.initManufacturer();
                 var that = this;
                 ko.applyBindings({ vm: dm, countries: App.Admin.countries }, that);
-                
-                
+
+
             },
             buttons: [
                 {
@@ -191,10 +219,19 @@ App.Admin.Manufacturer = function (data) {
 
 
                         if (dm.isValid()) {
-                            if (onSuccess) {
-                                onSuccess();
-                            }
-                            $(this).dialog("close");
+
+
+                            self.save(url, function (data) {
+                                if (data) {
+                                    self.heartId(data.id);
+                                    if (onSave) {
+                                        onSave();
+                                    }
+                                    $dialog.dialog("close");
+
+                                }
+                            });
+
                         }
                         else {
                             dm.errors.showAllMessages();
@@ -215,8 +252,12 @@ App.Admin.Manufacturer = function (data) {
         };
         dialogContent.dialog(options);
         return dialogContent;
-    };
+    }
 }
+
+
+$.extend(App.Admin.Shop.ManufacturerFunctions, App.Admin.HeartFunctions);
+
 
 function showManufacturersDialog(onSelected) {
     var options = {
@@ -231,7 +272,7 @@ function showManufacturersDialog(onSelected) {
             var that = this;
             manufacturersEditorLoaded(function (item) {
                 if (onSelected) {
-                    onSelected({ id: item.manufacturerId(), name: item.name() });
+                    onSelected({ id: item.heartId(), name: item.name() });
                 }
                 $(that).dialog("close");
             }, $dialog);

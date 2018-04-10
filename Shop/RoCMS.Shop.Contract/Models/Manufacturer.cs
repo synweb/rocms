@@ -4,15 +4,12 @@ using RoCMS.Web.Contract.Models;
 
 namespace RoCMS.Shop.Contract.Models
 {
-    public class Manufacturer
+    public class Manufacturer:Heart
     {
-        public int ManufacturerId { get; set; }
-        public DateTime CreationDate { get; set; }
         public System.Guid Guid { get; set; }
         public string Name { get; set; }
         public string LogoImageId { get; set; }
         public string Description { get; set; }
-        public string Url { get; set; }
 
         public int? CountryId { get; set; }
 

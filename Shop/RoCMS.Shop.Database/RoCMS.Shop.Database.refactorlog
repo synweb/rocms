@@ -70,4 +70,18 @@
     <Property Name="ParentElementType" Value="SqlTable" />
     <Property Name="NewName" Value="HeartId" />
   </Operation>
+  <Operation Name="Rename Refactor" Key="0ad62b22-8d25-4eae-9ae0-e25d53a81aca" ChangeDateTime="03/29/2018 08:40:40">
+    <Property Name="ElementName" Value="[Shop].[Manufacturer].[ManufacturerId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[Manufacturer]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="497abba2-2218-416b-aa1d-fb4236ad0e3b" ChangeDateTime="03/29/2018 08:41:52">
+    <Property Name="ElementName" Value="[Shop].[Action].[ActionId]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[Shop].[Action]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="HeartId" />
+  </Operation>
 </Operations>

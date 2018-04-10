@@ -39,7 +39,22 @@ namespace RoCMS.Shop.Services
         {
             Mapper.CreateMap<Manufacturer, Data.Models.Manufacturer>();
             Mapper.CreateMap<Data.Models.Manufacturer, Manufacturer>()
-                .ForMember(x => x.Country, x => x.Ignore());
+                .ForMember(x => x.Country, x => x.Ignore())
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore())
+                .ForMember(x => x.CreationDate, x => x.Ignore())
+                .ForMember(x => x.RelativeUrl, x => x.Ignore())
+                .ForMember(x => x.ParentHeartId, x => x.Ignore())
+                .ForMember(x => x.BreadcrumbsTitle, x => x.Ignore())
+                .ForMember(x => x.Noindex, x => x.Ignore())
+                .ForMember(x => x.Title, x => x.Ignore())
+                .ForMember(x => x.MetaDescription, x => x.Ignore())
+                .ForMember(x => x.MetaKeywords, x => x.Ignore())
+                .ForMember(x => x.Styles, x => x.Ignore())
+                .ForMember(x => x.Scripts, x => x.Ignore())
+                .ForMember(x => x.Layout, x => x.Ignore())
+                .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
+
+                ;
 
             Mapper.CreateMap<Spec, Data.Models.Spec>();
             Mapper.CreateMap<Data.Models.Spec, Spec>();
@@ -103,7 +118,21 @@ namespace RoCMS.Shop.Services
             Mapper.CreateMap<Data.Models.Action, Action>()
                 .ForMember(x => x.Goods, x => x.Ignore())
                 .ForMember(x => x.Manufacturers, x => x.Ignore())
-                .ForMember(x => x.Categories, x => x.Ignore());
+                .ForMember(x => x.Categories, x => x.Ignore())
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore())
+                .ForMember(x => x.CreationDate, x => x.Ignore())
+                .ForMember(x => x.RelativeUrl, x => x.Ignore())
+                .ForMember(x => x.ParentHeartId, x => x.Ignore())
+                .ForMember(x => x.BreadcrumbsTitle, x => x.Ignore())
+                .ForMember(x => x.Noindex, x => x.Ignore())
+                .ForMember(x => x.Title, x => x.Ignore())
+                .ForMember(x => x.MetaDescription, x => x.Ignore())
+                .ForMember(x => x.MetaKeywords, x => x.Ignore())
+                .ForMember(x => x.Styles, x => x.Ignore())
+                .ForMember(x => x.Scripts, x => x.Ignore())
+                .ForMember(x => x.Layout, x => x.Ignore())
+                .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
+                ;
 
             Mapper.CreateMap<GoodsFilter, Data.Models.GoodsFilter>()
                 .ForMember(x => x.WithSubcategories, x => x.MapFrom(y => y.ClientMode??false))

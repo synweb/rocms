@@ -9,23 +9,23 @@ using RoCMS.Shop.Contract.Services;
 
 namespace RoCMS.Shop.Web.Helpers
 {
-    public class CategoryDynamicNodeProvider : DynamicNodeProviderBase
+    public class ManufacturerDynamicNodeProvider : DynamicNodeProviderBase
     {
         public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
         {
-            IShopCategoryService categoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
+            IShopManufacturerService manufacturerService = DependencyResolver.Current.GetService<IShopManufacturerService>();
             var nodes = new List<DynamicNode>();
             try
             {
-                var categories = categoryService.GetAllCategories();
-                foreach (var category in categories)
+                var manufacturers = manufacturerService.GetManufacturers();
+                foreach (var manufacturer in manufacturers)
                 {
                     DynamicNode dynamicNode = new DynamicNode();
                     // ключ должен быть уникальным для каждой ноды
-                    dynamicNode.Key = "category_" + category.HeartId;
-                    dynamicNode.RouteValues.Add("relativeUrl", category.RelativeUrl);
-                    dynamicNode.Route = typeof(Category).FullName;
-                    dynamicNode.Title = category.Title;
+                    dynamicNode.Key = "manufacturer_" + manufacturer.HeartId;
+                    dynamicNode.RouteValues.Add("relativeUrl", manufacturer.RelativeUrl);
+                    dynamicNode.Route = typeof(Manufacturer).FullName;
+                    dynamicNode.Title = manufacturer.Title;
                     dynamicNode.Protocol = "*";
 
                     dynamicNode.Attributes.Add("visibility", "MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult");

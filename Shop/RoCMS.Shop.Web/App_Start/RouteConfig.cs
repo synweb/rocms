@@ -7,6 +7,7 @@ using System.Web.Routing;
 using RoCMS.Base.ForWeb.Helpers;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
+using Action = RoCMS.Shop.Contract.Models.Action;
 
 namespace Shop.Web
 {
@@ -52,6 +53,8 @@ namespace Shop.Web
 
             RoutingHelper.RegisterHeartRoute(routes, typeof(Category), "Shop", "CategorySEF");
             RoutingHelper.RegisterHeartRoute(routes, typeof(GoodsItem), "Shop", "GoodsSEF");
+            RoutingHelper.RegisterHeartRoute(routes, typeof(Action), "Shop", "ActionSEF");
+            RoutingHelper.RegisterHeartRoute(routes, typeof(Manufacturer), "Shop", "ManufacturerSEF");
         }
     }
 }

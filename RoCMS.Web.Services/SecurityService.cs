@@ -48,6 +48,20 @@ namespace RoCMS.Web.Services
             return sb.ToString().ToLower();
         }
 
+        private static string CalculateLegacyHash(string input)
+        {
+            // MD5
+            var md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+            var sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString().ToLower();
+        }
+
         public void ChangePassword(string user, string oldPassword, string password)
         {
             if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
@@ -94,7 +108,12 @@ namespace RoCMS.Web.Services
         public bool Authenticate(string username, string password)
         {
             var hash = CalculateHash(password);
-            return _userGateway.Authenticate(username, hash);
+            bool success = _userGateway.Authenticate(username, hash);
+            if (success)
+                return true;
+            var legacyHash = CalculateLegacyHash(password);
+            bool successWithLegacyHash = _userGateway.Authenticate(username, legacyHash);
+            return successWithLegacyHash;
         }
 
         public IEnumerable<string> GetUsernames()

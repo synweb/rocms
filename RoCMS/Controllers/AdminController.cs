@@ -322,11 +322,6 @@ namespace RoCMS.Controllers
         [AuthorizeResources(RoCmsResources.Blocks)]
         public ActionResult DeleteBlock(int id)
         {
-            if (id <= 5)
-            {
-                throw new InvalidOperationException("Блок является системным, его нельзя удалить");
-            }
-
             _blockService.DeleteBlock(id);
             return Json(ResultModel.Success);
         }

@@ -42,31 +42,39 @@ function blockEditorLoaded() {
         });
         return false;
     });
-    $('#adminContent').on("click", ".block-summary .button-delete", function () {
-        if (!confirmRemoval()) {
-            return false;
-        }
-        var container = $(this).parents(".block-summary");
-        var id = container.data("blockId");
-        var url = "/api/block/" + id + "/delete";
-        blockUI();
-        postJSON(url, "", function (res) {
-                if (res.succeed) {
-                    container.hide(1000, function () { container.remove(); });
-                } else {
-                    if (res.message) {
-                        alert(res.message);
-                    } else {
-                        alert("Произошла ошибка. Попробуйте еще раз или свяжитесь с администрацией");
-                    }
-                }
-            })
-            .fail(function () {
-                smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
-            })
-            .always(function () {
-                unblockUI();
-            });
-        return false;
-    });
+    
 }
+
+$(function() {
+    $('#adminContent').on("click",
+        ".block-summary .button-delete",
+        function() {
+            if (!confirmRemoval()) {
+                return false;
+            }
+            var container = $(this).parents(".block-summary");
+            var id = container.data("blockId");
+            var url = "/api/block/" + id + "/delete";
+            blockUI();
+            postJSON(url,
+                    "",
+                    function(res) {
+                        if (res.succeed) {
+                            container.hide(1000, function() { container.remove(); });
+                        } else {
+                            if (res.message) {
+                                alert(res.message);
+                            } else {
+                                alert("Произошла ошибка. Попробуйте еще раз или свяжитесь с администрацией");
+                            }
+                        }
+                    })
+                .fail(function() {
+                    smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+                })
+                .always(function() {
+                    unblockUI();
+                });
+            return false;
+        });
+});

@@ -30,11 +30,6 @@ namespace RoCMS.ApiControllers
         [HttpPost]
         public ResultModel Delete(int id)
         {
-            if (id <= 5)
-            {
-                return new ResultModel(false, "Блок является системным, его нельзя удалить");
-            }
-
             _blockService.DeleteBlock(id);
             return ResultModel.Success;
         }

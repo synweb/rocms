@@ -164,12 +164,29 @@ namespace RoCMS.Shop.Services
         private void FillPacks(GoodsItem goodsItem)
         {
             var dataVals = _goodsPackGateway.SelectByGoods(goodsItem.HeartId);
-            var vals = Mapper.Map<IList<GoodsPack>>(dataVals);
-            foreach (var goodsPack in vals)
+            if (dataVals.Any())
             {
-                goodsPack.PackInfo = _shopPackService.GetPack(goodsPack.PackId);
+                try
+                {
+                    var vals = Mapper.Map<IList<GoodsPack>>(dataVals);
+                    foreach (var goodsPack in vals)
+                    {
+                        goodsPack.PackInfo = _shopPackService.GetPack(goodsPack.PackId);
+                    }
+                    goodsItem.Packs = vals;
+
+                    var basePack = goodsItem.Packs.Single(x => x.PackId == goodsItem.BasePackId).PackInfo;
+                    goodsItem.BasePack = basePack;
+
+
+                }
+                catch (Exception e)
+                {
+                    _logService.LogError(new Exception($"Ошибка при заполнении упаковок товара {goodsItem.HeartId}", e));
+                }
+
+
             }
-            goodsItem.Packs = vals;
         }
 
         private void FillActions(GoodsItem goodsItem)

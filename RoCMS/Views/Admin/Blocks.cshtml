@@ -23,9 +23,9 @@
                     <a href="@Url.Action("EditBlock", new {id = block.BlockId})" class="btn btn-warning btn-xs">
                         <i class="fa fa-pencil"></i> @Strings.Blocks_EditBlock
                     </a>
-                    @if (block.BlockId > 6 && User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
+                    @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                     {
-                        <a href="@Url.Action("DeleteBlock", "Admin", new {id = block.BlockId})" class="btn btn-danger btn-xs button-delete">
+                        <a href="#" class="btn btn-danger btn-xs button-delete">
                             <i class="fa fa-times"></i> @Strings.Blocks_DeleteBlock
                         </a>
                     }

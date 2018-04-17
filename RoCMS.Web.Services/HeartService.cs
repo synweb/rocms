@@ -32,6 +32,19 @@ namespace RoCMS.Web.Services
             }
         }
 
+        private List<UrlPair> CanonicalUrlPairs
+        {
+            get
+            {
+                var result = new List<UrlPair>();
+                foreach (var val in _heartUrlPairs.Values)
+                {
+                    result.AddRange(val);
+                }
+                return result;
+            }
+        }
+
         private string GetUncachedCanonicalUrl(string relativeUrl)
         {
             string prefix = GetCanonicalUrlPrefix(relativeUrl);
@@ -133,7 +146,16 @@ namespace RoCMS.Web.Services
             var res = Mapper.Map<ICollection<Heart>>(dataRes);
             foreach (var heart in res)
             {
-                heart.CanonicalUrl = GetCanonicalUrl(heart.HeartId);
+
+                var pair = CanonicalUrlPairs.SingleOrDefault(x => x.RelativeUrl == heart.RelativeUrl);
+                if (pair != null)
+                {
+                    heart.CanonicalUrl = pair.CanonicalUrl;
+                }
+                else
+                {
+                    heart.CanonicalUrl = GetCanonicalUrl(heart.HeartId);
+                }
             }
             return res;
         }

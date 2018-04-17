@@ -106,7 +106,7 @@ function pageEditorLoad(relativeUrl) {
 
     blockUI();
     $.when(
-            getJSON("/api/heart/hearts/get", "", function (res) {
+            getJSON("/api/heart/hearts/RoCMS.Web.Contract.Models.Page/get", "", function (res) {
                 $(res).each(function () {
                     vm.parents.push(this);
                 });

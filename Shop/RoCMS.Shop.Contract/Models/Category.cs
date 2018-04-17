@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using RoCMS.Base.Models;
 using RoCMS.Web.Contract.Models;
 
 namespace RoCMS.Shop.Contract.Models
 {
+    [DisplayName("Категория")]
     public class Category: Heart
     {
         public Category()

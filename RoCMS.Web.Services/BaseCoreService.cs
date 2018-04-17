@@ -21,7 +21,7 @@ namespace RoCMS.Web.Services
     {
         protected override int CacheExpirationInMinutes
         {
-            get { return 10; }
+            get { return 30; }
         }
 
         static BaseCoreService()

@@ -23,7 +23,7 @@
     }
     @if (User.Identity.IsAuthenticated)
     {
-        <li><a href="@Url.RouteUrl("BlogPersonal")">Личный кабинет</a></li>
+        @*<li><a href="@Url.RouteUrl("BlogPersonal")">Личный кабинет</a></li>*@
             <li><a href="#" onclick="logout()" class="logout">Выход</a></li>
     }
 </ul>

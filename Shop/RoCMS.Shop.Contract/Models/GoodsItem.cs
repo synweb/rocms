@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 using RoCMS.Base.Models;
@@ -9,6 +10,7 @@ using RoCMS.Web.Contract.Models.Search;
 
 namespace RoCMS.Shop.Contract.Models
 {
+    [DisplayName("Товар")]
     public class GoodsItem: Heart, ISearchable
     {
         public GoodsItem()

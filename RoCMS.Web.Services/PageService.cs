@@ -20,6 +20,7 @@ namespace RoCMS.Web.Services
 
         private const string PAGE_CACHE_KEY_TEMPLATE = "Page:{0}";
 
+
         private readonly PageGateway _pageGateway = new PageGateway();
         
 

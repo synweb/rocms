@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using MvcSiteMapProvider;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Shop.Web.Helpers
 {
@@ -13,13 +14,11 @@ namespace RoCMS.Shop.Web.Helpers
     {
         public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
         {
-            IShopService shopService = DependencyResolver.Current.GetService<IShopService>();
+            IHeartService categoryService = DependencyResolver.Current.GetService<IHeartService>();
             var nodes = new List<DynamicNode>();
             try
             {
-                int totalCount;
-                FilterCollections filters;
-                var goodsItems = shopService.GetGoodsSet(new GoodsFilter() { ClientMode = true }, 1, Int32.MaxValue, out totalCount, out filters, true);
+                var goodsItems = categoryService.GetHearts(typeof(GoodsItem).FullName);
                 foreach (var item in goodsItems)
                 {
                     DynamicNode dynamicNode = new DynamicNode();

@@ -67,6 +67,17 @@ namespace RoCMS.ApiControllers
         public ICollection<Heart> GetHeartsByType(string type)
         {
             var hearts = _heartService.GetHearts(type);
+            foreach (var heart in hearts)
+            {
+                var typeObj = GetTypeByName(heart.Type);
+
+                var displayNameAttr = typeObj.GetCustomAttribute<DisplayNameAttribute>();
+
+                var displayName = displayNameAttr != null ? displayNameAttr.DisplayName : heart.Type.Split('.').Last();
+                heart.Type = displayName;
+            }
+
+            return hearts;
             return hearts;
         }
 

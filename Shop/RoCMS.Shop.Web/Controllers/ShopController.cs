@@ -142,7 +142,7 @@ namespace RoCMS.Shop.Web.Controllers
             var args = new RouteValueDictionary(routeValues);
             args.Add("relativeUrl", cat.CanonicalUrl);
             args.Remove("id");
-            return RedirectPermanent(Url.RouteUrl("CatalogSEF", args));
+            return RedirectPermanent(Url.RouteUrl(typeof(Category).FullName, args));
         }
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "CategorySEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.CategoryDynamicNodeProvider, RoCMS.Shop.Web")]

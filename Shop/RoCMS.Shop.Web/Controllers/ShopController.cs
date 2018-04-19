@@ -213,6 +213,7 @@ namespace RoCMS.Shop.Web.Controllers
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
 
             ViewBag.PagingRoute = typeof(Category).FullName;
+            ViewBag.ActionId = id;
 
             return PartialView("GoodsPage", goods);
         }
@@ -317,6 +318,7 @@ namespace RoCMS.Shop.Web.Controllers
             };
 
             ViewBag.PagingRoute = typeof(Action).FullName;
+            ViewBag.ActionId = heart.HeartId;
 
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, pageNumber, pageSize);
             return PartialView("GoodsPage", goods);

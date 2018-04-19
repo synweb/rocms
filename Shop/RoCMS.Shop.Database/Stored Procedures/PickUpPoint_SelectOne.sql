@@ -2,4 +2,4 @@
 @PickUpPointId int
 AS
 	SELECT * FROM [Shop].[PickUpPoint]
-	WHERE [PickUpPointid]=@PickUpPointId
+	WHERE [PickUpPointId]=@PickUpPointId

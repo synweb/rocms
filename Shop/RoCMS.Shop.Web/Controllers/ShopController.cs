@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading;
 using System.Web;
@@ -33,6 +34,9 @@ namespace RoCMS.Shop.Web.Controllers
         private readonly IShopActionService _shopActionService;
         private readonly IShopCategoryService _shopCategoryService;
         private readonly IShopManufacturerService _shopManufacturerService;
+        private readonly IShopOrderService _shopOrderService;
+
+        private readonly IShopPickupPointService _pickupPointService;
 
         private readonly IHeartService _heartService;
 
@@ -43,7 +47,7 @@ namespace RoCMS.Shop.Web.Controllers
         public ShopController(ISessionValueProviderService sessionService, IShopService shopService,
             ISearchService searchService, IShopClientService clientService, IShopActionService shopActionService,
             IShopCategoryService shopCategoryService, IShopManufacturerService shopManufacturerService,
-            IPrincipalResolver principalResolver, IHeartService heartService)
+            IPrincipalResolver principalResolver, IHeartService heartService, IShopOrderService shopOrderService, IShopPickupPointService pickupPointService)
         {
             _sessionService = sessionService;
             _shopService = shopService;
@@ -54,6 +58,8 @@ namespace RoCMS.Shop.Web.Controllers
             _shopManufacturerService = shopManufacturerService;
             _principalResolver = principalResolver;
             _heartService = heartService;
+            _shopOrderService = shopOrderService;
+            _pickupPointService = pickupPointService;
 
 
             var service = DependencyResolver.Current.GetService<IShopSettingsService>();
@@ -398,6 +404,22 @@ namespace RoCMS.Shop.Web.Controllers
             return View();
         }
 
+        public ActionResult PayForOrder(int id)
+        {
+            var order = _shopOrderService.GetOrder(id);
+
+            ViewBag.ShopId = ConfigurationManager.AppSettings["YaKassaShopId"];
+            ViewBag.ScId = ConfigurationManager.AppSettings["YaKassaScId"];
+
+            return View(order);
+        }
+
+        public ActionResult PaymentFailed(int orderNumber)
+        {
+            var order = _shopOrderService.GetOrder(orderNumber);
+            return View(order);
+        }
+
         public ActionResult OrderLike(int id)
         {
             var goodsItem = _shopService.GetGoods(id, false);
@@ -405,6 +427,19 @@ namespace RoCMS.Shop.Web.Controllers
             var cats = _shopCategoryService.GetCategory(1).ChildrenCategories;
             var category = cats.First(x => goodsItem.Categories.Any(y => x.HeartId == y.ID));
             return View(category);
+        }
+
+        public ActionResult PickUpPoint(int id)
+        {
+            try
+            {
+                PickupPointInfo pickUpPoint = _pickupPointService.GetPickupPoint(id);
+                return View(pickUpPoint);
+            }
+            catch
+            {
+                throw new HttpException(404, "Not found");
+            }
         }
     }
 }

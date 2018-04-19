@@ -1,0 +1,51 @@
+﻿@*@using RoCMS.Shop.Contract.Models
+@model Order
+
+@{
+    ViewBag.Title = "Оплата покупки";
+    Layout = "~/Views/Shared/_newUserLayout.cshtml";
+}
+
+<h2>Оплата заказа #@Model.OrderId</h2>
+
+@if (Model.PaymentType == PaymentType.Cash)
+{
+    <span>Заказ оплачивается наличными</span>
+}
+else if (Model.PaymentType == PaymentType.Card)
+{
+    if (Model.PaymentState == null)
+    {
+        <span>Что-то не так</span>
+    }
+    else if (Model.PaymentState.Value == PaymentState.Invoiced || Model.PaymentState.Value == PaymentState.Rejected)
+    {
+
+
+        <span>Через пару секунд Вы сможете оплатить заказ...</span>
+
+        <form action="https://money.yandex.ru/eshop.xml" method="post" style="display: none;">
+
+            <input name="shopId" value="@ViewBag.ShopId" type="hidden" />
+            <input name="scid" value="@ViewBag.ScId" type="hidden"/>
+            <input name="sum" value="@Model.Summary" type="hidden">
+            <input name="customerNumber" value="@Model.ClientId" type="hidden"/>
+            <input name="orderNumber" value="@Model.OrderId" type="hidden" />
+            <input name="paymentType" value="AC" type="hidden" />
+            
+            <input id="pay" type="submit" value="Заплатить"/>
+        </form>
+
+        <script>
+            $(function() {
+                setTimeout(function() {
+                    $("#pay").click();
+                }, 1000);
+            });
+        </script>
+    }
+    else if (Model.PaymentState.Value == PaymentState.Paid)
+    {
+        <span>Заказ оплачен</span>
+    }
+}*@

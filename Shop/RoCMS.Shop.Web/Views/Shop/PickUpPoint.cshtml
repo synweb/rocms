@@ -1,0 +1,162 @@
+﻿@using RoCMS.Models
+@model RoCMS.Shop.Contract.Models.PickupPointInfo
+
+@{
+    if (!Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+
+        TempData["MetaDescription"] = Model.Title;
+
+        ViewBag.Title = ViewBag.Header = Model.Title;
+    }
+
+
+}
+
+<script src="//api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+
+@if (!String.IsNullOrEmpty(Model.ImageId))
+{
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="text-center">
+                <img class="img-responsive" src="@Url.RouteUrl("Image", new {id = Model.ImageId})" />
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row">
+    <div class="col-xs-3">
+        <label>Адрес</label>
+    </div>
+    <div class="col-xs-9">@Model.Address</div>
+</div>
+@if (!String.IsNullOrEmpty(Model.Phone))
+{
+    <div class="row">
+        <div class="col-xs-3">
+            <label>Телефон</label>
+        </div>
+        <div class="col-xs-9">@Model.Phone</div>
+    </div>
+}
+<div class="row">
+    <div class="col-xs-3">
+        <label>Город</label>
+    </div>
+    <div class="col-xs-9">@Model.City</div>
+</div>
+@if (!String.IsNullOrEmpty(Model.Metro))
+{
+    <div class="row">
+        <div class="col-xs-3">
+            <label>Метро</label>
+        </div>
+        <div class="col-xs-9">@Model.Metro</div>
+    </div>
+}
+@if (!String.IsNullOrEmpty(Model.PaymentType))
+{
+    <div class="row">
+        <div class="col-xs-3">
+            <label>Способы оплаты</label>
+        </div>
+        <div class="col-xs-9">@Model.PaymentType</div>
+    </div>
+}
+@if (!String.IsNullOrEmpty(Model.Schedule))
+{
+    <div class="row">
+        <div class="col-xs-3">
+            <label>График работы</label>
+        </div>
+        <div class="col-xs-9">@Model.Schedule</div>
+    </div>
+}
+@if (!String.IsNullOrEmpty(Model.HowToReach))
+{
+    <div class="row">
+        <div class="col-xs-3">
+            <label>Как добраться</label>
+        </div>
+        <div class="col-xs-9">
+            <p>
+                @Html.Raw(Model.HowToReach.Replace("\n", "<br/>"))
+            </p>
+
+        </div>
+    </div>
+}
+                    @if (!String.IsNullOrEmpty(Model.Description))
+{
+    <div class="row">
+        <div class="col-xs-12">@Model.Description</div>
+    </div>
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="text-center">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+
+    ymaps.ready(function () {
+        $("#map").css("height", "300px");
+
+
+
+
+
+        @*var geocoder = new ymaps.Geocode("Россия @Model.City @Model.Address");
+
+        ymaps.Events.observe(geocoder, geocoder.Events.Load, function () {
+            if (this.length()) {
+                alert("Найдено :" + this.length());
+                map.addOverlay(this.get(0));
+                map.panTo(this.get(0).getGeoPoint());
+            } else {
+                alert("Ничего не найдено");
+            }
+        });*@
+
+        var myGeocoder = ymaps.geocode("Россия @Model.City @Model.Address");
+
+        myGeocoder.then(
+            function (res) {
+
+                var map = new ymaps.Map("map", {
+                    center: res.geoObjects,
+                    zoom: 10
+                });
+                map.controls
+                    .remove('trafficControl')
+                    .remove('searchControl')
+                    .remove('smallZoomControl')
+                    .remove('zoomControl')
+                    .remove('geolocationControl')
+                    .remove('fullscreenControl')
+                    .remove('rulerControl');
+
+                map.geoObjects.add(res.geoObjects);
+
+                map.setBounds(res.geoObjects.getBounds(), { checkZoomRange: true }).then(function () {
+                    $("#map").show();
+                    if (map.getZoom() > 14) map.setZoom(14);
+
+                });
+
+            },
+            function (err) {
+                // обработка ошибки
+            }
+        );
+
+    });
+
+</script>

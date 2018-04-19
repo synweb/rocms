@@ -1,0 +1,11 @@
+﻿@using RoCMS.Shop.Contract.Models
+@model Order
+
+@{
+    ViewBag.Title = "Оплата не удалась";
+    Layout = "~/Views/Shared/_newUserLayout.cshtml";
+}
+
+
+<h2>Оплата заказа #@Model.OrderId</h2>
+<span>При оплате заказа возникла ошибка. Свяжитесь с менеджером или <a href="/Shop/PayForOrder/@Model.OrderId">попробуйте ещё раз</a></span>

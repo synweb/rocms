@@ -21,6 +21,7 @@ namespace RoCMS.Shop.Services
             var res = Mapper.Map<PickupPointInfo>(dataRes);
             return res;
         }
+
         public IList<PickupPointInfo> GetPickupPoints()
         {
             var dataRes = _pickUpPointGateway.Select();

@@ -213,7 +213,11 @@ namespace RoCMS.Shop.Web.Controllers
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pgsize);
 
             ViewBag.PagingRoute = typeof(Category).FullName;
-            ViewBag.ActionId = id;
+            ViewBag.CategoryId = id;
+
+            TempData["MetaKeywords"] = cat.MetaKeywords;
+            TempData["MetaDescription"] = cat.MetaDescription;
+            TempData["AdditionalHeaders"] = cat.AdditionalHeaders;
 
             return PartialView("GoodsPage", goods);
         }
@@ -318,9 +322,16 @@ namespace RoCMS.Shop.Web.Controllers
             };
 
             ViewBag.PagingRoute = typeof(Action).FullName;
-            ViewBag.ActionId = heart.HeartId;
+            
 
             var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, pageNumber, pageSize);
+
+            ViewBag.ActionId = heart.HeartId;
+
+            TempData["MetaKeywords"] = heart.MetaKeywords;
+            TempData["MetaDescription"] = heart.MetaDescription;
+            TempData["AdditionalHeaders"] = heart.AdditionalHeaders;
+
             return PartialView("GoodsPage", goods);
         }
 
@@ -347,6 +358,12 @@ namespace RoCMS.Shop.Web.Controllers
             var heart = _heartService.GetHeart(pageUrl);
 
             Manufacturer man = _shopManufacturerService.GetManufacturer(heart.HeartId);
+
+            TempData["MetaKeywords"] = heart.MetaKeywords;
+            TempData["MetaDescription"] = heart.MetaDescription;
+            TempData["AdditionalHeaders"] = heart.AdditionalHeaders;
+
+
             return View("Manufacturer", man);
         }
 
@@ -388,6 +405,10 @@ namespace RoCMS.Shop.Web.Controllers
 
                 return RedirectPermanent(Url.RouteUrl(typeof(GoodsItem).FullName, routeValues));
             }
+
+            TempData["MetaKeywords"] = goodsItem.MetaKeywords;
+            TempData["MetaDescription"] = goodsItem.MetaDescription;
+            TempData["AdditionalHeaders"] = goodsItem.AdditionalHeaders;
 
             return PartialView("Goods", (object)pageUrl);
         }

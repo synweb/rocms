@@ -16,18 +16,19 @@
         );
 }
 <div>
-    @Scripts.Render("~/Content/client/clockjsbl")
-    @Styles.Render("~/Content/client/clockcssbl")
+    
+    @Js("Content/client/vendor/flipclock2")
+    @Css("Content/client/vendor/flipclock2")
 
-    <div style="display:inline-block; width: auto;" class="clock @g"></div>
+    <div style="display: inline-block; width: auto;" class="clock @g"></div>
 
-    <script type="text/javascript">
-        $(function () {
-            $('.clock.@g').html("");
-            $('.clock.@g').flipcountdown({
-                size: "sm",
-                beforeDateTime: '@datestr'
-            });
-        });
-    </script>
+    @JsInline(@<script type="text/javascript">
+                   $(function() {
+                       $('.clock.@g').html("");
+                       $('.clock.@g').flipcountdown({
+                           size: "sm",
+                           beforeDateTime: '@datestr'
+                       });
+                   });
+               </script>)
 </div>

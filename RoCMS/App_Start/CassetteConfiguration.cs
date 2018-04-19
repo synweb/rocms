@@ -72,7 +72,7 @@ namespace RoCMS
             bundles.Add<ScriptBundle>("Content/client/vendor/flipclock2", new FileSearch
             {
                 Pattern = "*.js"
-            });
+            }, bundle => bundle.AddReference("~/Content/base/vendor/jquery/core"));
 
 
 

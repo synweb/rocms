@@ -94,7 +94,7 @@ namespace RoCMS.Shop.Contract.Models
 
         public decimal DiscountedPrice
         {
-            get { return Price - Price*(Discount/100m); }
+            get { return Math.Round(Price - Price * (Discount / 100m), 0, MidpointRounding.AwayFromZero); }
         }
 
         public decimal MainCurrDiscountedPrice
@@ -174,13 +174,13 @@ namespace RoCMS.Shop.Contract.Models
                 ?? (noPackDiscount ? Price * (decimal)pack.PackInfo.Size / (decimal)BasePack.Size
                 : Price * (decimal)pack.PackInfo.Size / (decimal)BasePack.Size *
                             (100m - (decimal)(pack.Discount ?? pack.PackInfo.DefaultDiscount ?? 0)) / 100m);
-            return Math.Round(price, 2);
+            return Math.Round(price, 0, MidpointRounding.AwayFromZero);
         }
 
         public decimal DiscountedPriceForPack(int packId)
         {
             decimal packPrice = PriceForPack(packId);
-            return Math.Round(packPrice - packPrice*((decimal)Discount/100m), 2);
+            return Math.Round(packPrice - packPrice * ((decimal)Discount / 100m), 0, MidpointRounding.AwayFromZero);
         }
 
         

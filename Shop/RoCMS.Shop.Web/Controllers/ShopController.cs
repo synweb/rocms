@@ -19,6 +19,7 @@ using RoCMS.Web.Contract.Models.Security;
 using RoCMS.Web.Contract.Services;
 using RoCMS.Shop.Web.Models.Filters;
 using RoCMS.Web.Contract.Models.Search;
+using Action = RoCMS.Shop.Contract.Models.Action;
 using BreadCrumbsHelper = RoCMS.Shop.Web.Helpers.BreadCrumbsHelper;
 
 namespace RoCMS.Shop.Web.Controllers
@@ -159,11 +160,11 @@ namespace RoCMS.Shop.Web.Controllers
         {
 
             string pageUrl = relativeUrl.Split('/').Last();
-            //bool exists = _heartService.CheckIfUrlExists(pageUrl);
-            //if (!exists)
-            //{
-            //    throw new HttpException(404, "Not found");
-            //}
+            bool exists = _heartService.CheckIfUrlExists(pageUrl);
+            if (!exists)
+            {
+                throw new HttpException(404, "Not found");
+            }
             var routeValues = Request.RequestContext.RouteData.Values;
             if (catFilter != null && (catFilter.Count() > 1 || catFilter.Any(x => x.Count() > 1)))
             {
@@ -278,7 +279,7 @@ namespace RoCMS.Shop.Web.Controllers
 
         [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int page, int pageSize, int? minPrice = null, int? maxPrice = null, string query = null)
+        public ActionResult Action(int id, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int pageNumber, int pageSize, int? minPrice = null, int? maxPrice = null, string query = null)
         {
             bool exists = _shopActionService.ActionExists(id);
             if (!exists)
@@ -291,16 +292,34 @@ namespace RoCMS.Shop.Web.Controllers
                 ActionIds = new[] { id },
                 SearchPattern = query
             };
-            var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, page, pageSize);
+            var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, pageNumber, pageSize);
             return PartialView("GoodsPage", goods);
         }
 
         [MvcSiteMapNode(ParentKey = "Home", Key = "ActionSEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.ActionDynamicNodeProvider, RoCMS.Shop.Web")]
         [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult ActionSEF(string relativeUrl)
+        public ActionResult ActionSEF(string relativeUrl, string specs, int? country, int? manufacturerId, int? packId, SortCriterion? sort, int pageNumber, int pageSize, int? minPrice = null, int? maxPrice = null, string query = null)
         {
-            throw new NotImplementedException();
+            string pageUrl = relativeUrl.Split('/').Last();
+            bool exists = _heartService.CheckIfUrlExists(pageUrl);
+            if (!exists)
+            {
+                throw new HttpException(404, "Not found");
+            }
+
+            var heart = _heartService.GetHeart(pageUrl);
+
+            var filter = new GoodsFilter()
+            {
+                ActionIds = new[] { heart.HeartId },
+                SearchPattern = query
+            };
+
+            ViewBag.PagingRoute = typeof(Action).FullName;
+
+            var goods = GetGoodsPage(filter, sort, specs, packId, country, manufacturerId, pageNumber, pageSize);
+            return PartialView("GoodsPage", goods);
         }
 
         [ShopPagingFilter]
@@ -314,9 +333,19 @@ namespace RoCMS.Shop.Web.Controllers
         [MvcSiteMapNode(ParentKey = "Home", Key = "ManufacturerSEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.ManufacturerDynamicNodeProvider, RoCMS.Shop.Web")]
         [ShopPagingFilter]
         [GoodsFilter]
-        public ActionResult ManufacturerSEF(int id)
+        public ActionResult ManufacturerSEF(string relativeUrl)
         {
-            throw new NotImplementedException();
+            string pageUrl = relativeUrl.Split('/').Last();
+            bool exists = _heartService.CheckIfUrlExists(pageUrl);
+            if (!exists)
+            {
+                throw new HttpException(404, "Not found");
+            }
+
+            var heart = _heartService.GetHeart(pageUrl);
+
+            Manufacturer man = _shopManufacturerService.GetManufacturer(heart.HeartId);
+            return View("Manufacturer", man);
         }
 
         public ActionResult BestSellers(int count)

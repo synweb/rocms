@@ -5,10 +5,11 @@ function actionsEditorLoaded(onSelected, context) {
     blockUI();
     var vm = {
         actions: ko.observableArray(),
+        parents: ko.observableArray(),
         createAction: function() {
             var self = this;
             var action = $.extend(new App.Admin.Shop.Action(), App.Admin.Shop.ActionFunctions);
-            
+            action.parents = vm.parents;
             action.create(function() {
                 self.actions.push(action);
             });
@@ -21,28 +22,44 @@ function actionsEditorLoaded(onSelected, context) {
         }
     };
 
-    getJSON("/api/shop/actions/get", "", function (result) {
-        $(result).each(function () {
-            var obj = $.extend(ko.mapping.fromJS(this), App.Admin.Shop.ActionFunctions);
-			if(obj.dateOfEnding()) {
-				obj.dateOfEnding(dateFormat(obj.dateOfEnding(), 'dd.mm.yyyy'));
-			}
-            vm.actions.push(obj);
-			
-        });
-    })
-        .fail(function () {
-            smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
-        })
-        .always(function () {
-            unblockUI();
-        });
+    vm.parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
 
-    if (context) {
-        ko.applyBindings(vm, context[0]);
-    } else {
-        ko.applyBindings(vm);
-    }
+
+    blockUI();
+    $.when(
+        getJSON("/api/heart/hearts/RoCMS.Web.Contract.Models.Page/get", "", function (res) {
+            $(res).each(function () {
+                vm.parents.push(this);
+            });
+        }),
+        getJSON("/api/shop/actions/get", "", function (result) {
+            $(result).each(function () {
+                var obj = $.extend(ko.mapping.fromJS(this), App.Admin.Shop.ActionFunctions);
+                if(obj.dateOfEnding()) {
+                    obj.dateOfEnding(dateFormat(obj.dateOfEnding(), 'dd.mm.yyyy'));
+                }
+                obj.parents = vm.parents();
+                vm.actions.push(obj);
+			
+            });
+        })
+
+    ).then(
+        function () {
+            if (context) {
+                ko.applyBindings(vm, context[0]);
+            } else {
+                ko.applyBindings(vm);
+            }
+
+        },
+        function () {
+            smartAlert("Произошла ошибка");
+        }
+    ).always(function () {
+        unblockUI();
+    });
+
 }
 
 App.Admin.Shop.ActionValidationMapping = {
@@ -190,12 +207,13 @@ App.Admin.Shop.ActionFunctions = {
                 self.initAction();
 
                 ko.applyBindings(self, this);
+                $(".withsearch").selectpicker();
             },
             buttons: [
                 {
                     text: "Сохранить",
                     click: function () {
-
+                        var $dialog = $(this);
 
                         var text = getTextFromEditor('actionDescription');
                         if (text) {

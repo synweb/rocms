@@ -562,6 +562,8 @@ namespace RoCMS.Shop.Services
 
         public IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentHeartId)
         {
+            int totalCount;
+            FilterCollections collections;
             var goods = GetGoodsSet(
                 new GoodsFilter()
                 {
@@ -571,8 +573,8 @@ namespace RoCMS.Shop.Services
                 }, 
                 startIndex: 1,
                 count: count + 1,  // забираем count+1 товаров, чтобы потом один убрать
-                totalCount: out int totalCount,
-                collections: out FilterCollections collections,
+                totalCount: out totalCount,
+                collections: out collections,
                 activeActionsOnly: false);
             var excludedGoodsItem = goods.FirstOrDefault(x => x.HeartId == currentHeartId);
             if (excludedGoodsItem != null)

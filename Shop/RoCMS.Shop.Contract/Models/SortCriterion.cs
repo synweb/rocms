@@ -4,6 +4,7 @@
     {
         Relevance,
         Article,
+        Random,
         CreationDateDesc,
         CreationDateAsc,
         //Мы пока не умеем сортировать по релевантности

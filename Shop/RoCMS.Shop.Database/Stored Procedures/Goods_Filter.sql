@@ -204,8 +204,7 @@ BEGIN
     INSERT INTO @HeartIds (HeartId)
     SELECT Val FROM @UnsortedHeartIds ug-- JOIN [GoodsItem] g ON ug.Val = g.HeartId
 END
-ELSE 
-IF @SortBy='CreationDate'
+ELSE IF @SortBy='CreationDate'
 BEGIN
     IF @SortOrder = 'Asc'
     BEGIN
@@ -225,6 +224,12 @@ BEGIN
     INSERT INTO @HeartIds (HeartId)
     SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
         ORDER BY g.NotAvailable, g.[Article]
+END
+ELSE IF @SortBy='Random'
+BEGIN
+    INSERT INTO @HeartIds (HeartId)
+    SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
+        ORDER BY NEWID()
 END
 ELSE IF @SortBy='Price'
 BEGIN

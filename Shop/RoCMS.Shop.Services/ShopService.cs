@@ -19,6 +19,7 @@ using FilterCollections = RoCMS.Shop.Contract.Models.FilterCollections;
 using GoodsFilter = RoCMS.Shop.Contract.Models.GoodsFilter;
 using GoodsItem = RoCMS.Shop.Contract.Models.GoodsItem;
 using GoodsPack = RoCMS.Shop.Contract.Models.GoodsPack;
+using SortCriterion = RoCMS.Shop.Contract.Models.SortCriterion;
 using Spec = RoCMS.Shop.Contract.Models.Spec;
 
 namespace RoCMS.Shop.Services
@@ -449,6 +450,16 @@ namespace RoCMS.Shop.Services
             }
         }
 
+        /// <summary>
+        /// Получить список товаров, удовлетворяющий фильтру
+        /// </summary>
+        /// <param name="filter">Сам фильтр</param>
+        /// <param name="startIndex">Индекс первого элемента в выборке (начинается с 1, 1-based)</param>
+        /// <param name="count">Количество элементов</param>
+        /// <param name="totalCount">Всего элементов, выходной параметр</param>
+        /// <param name="collections">Данные, которые представлены в товарах этой выборки</param>
+        /// <param name="activeActionsOnly">В товар достаются только активные акции, а не все, в которых он участвовал</param>
+        /// <returns></returns>
         public IList<GoodsItem> GetGoodsSet(GoodsFilter filter, int startIndex, int count, out int totalCount, out FilterCollections collections,
             bool activeActionsOnly = true)
         {
@@ -551,8 +562,14 @@ namespace RoCMS.Shop.Services
 
         public IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentHeartId)
         {
-            var goods = GetGoodsSet(new GoodsFilter() {CategoryIds = new[] {categoryids}}, 
-                startIndex: 0,
+            var goods = GetGoodsSet(
+                new GoodsFilter()
+                {
+                    CategoryIds = new[] {categoryids},
+                    ClientMode = true,
+                    SortBy = SortCriterion.Random
+                }, 
+                startIndex: 1,
                 count: count + 1,  // забираем count+1 товаров, чтобы потом один убрать
                 totalCount: out int totalCount,
                 collections: out FilterCollections collections,

@@ -142,9 +142,9 @@ function goodsEditorLoaded(onSelected, context) {
 
     var inited = 0;
     getJSON("/api/shop/suppliers/get", "", function (result) {
-        App.Admin.suppliers.push(new App.Admin.Manufacturer({ name: "Все поставщики" }));
+        App.Admin.suppliers.push(new App.Admin.Shop.Manufacturer({ name: "Все поставщики" }));
         $(result).each(function () {
-            App.Admin.suppliers.push(new App.Admin.Manufacturer(this));
+            App.Admin.suppliers.push(new App.Admin.Shop.Manufacturer(this));
         });
         inited++;
 
@@ -163,9 +163,9 @@ function goodsEditorLoaded(onSelected, context) {
     });
 
     getJSON("/api/shop/manufacturers/used/get", "", function (result) {
-        App.Admin.usedManufacturers.push(new App.Admin.Manufacturer({ name: "Все производители" }));
+        App.Admin.usedManufacturers.push(new App.Admin.Shop.Manufacturer({ name: "Все производители" }));
         $(result).each(function () {
-            App.Admin.usedManufacturers.push(new App.Admin.Manufacturer(this));
+            App.Admin.usedManufacturers.push(new App.Admin.Shop.Manufacturer(this));
         });
         inited++;
         if (lastManufacturerId && lastManufacturerName) {
@@ -183,9 +183,9 @@ function goodsEditorLoaded(onSelected, context) {
     });
 
     getJSON("/api/shop/manufacturers/get", "", function (result) {
-        App.Admin.manufacturers.push(new App.Admin.Manufacturer({ name: "Неизвестен" }));
+        App.Admin.manufacturers.push(new App.Admin.Shop.Manufacturer({ name: "Неизвестен" }));
         $(result).each(function () {
-            App.Admin.manufacturers.push(new App.Admin.Manufacturer(this));
+            App.Admin.manufacturers.push(new App.Admin.Shop.Manufacturer(this));
         });
     });
 

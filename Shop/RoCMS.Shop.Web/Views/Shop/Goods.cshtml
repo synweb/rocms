@@ -28,7 +28,22 @@
     ViewBag.CanonicalUrl = Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl = goodsItem.CanonicalUrl });
 
 
-    var compatibles = goodsItem.CompatibleGoods.SelectMany(x => x.CompatibleGoods);
+    var compatibles = new List<GoodsItem>();
+    if (goodsItem.CompatibleGoods.Any())
+    {
+        foreach (var comSet in goodsItem.CompatibleGoods)
+        {
+            foreach (var goods in comSet.CompatibleGoods)
+            {
+                if (goods.ID == goodsItem.HeartId)
+                {
+                    continue;
+                }
+                compatibles.Add(shopService.GetGoods(goods.ID));
+            }
+        }
+
+    }
 
 
 }

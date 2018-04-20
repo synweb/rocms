@@ -205,3 +205,18 @@ textarea.shop-item-description {
 .ui-dialog .categoryEditor .category .btn-warning {
     display: none;
 }
+
+li.compatible {
+    padding: 5px;
+}
+
+li.compatible:after {
+    display: block;
+    content: ' ';
+    clear: both;
+}
+
+li.compatible:hover {
+    background-color: #eaeaea;
+    border-radius: 4px;
+}

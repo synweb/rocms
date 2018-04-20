@@ -551,7 +551,28 @@ namespace RoCMS.Shop.Services
 
         public IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentHeartId)
         {
-            throw new NotImplementedException();
+            var goods = GetGoodsSet(new GoodsFilter() {CategoryIds = new[] {categoryids}}, 
+                startIndex: 0,
+                count: count + 1,  // забираем count+1 товаров, чтобы потом один убрать
+                totalCount: out int totalCount,
+                collections: out FilterCollections collections,
+                activeActionsOnly: false);
+            var excludedGoodsItem = goods.FirstOrDefault(x => x.HeartId == currentHeartId);
+            if (excludedGoodsItem != null)
+            {
+                // если товар с currentHeartId есть в списке, убираем его
+                goods.Remove(excludedGoodsItem);
+            }
+            else
+            {
+                if (goods.Count > count)
+                {
+                    // если нет, убираем любой (при условии, что товаров в коллекции на 1 больше, чем нам надо)
+                    int randomIndex = RandomHelper.GetRandom(goods.Count);
+                    goods.RemoveAt(randomIndex);
+                }
+            }
+            return goods;
         }
 
         private string GetGoodsCanonicalUrlCacheKey(string url)

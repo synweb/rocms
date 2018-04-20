@@ -16,8 +16,12 @@ namespace RoCMS.Shop.Contract.Models
             Articles = new List<string>();
             SpecIdValues = new Dictionary<int, string>();
         }
-        //public IEnumerable<int> CategoryIds { get; set; }
+        
+        /// <summary>
+        /// Множества категорий: [[1,2],[3,4]] = (1|2)&(3,4)
+        /// </summary>
         public IEnumerable<IEnumerable<int>> CategoryIds { get; set; }
+
         /// <summary>
         /// Если true, то вынимаются товары из всех дочерних категорий, кроме скрытых.
         /// Товары скрытых категорий не возвращаются

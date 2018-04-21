@@ -22,12 +22,14 @@ namespace RoCMS.Shop.Web.ApiControllers
         private readonly IShopService _shopService;
         private readonly ISettingsService _settingsService;
         private readonly IShopGoodsReviewService _shopGoodsReviewService;
+        private readonly ILogService _logService;
 
-        public GoodsApiController(IShopService shopService, ISettingsService settingsService, IShopGoodsReviewService shopGoodsReviewService)
+        public GoodsApiController(IShopService shopService, ISettingsService settingsService, IShopGoodsReviewService shopGoodsReviewService, ILogService logService)
         {
             _shopService = shopService;
             _settingsService = settingsService;
             _shopGoodsReviewService = shopGoodsReviewService;
+            _logService = logService;
         }
 
         [HttpGet]
@@ -148,6 +150,7 @@ namespace RoCMS.Shop.Web.ApiControllers
             
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public HttpResponseMessage CreateGoodsReview(GoodsReview review)
         {
@@ -201,6 +204,7 @@ namespace RoCMS.Shop.Web.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }

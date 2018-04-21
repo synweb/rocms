@@ -120,7 +120,7 @@ namespace RoCMS
             );
 
 
-            RegisterIndexRoute(routes);
+            //RegisterIndexRoute(routes);
             RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
             
 
@@ -133,12 +133,12 @@ namespace RoCMS
 
         }
 
-        private static void RegisterIndexRoute(RouteCollection routes)
-        {
-            // если в урле ничего нет, то это главная
-            var route = new HeartRoute(new List<UrlPair>() {new UrlPair("", "")}, "Page", "MainPage");
-            routes.Add("Index", route);
-        }
+        //private static void RegisterIndexRoute(RouteCollection routes)
+        //{
+        //    // если в урле ничего нет, то это главная
+        //    var route = new HeartRoute(new List<UrlPair>() {new UrlPair("", "")}, "Page", "MainPage");
+        //    routes.Add("Index", route);
+        //}
 
         public static void RegisterRedirects(RouteCollection routes)
         {

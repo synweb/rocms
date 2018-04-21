@@ -229,7 +229,7 @@ ELSE IF @SortBy='Random'
 BEGIN
     INSERT INTO @HeartIds (HeartId)
     SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
-        ORDER BY NEWID()
+        ORDER BY g.NotAvailable, NEWID()
 END
 ELSE IF @SortBy='Price'
 BEGIN

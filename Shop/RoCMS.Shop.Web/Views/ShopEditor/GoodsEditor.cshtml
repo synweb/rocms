@@ -91,11 +91,11 @@
         </div>
         <div class="row">
             <div class="col-xs-4">
-                <select class="form-control" data-bind="options: $root.manufacturers(), optionsText: 'name', optionsValue: 'manufacturerId', value: manufacturerIds"></select>
+                <select class="form-control" data-bind="options: $root.manufacturers(), optionsText: 'name', optionsValue: 'heartId', value: manufacturerIds"></select>
             </div>
-            @*<div class="col-xs-4">
-                    <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'manufacturerId', value: supplierIds"></select>
-                </div>*@
+            <div class="col-xs-4">
+                    <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'heartId', value: supplierIds"></select>
+                </div>
             <div class="col-xs-4">
                 <select class="form-control" data-bind="value: sortBy">
                     <option value="Article">@SortCriterion.Article.Description()</option>
@@ -253,13 +253,13 @@
                     <div class="form-group">
                         <label class="control-label col-xs-2" for="price">Производитель</label>
                         <div class="col-xs-10">
-                            <select class="form-control" data-bind="options: $root.manufacturers, optionsText: 'name', optionsValue: 'manufacturerId', value: manufacturerId"></select>
+                            <select class="form-control" data-bind="options: $root.manufacturers(), optionsText: 'name', optionsValue: 'heartId', value: manufacturerId"></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="control-label col-xs-2" for="price">Поставщик</label>
                         <div class="col-xs-10">
-                            <select class="form-control" data-bind="options: $root.manufacturers, optionsText: 'name', optionsValue: 'manufacturerId', value: supplierId"></select>
+                            <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'heartId', value: supplierId"></select>
                         </div>
                     </div>
                     <div class="form-group">

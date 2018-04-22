@@ -142,9 +142,12 @@ function goodsEditorLoaded(onSelected, context) {
 
     var inited = 0;
     getJSON("/api/shop/suppliers/get", "", function (result) {
-        App.Admin.suppliers.push(new App.Admin.Shop.Manufacturer({ name: "Все поставщики" }));
+        var man = new App.Admin.Shop.Manufacturer();
+        man.name("Выберите...");
+
+        App.Admin.suppliers.push(man);
         $(result).each(function () {
-            App.Admin.suppliers.push(new App.Admin.Shop.Manufacturer(this));
+            App.Admin.suppliers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
         });
         inited++;
 
@@ -163,9 +166,11 @@ function goodsEditorLoaded(onSelected, context) {
     });
 
     getJSON("/api/shop/manufacturers/used/get", "", function (result) {
-        App.Admin.usedManufacturers.push(new App.Admin.Shop.Manufacturer({ name: "Все производители" }));
+        var man = new App.Admin.Shop.Manufacturer();
+        man.name("Выберите...");
+        App.Admin.usedManufacturers.push(man);
         $(result).each(function () {
-            App.Admin.usedManufacturers.push(new App.Admin.Shop.Manufacturer(this));
+            App.Admin.usedManufacturers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
         });
         inited++;
         if (lastManufacturerId && lastManufacturerName) {
@@ -183,9 +188,11 @@ function goodsEditorLoaded(onSelected, context) {
     });
 
     getJSON("/api/shop/manufacturers/get", "", function (result) {
-        App.Admin.manufacturers.push(new App.Admin.Shop.Manufacturer({ name: "Неизвестен" }));
+        var man = new App.Admin.Shop.Manufacturer();
+        man.name("Выберите...");
+        App.Admin.manufacturers.push(man);
         $(result).each(function () {
-            App.Admin.manufacturers.push(new App.Admin.Shop.Manufacturer(this));
+            App.Admin.manufacturers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
         });
     });
 
@@ -546,6 +553,7 @@ App.Admin.Shop.GoodsItemFunctions = {
                 var model = {
                     vm: dm,
                     manufacturers: App.Admin.manufacturers,
+                    suppliers: App.Admin.suppliers,
                     packs: App.Admin.packs,
                     currencies: App.Admin.currencies,
                     parents: parents

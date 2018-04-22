@@ -14,6 +14,7 @@ using RoCMS.Shop.Data.Models;
 using RoCMS.Web.Contract.Services;
 using Client = RoCMS.Shop.Contract.Models.Client;
 using Order = RoCMS.Shop.Contract.Models.Order;
+using OrderState = RoCMS.Shop.Contract.Models.OrderState;
 
 namespace RoCMS.Shop.Services
 {
@@ -86,7 +87,7 @@ namespace RoCMS.Shop.Services
 
             int total;
             var shopOrderService = DependencyResolver.Current.GetService<IShopOrderService>();
-            IEnumerable<Order> orders = shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.UserId);
+            IEnumerable<Order> orders = shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.UserId).Where(x => x.State == OrderState.Completed);
 
 
             decimal totalSum = orders.Sum(x => x.GoodsInOrder.Sum(y => ((y.Price - y.Price * (decimal)x.TotalDiscount / 100m) * (decimal)y.Quantity)));

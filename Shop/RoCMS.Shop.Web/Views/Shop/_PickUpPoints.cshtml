@@ -11,7 +11,7 @@
     <ul>
         @foreach (var point in pickUpPoints)
         {
-            <li>@point.Title</li>
+            <li><a href="@Url.RouteUrl("PickUpPoint", new {id = point.PickUpPointId})">@point.Title</a></li>
         }
     </ul>
 }

@@ -251,7 +251,7 @@ var shopCartViewModel = {
                         var orderId = result.data;
                         window.location.replace("/Shop/PayForOrder/" + orderId);
                     } else {
-                        window.location.replace("/Shop/ThankYou");
+                        window.location.replace("/thankyou");
                     }
                 } else {
                     alert(result.message);
@@ -476,7 +476,7 @@ function onBuy(event, cartUrl) {
     $(source).closest(".buttons").append($div);
 
     var btn = $(source);
-    btn.html("В корзине").attr("href", "/Shop/Checkout").removeAttr("data-bind").unbind("click");
+    btn.html("В корзине").attr("href", cartUrl).removeAttr("data-bind").unbind("click");
     $div.show(100);
     setTimeout(function () {
         $div.hide(100);

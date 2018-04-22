@@ -30,7 +30,7 @@
         <p>@goodsItem.Description</p>
         <div class="buttons cart">
             <a href="#" class="btn btn-light">Купить в один клик</a>
-            <a href="#" class="btn btn-dark pull-right" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.HeartId, 1) }"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+            <a href="#" class="btn btn-dark pull-right" data-bind="click: function(){ onBuy(event, '@Url.RouteUrl("Checkout")'); addItem(@goodsItem.HeartId, 1) }"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
         </div>
     </div>
 </div>

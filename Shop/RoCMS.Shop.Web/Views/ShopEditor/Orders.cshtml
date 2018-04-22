@@ -276,7 +276,7 @@
 <script type="text/x-jquery-tmpl" id="goods-item-order-template">
     <tr>
         <td>
-            <a target="_blank" data-bind="attr:{href:'/Shop/Goods/'+goods.heartId()}">
+            <a target="_blank" data-bind="attr:{href: goods.canonicalUrl}">
                 <span data-bind="text: goods.name"></span>
             </a>
             @*<a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeGoods($data, $parent);}"><em class="fa fa-trash-o"></em></a>*@

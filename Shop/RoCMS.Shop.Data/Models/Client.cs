@@ -15,5 +15,6 @@ namespace RoCMS.Shop.Data.Models
         public string LastName { get; set; }
         public string SecondName { get; set; }
         public string Address { get; set; }
+        public decimal InitialAmount { get; set; }
     }
 }

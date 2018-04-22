@@ -11,6 +11,8 @@
     [PickUpPointId] INT NULL, 
     [DeliveryPrice] DECIMAL(18, 2) NULL, 
     [TotalDiscount] INT NOT NULL DEFAULT 0, 
+	[PaymentType] VARCHAR(20) NULL DEFAULT 'Cash',
+	[PaymentState] VARCHAR(20) NULL,
     CONSTRAINT [PK_OrderSet] PRIMARY KEY CLUSTERED ([OrderId] ASC),
     CONSTRAINT [FK_OrderClient] FOREIGN KEY ([ClientId]) REFERENCES [Shop].[Client] ([ClientId]) ON DELETE CASCADE,
 	CONSTRAINT [FK_OrderPickUpPoint] FOREIGN KEY ([PickUpPointId]) REFERENCES [Shop].[PickUpPoint] ([PickUpPointId]) ON Delete SET NULL

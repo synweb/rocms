@@ -134,8 +134,10 @@ DECLARE @UnsortedHeartIds [Int_Table]
 
 INSERT INTO @UnsortedHeartIds
 SELECT DISTINCT gc1.GoodsId
-FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.HeartId = g.HeartId
+FROM [Shop].[Goods_Category] gc1 join [GoodsItem] g on gc1.GoodsId = g.HeartId
 WHERE
+g.Deleted=0
+AND
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))
 AND
 (

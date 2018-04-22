@@ -25,5 +25,6 @@ namespace RoCMS.Shop.Contract.Models
         public string Comment { get; set; }
 
         public Address Address { get; set; }
+        public decimal InitialAmount { get; set; }
     }
 }

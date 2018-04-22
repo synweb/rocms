@@ -7,8 +7,9 @@
 @Name nvarchar(100),
 @Comment nvarchar(MAX),
 @LastName nvarchar(100),
-@Address nvarchar(MAX)
+@Address nvarchar(MAX),
+@InitialAmount decimal(18,2)
 AS
-	INSERT INTO [Shop].[Client] ([Email], [Phone], [EmailNotificationAllowed], [SmsNotificationAllowed], [UserId], [Name], [Comment], [LastName], [Address])
-	VALUES (@Email, @Phone, @EmailNotificationAllowed, @SmsNotificationAllowed, @UserId, @Name, @Comment, @LastName, @Address)
+	INSERT INTO [Shop].[Client] ([Email], [Phone], [EmailNotificationAllowed], [SmsNotificationAllowed], [UserId], [Name], [Comment], [LastName], [Address], [InitialAmount])
+	VALUES (@Email, @Phone, @EmailNotificationAllowed, @SmsNotificationAllowed, @UserId, @Name, @Comment, @LastName, @Address, @InitialAmount)
 	SELECT @@IDENTITY

@@ -90,7 +90,7 @@ namespace RoCMS.Shop.Services
             IEnumerable<Order> orders = shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.UserId).Where(x => x.State == OrderState.Completed);
 
 
-            decimal totalSum = orders.Sum(x => x.GoodsInOrder.Sum(y => ((y.Price - y.Price * (decimal)x.TotalDiscount / 100m) * (decimal)y.Quantity)));
+            decimal totalSum = client.InitialAmount + orders.Sum(x => x.GoodsInOrder.Sum(y => ((y.Price - y.Price * (decimal)x.TotalDiscount / 100m) * (decimal)y.Quantity)));
             foreach (var discount in res)
             {
                 if (totalSum >= discount.MinimalSum)

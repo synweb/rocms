@@ -10,6 +10,7 @@
     [Comment]                  NVARCHAR (MAX) NULL,
     [LastName] NVARCHAR(100) NULL, 
     [Address] NVARCHAR(MAX) NULL, 
+	[InitialAmount] DECIMAL(18,2) DEFAULT 0 NOT NULL, -- сумма ранее выполненных заказов
     CONSTRAINT [PK_ClientSet] PRIMARY KEY CLUSTERED ([ClientId] ASC),
     CONSTRAINT [FK_ClientUser] FOREIGN KEY ([UserId]) REFERENCES [dbo].[User] ([UserId]) ON DELETE SET NULL
 );

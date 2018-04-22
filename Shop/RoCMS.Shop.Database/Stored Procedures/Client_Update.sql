@@ -8,7 +8,8 @@
 @Comment nvarchar(MAX),
 @LastName nvarchar(100),
 @Address nvarchar(MAX),
-@ClientId int
+@ClientId int,
+@InitialAmount decimal(18,2)
 AS
 	UPDATE [Shop].[Client] SET
 		[Email]=@Email,
@@ -19,5 +20,6 @@ AS
 		[Name]=@Name,
 		[Comment]=@Comment,
 		[LastName]=@LastName,
-		[Address]=@Address
+		[Address]=@Address,
+		[InitialAmount]=@InitialAmount
 	WHERE [ClientId]=@ClientId

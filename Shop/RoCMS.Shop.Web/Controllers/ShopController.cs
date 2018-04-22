@@ -447,7 +447,7 @@ namespace RoCMS.Shop.Web.Controllers
             //IEnumerable<Order> orders = _clientService.GetOrdersByUserId(currentPrincipal.UserId);
 
             int total;
-            IEnumerable<Order> orders = _shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.UserId);
+            IEnumerable<Order> orders = _shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.ClientId);
             ViewBag.Orders = orders;
 
             return View(client);

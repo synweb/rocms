@@ -31,10 +31,9 @@ namespace RoCMS.Base.Helpers
             Type type = typeof(T);
             if (type.IsEnum)
             {
-                int intValue;
-                if (Int32.TryParse(value, out intValue))
+                if (Enum.IsDefined(type, value))
                 {
-                    return (T)Enum.ToObject(type, intValue);
+                    return (T)Enum.Parse(type, value);
                 }
 
                 return defaultValue;

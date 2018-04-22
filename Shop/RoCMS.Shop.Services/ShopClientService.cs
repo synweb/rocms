@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
+using System.Web.Mvc;
 using AutoMapper;
 using RoCMS.Data.Gateways;
 using RoCMS.Shop.Contract.Models;
@@ -83,17 +84,21 @@ namespace RoCMS.Shop.Services
             var res = _regularCustomerDiscountGateway.Select().OrderByDescending(x => x.MinimalSum);
             if (!res.Any()) return 0;
 
+            int total;
+            var shopOrderService = DependencyResolver.Current.GetService<IShopOrderService>();
+            IEnumerable<Order> orders = shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.UserId);
+
+
+            decimal totalSum = orders.Sum(x => x.GoodsInOrder.Sum(y => ((y.Price - y.Price * (decimal)x.TotalDiscount / 100m) * (decimal)y.Quantity)));
+            foreach (var discount in res)
+            {
+                if (totalSum >= discount.MinimalSum)
+                {
+                    return discount.Discount;
+                }
+            }
+
             return 0;
-            //TODO:
-            //throw new NotImplementedException();
-            //decimal total = client.OrderSets.Sum(x => x.GoodsInOrder.Sum(y => ((y.Price - y.Price * (decimal)x.TotalDiscount / 100m) * (decimal)y.Quantity)));
-            //foreach (var discount in res)
-            //{
-            //    if (total >= discount.MinimalSum)
-            //    {
-            //        return discount.Discount;
-            //    }
-            //}
         }
 
         public IList<RegularClientDiscount> GetRegularClientDiscounts()

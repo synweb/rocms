@@ -104,6 +104,19 @@ function goodsEditorLoaded(onSelected, context) {
         currencies: ko.observableArray(),
 
 
+        copyGoodsItem: function (item) {
+
+            var dataJs = ko.toJS(item);//создаем копию объекта, отвязывая все bindings
+            var copy = $.extend(ko.mapping.fromJS(dataJs, App.Admin.Shop.GoodsItemValidationMapping), App.Admin.Shop.GoodsItemFunctions);
+
+            copy.heartId = ko.observable(); //сбрасываем айдишник
+            copy.relativeUrl(copy.relativeUrl() + "-copy");
+            copy.name("Копия " + copy.name());
+            copy.create(function () {
+                vm.goods.push(copy);
+            });
+        },
+
         createGoodsItem: function () {
 
             var goodsItem = $.extend(new App.Admin.Shop.GoodsItem(), App.Admin.Shop.GoodsItemFunctions);

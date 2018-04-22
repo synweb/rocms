@@ -174,12 +174,12 @@
     </script>
 
     <script type="text/x-jquery-tmpl" id="goods-list-item-template">
-        <div class="goodsItem col-xs-4 col-sm-3 col-md-2" data-bind="click: $root.selectGoods">
+        <div class="goodsItem col-xs-4 col-sm-4 col-md-3" data-bind="click: $root.selectGoods">
             <div class="box">
                 <header style="white-space: nowrap;">
                     <div class="toolbar">
                         <a data-bind="click: edit, clickBubble: false, attr:{title: name} " class="btn btn-xs btn-warning" onclick="true"><i class="fa fa-pencil"></i></a>
-
+                        <a data-bind="click: function() { $root.copyGoodsItem($data); return false; }, clickBubble: false, attr:{ title: 'Создать копию' } " class="btn btn-xs btn-info" onclick="true"><i class="fa fa-copy"></i></a>
                         @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                         {
                             <a data-bind="click: function () {if(!confirmRemoval()) { return false;}  remove($data, $parent); }, clickBubble: false" class="btn btn-xs btn-danger" onclick="true"><i class="fa fa-trash-o"></i></a>

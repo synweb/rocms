@@ -239,6 +239,8 @@ namespace RoCMS.Shop.Services
                         HouseIndex = y.HouseIndex,
                         Metro = y.Metro,
                         PostCode = y.PostCode,
+                        Floor = y.Floor,
+                        Intercom = y.Intercom
                     };
                     string addressString = DataContractSerializeHelper.SerializeToXmlString(address);
                     return addressString;
@@ -273,6 +275,8 @@ namespace RoCMS.Shop.Services
                         result.HouseIndex = address.HouseIndex;
                         result.Metro = address.Metro;
                         result.PostCode = address.PostCode;
+                        result.Floor = address.Floor;
+                        result.Intercom = address.Intercom;
                     }
                     return result;
                 });

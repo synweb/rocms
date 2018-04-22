@@ -29,5 +29,9 @@ namespace RoCMS.Web.Contract.Models
         public string HouseIndex { get; set; }
         [DataMember]
         public string Appartment { get; set; }
+        [DataMember]
+        public string Floor { get; set; }
+        [DataMember]
+        public string Intercom { get; set; }
     }
 }

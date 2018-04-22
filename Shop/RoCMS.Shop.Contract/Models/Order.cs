@@ -29,6 +29,10 @@ namespace RoCMS.Shop.Contract.Models
 
         public string Appartment { get; set; }
 
+        public string Floor { get; set; }
+
+        public string Intercom { get; set; }
+
         public int? PickUpPointId { get; set; }
 
 

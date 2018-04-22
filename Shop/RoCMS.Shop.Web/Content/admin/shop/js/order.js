@@ -138,6 +138,8 @@ App.Admin.Order = function () {
 
     self.frontNumber = ko.observable();
     self.houseIndex = ko.observable();
+    self.floor = ko.observable();
+    self.intercom = ko.observable();
     self.appartment = ko.observable();
     self.comment = ko.observable();
     self.adminComment = ko.observable();

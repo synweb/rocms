@@ -108,6 +108,11 @@ namespace RoCMS.Shop.Data.Gateways
             public decimal? MaxPrice { get; set; }
         }
 
+        public ICollection<int> SelectBestsellerIds(int count)
+        {
+            return ExecSelect<int>(GetProcedureString(), count);
+        }
+
         public ICollection<IdNamePair<int>> GetManufacturers(ICollection<int> heartIds)
         {
             return ExecSelect<IdNamePair<int>>("[Shop].[Goods_GetManufacturers]", heartIds);

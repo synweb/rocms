@@ -87,7 +87,7 @@ namespace RoCMS.Shop.Services
 
             int total;
             var shopOrderService = DependencyResolver.Current.GetService<IShopOrderService>();
-            IEnumerable<Order> orders = shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.UserId).Where(x => x.State == OrderState.Completed);
+            IEnumerable<Order> orders = shopOrderService.GetOrderPage(1, Int32.MaxValue, out total, client.ClientId).Where(x => x.State == OrderState.Completed);
 
 
             decimal totalSum = orders.Sum(x => x.GoodsInOrder.Sum(y => ((y.Price - y.Price * (decimal)x.TotalDiscount / 100m) * (decimal)y.Quantity)));

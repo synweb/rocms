@@ -530,23 +530,36 @@ namespace RoCMS.Shop.Services
 
         public IList<GoodsItem> GetBestSellers(int count)
         {
-            throw new NotImplementedException();
+            String cacheKey = $"BESTSELLERS:{count}";
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var ids = _goodsItemGateway.SelectBestsellerIds(count);
+                var dataRes = new List<Data.Models.GoodsItem>();
+                foreach (var id in ids)
+                {
+                    dataRes.Add(_goodsItemGateway.SelectOne(id));
+                }
+                var result = Mapper.Map<IList<GoodsItem>>(dataRes);
+                foreach (var goodsItem in result)
+                {
+                    FillData(goodsItem);
+                }
+                return result;
+            });
         }
 
         public IList<GoodsItem> GetNewGoodsItems(int count)
         {
-            String cacheKey = String.Format("NEWITEMS:{0}", count);
+            String cacheKey = $"NEWITEMS:{count}";
             return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
             {
+                var goods = _goodsItemGateway.SelectNew(count);
+                var result = Mapper.Map<IList<GoodsItem>>(goods);
+                foreach (var goodsItem in result)
                 {
-                    var goods = _goodsItemGateway.SelectNew(count);
-                    var result = Mapper.Map<IList<GoodsItem>>(goods);
-                    foreach (var goodsItem in result)
-                    {
-                        FillData(goodsItem);
-                    }
-                    return result;
+                    FillData(goodsItem);
                 }
+                return result;
             });
         }
 

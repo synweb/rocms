@@ -140,7 +140,7 @@ namespace RoCMS.Shop.Contract.Models
         public string HtmlDescription { get; set; }
         public string MainImageId { get; set; }
         public string Article { get; set; }
-        public float? Rating { get; set; }
+        public double? Rating { get; set; }
         public string Currency { get; set; }
         
 

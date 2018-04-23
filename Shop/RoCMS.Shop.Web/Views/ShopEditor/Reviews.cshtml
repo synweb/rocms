@@ -31,7 +31,7 @@
                         <a class="btn btn-xs btn-danger button-delete" onclick=" true " data-bind="click: remove"><i class=" fa fa-trash-o"></i></a>
                     }
                 </div>
-                <h5>Товар: <a onclick="true" data-bind="attr: {href: goodsUrl()}"><span data-bind="text: goodsItem.name"></span></a></h5>
+                <h5>Товар: <a onclick="true" target="_blank" data-bind="attr: {href: goodsUrl()}"><span data-bind="text: goodsItem.breadcrumbsTitle"></span></a></h5>
             </header>
             <div class="body">
                 <div class="review-container" data-bind="attr: {dataReviewId: goodsReviewId}">

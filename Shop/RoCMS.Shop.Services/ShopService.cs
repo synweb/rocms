@@ -37,6 +37,7 @@ namespace RoCMS.Shop.Services
         private readonly IShopManufacturerService _shopManufacturerService;
         private readonly IShopPackService _shopPackService;
         private readonly IHeartService _heartService;
+        private readonly IShopGoodsReviewService _goodsReviewService;
 
         private readonly GoodsItemGateway _goodsItemGateway = new GoodsItemGateway();
         private readonly GoodsSpecGateway _goodsSpecGateway = new GoodsSpecGateway();
@@ -49,7 +50,7 @@ namespace RoCMS.Shop.Services
         private readonly ActionGoodsGateway _actionGoodsGateway = new ActionGoodsGateway();
         private readonly CountryGateway _countryGateway = new CountryGateway();
 
-        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService)
+        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService, IShopGoodsReviewService goodsReviewService)
         {
             _logService = logService;
             _shopActionService = shopActionService;
@@ -59,6 +60,7 @@ namespace RoCMS.Shop.Services
             _shopPackService = shopPackService;
             _shopManufacturerService = shopManufacturerService;
             _heartService = heartService;
+            _goodsReviewService = goodsReviewService;
             InitCache("ShopService");
 
             //GenerateRelativeUrls();
@@ -127,15 +129,15 @@ namespace RoCMS.Shop.Services
             FillPacks(goodsItem);
             FillSpecs(goodsItem);
             FillManufacturers(goodsItem);
+
+            goodsItem.Rating = _goodsReviewService.GetGoodsRating(goodsItem.HeartId);
+
             if (activeActionsOnly)
             {
                 goodsItem.Actions.Clear();
                 goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
 
-                //TODO: разрулить через харты
-                //goodsItem.CanonicalUrl = goodsItem.Categories.Any()
-                //    ? GetGoodsCanonicalUrl(goodsItem.RelativeUrl, goodsItem.Categories.First().ID)
-                //    : goodsItem.RelativeUrl;
+
             }
         }
 

@@ -206,6 +206,10 @@ textarea.shop-item-description {
     display: none;
 }
 
+.ui-dialog .manufacturerEditor .button-add, .ui-dialog .manufacturerEditor .btn-warning {
+    display: none;
+}
+
 .ui-dialog .categoryEditor .category .btn-warning {
     display: none;
 }

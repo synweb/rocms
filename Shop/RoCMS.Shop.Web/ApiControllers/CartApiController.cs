@@ -18,14 +18,16 @@ namespace RoCMS.Shop.Web.ApiControllers
         private ISessionValueProviderService _sessionService;
         private ISecurityService _securityService;
         private readonly IShopOrderService _shopOrderService;
+        private readonly ILogService _logService;
 
-        public CartApiController(ICartService cartService, ISessionValueProviderService sessionService, IShopService shopService, ISecurityService securityService, IShopOrderService shopOrderService)
+        public CartApiController(ICartService cartService, ISessionValueProviderService sessionService, IShopService shopService, ISecurityService securityService, IShopOrderService shopOrderService, ILogService logService)
         {
             _cartService = cartService;
             _sessionService = sessionService;
             _shopService = shopService;
             _securityService = securityService;
             _shopOrderService = shopOrderService;
+            _logService = logService;
         }
 
         [System.Web.Http.HttpGet]
@@ -90,7 +92,6 @@ namespace RoCMS.Shop.Web.ApiControllers
         {
             try
             {
-                //TODO: перенести в сервис в тракзакцию
                 if (req.User != null)
                 {
                     var user = req.User;
@@ -108,10 +109,12 @@ namespace RoCMS.Shop.Web.ApiControllers
             }
             catch (UserExistsException e)
             {
+                _logService.LogError(e);
                 return new ResultModel(e);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logService.LogError(e);
                 return new ResultModel(false, "При формировании заказа произошла ошибка");
             }
         }

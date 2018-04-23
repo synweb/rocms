@@ -2,6 +2,7 @@
     @CategoryIds [Int_Table] readonly,
     @WithSubcategories bit,
     @ManufacturerIds [Int_Table] readonly,
+    @SupplierIds [Int_Table] readonly,
     @Countries [Int_Table] readonly,
     @ActionIds [Int_Table] readonly,
     @PackIds [Int_Table] readonly,
@@ -22,12 +23,14 @@ AS
     
     
 DECLARE @CategoryIdsExist BIT = 0, @ManufacturerIdsExist BIT = 0, 
-    @CountriesExist BIT = 0, @ActionIdsExist BIT = 0, @PackIdsExist BIT = 0, @SpecIdsExist BIT = 0
+    @CountriesExist BIT = 0, @ActionIdsExist BIT = 0, @PackIdsExist BIT = 0, @SpecIdsExist BIT = 0, @SupplierIdsExist BIT = 0
 
 IF EXISTS (SELECT * FROM @CategoryIds) 
     SET @CategoryIdsExist=1
 IF EXISTS (SELECT * FROM @ManufacturerIds) 
     SET @ManufacturerIdsExist=1
+IF EXISTS (SELECT * FROM @SupplierIds) 
+    SET @SupplierIdsExist=1
 IF EXISTS (SELECT * FROM @Countries) 
     SET @CountriesExist=1
 IF EXISTS (SELECT * FROM @ActionIds) 
@@ -153,6 +156,8 @@ AND
     EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.GoodsId AND (
     g.SupplierId IN (SELECT Val FROM @FinalManufacturerIds) 
     OR g.ManufacturerId IN (SELECT Val FROM @FinalManufacturerIds))))
+AND
+(@SupplierIdsExist = 0 OR g.SupplierId IN (SELECT Val FROM @SupplierIds))
 AND
 (@ActionIdsExist = 0 OR gc1.GoodsId IN (SELECT Val FROM @ActionHeartIds))
 AND

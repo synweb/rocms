@@ -60,7 +60,7 @@ namespace RoCMS.Shop.Web
                         Title = item.Name,
                         Weight = 2,
                         Text = item.Description,
-                        Url = item.CanonicalUrl
+                        HeartId = item.HeartId
                     };
                 },
                 x =>
@@ -76,7 +76,7 @@ namespace RoCMS.Shop.Web
                         Title = item.Name,
                         Weight = 1,
                         Text = item.Description,
-                        Url = item.CanonicalUrl
+                        HeartId = item.HeartId
                     };
                 },
                 x =>
@@ -92,7 +92,7 @@ namespace RoCMS.Shop.Web
                         Title = item.Name,
                         Weight = 1,
                         Text = item.Description,
-                        Url = item.CanonicalUrl
+                        HeartId = item.HeartId
                     };
                 }
             });

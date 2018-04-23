@@ -58,6 +58,7 @@
     <Compile Include="Gateways\GoodsReviewGateway.cs" />
     <Compile Include="Gateways\GoodsSpecGateway.cs" />
     <Compile Include="Gateways\ManufacturerGateway.cs" />
+    <Compile Include="Gateways\MassPriceChangeTaskGateway.cs" />
     <Compile Include="Gateways\SpecCategoryGateway.cs" />
     <Compile Include="Gateways\GoodsAwaitingGateway.cs" />
     <Compile Include="Gateways\GoodsCategoryGateway.cs" />

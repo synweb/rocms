@@ -19,6 +19,7 @@ using FilterCollections = RoCMS.Shop.Contract.Models.FilterCollections;
 using GoodsFilter = RoCMS.Shop.Contract.Models.GoodsFilter;
 using GoodsItem = RoCMS.Shop.Contract.Models.GoodsItem;
 using GoodsPack = RoCMS.Shop.Contract.Models.GoodsPack;
+using Pack = RoCMS.Shop.Contract.Models.Pack;
 using SortCriterion = RoCMS.Shop.Contract.Models.SortCriterion;
 using Spec = RoCMS.Shop.Contract.Models.Spec;
 
@@ -38,6 +39,7 @@ namespace RoCMS.Shop.Services
         private readonly IShopPackService _shopPackService;
         private readonly IHeartService _heartService;
         private readonly IShopGoodsReviewService _goodsReviewService;
+        private readonly ISearchService _searchService;
 
         private readonly GoodsItemGateway _goodsItemGateway = new GoodsItemGateway();
         private readonly GoodsSpecGateway _goodsSpecGateway = new GoodsSpecGateway();
@@ -50,7 +52,7 @@ namespace RoCMS.Shop.Services
         private readonly ActionGoodsGateway _actionGoodsGateway = new ActionGoodsGateway();
         private readonly CountryGateway _countryGateway = new CountryGateway();
 
-        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService, IShopGoodsReviewService goodsReviewService)
+        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService, IShopGoodsReviewService goodsReviewService, ISearchService searchService)
         {
             _logService = logService;
             _shopActionService = shopActionService;
@@ -61,9 +63,36 @@ namespace RoCMS.Shop.Services
             _shopManufacturerService = shopManufacturerService;
             _heartService = heartService;
             _goodsReviewService = goodsReviewService;
+            _searchService = searchService;
             InitCache("ShopService");
+            // Reindex();
+            // GenerateRelativeUrls();
+        }
 
-            //GenerateRelativeUrls();
+        private void Reindex()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    _logService.TraceMessage("Reindex started");
+                    int total;
+                    FilterCollections filterCollections;
+                    var goods = GetGoodsSet(new GoodsFilter(), 1, int.MaxValue, out total, out filterCollections, false);
+                    _logService.TraceMessage($"Reindexing {goods.Count} goods");
+                    foreach (var goodsItem in goods)
+                    {
+                        //UpdateGoods(goodsItem);
+                        _searchService.UpdateIndex(goodsItem);
+                        _logService.TraceMessage($"Reindexed GoodsItem {goodsItem.Guid}");
+                    }
+                    _logService.TraceMessage("Reindex OK");
+                }
+                catch (Exception e)
+                {
+                    _logService.LogError(e);
+                }
+            });
         }
 
         //Для генерации урлов в уже существующих товарах и категориях
@@ -178,9 +207,20 @@ namespace RoCMS.Shop.Services
                     }
                     goodsItem.Packs = vals;
 
-                    var basePack = goodsItem.Packs.Single(x => x.PackId == goodsItem.BasePackId).PackInfo;
-                    goodsItem.BasePack = basePack;
-
+                    if (goodsItem.BasePackId.HasValue)
+                    {
+                        var basePack = goodsItem.Packs.FirstOrDefault(x => x.PackId == goodsItem.BasePackId);
+                        Pack basePackInfo;
+                        if (basePack != null)
+                        {
+                            basePackInfo = basePack.PackInfo;
+                        }
+                        else
+                        {
+                            basePackInfo = _shopPackService.GetPack(goodsItem.BasePackId.Value);
+                        }
+                        goodsItem.BasePack = basePackInfo;
+                    }
 
                 }
                 catch (Exception e)
@@ -272,6 +312,7 @@ namespace RoCMS.Shop.Services
                     var dataGoodsSpec = Mapper.Map<GoodsSpec>(specVal);
                     _goodsSpecGateway.Insert(dataGoodsSpec);
                 }
+                _searchService.UpdateIndex(goods);
                 ts.Complete();
                 return id;
             }
@@ -281,7 +322,8 @@ namespace RoCMS.Shop.Services
         {
             int heartId = goods.HeartId;
             var dataGoods = Mapper.Map<Data.Models.GoodsItem>(goods);
-            dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
+            //dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
+            
             using (var ts = new TransactionScope())
             {
                 _heartService.UpdateHeart(goods);
@@ -412,6 +454,7 @@ namespace RoCMS.Shop.Services
                         });
                     }
                 }
+                _searchService.UpdateIndex(goods);
                 ts.Complete();
             }
         }
@@ -448,6 +491,7 @@ namespace RoCMS.Shop.Services
                 {
                     _goodsSpecGateway.Delete(goodsSpec);
                 }
+                _searchService.RemoveFromIndex(typeof(GoodsItem), heartId);
                 ts.Complete();
             }
         }

@@ -284,6 +284,9 @@ namespace RoCMS.Shop.Services
 
             Mapper.CreateMap<ExportTask, ShopDbExportTask>();
             Mapper.CreateMap<ShopDbExportTask, ExportTask>();
+
+            Mapper.CreateMap<Contract.Models.MassPriceChangeTask, Data.Models.MassPriceChangeTask>();
+            Mapper.CreateMap<Data.Models.MassPriceChangeTask, Contract.Models.MassPriceChangeTask>();
             Mapper.AssertConfigurationIsValid();
         }
 

@@ -17,47 +17,34 @@ namespace RoCMS
 {
     public class RouteConfig
     {
-        private static Dictionary<string, string> _redirectUrlsMapping
+        static RouteConfig()
         {
-            get
+            try
             {
-                try
+                _redirectUrlsMapping = new Dictionary<string, string>();
+                RedirectToPageRoutesConfigurationSection redirectSection = (RedirectToPageRoutesConfigurationSection)ConfigurationManager.GetSection("redirectToPageRoutes");
+                foreach (RedirectPageRoute rec in redirectSection.RedirectPageRoutes)
                 {
-                    var redirects = new Dictionary<string, string>();
-                    RedirectToPageRoutesConfigurationSection redirectSection = (RedirectToPageRoutesConfigurationSection)ConfigurationManager.GetSection("redirectToPageRoutes");
-                    foreach (RedirectPageRoute rec in redirectSection.RedirectPageRoutes)
-                    {
-                        if (string.IsNullOrEmpty(rec.Key))
-                            continue;
-                        var fixedValue = rec.Value.StartsWith("/") ? rec.Value : $"/{rec.Value}";
-                        redirects.Add(rec.Key, fixedValue);
-                    }                    
-                    return redirects;
-                }
-                catch
-                {
-                    return new Dictionary<string, string>();
+                    if (string.IsNullOrEmpty(rec.Key))
+                        continue;
+                    var fixedValue = (rec.Value.StartsWith("/") ? rec.Value : $"/{rec.Value}").ToLower();
+                    var fixedKey = (rec.Key.StartsWith("/") ? rec.Key : $"/{rec.Key}").ToLower();
+                    _redirectUrlsMapping.Add(fixedKey, fixedValue);
                 }
             }
+            catch
+            {
+                _redirectUrlsMapping = new Dictionary<string, string>();
+            }
         }
+
+        private static readonly Dictionary<string, string> _redirectUrlsMapping;
 
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("favicon.ico");
             XmlSiteMapController.RegisterRoutes(routes);
-
-            //ConfigureSEFRoutes(routes);
-
-            //routes.MapRoute(
-            //    name: "PageSEF",
-            //    url: "{*relativeUrl}",
-            //    defaults: new { controller = "Page", action = "PageSEF" }
-            //    );
-
-
-
-
             routes.MapRoute(
                 name: "Thumbnail",
                 url: "Gallery/Thumbnail/{id}",
@@ -119,19 +106,13 @@ namespace RoCMS
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
                 constraints: new { controller = constraint }
             );
-
-
             //RegisterIndexRoute(routes);
             RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
-            
-
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-
-
         }
 
         //private static void RegisterIndexRoute(RouteCollection routes)
@@ -143,13 +124,7 @@ namespace RoCMS
 
         public static void RegisterRedirects(RouteCollection routes)
         {
-            foreach (var redirect in _redirectUrlsMapping)
-            {
-                routes.MapRoute(
-                    name: String.Format("Rdr{0}", redirect.Key),
-                    url: redirect.Key,
-                    defaults: new { controller = "Redirect", action = "Index", relativeUrl = redirect.Value });
-            }
+            routes.Add(new RedirectRoute(_redirectUrlsMapping));
         }
     }
 }

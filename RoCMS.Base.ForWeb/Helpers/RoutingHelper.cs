@@ -16,5 +16,7 @@ namespace RoCMS.Base.ForWeb.Helpers
             var route = new HeartRoute(urls, controller, action);
             routes.Add(type.FullName, route);
         }
+
+
     }
 }

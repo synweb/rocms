@@ -10,7 +10,7 @@
 
                 var data = ko.toJS(vm.massChange);
 
-                data.filter.categoryIds = $.map(data.filter.categoryIds, function (val) { return val.id; });
+                data.filter.categoryIds = [$.map(data.filter.categoryIds, function (val) { return val.id; })];
                 data.filter.manufacturerIds = $.map(data.filter.manufacturerIds, function (val) { return val.id; });
 
                 postJSON("/api/shop/mass/price/change", data, function (result) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using AutoMapper;
 using RoCMS.Base.Models;
 using RoCMS.Base.Services;
@@ -152,6 +153,9 @@ namespace RoCMS.Web.Services
             {
                 return Enum.GetName(typeof(OrderFormFieldType), x);
             });
+
+            Mapper.CreateMap<decimal, string>().ConstructUsing(x => x.ToString(CultureInfo.InvariantCulture));
+            Mapper.CreateMap<string, decimal>().ConstructUsing(x => decimal.Parse(x, CultureInfo.InvariantCulture));
 
             Mapper.CreateMap<Data.Models.OrderFormField, OrderFormField>();
             Mapper.CreateMap<OrderFormField, Data.Models.OrderFormField>();

@@ -9,6 +9,7 @@ using RoCMS.Base.Models;
 using RoCMS.Base.Services;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Data.Models;
+using RoCMS.Shop.Export.Contract.Models;
 using RoCMS.Web.Contract.Models;
 using Action = RoCMS.Shop.Contract.Models.Action;
 using Cart = RoCMS.Shop.Contract.Models.Cart;
@@ -281,6 +282,8 @@ namespace RoCMS.Shop.Services
                     return result;
                 });
 
+            Mapper.CreateMap<ExportTask, ShopDbExportTask>();
+            Mapper.CreateMap<ShopDbExportTask, ExportTask>();
             Mapper.AssertConfigurationIsValid();
         }
 

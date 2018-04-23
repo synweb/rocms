@@ -91,12 +91,12 @@ namespace RoCMS.Shop.Web.Controllers
             return View();
         }
 
-        //[MvcSiteMapNode(Order = 10, Title = "Экспорт в Я.Маркет", ParentKey = "Shop", Key = "Shop_YmlExport", VisibilityProvider = "RoCMS.Helpers.RoCMSSiteMapNodesVisibilityProvider, RoCMS", Attributes = @"{ ""visibility"": ""AdminMenu"", ""cmsResourceRequired"": ""Shop_YmlExport""}")]
-        //[AuthorizeResources(ShopRoCmsResources.Shop_YmlExport)]
-        //public ActionResult YmlExport()
-        //{
-        //    return View();
-        //}
+        [MvcSiteMapNode(Order = 10, Title = "Экспорт в Я.Маркет", ParentKey = "Shop", Key = "Shop_YmlExport", VisibilityProvider = "RoCMS.Helpers.RoCMSSiteMapNodesVisibilityProvider, RoCMS", Attributes = @"{ ""visibility"": ""AdminMenu"", ""cmsResourceRequired"": ""Shop_YmlExport""}")]
+        [AuthorizeResources(ShopRoCmsResources.Shop_YmlExport)]
+        public ActionResult YmlExport()
+        {
+            return View();
+        }
 
         [MvcSiteMapNode(Order = 0, Title = "Заказы", ParentKey = "Shop", Key = "Shop_Orders", VisibilityProvider = "RoCMS.Helpers.RoCMSSiteMapNodesVisibilityProvider, RoCMS", Attributes = @"{ ""visibility"": ""AdminMenu"", ""cmsResourceRequired"": ""Shop_Orders""}")]
         [AuthorizeResources(ShopRoCmsResources.Shop_Orders)]

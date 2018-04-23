@@ -29,7 +29,8 @@ namespace RoCMS
                     {
                         if (string.IsNullOrEmpty(rec.Key))
                             continue;
-                        redirects.Add(rec.Key, rec.Value);
+                        var fixedValue = rec.Value.StartsWith("/") ? rec.Value : $"/{rec.Value}";
+                        redirects.Add(rec.Key, fixedValue);
                     }                    
                     return redirects;
                 }

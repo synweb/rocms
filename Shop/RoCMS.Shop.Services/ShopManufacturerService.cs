@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,12 @@ namespace RoCMS.Shop.Services
         public Manufacturer GetManufacturer(int manufacturerId)
         {
             var dataRes = _manufacturerGateway.SelectOne(manufacturerId);
+
+            if (dataRes == null)
+            {
+                return null;
+            }
+
             var res = Mapper.Map<Manufacturer>(dataRes);
             FillData(res);
             return res;

@@ -14,65 +14,13 @@
         Layout = "~/Views/Shared/_adminLayout.cshtml";
     }
 
-
-    int? catId = Settings.GetSettings<int?>(SettingKey.LastGoodsCategory.ToString());
-    int? manId = Settings.GetSettings<int?>(SettingKey.LastGoodsManufacturer.ToString());
-    int? supId = Settings.GetSettings<int?>(SettingKey.LastGoodsSupplier.ToString());
-    SortCriterion sortBy = Settings.GetSettings<SortCriterion>(SettingKey.LastGoodsSortBy.ToString());
-
-    string catName = "";
-    string manName = "";
-    string supName = "";
-    IShopCategoryService shopCategoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
-    IShopManufacturerService shopManufacturerService = DependencyResolver.Current.GetService<IShopManufacturerService>();
-
-    if (catId.HasValue)
-    {
-
-        var cat = shopCategoryService.GetCategory(catId.Value);
-        if (cat != null)
-        {
-            catName = cat.Name;
-        }
-        else
-        {
-            catId = null;
-        }
-    }
-
-    if (manId.HasValue)
-    {
-
-        var cat = shopManufacturerService.GetManufacturer(manId.Value);
-        if (cat != null)
-        {
-            manName = cat.Name;
-        }
-        else
-        {
-            manId = null;
-        }
-    }
-
-    if (supId.HasValue)
-    {
-
-        var cat = shopManufacturerService.GetManufacturer(supId.Value);
-        if (cat != null)
-        {
-            supName = cat.Name;
-        }
-        else
-        {
-            supId = null;
-        }
-    }
+    
 }
 @Js("/Content/base/vendor/ckeditor")
 @Js("/bin/Content/admin/shop")
 
 
-<div>
+<div class="goodsEditor">
     <div data-bind="with: filters">
 
         <div class="row" style="margin-bottom: 5px;">
@@ -94,8 +42,8 @@
                 <select class="form-control" data-bind="options: $root.manufacturers(), optionsText: 'name', optionsValue: 'heartId', value: manufacturerIds"></select>
             </div>
             <div class="col-xs-4">
-                    <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'heartId', value: supplierIds"></select>
-                </div>
+                <select class="form-control" data-bind="options: $root.suppliers(), optionsText: 'name', optionsValue: 'heartId', value: supplierIds"></select>
+            </div>
             <div class="col-xs-4">
                 <select class="form-control" data-bind="value: sortBy">
                     <option value="Article">@SortCriterion.Article.Description()</option>
@@ -122,6 +70,10 @@
         <div class="in body">
             <div class="row" data-bind="template: { name: 'goods-list-item-template', foreach: goods }">
 
+            </div>
+            
+            <div class="text-center">
+                <button title="Загрузить еще" style="margin: 0 auto;" class="btn btn-success btn-xs" data-bind="click: moreGoods, style: {display: hasMore() === true ? 'block': 'none'}"><em class="fa fa-caret-square-o-down"></em></button>
             </div>
         </div>
     </div>
@@ -174,7 +126,7 @@
     </script>
 
     <script type="text/x-jquery-tmpl" id="goods-list-item-template">
-        <div class="goodsItem col-xs-4 col-sm-4 col-md-3" data-bind="click: $root.selectGoods">
+        <div  data-bind="attr:{title: name}" class="goodsItem col-xs-4 col-sm-4 col-md-3" data-bind="click: $root.selectGoods">
             <div class="box">
                 <header style="white-space: nowrap;">
                     <div class="toolbar">
@@ -393,23 +345,33 @@
     @JsInline(@<script type="text/javascript">
 
 
-        var lastCategoryId = '@(catId.HasValue ? catId.Value.ToString() : "")';
-        var lastCategoryName = '@catName';
-
-        var lastManufacturerId = '@(manId.HasValue ? manId.Value.ToString() : "")';
-        var lastManufacturerName = '@manName';
-
-        var lastSupplierId = '@(supId.HasValue ? supId.Value.ToString() : "")';
-        var lastSupplierName = '@supName';
-
-        var lastSortBy = '@sortBy.ToString()';
 
         @if (!Request.IsAjaxRequest())
                {<text>
         $(function () {
-            goodsEditorLoaded(function (item) {
-                item.edit();
-            });
+
+            getJSON("/api/shop/settings/lastused",
+                "",
+                function (data) {
+
+                    window.lastCategoryId = data.lastCategory ? data.lastCategory.id : "";
+                    window.lastCategoryName = data.lastCategory ? data.lastCategory.name : "";
+
+                    window.lastManufacturerId = data.lastManufacturer ? data.lastManufacturer.id : "";
+                    window.lastManufacturerName = data.lastManufacturer ? data.lastManufacturer.name : "";
+
+                    window.lastSupplierId = data.lastSupplier ? data.lastSupplier.id : "";
+                    window.lastSupplierName = data.lastSupplier ? data.lastSupplier.name : "";
+
+                    window.lastSortBy = data.lastSortBy;
+
+                    goodsEditorLoaded(function (item) {
+                        item.edit();
+                    });
+                });
+
+
+
         });
         </text>}
     </script>)

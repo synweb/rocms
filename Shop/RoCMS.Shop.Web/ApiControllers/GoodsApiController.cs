@@ -53,7 +53,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         //}
 
         [HttpPost]
-        public IList<GoodsItem> GetGoods(GoodsFilter filter)
+        public IList<GoodsItem> GetGoods(ExtendedGoodsFilter filter)
         {
             int total;
             FilterCollections col;
@@ -67,8 +67,14 @@ namespace RoCMS.Shop.Web.ApiControllers
             _settingsService.Set<int?>(SettingKey.LastGoodsManufacturer.ToString(), filter.ManufacturerIds != null && filter.ManufacturerIds.Any() ? filter.ManufacturerIds.First() : (int?)null);
             _settingsService.Set<SortCriterion>(SettingKey.LastGoodsSortBy.ToString(), filter.SortBy);
 
-            var res = _shopService.GetGoodsSet(filter, 1, int.MaxValue, out total, out col, false);
+            var res = _shopService.GetGoodsSet(filter, filter.StartIndex, filter.Count, out total, out col, false);
             return res;
+        }
+
+        public class ExtendedGoodsFilter : GoodsFilter
+        {
+            public int Count { get; set; }
+            public int StartIndex { get; set; }
         }
 
         [HttpGet]

@@ -13,60 +13,6 @@
     {
         Layout = "~/Views/Shared/_adminLayout.cshtml";
     }
-
-
-    int? catId = Settings.GetSettings<int?>(SettingKey.LastGoodsCategory.ToString());
-    int? manId = Settings.GetSettings<int?>(SettingKey.LastGoodsManufacturer.ToString());
-    int? supId = Settings.GetSettings<int?>(SettingKey.LastGoodsSupplier.ToString());
-    SortCriterion sortBy = Settings.GetSettings<SortCriterion>(SettingKey.LastGoodsSortBy.ToString());
-
-    string catName = "";
-    string manName = "";
-    string supName = "";
-    IShopCategoryService shopCategoryService = DependencyResolver.Current.GetService<IShopCategoryService>();
-    IShopManufacturerService shopManufacturerService = DependencyResolver.Current.GetService<IShopManufacturerService>();
-
-    if (catId.HasValue)
-    {
-
-        var cat = shopCategoryService.GetCategory(catId.Value);
-        if (cat != null)
-        {
-            catName = cat.Name;
-        }
-        else
-        {
-            catId = null;
-        }
-    }
-
-    if (manId.HasValue)
-    {
-
-        var cat = shopManufacturerService.GetManufacturer(manId.Value);
-        if (cat != null)
-        {
-            manName = cat.Name;
-        }
-        else
-        {
-            manId = null;
-        }
-    }
-
-    if (supId.HasValue)
-    {
-
-        var cat = shopManufacturerService.GetManufacturer(supId.Value);
-        if (cat != null)
-        {
-            supName = cat.Name;
-        }
-        else
-        {
-            supId = null;
-        }
-    }
 }
 
 @Js("/Content/base/vendor/ckeditor")
@@ -212,16 +158,7 @@
     @if (!Request.IsAjaxRequest())
     {
         @JsInline(@<script type="text/javascript">
-            var lastCategoryId = '@(catId.HasValue ? catId.Value.ToString() : "")';
-            var lastCategoryName = '@catName';
 
-            var lastManufacturerId = '@(manId.HasValue ? manId.Value.ToString() : "")';
-            var lastManufacturerName = '@manName';
-
-            var lastSupplierId = '@(supId.HasValue ? supId.Value.ToString() : "")';
-            var lastSupplierName = '@supName';
-
-            var lastSortBy = '@sortBy.ToString()';
             $(function () {
                 actionsEditorLoaded();
             });

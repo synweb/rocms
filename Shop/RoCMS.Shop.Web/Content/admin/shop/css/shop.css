@@ -202,6 +202,10 @@ textarea.shop-item-description {
     display: none;
 }
 
+.ui-dialog .goodsEditor .toolbar {
+    display: none;
+}
+
 .ui-dialog .categoryEditor .category .btn-warning {
     display: none;
 }
@@ -219,4 +223,14 @@ li.compatible:after {
 li.compatible:hover {
     background-color: #eaeaea;
     border-radius: 4px;
+}
+
+.shop-packs-list li {
+    padding: 5px;
+}
+
+.shop-packs-list li:after {
+    display: block;
+    content: ' ';
+    clear: both;
 }

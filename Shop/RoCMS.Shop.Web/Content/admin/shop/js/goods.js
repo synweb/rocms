@@ -49,48 +49,69 @@ App.Admin.Shop.GoodsFilter = {
 };
 
 function goodsEditorLoaded(onSelected, context) {
-    var reloadGoods = function () {
+    var loadMoreGoods = function () {
 
+        var pageSize = 10;
 
         var data = {
             categoryIds: vm.filters().categoryIds() ? [[vm.filters().categoryIds()]] : [],
             manufacturerIds: vm.filters().manufacturerIds() ? [vm.filters().manufacturerIds()] : [],
             supplierIds: vm.filters().supplierIds() ? [vm.filters().supplierIds()] : [],
             searchPattern: vm.filters().searchPattern() ? vm.filters().searchPattern() : "",
-            sortBy: vm.filters().sortBy() ? vm.filters().sortBy() : ""
+            sortBy: vm.filters().sortBy() ? vm.filters().sortBy() : "",
+            startIndex: vm.goods().length + 1,
+            count: pageSize
         };
 
-        vm.goods.removeAll();
-
-
-
-        if (!data.categoryIds && !data.manufacturerIds && !data.supplierIds && !data.searchPattern)
+        if (data.categoryIds.length === 0 &&
+            data.manufacturerIds.length === 0 &&
+            data.supplierIds.length === 0 &&
+            !data.searchPattern)
             return false;
 
         blockUI();
 
 
-        postJSON("/api/shop/goods/filter", data, function (result) {
-            $(result).each(function () {
-                $(this.goodsSpecs).each(function () {
-                    if (this.spec.valueType != 'Enum') {
-                        this.inputValue = this.value;
-                    } else {
-                        this.inputValue = '';
-                    }
-                });
-                var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.GoodsItemValidationMapping), App.Admin.Shop.GoodsItemFunctions);
+        postJSON("/api/shop/goods/filter",
+                data,
+                function (result) {
 
-                vm.goods.push(res);
-            });
-        })
+                    if (result.length === 0) {
+                        vm.hasMore(false);
+                    } else {
+                        vm.hasMore(true);
+                    }
+
+                    $(result).each(function () {
+                        $(this.goodsSpecs).each(function () {
+                            if (this.spec.valueType != 'Enum') {
+                                this.inputValue = this.value;
+                            } else {
+                                this.inputValue = '';
+                            }
+                        });
+                        var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.GoodsItemValidationMapping),
+                            App.Admin.Shop.GoodsItemFunctions);
+
+                        vm.goods.push(res);
+                    });
+                })
             .fail(function () {
                 smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
             })
             .always(function () {
                 unblockUI();
             });
-    }
+    };
+
+    var reloadGoods = function () {
+
+        vm.goods.removeAll();
+
+        loadMoreGoods();
+
+
+    };
 
 
     var vm = {
@@ -106,8 +127,9 @@ function goodsEditorLoaded(onSelected, context) {
 
         copyGoodsItem: function (item) {
 
-            var dataJs = ko.toJS(item);//создаем копию объекта, отвязывая все bindings
-            var copy = $.extend(ko.mapping.fromJS(dataJs, App.Admin.Shop.GoodsItemValidationMapping), App.Admin.Shop.GoodsItemFunctions);
+            var dataJs = ko.toJS(item); //создаем копию объекта, отвязывая все bindings
+            var copy = $.extend(ko.mapping.fromJS(dataJs, App.Admin.Shop.GoodsItemValidationMapping),
+                App.Admin.Shop.GoodsItemFunctions);
 
             copy.heartId = ko.observable(); //сбрасываем айдишник
             copy.relativeUrl(copy.relativeUrl() + "-copy");
@@ -121,7 +143,10 @@ function goodsEditorLoaded(onSelected, context) {
 
             var goodsItem = $.extend(new App.Admin.Shop.GoodsItem(), App.Admin.Shop.GoodsItemFunctions);
             if (vm.filters().categoryIds()) {
-                goodsItem.categories.push(ko.mapping.fromJS({ id: vm.filters().categoryIds(), name: vm.filters().categoryName() }));
+                goodsItem.categories.push(ko.mapping.fromJS({
+                    id: vm.filters().categoryIds(),
+                    name: vm.filters().categoryName()
+                }));
                 goodsItem.parentHeartId(vm.filters().categoryIds());
             }
             goodsItem.create(function () {
@@ -141,86 +166,118 @@ function goodsEditorLoaded(onSelected, context) {
             if (onSelected) {
                 onSelected(item);
             }
-        }
+        },
+
+        moreGoods: function () {
+            loadMoreGoods();
+        },
+
+        hasMore: ko.observable(true)
 
     };
 
+    var inited = 0;
+
     var checkAndReload = function () {
-        if (inited == 3) {
-            if (lastManufacturerId || lastSupplierId || lastCategoryId) {
-                reloadGoods();
-            }
+        if (inited >= 3) {
+            reloadGoods();
         }
     }
 
-    var inited = 0;
-    getJSON("/api/shop/suppliers/get", "", function (result) {
-        var man = new App.Admin.Shop.Manufacturer();
-        man.name("Выберите...");
+    
+    if (App.Admin.suppliers().length === 0) {
+        getJSON("/api/shop/suppliers/get", "", function (result) {
+            var man = new App.Admin.Shop.Manufacturer();
+            man.name("Выберите...");
 
-        App.Admin.suppliers.push(man);
-        $(result).each(function () {
-            App.Admin.suppliers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
-        });
-        inited++;
+            App.Admin.suppliers.push(man);
+            $(result).each(function () {
+                App.Admin.suppliers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
+            });
 
-        if (lastSupplierId && lastSupplierName) {
-            vm.filters().supplierName(lastSupplierName);
-            vm.filters().supplierIds(lastSupplierId);
 
-        }
+            if (lastSupplierId && lastSupplierName) {
+                vm.filters().supplierName(lastSupplierName);
+                vm.filters().supplierIds(lastSupplierId);
 
-        vm.filters().supplierIds.subscribe(function (newValue) {
-            if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
-                reloadGoods();
             }
+            inited++;
+            vm.filters().supplierIds.subscribe(function (newValue) {
+                if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
+                    reloadGoods();
+                }
+            });
+            checkAndReload();
         });
-        checkAndReload();
-    });
-
-    getJSON("/api/shop/manufacturers/used/get", "", function (result) {
-        var man = new App.Admin.Shop.Manufacturer();
-        man.name("Выберите...");
-        App.Admin.usedManufacturers.push(man);
-        $(result).each(function () {
-            App.Admin.usedManufacturers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
-        });
+    } else {
         inited++;
-        if (lastManufacturerId && lastManufacturerName) {
-            vm.filters().manufacturerName(lastManufacturerName);
-            vm.filters().manufacturerIds(lastManufacturerId);
-        }
+    }
 
-        vm.filters().manufacturerIds.subscribe(function (newValue) {
-            if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
-                reloadGoods();
-            }
-        });
+    if (App.Admin.usedManufacturers().length === 0) {
+        getJSON("/api/shop/manufacturers/used/get",
+            "",
+            function (result) {
+                var man = new App.Admin.Shop.Manufacturer();
+                man.name("Выберите...");
+                App.Admin.usedManufacturers.push(man);
+                $(result).each(function () {
+                    App.Admin.usedManufacturers.push($.extend(
+                        ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping),
+                        App.Admin.Shop.ManufacturerFunctions));
+                });
 
-        checkAndReload();
-    });
+                if (lastManufacturerId && lastManufacturerName) {
+                    vm.filters().manufacturerName(lastManufacturerName);
+                    vm.filters().manufacturerIds(lastManufacturerId);
+                }
+                inited++;
+                vm.filters().manufacturerIds.subscribe(function (newValue) {
+                    if (App.Admin.Shop.GoodsFilter.clearingAll == false) {
+                        reloadGoods();
+                    }
+                });
 
-    getJSON("/api/shop/manufacturers/get", "", function (result) {
-        var man = new App.Admin.Shop.Manufacturer();
-        man.name("Выберите...");
-        App.Admin.manufacturers.push(man);
-        $(result).each(function () {
-            App.Admin.manufacturers.push($.extend(ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping), App.Admin.Shop.ManufacturerFunctions));
-        });
-    });
+                checkAndReload();
+            });
+    } else {
+        inited++;
+    }
 
-    getJSON("/api/shop/packs/get", "", function (result) {
-        App.Admin.packs.push(ko.mapping.fromJS({ name: "единицу товара", packId: null }));
-        $(result).each(function () {
-            App.Admin.packs.push(ko.mapping.fromJS(this));
-        });
-    });
+    if (App.Admin.manufacturers().length === 0) {
 
-    getJSON("/api/shop/currencies/get", "", function (result) {
-        $(result.data).each(function () {
-            App.Admin.currencies.push(new App.Admin.Currency(this));
-        });
-    });
+        getJSON("/api/shop/manufacturers/get",
+            "",
+            function (result) {
+                var man = new App.Admin.Shop.Manufacturer();
+                man.name("Выберите...");
+                App.Admin.manufacturers.push(man);
+                $(result).each(function () {
+                    App.Admin.manufacturers.push($.extend(
+                        ko.mapping.fromJS(this, App.Admin.Shop.ManufacturerValidationMapping),
+                        App.Admin.Shop.ManufacturerFunctions));
+                });
+            });
+    }
+
+    if (App.Admin.packs().length === 0) {
+        getJSON("/api/shop/packs/get",
+            "",
+            function (result) {
+                App.Admin.packs.push(ko.mapping.fromJS({ name: "единицу товара", packId: null }));
+                $(result).each(function () {
+                    App.Admin.packs.push(ko.mapping.fromJS(this));
+                });
+            });
+    }
+    if (App.Admin.currencies().length === 0) {
+        getJSON("/api/shop/currencies/get",
+            "",
+            function (result) {
+                $(result.data).each(function () {
+                    App.Admin.currencies.push(new App.Admin.Currency(this));
+                });
+            });
+    }
 
     if (lastCategoryId && lastCategoryName) {
         vm.filters().categoryName(lastCategoryName);
@@ -387,7 +444,7 @@ App.Admin.Shop.GoodsItemFunctions = {
                         $(".withsearch").selectpicker('refresh');
                     }
                 }, 300);
-                
+
             }
         });
     },
@@ -553,12 +610,12 @@ App.Admin.Shop.GoodsItemFunctions = {
 
                 var dialog = this;
 
-                
+
 
                 var parents = ko.observableArray();
                 parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
                 $(self.categories()).each(function () {
-                    parents.push({ heartId: this.id, title: this.name, type: 'Категории'});
+                    parents.push({ heartId: this.id, title: this.name, type: 'Категории' });
                 });
 
 
@@ -701,12 +758,33 @@ function showGoodsDialog(onSelected) {
         open: function () {
             var $dialog = $(this).dialog("widget");
             var that = this;
-            goodsEditorLoaded(function (item) {
-                if (onSelected) {
-                    onSelected({ id: item.heartId(), name: item.name() });
-                }
-                $(that).dialog("close");
-            }, $dialog);
+
+            getJSON("/api/shop/settings/lastused",
+                "",
+                function (data) {
+
+                    window.lastCategoryId = data.lastCategory ? data.lastCategory.id : "";
+                    window.lastCategoryName = data.lastCategory ? data.lastCategory.name : "";
+
+                    window.lastManufacturerId = data.lastManufacturer ? data.lastManufacturer.id : "";
+                    window.lastManufacturerName = data.lastManufacturer ? data.lastManufacturer.name : "";
+
+                    window.lastSupplierId = data.lastSupplier ? data.lastSupplier.id : "";
+                    window.lastSupplierName = data.lastSupplier ? data.lastSupplier.name : "";
+
+                    window.lastSortBy = data.lastSortBy;
+
+
+
+                    goodsEditorLoaded(function (item) {
+                        if (onSelected) {
+                            onSelected({ id: item.heartId(), name: item.name() });
+                        }
+                        $(that).dialog("close");
+                    }, $dialog);
+                });
+
+
         }
     };
     showDialogFromUrl("/ShopEditor/GoodsEditor", options);

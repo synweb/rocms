@@ -259,14 +259,14 @@ BEGIN
     IF @SortOrder = 'Asc'
     BEGIN
         INSERT INTO @HeartIds (HeartId)
-        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON gr.HeartId = g.HeartId
+        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON ug.Val = g.HeartId
             GROUP BY Val, g.NotAvailable
             ORDER BY g.NotAvailable, AVG(Rating)
     END
     ELSE
     BEGIN
         INSERT INTO @HeartIds (HeartId)
-        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON gr.HeartId = g.HeartId
+        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON ug.Val = g.HeartId
             GROUP BY Val, g.NotAvailable
             ORDER BY g.NotAvailable, AVG(Rating) DESC
     END

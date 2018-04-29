@@ -65,7 +65,7 @@ namespace RoCMS.Shop.Services
             _goodsReviewService = goodsReviewService;
             _searchService = searchService;
             InitCache("ShopService");
-            // Reindex();
+            //Reindex();
             // GenerateRelativeUrls();
         }
 

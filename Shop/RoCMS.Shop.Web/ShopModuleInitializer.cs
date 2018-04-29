@@ -43,7 +43,6 @@ namespace RoCMS.Shop.Web
 
         private void RegisterSearch()
         {
-            //TODO: не проверялось. Проверить!
             var searchService = DependencyResolver.Current.GetService<ISearchService>();
             searchService.RegisterRules(typeof(GoodsItem), new List<IndexingRule>()
             {
@@ -91,6 +90,22 @@ namespace RoCMS.Shop.Web
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 1,
+                        Text = item.Description,
+                        HeartId = item.HeartId
+                    };
+                },
+                x =>
+                {
+                    var item = (GoodsItem) x;
+                    return new SearchItem()
+                    {
+                        SearchItemKey = item.SearchKeyArticle,
+                        EntityName = x.GetType().FullName,
+                        EntityId = item.HeartId.ToString(),
+                        SearchContent = item.Article,
+                        ImageId = item.MainImageId,
+                        Title = item.Name,
+                        Weight = 3,
                         Text = item.Description,
                         HeartId = item.HeartId
                     };

@@ -223,6 +223,7 @@ namespace RoCMS.Shop.Contract.Models
         public string SearchKeyName => nameof(Name);
         public string SearchKeyDescription => nameof(Description);
         public string SearchKeyHtmlDescription => nameof(HtmlDescription);
+        public string SearchKeyArticle => nameof(Article);
     }
 }
 

@@ -229,6 +229,7 @@
     <Build Include="dbo\Stored Procedures\Heart_SelectByType.sql" />
     <Build Include="dbo\Stored Procedures\Heart_SelectByIds.sql" />
     <Build Include="dbo\Functions\SplitStringToInts.sql" />
+    <Build Include="dbo\Stored Procedures\SearchItem_FindStrict.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExportImages.sql" />

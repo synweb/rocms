@@ -103,6 +103,7 @@ namespace RoCMS.Shop.Web
                         EntityName = x.GetType().FullName,
                         EntityId = item.HeartId.ToString(),
                         SearchContent = item.Article,
+                        StrictSearch = true,
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 3,

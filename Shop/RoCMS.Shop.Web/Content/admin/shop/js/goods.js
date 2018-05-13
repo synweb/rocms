@@ -184,7 +184,7 @@ function goodsEditorLoaded(onSelected, context) {
         }
     }
 
-    
+
     if (App.Admin.suppliers().length === 0) {
         getJSON("/api/shop/suppliers/get", "", function (result) {
             var man = new App.Admin.Shop.Manufacturer();
@@ -585,8 +585,12 @@ App.Admin.Shop.GoodsItemFunctions = {
     addImage: function () {
         var self = this;
         showImagePickDialog(function (imageData) {
-            self.images.push(imageData.ID);
-        });
+                $(imageData).each(function() {
+                    self.images.push(this.ID);
+                });
+            
+        },
+            { multipleUpload: true });
     },
 
     removeImage: function (image, parent) {

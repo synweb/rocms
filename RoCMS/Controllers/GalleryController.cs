@@ -200,8 +200,9 @@ namespace RoCMS.Controllers
         }
 
         [AuthorizeResources(RoCmsResources.Albums)]
-        public ActionResult PickImageFromAlbum(int id)
+        public ActionResult PickImageFromAlbum(int id, bool multiple = false)
         {
+            ViewBag.IsMultiple = multiple;
             var imgIds = _albumService.GetAlbumImages(id);
             ViewBag.AlbumId = id;
             return PartialView(imgIds);

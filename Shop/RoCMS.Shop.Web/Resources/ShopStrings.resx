@@ -294,4 +294,13 @@
   <data name="ShipmentType_SelfPickup" xml:space="preserve">
     <value>Самовывоз</value>
   </data>
+  <data name="PaymentType_Card" xml:space="preserve">
+    <value>Картой</value>
+  </data>
+  <data name="PaymentType_Cash" xml:space="preserve">
+    <value>Наличными</value>
+  </data>
+  <data name="PaymentType_CourierCard" xml:space="preserve">
+    <value>Картой курьеру</value>
+  </data>
 </root>

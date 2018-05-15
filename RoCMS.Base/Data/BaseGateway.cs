@@ -448,9 +448,20 @@ namespace RoCMS.Base.Data
                 }
                 else
                 {
+                    //Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
+                    //object safeValue = Convert.ChangeType(dbValue, t);
+                    //propertyInfo.SetValue(res, safeValue);
                     Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-                    object safeValue = Convert.ChangeType(dbValue, t);
-                    propertyInfo.SetValue(res, safeValue);
+                    if (t.IsEnum)
+                    {
+                        var value = Enum.Parse(t, Convert.ToString(dbValue));
+                        propertyInfo.SetValue(res, value);
+                    }
+                    else
+                    {
+                        object safeValue = Convert.ChangeType(dbValue, t);
+                        propertyInfo.SetValue(res, safeValue);
+                    }
                 }
             }
             return res;

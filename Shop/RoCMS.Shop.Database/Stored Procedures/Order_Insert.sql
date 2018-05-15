@@ -8,8 +8,10 @@
 @ShipmentType nvarchar(20),
 @PickUpPointId int,
 @DeliveryPrice decimal,
-@TotalDiscount int
+@TotalDiscount int,
+@PaymentType varchar(20),
+@PaymentState varchar(20)
 AS
-	INSERT INTO [Shop].[Order] ([Address], [ClientId], [Comment], [AdminComment], [State], [ShipmentDate], [ShipmentType], [PickUpPointId], [DeliveryPrice], [TotalDiscount])
-	VALUES (@Address, @ClientId, @Comment, @AdminComment, @State, @ShipmentDate, @ShipmentType, @PickUpPointId, @DeliveryPrice, @TotalDiscount)
+	INSERT INTO [Shop].[Order] ([Address], [ClientId], [Comment], [AdminComment], [State], [ShipmentDate], [ShipmentType], [PickUpPointId], [DeliveryPrice], [TotalDiscount], [PaymentType], [PaymentState])
+	VALUES (@Address, @ClientId, @Comment, @AdminComment, @State, @ShipmentDate, @ShipmentType, @PickUpPointId, @DeliveryPrice, @TotalDiscount, @PaymentType, @PaymentState)
 	SELECT @@IDENTITY

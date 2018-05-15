@@ -42,7 +42,8 @@ namespace RoCMS.Shop.Contract.Models
         public OrderState State { get; set; }
         public DateTime? ShipmentDate { get; set; }
         public ShipmentType ShipmentType { get; set; }
-
+        public PaymentType PaymentType { get; set; }
+        public PaymentState? PaymentState { get; set; }
         /// <summary>
         /// Заказавший клиент. Использовать только для отображения!
         /// </summary>

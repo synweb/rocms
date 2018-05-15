@@ -29,6 +29,8 @@ using Manufacturer = RoCMS.Shop.Contract.Models.Manufacturer;
 using Order = RoCMS.Shop.Contract.Models.Order;
 using OrderState = RoCMS.Shop.Contract.Models.OrderState;
 using Pack = RoCMS.Shop.Contract.Models.Pack;
+using PaymentState = RoCMS.Shop.Contract.Models.PaymentState;
+using PaymentType = RoCMS.Shop.Contract.Models.PaymentType;
 using ShipmentType = RoCMS.Shop.Contract.Models.ShipmentType;
 using Spec = RoCMS.Shop.Contract.Models.Spec;
 
@@ -161,6 +163,8 @@ namespace RoCMS.Shop.Services
             Mapper.CreateMap<GoodsItem, Data.Models.GoodsItem>()
                 .ForMember(x => x.Deleted, x => x.Ignore())
                 .ForMember(x => x.SearchDescription, x => x.Ignore());
+
+            //TODO: повторяется куча полей в списке
             Mapper.CreateMap<Data.Models.GoodsItem, GoodsItem>()
                 .ForMember(x => x.Images, x => x.Ignore())
                 .ForMember(x => x.Categories, x => x.Ignore())
@@ -252,6 +256,11 @@ namespace RoCMS.Shop.Services
                     var address = DataContractSerializeHelper.Deserialize<Address>(order.Address);
                     ShipmentType st = Mapper.Map<ShipmentType>(order.ShipmentType);
                     OrderState state = Mapper.Map<OrderState>(order.State);
+                    PaymentType pt = Mapper.Map<PaymentType>(order.PaymentType);
+                    PaymentState? ps = order.PaymentState.HasValue
+                        ? (PaymentState?)Mapper.Map<PaymentState>(order.PaymentState.Value)
+                        : null;
+
                     var result = new Order()
                     {
                         ClientId = order.ClientId,
@@ -264,7 +273,9 @@ namespace RoCMS.Shop.Services
                         State = state,
                         PickUpPointId = order.PickUpPointId,
                         DeliveryPrice = order.DeliveryPrice,
-                        TotalDiscount = order.TotalDiscount
+                        TotalDiscount = order.TotalDiscount,
+                        PaymentType = pt,
+                        PaymentState = ps
                     };
                     if (address != null)
                     {

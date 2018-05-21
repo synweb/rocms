@@ -84,12 +84,20 @@ namespace RoCMS.Shop.Services
 
                 var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
                 _manufacturerGateway.Update(dataRec);
+
+                ts.Complete();
             }
         }
 
         public void DeleteManufacturer(int manufacturerId)
         {
-            _heartService.DeleteHeart(manufacturerId);
+            using (TransactionScope ts = new TransactionScope())
+            {
+                _manufacturerGateway.Delete(manufacturerId);
+                _heartService.DeleteHeart(manufacturerId);
+
+                ts.Complete();
+            }
         }
 
         public IList<Manufacturer> GetManufacturers()

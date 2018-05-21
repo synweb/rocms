@@ -627,7 +627,7 @@ App.Admin.Shop.GoodsItemFunctions = {
                 var model = {
                     vm: dm,
                     manufacturers: App.Admin.manufacturers,
-                    suppliers: App.Admin.suppliers,
+                    suppliers: App.Admin.manufacturers,
                     packs: App.Admin.packs,
                     currencies: App.Admin.currencies,
                     parents: parents

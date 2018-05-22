@@ -113,7 +113,7 @@
 
     <script type="text/x-jquery-tmpl" id="pack-item-goods-template">
         <span class="pack-item name-block">
-            <span data-bind="text: packInfo.name"></span>
+            <span data-bind="text: packInfo.fullName"></span>
             <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removePack($data, $parent);}"><em class="fa fa-trash-o"></em></a>
         </span>
     </script>
@@ -224,7 +224,7 @@
                         </div>
                         <div class="col-xs-1" style="padding: 7px;">за</div>
                         <div class="col-xs-4">
-                            <select class="form-control" data-bind="options: $root.packs, optionsText: 'name', optionsValue: 'packId', value: basePackId"></select>
+                            <select class="form-control" data-bind="options: $root.packs, optionsText: 'fullName', optionsValue: 'packId', value: basePackId"></select>
                         </div>
                     </div>
                     <div class="form-group">

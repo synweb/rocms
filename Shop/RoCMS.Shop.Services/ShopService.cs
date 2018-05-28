@@ -37,6 +37,7 @@ namespace RoCMS.Shop.Services
         private readonly IShopManufacturerService _shopManufacturerService;
         private readonly IShopPackService _shopPackService;
         private readonly IHeartService _heartService;
+        private readonly ISearchService _searchService;
 
         private readonly GoodsItemGateway _goodsItemGateway = new GoodsItemGateway();
         private readonly GoodsSpecGateway _goodsSpecGateway = new GoodsSpecGateway();
@@ -49,7 +50,7 @@ namespace RoCMS.Shop.Services
         private readonly ActionGoodsGateway _actionGoodsGateway = new ActionGoodsGateway();
         private readonly CountryGateway _countryGateway = new CountryGateway();
 
-        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService)
+        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService, ISearchService searchService)
         {
             _logService = logService;
             _shopActionService = shopActionService;
@@ -59,6 +60,7 @@ namespace RoCMS.Shop.Services
             _shopPackService = shopPackService;
             _shopManufacturerService = shopManufacturerService;
             _heartService = heartService;
+            _searchService = searchService;
             InitCache("ShopService");
 
             //GenerateRelativeUrls();
@@ -410,6 +412,7 @@ namespace RoCMS.Shop.Services
                         });
                     }
                 }
+                _searchService.UpdateIndex(goods);
                 ts.Complete();
             }
         }
@@ -446,6 +449,7 @@ namespace RoCMS.Shop.Services
                 {
                     _goodsSpecGateway.Delete(goodsSpec);
                 }
+                _searchService.RemoveFromIndex(typeof(GoodsItem), heartId);
                 ts.Complete();
             }
         }

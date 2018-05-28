@@ -7,16 +7,34 @@ using AutoMapper;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
 using RoCMS.Shop.Data.Gateways;
+using RoCMS.Web.Contract.Services;
 
 namespace RoCMS.Shop.Services
 {
     class ShopGoodsReviewService: BaseShopService, IShopGoodsReviewService
     {
+        private readonly IHeartService _heartService;
+
+
         private readonly GoodsReviewGateway _goodsReviewGateway = new GoodsReviewGateway();
+
+        public ShopGoodsReviewService(IHeartService heartService)
+        {
+            _heartService = heartService;
+        }
+
         public IList<GoodsReview> GetAllGoodsReviews()
         {
             var dataRes = _goodsReviewGateway.Select();
             var res = Mapper.Map<IList<GoodsReview>>(dataRes);
+
+            foreach (var r in res)
+            {
+                r.GoodsItem = new GoodsItem() { HeartId = r.HeartId };
+                r.GoodsItem.FillHeart(_heartService.GetHeart(r.HeartId));
+                    
+            }
+
             return res;
         }
 
@@ -33,6 +51,16 @@ namespace RoCMS.Shop.Services
             var dataRes = _goodsReviewGateway.SelectByGoods(heartId);
             var res = Mapper.Map<IList<GoodsReview>>(dataRes);
             return res;
+        }
+
+        public double? GetGoodsRating(int heartId)
+        {
+            var dataRes = _goodsReviewGateway.SelectByGoods(heartId);
+            if (dataRes.Any())
+            {
+                return dataRes.Select(x => x.Rating).Average();
+            }
+            return null;
         }
 
         public IList<GoodsReview> GetGoodsReviewsWithText(int heartId)

@@ -74,11 +74,11 @@
                 <div class="form-group">
                     <label class="control-label col-xs-2">Имя</label>
                     <div class="col-xs-4">
-                        <input class="form-control" type="text" data-bind="value: name"/>
+                        <input class="form-control" type="text" data-bind="value: name" />
                     </div>
                     <label class="control-label col-xs-2">Фамилия</label>
                     <div class="col-xs-4">
-                        <input class="form-control" type="text" data-bind="value: lastName"/>
+                        <input class="form-control" type="text" data-bind="value: lastName" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -86,14 +86,20 @@
                     <div class="col-xs-4 info-label-container">
                         <span data-bind="text: email"></span>
                         @*<a data-bind="click: function () { edit($data, $root); }, clickBubble: false"
-                           class="btn btn-warning btn-xs"
-                           title="Редактировать">
-                            <i class="fa fa-pencil"></i>
-                        </a>*@
+                   class="btn btn-warning btn-xs"
+                   title="Редактировать">
+                    <i class="fa fa-pencil"></i>
+                </a>*@
                     </div>
                     <label class="control-label col-xs-2">Телефон</label>
                     <div class="col-xs-4">
                         <input class="form-control" type="text" data-bind="value: phone" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-5">Сумма прошлых заказов, <i class="fa fa-rub"></i></label>
+                    <div class="col-xs-4">
+                        <input class="form-control" type="text" data-bind="value: initialAmount" />
                     </div>
                 </div>
                 <div class="form-group">

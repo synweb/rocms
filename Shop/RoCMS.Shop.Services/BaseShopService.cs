@@ -9,6 +9,7 @@ using RoCMS.Base.Models;
 using RoCMS.Base.Services;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Data.Models;
+using RoCMS.Shop.Export.Contract.Models;
 using RoCMS.Web.Contract.Models;
 using Action = RoCMS.Shop.Contract.Models.Action;
 using Cart = RoCMS.Shop.Contract.Models.Cart;
@@ -28,6 +29,8 @@ using Manufacturer = RoCMS.Shop.Contract.Models.Manufacturer;
 using Order = RoCMS.Shop.Contract.Models.Order;
 using OrderState = RoCMS.Shop.Contract.Models.OrderState;
 using Pack = RoCMS.Shop.Contract.Models.Pack;
+using PaymentState = RoCMS.Shop.Contract.Models.PaymentState;
+using PaymentType = RoCMS.Shop.Contract.Models.PaymentType;
 using ShipmentType = RoCMS.Shop.Contract.Models.ShipmentType;
 using Spec = RoCMS.Shop.Contract.Models.Spec;
 
@@ -160,6 +163,8 @@ namespace RoCMS.Shop.Services
             Mapper.CreateMap<GoodsItem, Data.Models.GoodsItem>()
                 .ForMember(x => x.Deleted, x => x.Ignore())
                 .ForMember(x => x.SearchDescription, x => x.Ignore());
+
+            //TODO: повторяется куча полей в списке
             Mapper.CreateMap<Data.Models.GoodsItem, GoodsItem>()
                 .ForMember(x => x.Images, x => x.Ignore())
                 .ForMember(x => x.Categories, x => x.Ignore())
@@ -239,6 +244,8 @@ namespace RoCMS.Shop.Services
                         HouseIndex = y.HouseIndex,
                         Metro = y.Metro,
                         PostCode = y.PostCode,
+                        Floor = y.Floor,
+                        Intercom = y.Intercom
                     };
                     string addressString = DataContractSerializeHelper.SerializeToXmlString(address);
                     return addressString;
@@ -249,6 +256,11 @@ namespace RoCMS.Shop.Services
                     var address = DataContractSerializeHelper.Deserialize<Address>(order.Address);
                     ShipmentType st = Mapper.Map<ShipmentType>(order.ShipmentType);
                     OrderState state = Mapper.Map<OrderState>(order.State);
+                    PaymentType pt = Mapper.Map<PaymentType>(order.PaymentType);
+                    PaymentState? ps = order.PaymentState.HasValue
+                        ? (PaymentState?)Mapper.Map<PaymentState>(order.PaymentState.Value)
+                        : null;
+
                     var result = new Order()
                     {
                         ClientId = order.ClientId,
@@ -261,7 +273,9 @@ namespace RoCMS.Shop.Services
                         State = state,
                         PickUpPointId = order.PickUpPointId,
                         DeliveryPrice = order.DeliveryPrice,
-                        TotalDiscount = order.TotalDiscount
+                        TotalDiscount = order.TotalDiscount,
+                        PaymentType = pt,
+                        PaymentState = ps
                     };
                     if (address != null)
                     {
@@ -273,10 +287,17 @@ namespace RoCMS.Shop.Services
                         result.HouseIndex = address.HouseIndex;
                         result.Metro = address.Metro;
                         result.PostCode = address.PostCode;
+                        result.Floor = address.Floor;
+                        result.Intercom = address.Intercom;
                     }
                     return result;
                 });
 
+            Mapper.CreateMap<ExportTask, ShopDbExportTask>();
+            Mapper.CreateMap<ShopDbExportTask, ExportTask>();
+
+            Mapper.CreateMap<Contract.Models.MassPriceChangeTask, Data.Models.MassPriceChangeTask>();
+            Mapper.CreateMap<Data.Models.MassPriceChangeTask, Contract.Models.MassPriceChangeTask>();
             Mapper.AssertConfigurationIsValid();
         }
 

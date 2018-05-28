@@ -57,7 +57,8 @@ App.Admin.Client = {
     userId: ko.observable(),
     name: ko.observable().extend({ required: true }),
     lastName: ko.observable(),
-    comment: ko.observable()
+    comment: ko.observable(),
+    initialAmount: ko.observable(),
 }
 
 App.Admin.ClientFunctions = {

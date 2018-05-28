@@ -87,7 +87,10 @@ namespace RoCMS.Web.Services
                     $"SEARCHRESULT:{searchParams.SearchPattern?.ToLower()}:{string.Join(",",searchParams.SearchEntities.Select(x => x.FullName))}",
                     () =>
                     {
-                        var dirtyResults = _searchItemGateway.Find(searchParams.SearchPattern, searchParams.SearchEntities).OrderByDescending(x => x.Relevance);
+                        var strictResults =
+                            _searchItemGateway.FindStrict(searchParams.SearchPattern, searchParams.SearchEntities);
+                        var fulltextResults = _searchItemGateway.Find(searchParams.SearchPattern, searchParams.SearchEntities).OrderByDescending(x => x.Relevance);
+                        var dirtyResults = strictResults.Concat(fulltextResults);
                         var distinctByEntity = dirtyResults.Distinct(new SearchResultEqualityComparer()).ToList();
                         return distinctByEntity;
                     });

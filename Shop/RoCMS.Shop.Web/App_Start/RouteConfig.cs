@@ -29,6 +29,27 @@ namespace Shop.Web
         public static string ShopUrl = "catalog";
         public static void RegisterRoutes(RouteCollection routes)
         {
+            routes.MapRoute(
+                name: "Personal",
+                url: "personal",
+                defaults: new { controller = "Shop", action = "Personal" });
+
+            routes.MapRoute(
+                name: "Checkout",
+                url: "checkout",
+                defaults: new { controller = "Shop", action = "Checkout" });
+
+            routes.MapRoute(
+                name: "PickUpPoint",
+                url: "pickuppoint/{id}",
+                defaults: new { controller = "Shop", action = "PickUpPoint", id = UrlParameter.Optional });
+
+            routes.MapRoute(
+                name: "ThankYou",
+                url: "thankyou",
+                defaults: new { controller = "Shop", action = "ThankYou" });
+
+
             IEnumerable<string> controllerNames = typeof (MvcApplication).Assembly.GetTypes()
                 .Where(t => t.Name.EndsWith("Controller"))
                 .Where(t => !t.IsAbstract)

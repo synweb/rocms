@@ -37,6 +37,9 @@
 
     <script type="text/html" id="category-list-item-template">
         <li class="category">
+            <div class="collapse-container" data-bind="style: {display: childrenCategories().length > 0 ? 'inline-block': 'none'}">
+                <a class="collapsed" data-bind="attr: {href: '#cat'+heartId()}" data-toggle="collapse" data-target=""><em class="fa fa-angle-down"></em></a>
+            </div>
             <div class="category-name" data-bind="click: $root.selectCategory">
                 <div style="float: right">
                     <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Category_EditCategory"><i class="fa fa-pencil"></i></a>
@@ -55,7 +58,7 @@
                 <label data-bind="text: name"></label>
                 <a href="#" data-bind="click: addChild, clickBubble: false" title="@ShopStrings.Shop_Category_AddSubCategory"><i class="fa fa-plus-circle"></i></a>
             </div>
-            <div style="clear: both; padding-left: 30px;" class="child-categories">
+            <div style="clear: both; padding-left: 30px;" class="child-categories collapse" data-bind="attr: {id: 'cat'+heartId()}">
                 <div>
                     <ul data-bind="template: { name: 'category-list-item-template', foreach: childrenCategories }"></ul>
                 </div>

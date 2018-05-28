@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using RoCMS.Base.Models;
 using RoCMS.Shop.Contract.Models;
@@ -18,7 +19,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         [HttpGet]
         public IList<PickupPointInfo> GetPoints()
         {
-            return _shopPickupPointService.GetPickupPoints();
+            return _shopPickupPointService.GetPickupPoints().OrderBy(x => x.Title).ToList();
         }
 
         [HttpPost]

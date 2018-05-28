@@ -9,7 +9,9 @@
 @PickUpPointId int,
 @DeliveryPrice decimal,
 @TotalDiscount int,
-@OrderId int
+@OrderId int,
+@PaymentType varchar(20),
+@PaymentState varchar(20)
 AS
 	UPDATE [Shop].[Order] SET
 		[Address]=@Address,
@@ -21,5 +23,7 @@ AS
 		[ShipmentType]=@ShipmentType,
 		[PickUpPointId]=@PickUpPointId,
 		[DeliveryPrice]=@DeliveryPrice,
-		[TotalDiscount]=@TotalDiscount
+		[TotalDiscount]=@TotalDiscount,
+		[PaymentType]=@PaymentType,
+		[PaymentState]=@PaymentState
 	WHERE [OrderId]=@OrderId

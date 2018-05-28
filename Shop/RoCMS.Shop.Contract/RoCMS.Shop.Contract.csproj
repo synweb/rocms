@@ -96,6 +96,8 @@
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderState.cs" />
     <Compile Include="Models\Pack.cs" />
+    <Compile Include="Models\PaymentState.cs" />
+    <Compile Include="Models\PaymentType.cs" />
     <Compile Include="Models\PickupPointInfo.cs" />
     <Compile Include="Models\DbExportStatus.cs" />
     <Compile Include="Models\DbExportTask.cs" />

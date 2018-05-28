@@ -63,19 +63,19 @@
                         </div>
                     </div>
                     @*<div>
-                            <div class="form-group">
-                                <label class="control-label col-xs-2">Пароль:</label>
-                                <div class="col-xs-6">
-                                    <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().password">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-xs-2">Подтвердите пароль:</label>
-                                <div class="col-xs-6">
-                                    <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().confirmPassword">
-                                </div>
-                            </div>
-                        </div>*@
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Пароль:</label>
+                    <div class="col-xs-6">
+                        <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-xs-2">Подтвердите пароль:</label>
+                    <div class="col-xs-6">
+                        <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().confirmPassword">
+                    </div>
+                </div>
+            </div>*@
 
                 </div>
                 <div class="col-xs-6">
@@ -85,18 +85,14 @@
                         <div class="col-xs-8">
                             <input type="text" class="form-control city" value="@Model.Address.City" />
                         </div>
-
                     </div>
                     <div class="form-group">
                         <label class="control-label col-xs-4">Индекс:</label>
                         <div class="col-xs-8">
                             <input type="text" class="form-control post-code" value="@Model.Address.PostCode" />
                         </div>
-
                     </div>
-
                     <div class="form-group">
-
                         <label class="control-label col-xs-4">Метро:</label>
                         <div class="col-xs-8">
                             <input type="text" class="form-control metro" value="@Model.Address.Metro" />
@@ -109,17 +105,32 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-xs-1">Дом:</label>
-                        <div class="col-xs-3">
+                        <label class="control-label col-xs-2">Дом:</label>
+                        <div class="col-xs-2 no-padding">
                             <input type="text" class="form-control house" value="@Model.Address.House" />
                         </div>
-                        <label class="control-label float-left">Под.:</label>
-                        <div class="col-xs-3">
+                        <label class="control-label col-xs-2">Корп./стр.:</label>
+                        <div class="col-xs-2 no-padding">
+                            <input type="text" class="form-control houseIndex" value="@Model.Address.HouseIndex" />
+                        </div>
+                        <label class="control-label col-xs-2">Под.:</label>
+                        <div class="col-xs-2 no-padding">
                             <input type="text" class="form-control front-number" value="@Model.Address.FrontNumber" />
                         </div>
-                        <label class="control-label float-left">Кв.:</label>
-                        <div class="col-xs-3">
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label  col-xs-2">Кв.:</label>
+                        <div class="col-xs-2 no-padding">
                             <input type="text" class="form-control appartment" value="@Model.Address.Appartment" />
+                        </div>
+                        <label class="control-label col-xs-2">Этаж:</label>
+                        <div class="col-xs-2 no-padding">
+                            <input type="text" class="form-control floor" value="@Model.Address.Floor" />
+                        </div>
+                        <label class="control-label col-xs-2">Домофон:</label>
+                        <div class="col-xs-2 no-padding">
+                            <input type="text" class="form-control intercom" value="@Model.Address.Intercom" />
                         </div>
                     </div>
                 </div>
@@ -249,6 +260,9 @@
                 var house = $("input.house").val();
                 var frontNumber = $("input.front-number").val();
                 var appartment = $("input.appartment").val();
+                var floor = $("input.floor").val();
+                var intercom = $("input.intercom").val();
+                var houseIndex = $("input.houseIndex").val();
 
                 blockUI();
 
@@ -263,7 +277,10 @@
                         house: house,
                         frontNumber: frontNumber,
                         appartment: appartment,
-                        postCode: postCode
+                        postCode: postCode,
+                        floor: floor,
+                        houseIndex: houseIndex,
+                        intercom: intercom
 
                     },
                     clientId: '@clientId'

@@ -11,6 +11,7 @@
 	[HeartId] int NULL, -- Если есть HeartId, урл строим по нему, если нет - берём урл из [Url]
 	[ImageId] VARCHAR(30) NULL, 
 	[Weight] INT NOT NULL DEFAULT 1,
+	[StrictSearch] BIT NOT NULL DEFAULT 0,
 	[CreationDate] DATETIME NOT NULL DEFAULT GETUTCDATE(),
 	[UpdateDate] DATETIME NOT NULL DEFAULT GETUTCDATE(),
 	CONSTRAINT [PK_SearchItem] PRIMARY KEY CLUSTERED ([SearchItemKey], [EntityName], [EntityId]), 

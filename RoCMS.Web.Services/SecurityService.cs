@@ -21,7 +21,11 @@ namespace RoCMS.Web.Services
         private readonly UserGateway _userGateway = new UserGateway();
         private readonly UserCMSResourceGateway _userCMSResourceGateway = new UserCMSResourceGateway();
         private readonly CMSResourceGateway _cmsResourceGateway = new CMSResourceGateway();
-        
+
+        public SecurityService()
+        {
+            InitCache("SecurityServiceMemoryCache");
+        }
 
         public static string CalculateHash(string input)
         {
@@ -161,17 +165,28 @@ namespace RoCMS.Web.Services
             return res;
         }
 
+        private const string AUTHORIZED_FOR_RESOURCE_CACHE_KEY_TEMPLATE = "Authed:{0}_{1}";
+
+        private string GetAuthorizedCacheKey(int userId, string cmsResource)
+        {
+            return string.Format(AUTHORIZED_FOR_RESOURCE_CACHE_KEY_TEMPLATE, userId, cmsResource);
+        }
+
         public bool IsAuthorizedForResource(int userId, string resource)
         {
-            try
+            string cacheKey = GetAuthorizedCacheKey(userId, resource);
+            return GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
             {
-                return _userCMSResourceGateway.CheckIfAuthorizedForResource(userId, resource);
-            }
-            catch
-            {
-                // при ошибке запрещаем доступ (например, нет доступа к БД)
-                return false;
-            }
+                try
+                {
+                    return _userCMSResourceGateway.CheckIfAuthorizedForResource(userId, resource);
+                }
+                catch
+                {
+                    // при ошибке запрещаем доступ
+                    return false;
+                }
+            });
         }
 
         public void GrantResource(int userId, string resourceName)
@@ -187,6 +202,7 @@ namespace RoCMS.Web.Services
         {
             var resource = _cmsResourceGateway.SelectByName(resourceName);
             _userCMSResourceGateway.Delete(userId, resource.CmsResourceId);
+            RemoveObjectFromCache(GetAuthorizedCacheKey(userId, resourceName));
         }
 
         public string GetUsername(int userId)
@@ -228,6 +244,6 @@ namespace RoCMS.Web.Services
             _userGateway.Update(dataUser);
         }
 
-        protected override int CacheExpirationInMinutes => 30;
+        protected override int CacheExpirationInMinutes => 10;
     }
 }

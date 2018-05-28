@@ -7,6 +7,7 @@ using System.Transactions;
 using AutoMapper;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Models.Email;
+using RoCMS.Shop.Contract.Models.Exceptions;
 using RoCMS.Shop.Contract.Services;
 using RoCMS.Shop.Data.Gateways;
 using RoCMS.Web.Contract.Extensions;
@@ -64,7 +65,25 @@ namespace RoCMS.Shop.Services
             var gios = Mapper.Map<List<GoodsInOrder>>(dataGios);
             foreach (var goodsInOrder in gios)
             {
-                goodsInOrder.Goods = _shopService.GetGoods(goodsInOrder.HeartId);
+                try
+                {
+                    goodsInOrder.Goods = _shopService.GetGoods(goodsInOrder.HeartId);
+                }
+                catch (GoodsNotFoundException)
+                {
+                    //TODO: заплатка на скорую руку. Разрулить
+                    GoodsItemGateway gateway = new GoodsItemGateway();
+                    var goods = gateway.SelectOne(goodsInOrder.HeartId);
+                    if (goods != null)
+                    {
+                        goodsInOrder.Goods = Mapper.Map<GoodsItem>(goods);
+                    }
+                    else
+                    {
+                        goodsInOrder.Goods = new GoodsItem() { Name = "Товар более не доступен"};
+                    }
+                    
+                }
             }
             order.GoodsInOrder = gios;
         }

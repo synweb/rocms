@@ -2,6 +2,7 @@
     @CategoryIds [Int_Table] readonly,
     @WithSubcategories bit,
     @ManufacturerIds [Int_Table] readonly,
+    @SupplierIds [Int_Table] readonly,
     @Countries [Int_Table] readonly,
     @ActionIds [Int_Table] readonly,
     @PackIds [Int_Table] readonly,
@@ -22,12 +23,14 @@ AS
     
     
 DECLARE @CategoryIdsExist BIT = 0, @ManufacturerIdsExist BIT = 0, 
-    @CountriesExist BIT = 0, @ActionIdsExist BIT = 0, @PackIdsExist BIT = 0, @SpecIdsExist BIT = 0
+    @CountriesExist BIT = 0, @ActionIdsExist BIT = 0, @PackIdsExist BIT = 0, @SpecIdsExist BIT = 0, @SupplierIdsExist BIT = 0
 
 IF EXISTS (SELECT * FROM @CategoryIds) 
     SET @CategoryIdsExist=1
 IF EXISTS (SELECT * FROM @ManufacturerIds) 
     SET @ManufacturerIdsExist=1
+IF EXISTS (SELECT * FROM @SupplierIds) 
+    SET @SupplierIdsExist=1
 IF EXISTS (SELECT * FROM @Countries) 
     SET @CountriesExist=1
 IF EXISTS (SELECT * FROM @ActionIds) 
@@ -134,8 +137,10 @@ DECLARE @UnsortedHeartIds [Int_Table]
 
 INSERT INTO @UnsortedHeartIds
 SELECT DISTINCT gc1.GoodsId
-FROM [Shop].[Goods_Category] gc1-- join [GoodsItem] g on gc1.HeartId = g.HeartId
+FROM [Shop].[Goods_Category] gc1 join [GoodsItem] g on gc1.GoodsId = g.HeartId
 WHERE
+g.Deleted=0
+AND
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))
 AND
 (
@@ -151,6 +156,8 @@ AND
     EXISTS (SELECT * FROM [GoodsItem] g WHERE g.HeartId = gc1.GoodsId AND (
     g.SupplierId IN (SELECT Val FROM @FinalManufacturerIds) 
     OR g.ManufacturerId IN (SELECT Val FROM @FinalManufacturerIds))))
+AND
+(@SupplierIdsExist = 0 OR g.SupplierId IN (SELECT Val FROM @SupplierIds))
 AND
 (@ActionIdsExist = 0 OR gc1.GoodsId IN (SELECT Val FROM @ActionHeartIds))
 AND
@@ -229,7 +236,7 @@ ELSE IF @SortBy='Random'
 BEGIN
     INSERT INTO @HeartIds (HeartId)
     SELECT Val FROM @UnsortedHeartIds ug JOIN [GoodsItem] g ON ug.Val = g.HeartId
-        ORDER BY NEWID()
+        ORDER BY g.NotAvailable, NEWID()
 END
 ELSE IF @SortBy='Price'
 BEGIN
@@ -252,14 +259,14 @@ BEGIN
     IF @SortOrder = 'Asc'
     BEGIN
         INSERT INTO @HeartIds (HeartId)
-        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON gr.HeartId = g.HeartId
+        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON ug.Val = g.HeartId
             GROUP BY Val, g.NotAvailable
             ORDER BY g.NotAvailable, AVG(Rating)
     END
     ELSE
     BEGIN
         INSERT INTO @HeartIds (HeartId)
-        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON gr.HeartId = g.HeartId
+        SELECT Val FROM @UnsortedHeartIds ug LEFT JOIN GoodsReview gr ON ug.Val = gr.HeartId INNER JOIN GoodsItem g ON ug.Val = g.HeartId
             GROUP BY Val, g.NotAvailable
             ORDER BY g.NotAvailable, AVG(Rating) DESC
     END

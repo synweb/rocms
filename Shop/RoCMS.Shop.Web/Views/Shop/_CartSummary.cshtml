@@ -5,7 +5,7 @@
 
 
 <div class="cart-container" data-bind="with: cartSummary">
-    <a href="@Url.Action("Checkout", "Shop")" title="Корзина">
+    <a href="@Url.RouteUrl("Checkout")" title="Корзина">
         <span class="badge" data-bind="text: quantity"></span>
         <em class="glyphicon glyphicon-shopping-cart"></em>Корзина
     </a>
@@ -13,7 +13,7 @@
 
 
 @*<div data-bind="with: cartSummary">
-        <a href="@Url.Action("Checkout", "Shop")" title="Корзина">
+        <a href="@Url.RouteUrl("Checkout")" title="Корзина">
             <div class="cart-header">ВАША КОРЗИНА</div>
             <div>
                 Товаров: <span data-bind="text: quantity"></span><br>

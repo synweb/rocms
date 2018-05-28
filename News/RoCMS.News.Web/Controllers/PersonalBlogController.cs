@@ -15,14 +15,14 @@ using RoCMS.Web.Contract.Services;
 namespace RoCMS.News.Web.Controllers
 {
     [Authorize]
-    public class PersonalController : Controller
+    public class PersonalBlogController : Controller
     {
         private readonly INewsItemService _newsItemService;
         private readonly IPrincipalResolver _principalResolver;
         private readonly IBlogService _blogService;
         private readonly INewsCategoryService _newsCategoryService;
 
-        public PersonalController(INewsItemService newsItemService, IPrincipalResolver principalResolver, IBlogService blogService, INewsCategoryService newsCategoryService)
+        public PersonalBlogController(INewsItemService newsItemService, IPrincipalResolver principalResolver, IBlogService blogService, INewsCategoryService newsCategoryService)
         {
             _newsItemService = newsItemService;
             _principalResolver = principalResolver;

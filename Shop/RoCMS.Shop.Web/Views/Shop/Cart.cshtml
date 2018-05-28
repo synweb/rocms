@@ -22,7 +22,7 @@
 <h1>Корзина</h1>
 @Html.Partial("_CartItems")
 
-<a  class="cart-button-order" href="@Url.Action("Checkout")">Оформить заказ</a>
+<a  class="cart-button-order" href="@Url.RouteUrl("Checkout")">Оформить заказ</a>
 
 @Js("/bin/Content/client/shop")
 

@@ -163,9 +163,9 @@ namespace RoCMS.Controllers
             {
                 AuthenticationHelper.GetInstance().Login(System.Web.HttpContext.Current, user.Username, user.Password);
 
+                
 
-
-                if (string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
+                if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
                 {
                     return new RedirectResult(ReturnUrl);
                 }

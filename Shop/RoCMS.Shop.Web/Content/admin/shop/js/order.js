@@ -138,12 +138,15 @@ App.Admin.Order = function () {
 
     self.frontNumber = ko.observable();
     self.houseIndex = ko.observable();
+    self.floor = ko.observable();
+    self.intercom = ko.observable();
     self.appartment = ko.observable();
     self.comment = ko.observable();
     self.adminComment = ko.observable();
     self.shipmentType = ko.observable();
     self.shipmentTypeView = ko.observable(); //Для более красивого отображение Enum-а, который едет с сервера
-    self.paymentType = ko.observable();
+    self.paymentType = ko.observable('cash');
+    self.paymentState = ko.observable();
     self.state = ko.observable();
 
     self.pickUpPointId = ko.observable();
@@ -242,8 +245,8 @@ App.Admin.OrderFunctions = {
         var dialogContent = $("#orderTemplate").tmpl();
         var options = {
             title: "Заказ",
-            width: 650,
-            height: 580,
+            width: 850,
+            height: 680,
             resizable: false,
             modal: true,
             open: function () {

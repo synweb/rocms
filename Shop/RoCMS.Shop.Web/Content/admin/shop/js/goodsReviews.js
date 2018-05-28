@@ -1,6 +1,6 @@
 ﻿/// <reference path="/Content/base/ro/js/rocms.helpers.js" />
 
-App.Admin.GoodsReview = function() {
+App.Admin.GoodsReview = function () {
     var self = this;
 
     self.goodsReviewId = ko.observable();
@@ -37,15 +37,11 @@ App.Admin.GoodsReviewValidationMapping = {
 
 App.Admin.GoodsReviewFunctions = {
 
-    goodsUrl: function() {
-        return '/Shop/Goods/' + this.heartId();
-    },
-
     containerId: function () {
         return 'goods-review-container-' + this.goodsReviewId();
     },
-    
-    init : function (d) {
+
+    init: function (d) {
         var self = this;
         self.goodsReviewId(d.goodsReviewId);
         self.author(d.author);
@@ -56,9 +52,14 @@ App.Admin.GoodsReviewFunctions = {
         self.rating(d.rating);
         self.moderated(d.moderated);
         self.goodsItem(d.goodsItem());
+
+
+        self.goodsUrl = ko.computed(function () {
+            return '/' + this.goodsItem.canonicalUrl;
+        });
     },
-    
-    create : function (onCreate) {
+
+    create: function (onCreate) {
         var self = this;
 
         self.dialog(function () {
@@ -72,7 +73,7 @@ App.Admin.GoodsReviewFunctions = {
         });
     },
 
-    save : function (url, onSuccess) {
+    save: function (url, onSuccess) {
         blockUI();
         var self = this;
 
@@ -98,7 +99,7 @@ App.Admin.GoodsReviewFunctions = {
         });
     },
 
-    dialog: function(onSuccess) {    
+    dialog: function (onSuccess) {
         var self = ko.validatedObservable(this);
         var dialogContent = $("#reviewEditorTemplate").tmpl();
         var options = {
@@ -143,13 +144,13 @@ App.Admin.GoodsReviewFunctions = {
         return dialogContent;
     },
 
-    remove : function (item, parent) {
+    remove: function (item, parent) {
         var self = this;
-        var container = $('#'+self.containerId());
+        var container = $('#' + self.containerId());
         container.hide(1000, function () { container.remove(); });
         var url = "/api/shop/goods/reviews/" + self.goodsReviewId() + "/delete";
         postJSON(url);
-        
+
     },
 
     //Модерация
@@ -160,7 +161,7 @@ App.Admin.GoodsReviewFunctions = {
         postJSON(url);
     },
 
-    hide: function() {
+    hide: function () {
         var url = "/api/shop/goods/reviews/" + self.goodsReviewId() + "/hide";
         postJSON(url);
     }
@@ -171,15 +172,15 @@ function goodsReviewsEditorLoaded() {
 
     var vm = {
         goodsItem: ko.observable(),
-        
+
         reviews: ko.observableArray(),
-        pickGoods: function() {
-            showGoodsDialog(function(goods) {
-                loadReviews("/api/shop/goods/reviews/"+goods.id+"/get",vm);
+        pickGoods: function () {
+            showGoodsDialog(function (goods) {
+                loadReviews("/api/shop/goods/reviews/" + goods.id + "/get", vm);
             });
         },
         allGoods: function () {
-            loadReviews("/api/shop/goods/reviews/get",vm);
+            loadReviews("/api/shop/goods/reviews/get", vm);
         }
     };
     ko.applyBindings(vm);
@@ -187,11 +188,16 @@ function goodsReviewsEditorLoaded() {
     unblockUI();
 }
 
-function loadReviews(url,vm) {
+function loadReviews(url, vm) {
     getJSON(url, null, function (result) {
         vm.reviews.removeAll();
         $(result).each(function () {
-            vm.reviews.push($.extend(ko.mapping.fromJS(this, App.Admin.GoodsReviewValidationMapping), App.Admin.GoodsReviewFunctions));
+            var review = $.extend(ko.mapping.fromJS(this, App.Admin.GoodsReviewValidationMapping),
+                App.Admin.GoodsReviewFunctions);
+            review.goodsUrl = ko.computed(function () {
+                return '/' + review.goodsItem.canonicalUrl();
+            });
+            vm.reviews.push(review);
         });
         renderSwitches();
     })
@@ -204,31 +210,31 @@ function loadReviews(url,vm) {
 }
 
 function renderSwitches() {
-        $('.moderated-switch').bootstrapSwitch();
-        $('.moderated-switch').bootstrapSwitch('setOnLabel', '<i class="fa fa-eye"></i>');
-        $('.moderated-switch').bootstrapSwitch('setOffLabel', '<i class="fa fa-eye-slash"></i>');
-        $('.moderated-switch').bootstrapSwitch('setSizeClass', 'switch-small');
-        
+    $('.moderated-switch').bootstrapSwitch();
+    $('.moderated-switch').bootstrapSwitch('setOnLabel', '<i class="fa fa-eye"></i>');
+    $('.moderated-switch').bootstrapSwitch('setOffLabel', '<i class="fa fa-eye-slash"></i>');
+    $('.moderated-switch').bootstrapSwitch('setSizeClass', 'switch-small');
 
-        $('.moderated-switch').on('switch-change', function (e, data) {
-            var reviewId = $(this).parent().data("reviewId");
-            var url;
-            if (data.value === true) {
-                url = "/api/shop/goods/reviews/"+reviewId+"/accept";
-            } else {
-                url = "/api/shop/goods/reviews/" + reviewId + "/hide";
+
+    $('.moderated-switch').on('switch-change', function (e, data) {
+        var reviewId = $(this).parent().data("reviewId");
+        var url;
+        if (data.value === true) {
+            url = "/api/shop/goods/reviews/" + reviewId + "/accept";
+        } else {
+            url = "/api/shop/goods/reviews/" + reviewId + "/hide";
+        }
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: JSON.stringify({
+                reviewId: reviewId
+            }),
+            contentType: "application/json",
+            success: function (data) {
             }
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: JSON.stringify({
-                    reviewId: reviewId
-                }),
-                contentType: "application/json",
-                success: function (data) {
-                }
-            });
-            return false;
         });
+        return false;
+    });
 
 }

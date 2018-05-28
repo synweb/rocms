@@ -21,5 +21,6 @@ namespace RoCMS.Web.Contract.Models.Search
         public DateTime CreationDate { get; set; }
         public DateTime UpdateDate { get; set; }
         public int HeartId { get; set; }
+        public bool StrictSearch { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿function goodsReviewLoaded() {
+﻿function goodsReviewLoaded(heartId) {
     var ratingField = $(".leave-goods-review-container-form input.review-rating-value");
     $("ul.rating li > a").click(function () {
         var rating = $("ul.rating");
@@ -38,7 +38,7 @@
         var text = textField.val();
         
         var rating = ratingField.val();
-        var heartId = $(".goods-item-card").data("heartId");
+
 
         postJSON("/api/shop/goods/reviews/create", {
             author: author,

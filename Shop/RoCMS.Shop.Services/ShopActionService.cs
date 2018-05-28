@@ -188,7 +188,13 @@ namespace RoCMS.Shop.Services
 
         public void DeleteAction(int actionId)
         {
-            _heartService.DeleteHeart(actionId);
+            using (TransactionScope ts = new TransactionScope())
+            {
+                _actionGateway.Delete(actionId);
+                _heartService.DeleteHeart(actionId);
+
+                ts.Complete();
+            }
         }
 
         public IList<Action> GetActions()

@@ -122,6 +122,9 @@ namespace Shop.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/settings/get", "ShopSettingsApi", "Get");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/settings/update", "ShopSettingsApi", "Update");
 
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/settings/lastused", "ShopSettingsApi", "GetLastUsedValues");
+            
+
 
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/mass/price/tasks", "MassChangeApi", "GetChangePriceTasks");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/mass/price/change", "MassChangeApi", "ChangePrice");

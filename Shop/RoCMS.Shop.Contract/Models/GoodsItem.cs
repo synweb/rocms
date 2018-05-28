@@ -140,7 +140,7 @@ namespace RoCMS.Shop.Contract.Models
         public string HtmlDescription { get; set; }
         public string MainImageId { get; set; }
         public string Article { get; set; }
-        public float? Rating { get; set; }
+        public double? Rating { get; set; }
         public string Currency { get; set; }
         
 
@@ -223,6 +223,7 @@ namespace RoCMS.Shop.Contract.Models
         public string SearchKeyName => nameof(Name);
         public string SearchKeyDescription => nameof(Description);
         public string SearchKeyHtmlDescription => nameof(HtmlDescription);
+        public string SearchKeyArticle => nameof(Article);
     }
 }
 

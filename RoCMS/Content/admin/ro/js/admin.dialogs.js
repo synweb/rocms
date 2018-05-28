@@ -30,8 +30,7 @@
 }
 
 
-function InitImageUploader()
-{
+function InitImageUploader() {
     $("html").on("click", ".image-picking-buttons .fileinput-button", function () {
         $('.image-picking-buttons #fileupload').click();
     });
@@ -82,11 +81,14 @@ function showImagePickDialog(onSelect, options) {
             unblockUI();
             var $dialog = $(this).dialog("widget");
             var self = this;
-            $(".image-picking-container").on("click", ".album-pick", function() {
+            $(".image-picking-container").on("click", ".album-pick", function () {
                 var id = $(this).data("id");
                 var url = "/Gallery/PickImageFromAlbum/" + id;
+                if (options && options.multipleUpload) {
+                    url = url + "?multiple=true";
+                }
                 blockUI();
-                $(".image-picking-container").load(url, function() {
+                $(".image-picking-container").load(url, function () {
                     if (options && options.restrictUpload) {
                         $('.image-picking-buttons .fileinput-button').hide();
                     } else {
@@ -94,8 +96,8 @@ function showImagePickDialog(onSelect, options) {
                             dataType: 'json',
                             xhrFields: { withCredentials: true },
                             forceIframeTransport: true,
-                            done: function(e, data) {
-                                $(data.result.files).each(function() {
+                            done: function (e, data) {
+                                $(data.result.files).each(function () {
                                     var imageId = this.name;
                                     var title = this.title;
                                     var size = humanFileSize(this.size);
@@ -104,7 +106,11 @@ function showImagePickDialog(onSelect, options) {
                                     var albumId = $(".image-pick-table").data("albumId");
                                     var url2 = "/api/album/" + albumId + "/" + this.name + "/add";
                                     postJSON(url2);
-                                    elem.click();
+                                    if (options && options.multipleUpload) {
+
+                                    } else {
+                                        elem.click();
+                                    }
                                 });
                             }
                         });
@@ -119,26 +125,70 @@ function showImagePickDialog(onSelect, options) {
             $(".image-picking-container").on("click", ".to-albums", function () {
                 var url = "/Gallery/PickImageDialog";
                 blockUI();
-                $(".image-picking-container").load(url, function() {
+                $(".image-picking-container").load(url, function () {
                     hideCurrentAlbum();
                     unblockUI();
                 });
             });
-            $(".image-picking-container").on("click", ".image-pick-table tbody tr", function () {
-                var img = $(this).find(".picking-image");
-                var id = img.data("id");
-                var src = IMAGE_THUMBNAIL_URL + id;
-                var data = {
-                    Url: src,
-                    ID: id
-                };
-                if (onSelect) {
-                    onSelect(data);
-                }
-                $(self).dialog("close");
-            });
+
+            $(".image-picking-container").on("click",
+                ".image-pick-table tbody tr",
+                function () {
+
+                    if (options && options.multipleUpload) {
+                        var check = $(this).find(".check-image");
+                        if (check.is(":checked")) {
+                            console.log("was checked");
+                            check.prop("checked", false);
+                        } else {
+                            console.log("was not checked");
+                            check.prop("checked", true);
+                        }
+                    } else {
+                        var img = $(this).find(".picking-image");
+                        var id = img.data("id");
+                        var src = IMAGE_THUMBNAIL_URL + id;
+                        var data = {
+                            Url: src,
+                            ID: id
+                        };
+                        if (onSelect) {
+                            onSelect(data);
+                        }
+                        $(self).dialog("close");
+                    }
+                });
+
         }
     }
+
+    if (options && options.multipleUpload) {
+        dialogOptions.buttons = [
+            {
+                text: "Выбрать",
+                click: function () {
+                    var $dialog = $(this).dialog("widget");
+
+                    var data = $(".check-image:checked").map(function () {
+                        var img = $(this).closest("tr").find(".picking-image");
+                        var id = img.data("id");
+                        var src = IMAGE_THUMBNAIL_URL + id;
+                        return {
+                            Url: src,
+                            ID: id
+                        };
+                    });
+
+                    if (onSelect) {
+                        onSelect(data);
+
+                    };
+                    $(this).dialog("close");
+                }
+            }
+        ]
+    }
+
     showDialogFromUrl("/Gallery/PickImageDialog", dialogOptions);
 }
 
@@ -209,31 +259,31 @@ function showFilePickDialog(onSelect) {
         draggable: true,
         open: function () {
 
-                $('.picking-buttons #fileupload').fileupload({
-                    dataType: 'json',
-                    xhrFields: { withCredentials: true },
-                    forceIframeTransport: true,
-                    done: function (e, data) {
-                        $(data.result.files).each(function () {
-                            var obj = $("<li class='file-pick-element'  data-filename='" + this.name + "' ><a class='picking-file row' href='/File/Get/"
-                                + this.name + "' title='Откройте ссылку в новом окне для скачивания файла'>"
-                                + '<div class="col-xs-7"><i class="fa fa-file"></i>&nbsp;' + this.name + '</div>'
-                                + '<div class="col-xs-5">Загружено только что</div>'
-                                + "</a></li>");
+            $('.picking-buttons #fileupload').fileupload({
+                dataType: 'json',
+                xhrFields: { withCredentials: true },
+                forceIframeTransport: true,
+                done: function (e, data) {
+                    $(data.result.files).each(function () {
+                        var obj = $("<li class='file-pick-element'  data-filename='" + this.name + "' ><a class='picking-file row' href='/File/Get/"
+                            + this.name + "' title='Откройте ссылку в новом окне для скачивания файла'>"
+                            + '<div class="col-xs-7"><i class="fa fa-file"></i>&nbsp;' + this.name + '</div>'
+                            + '<div class="col-xs-5">Загружено только что</div>'
+                            + "</a></li>");
 
-                            $(".file-pick-list")
-                                .prepend(obj);
+                        $(".file-pick-list")
+                            .prepend(obj);
 
-                            obj.find(".picking-file").click();
-                        });
+                        obj.find(".picking-file").click();
+                    });
 
-                    }
-                });
-                $('#fileupload').fileupload(
-                    'option',
-                    'redirect',
-                    'http://' + location.host + '/Content/admin/vendor/FU/cors/result.html?%s');
-                unblockUI();
+                }
+            });
+            $('#fileupload').fileupload(
+                'option',
+                'redirect',
+                'http://' + location.host + '/Content/admin/vendor/FU/cors/result.html?%s');
+            unblockUI();
 
             var $dialog = $(this).dialog("widget");
             var self = this;
@@ -297,24 +347,24 @@ function showInterfaceStringCreateDialog(onSubmit) {
 			        if (onSubmit) {
 			            onSubmit({ key, value });
 			            $(this).dialog("close");
-			        };
-			    }
-			},
-			{
-			    text: "Отмена",
-			    click: function () {
+			            };
+			            }
+			            },
+			            {
+			                text: "Отмена",
+			                click: function () {
 			        $(this).dialog("close");
-			    }
-			}
-        ]
-    };
+			            }
+			            }
+			            ]
+			            };
     showDialogFromUrl("/Developer/CreateInterfaceString", options);
 }
 
-$(document).on("click", ".istr-create-indialog", function() {
+$(document).on("click", ".istr-create-indialog", function () {
     showInterfaceStringCreateDialog(function (data) {
         //TODO: валидация
-        postJSON('/api/interface/strings/create', data, function(res) {
+        postJSON('/api/interface/strings/create', data, function (res) {
             if (res.succeed) {
                 var elem = $("#istr-pick-template").tmpl({ key: data.key, value: data.value });
                 $(".interface-string-pick-table").prepend(elem);
@@ -329,25 +379,25 @@ $(document).on("click", ".istr-create-indialog", function() {
     });
 });
 
-$(document).on("click", ".album-create-indialog", function() {
-    showAlbumCreateDialog(function(title) {
-        postJSON('/api/album/create', title, function(res) {
+$(document).on("click", ".album-create-indialog", function () {
+    showAlbumCreateDialog(function (title) {
+        postJSON('/api/album/create', title, function (res) {
             if (res.succeed) {
                 var albumId = res.data;
                 var elem = $("#album-pick-template").tmpl({ name: title, albumId });
                 $(".album-pick-table").prepend(elem);
-            }
-        });
-    });
-});
+                }
+                });
+                });
+                });
 
 function confirmRemoval() {
     return confirm('Вы уверены, что хотите удалить элемент?');
-}
+                }
 
 function showAddUserDialog() {
     var options = {
-        title: 'Добавление пользователя',
+                    title: 'Добавление пользователя',
         modal: true,
         resizable: false,
         width: 400,

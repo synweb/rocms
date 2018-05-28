@@ -38,7 +38,7 @@ function packsEditorLoaded(onSelected, context) {
 
     getJSON("/api/shop/packs/get", "", function (result) {
         $(result).each(function () {
-            vm.packs.push($.extend(ko.mapping.fromJS(this), App.Admin.PackFunctions));
+            vm.packs.push($.extend(ko.mapping.fromJS(this, App.Admin.PackValidationMapping), App.Admin.PackFunctions));
         });       
     })
         .fail(function () {
@@ -58,8 +58,13 @@ function packsEditorLoaded(onSelected, context) {
     }
 }
 
-App.Admin.CompatibleValidationMapping = {
+App.Admin.PackValidationMapping = {
     name: {
+        create: function (options) {
+            return ko.observable(options.data).extend({ required: true });
+        }
+    },
+    fullName: {
         create: function (options) {
             return ko.observable(options.data).extend({ required: true });
         }
@@ -84,6 +89,8 @@ App.Admin.Pack = function () {
     self.defaultDiscount = ko.observable();
     self.size = ko.observable().extend({ required: true, number: true });
     self.dimensionId = ko.observable().extend({ required: true });
+
+    self.fullName = ko.observable().extend({ required: true });
 }
 
 App.Admin.PackFunctions = {
@@ -151,7 +158,6 @@ App.Admin.PackFunctions = {
             resizable: false,
             modal: true,
             open: function () {
-                
                 ko.applyBindings({ vm: self, dimensions: App.Admin.dimensions }, this);
             },
             buttons: [
@@ -201,7 +207,7 @@ function showPacksDialog(onSelected) {
             unblockUI();
             packsEditorLoaded(function (item) {
                 if (onSelected) {
-                    onSelected({ packInfo: { packId: item.packId(), name: item.name() } });
+                    onSelected({ packInfo: { packId: item.packId(), fullName: item.fullName() } });
                 }
                 $(that).dialog("close");
             }, $dialog);

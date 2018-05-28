@@ -48,5 +48,20 @@ namespace RoCMS.Data.Gateways
         {
             Exec(GetProcedureString(), new {entityName, entityId}, true);
         }
+
+        public ICollection<SearchResultItem> FindStrict(string searchPattern, ICollection<Type> searchEntities)
+        {
+            string query;
+            if (string.IsNullOrEmpty(searchPattern))
+            {
+                query = null;
+            }
+            else
+            {
+                query = searchPattern;
+            }
+            var res = ExecSelect<SearchResultItem>(GetProcedureString(), new { SearchQuery = query, Entities = searchEntities.Select(x => x.FullName) });
+            return res;
+        }
     }
 }

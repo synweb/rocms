@@ -43,7 +43,6 @@ namespace RoCMS.Shop.Web
 
         private void RegisterSearch()
         {
-            //TODO: не проверялось. Проверить!
             var searchService = DependencyResolver.Current.GetService<ISearchService>();
             searchService.RegisterRules(typeof(GoodsItem), new List<IndexingRule>()
             {
@@ -60,7 +59,7 @@ namespace RoCMS.Shop.Web
                         Title = item.Name,
                         Weight = 2,
                         Text = item.Description,
-                        Url = item.CanonicalUrl
+                        HeartId = item.HeartId
                     };
                 },
                 x =>
@@ -76,7 +75,7 @@ namespace RoCMS.Shop.Web
                         Title = item.Name,
                         Weight = 1,
                         Text = item.Description,
-                        Url = item.CanonicalUrl
+                        HeartId = item.HeartId
                     };
                 },
                 x =>
@@ -92,7 +91,24 @@ namespace RoCMS.Shop.Web
                         Title = item.Name,
                         Weight = 1,
                         Text = item.Description,
-                        Url = item.CanonicalUrl
+                        HeartId = item.HeartId
+                    };
+                },
+                x =>
+                {
+                    var item = (GoodsItem) x;
+                    return new SearchItem()
+                    {
+                        SearchItemKey = item.SearchKeyArticle,
+                        EntityName = x.GetType().FullName,
+                        EntityId = item.HeartId.ToString(),
+                        SearchContent = item.Article,
+                        StrictSearch = true,
+                        ImageId = item.MainImageId,
+                        Title = item.Name,
+                        Weight = 3,
+                        Text = item.Description,
+                        HeartId = item.HeartId
                     };
                 }
             });

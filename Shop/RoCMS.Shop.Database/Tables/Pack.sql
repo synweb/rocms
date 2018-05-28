@@ -4,6 +4,7 @@
     [CreationDate]  DATETIME NOT NULL DEFAULT GETUTCDATE(),
     [Guid]        UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() UNIQUE,
     [Name] NVARCHAR(50) NOT NULL, 
+	[FullName] NVARCHAR(200), 
     [Size] FLOAT NOT NULL, 
     [DimensionId] INT NOT NULL,
 	[DefaultDiscount] INT NULL, 

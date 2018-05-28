@@ -195,7 +195,8 @@ App.Admin.Shop.CategoryFunctions = {
         var category = $.extend(new App.Admin.Shop.Category(), App.Admin.Shop.CategoryFunctions);
         category.parentCategoryId(self.heartId());
         category.parentCategory().name = self.name();
-        
+        category.parentCategory().id = self.heartId();
+        category.parentHeartId(self.heartId());
         category.newCategory(function () {
             self.childrenCategories.push(category);
         });
@@ -338,18 +339,14 @@ App.Admin.Shop.CategoryFunctions = {
             open: function () {
                 var $form = $(this).find('form');
 
-
-
                 self.initCategory();
                 var parents = ko.observableArray();
                 parents.push({ title: "Нет", heartId: null, type: "Выберите..." });
 
                 if (self.parentCategoryId() && self.parentCategory()) {
-
                     parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
+                    
                 }
-
-                
 
                 var that = this;
 
@@ -373,11 +370,21 @@ App.Admin.Shop.CategoryFunctions = {
 
                     self.parentHeartId.notifySubscribers();
 
-                    $(".withsearch").selectpicker('refresh');
+                    
+                    setTimeout(function () {
+                        $(".withsearch").selectpicker('refresh');
+
+                    }, 100);
                 });
 
                 ko.applyBindings(vm, that);
-                $(".withsearch").selectpicker();
+
+                setTimeout(function() {
+                    $(".withsearch").selectpicker();
+
+                }, 100);
+                
+
             },
             buttons: [
                 {

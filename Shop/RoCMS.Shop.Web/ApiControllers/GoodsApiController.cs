@@ -22,12 +22,14 @@ namespace RoCMS.Shop.Web.ApiControllers
         private readonly IShopService _shopService;
         private readonly ISettingsService _settingsService;
         private readonly IShopGoodsReviewService _shopGoodsReviewService;
+        private readonly ILogService _logService;
 
-        public GoodsApiController(IShopService shopService, ISettingsService settingsService, IShopGoodsReviewService shopGoodsReviewService)
+        public GoodsApiController(IShopService shopService, ISettingsService settingsService, IShopGoodsReviewService shopGoodsReviewService, ILogService logService)
         {
             _shopService = shopService;
             _settingsService = settingsService;
             _shopGoodsReviewService = shopGoodsReviewService;
+            _logService = logService;
         }
 
         [HttpGet]
@@ -51,7 +53,7 @@ namespace RoCMS.Shop.Web.ApiControllers
         //}
 
         [HttpPost]
-        public IList<GoodsItem> GetGoods(GoodsFilter filter)
+        public IList<GoodsItem> GetGoods(ExtendedGoodsFilter filter)
         {
             int total;
             FilterCollections col;
@@ -65,8 +67,14 @@ namespace RoCMS.Shop.Web.ApiControllers
             _settingsService.Set<int?>(SettingKey.LastGoodsManufacturer.ToString(), filter.ManufacturerIds != null && filter.ManufacturerIds.Any() ? filter.ManufacturerIds.First() : (int?)null);
             _settingsService.Set<SortCriterion>(SettingKey.LastGoodsSortBy.ToString(), filter.SortBy);
 
-            var res = _shopService.GetGoodsSet(filter, 1, int.MaxValue, out total, out col, false);
+            var res = _shopService.GetGoodsSet(filter, filter.StartIndex, filter.Count, out total, out col, false);
             return res;
+        }
+
+        public class ExtendedGoodsFilter : GoodsFilter
+        {
+            public int Count { get; set; }
+            public int StartIndex { get; set; }
         }
 
         [HttpGet]
@@ -148,6 +156,7 @@ namespace RoCMS.Shop.Web.ApiControllers
             
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public HttpResponseMessage CreateGoodsReview(GoodsReview review)
         {
@@ -201,6 +210,7 @@ namespace RoCMS.Shop.Web.ApiControllers
             }
             catch (Exception e)
             {
+                _logService.LogError(e);
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }

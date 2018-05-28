@@ -1,5 +1,13 @@
 ﻿@{
-    var rated= (bool)ViewBag.Rated;
+    HttpCookie requestCookie = Request.Cookies["goodsRated"];
+
+    bool rated = false;
+
+    if (requestCookie != null)
+    {
+        var values = requestCookie.Value.Split(',').ToList();
+        rated = values.Contains(Model.ToString());
+    }
 }
 
 <form class="form-horizontal leave-goods-review-container-form">

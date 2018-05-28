@@ -58,6 +58,7 @@
     <Compile Include="Gateways\GoodsReviewGateway.cs" />
     <Compile Include="Gateways\GoodsSpecGateway.cs" />
     <Compile Include="Gateways\ManufacturerGateway.cs" />
+    <Compile Include="Gateways\MassPriceChangeTaskGateway.cs" />
     <Compile Include="Gateways\SpecCategoryGateway.cs" />
     <Compile Include="Gateways\GoodsAwaitingGateway.cs" />
     <Compile Include="Gateways\GoodsCategoryGateway.cs" />
@@ -100,6 +101,8 @@
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderState.cs" />
     <Compile Include="Models\Pack.cs" />
+    <Compile Include="Models\PaymentState.cs" />
+    <Compile Include="Models\PaymentType.cs" />
     <Compile Include="Models\PickUpPoint.cs" />
     <Compile Include="Models\RegularCustomerDiscount.cs" />
     <Compile Include="Models\ShipmentType.cs" />

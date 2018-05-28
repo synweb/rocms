@@ -20,5 +20,7 @@ namespace RoCMS.Shop.Contract.Services
         void AcceptGoodsReview(int reviewId);
         void HideGoodsReview(int reviewId);
         GoodsReview GetGoodsReview(int reviewId);
+
+        double? GetGoodsRating(int heartId);
     }
 }

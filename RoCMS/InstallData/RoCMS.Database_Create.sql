@@ -3889,6 +3889,7 @@ BEGIN
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (26, N'SupportTickets', N'Поддержка')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (27, N'Shop_Currencies', N'Магазин: Валюты')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (28, N'Shop_OrderForms', N'Магазин: Формы заказа')
+	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (100, N'Shop_MassPriceChange', N'Магазин: Пакетные изменения цен')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (34, N'CommentsEditor', N'Комментарии')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (40, N'Emails', N'Письма')
 	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (50, N'UploadFiles', N'Файлы')

@@ -1,14 +1,12 @@
 ﻿@using RoCMS.Base
 @using RoCMS.Base.ForWeb.Extensions
 @*@model IEnumerable<RoCMS.ViewModels.OrderVM>*@
-
 @{
     ViewBag.Title = "Заказы";
     Layout = "~/Views/Shared/_adminLayout.cshtml";
-	
-	int? clientId = ViewBag.ClientId;
-}
 
+    int? clientId = ViewBag.ClientId;
+}
 <!--Begin Datatables-->
 <div class="row">
     <div class="col-lg-12">
@@ -41,7 +39,6 @@
     </div>
 </div>
 
-
 <script type="text/html" id="order-item">
     <tr>
         <td data-bind="text: orderId"></td>
@@ -60,7 +57,6 @@
         <td data-bind="text: client.phone"></td>
         <td data-bind="text: client.email"></td>
         <td><span data-bind="text: priceFormat(summary())"></span><i class="fa fa-rub"></i></td>
-
         <td>
             <a data-bind="click: function () { edit($data, $root); }, clickBubble: false"
                class="btn btn-warning btn-xs"
@@ -68,7 +64,6 @@
                 <i class="fa fa-pencil"></i>
             </a>
         </td>
-
         <td>
             @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
             {
@@ -81,7 +76,6 @@
         </td>
     </tr>
 </script>
-
 
 <script type="text/html" id="orderTemplate">
     <div class="shop-order">
@@ -111,6 +105,25 @@
                         <label class="control-label col-xs-2">Стоимость доставки</label>
                         <div class="col-xs-4 info-label-container">
                             <span data-bind="text: priceFormat(deliveryPrice())"></span><i class="fa fa-rub"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-xs-2">Способ оплаты</label>
+                        <div class="col-xs-4">
+                            <select class="form-control" data-bind="value: paymentType">
+                                <option value="Cash">Наличные</option>
+                                <option value="Card">Карта</option>
+                                <option value="CourierCard">Карта курьеру</option>
+                            </select>
+                        </div>
+                        <label class="control-label col-xs-2">Статус оплаты</label>
+                        <div class="col-xs-4">
+                            <select class="form-control" data-bind="value: paymentState">
+                                <option value=""></option>
+                                <option value="Invoiced">Ожидает оплаты</option>
+                                <option value="Paid">Оплачено</option>
+                                <option value="Rejected">Отказ</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group">
@@ -214,6 +227,16 @@
                                 <input type="text" class="form-control" data-bind="value: appartment" />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-2">Этаж</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: floor" />
+                            </div>
+                            <label class="control-label col-xs-2">Домофон</label>
+                            <div class="col-xs-4">
+                                <input type="text" class="form-control" data-bind="value: intercom" />
+                            </div>
+                        </div>
                     </div>
                     @*Самовывоз*@
                     <div data-bind="style: {display: shipmentType() === 'SelfPickup' ? 'block': 'none'}">
@@ -260,13 +283,11 @@
             </div>
         </form>
     </div>
-
 </script>
-
 <script type="text/x-jquery-tmpl" id="goods-item-order-template">
     <tr>
         <td>
-            <a target="_blank" data-bind="attr:{href:'/Shop/Goods/'+goods.heartId()}">
+            <a target="_blank" data-bind="attr:{href: '/'+goods.canonicalUrl()}">
                 <span data-bind="text: goods.name"></span>
             </a>
             @*<a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeGoods($data, $parent);}"><em class="fa fa-trash-o"></em></a>*@
@@ -287,11 +308,9 @@
     </tr>
 </script>
 
-
 @Js("/bin/Content/admin/shop")
 @JsInline(@<script>
     $(function () {
         onShopOrdersLoaded(@(clientId.HasValue?clientId.Value.ToString():"null"));
     })
-</script>)
-
+    </script>)

@@ -3,7 +3,7 @@
 @*<span data-bind="with: account">
         <span data-bind="style: {display: isAuthorized() === true ? 'block' : 'none' }">Вы авторизованы как:<br/>
             <i class="fa fa-user" style="font-size: 24px"></i> <span data-bind="text: username"></span>&nbsp;<br />
-            <a href="@Url.Action("Personal", "Shop")" title="Выход">Личный кабинет</a> |
+            <a href="@Url.RouteUrl("Personal")" title="Выход">Личный кабинет</a> |
             <a href="#" data-bind="click: $root.logout" title="Выход">Выход</a>
         </span>
     </span>*@

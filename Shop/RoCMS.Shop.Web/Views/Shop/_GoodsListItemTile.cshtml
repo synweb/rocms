@@ -59,7 +59,7 @@ var currencyService = DependencyResolver.Current.GetService<IShopCurrencyService
 
         </div>
         <div class="cart order-btn-container buttons">
-            <a onclick="true" class="button addToCart order-link" data-bind="click: function(){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.HeartId, 1) }">
+            <a onclick="true" class="button addToCart order-link" data-bind="click: function(){ onBuy(event, '@Url.RouteUrl("Checkout")'); addItem(@goodsItem.HeartId, 1) }">
                 <span>Заказать</span>
             </a>
         </div>

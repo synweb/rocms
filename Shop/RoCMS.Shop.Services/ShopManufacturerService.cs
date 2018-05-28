@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,12 @@ namespace RoCMS.Shop.Services
         public Manufacturer GetManufacturer(int manufacturerId)
         {
             var dataRes = _manufacturerGateway.SelectOne(manufacturerId);
+
+            if (dataRes == null)
+            {
+                return null;
+            }
+
             var res = Mapper.Map<Manufacturer>(dataRes);
             FillData(res);
             return res;
@@ -77,12 +84,20 @@ namespace RoCMS.Shop.Services
 
                 var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
                 _manufacturerGateway.Update(dataRec);
+
+                ts.Complete();
             }
         }
 
         public void DeleteManufacturer(int manufacturerId)
         {
-            _heartService.DeleteHeart(manufacturerId);
+            using (TransactionScope ts = new TransactionScope())
+            {
+                _manufacturerGateway.Delete(manufacturerId);
+                _heartService.DeleteHeart(manufacturerId);
+
+                ts.Complete();
+            }
         }
 
         public IList<Manufacturer> GetManufacturers()

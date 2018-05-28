@@ -134,7 +134,7 @@
     <Compile Include="ApiControllers\NewsApiController.cs" />
     <Compile Include="ApiControllers\NewsSettingsApiController.cs" />
     <Compile Include="ApiControllers\TagApiController.cs" />
-    <Compile Include="Controllers\PersonalController.cs" />
+    <Compile Include="Controllers\PersonalBlogController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\NewsEditorController.cs" />
     <Compile Include="Helpers\NewsCategoryDynamicNodeProvider.cs" />
@@ -272,17 +272,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Personal\Settings.cshtml">
+    <Content Include="Views\PersonalBlog\Settings.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Personal\Index.cshtml">
+    <Content Include="Views\PersonalBlog\Index.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Personal\BlogItemEditor.cshtml">
+    <Content Include="Views\PersonalBlog\BlogItemEditor.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -302,7 +302,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Personal\BlogEditor.cshtml">
+    <Content Include="Views\PersonalBlog\BlogEditor.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

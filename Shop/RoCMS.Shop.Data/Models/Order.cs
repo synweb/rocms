@@ -16,5 +16,8 @@ namespace RoCMS.Shop.Data.Models
         public string AdminComment { get; set; }
         public Nullable<decimal> DeliveryPrice { get; set; }
         public int TotalDiscount { get; set; }
+
+        public PaymentType PaymentType { get; set; }
+        public PaymentState? PaymentState { get; set; }
     }
 }

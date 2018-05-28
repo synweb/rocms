@@ -108,10 +108,20 @@ namespace RoCMS
             );
             //RegisterIndexRoute(routes);
             RoutingHelper.RegisterHeartRoute(routes, typeof(Page), "Page", "PageSEF");
+
+
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+
+
+            routes.MapRoute(
+                name: "PageSEF5",
+                url: "{*relativeUrl}",
+                defaults: new { controller = "Page", action = "PageSEF" }
             );
         }
 

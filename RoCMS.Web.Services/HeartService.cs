@@ -124,7 +124,7 @@ namespace RoCMS.Web.Services
                 ts.Complete();
             }
             RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
-
+            RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.HeartId));
         }
 
         public string GetCanonicalUrl(int heartId)

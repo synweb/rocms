@@ -23,15 +23,17 @@ namespace RoCMS.Shop.Services
         private readonly IMailService _mailService;
         private readonly ISettingsService _settingsService;
         private readonly IShopService _shopService;
+        private readonly IShopPickupPointService _pickupPointService;
         private readonly OrderGateway _orderGateway = new OrderGateway();
         private readonly GoodsInOrderGateway _goodsInOrderGateway = new GoodsInOrderGateway();
-        public ShopOrderService(IRazorEngineService razorService, IShopClientService clientService, IMailService mailService, ISettingsService settingsService, IShopService shopService)
+        public ShopOrderService(IRazorEngineService razorService, IShopClientService clientService, IMailService mailService, ISettingsService settingsService, IShopService shopService, IShopPickupPointService pickupPointService)
         {
             _razorService = razorService;
             _clientService = clientService;
             _mailService = mailService;
             _settingsService = settingsService;
             _shopService = shopService;
+            _pickupPointService = pickupPointService;
         }
         public IEnumerable<Order> GetOrderPage(int startIndex, int pageSize, out int total, int? clientId = null)
         {
@@ -51,7 +53,23 @@ namespace RoCMS.Shop.Services
             var res = Mapper.Map<Order>(dataRes);
             FillOrderGoods(res);
             FillClient(res);
+            FillPickUpPoint(res);
             return res;
+        }
+
+        private void FillPickUpPoint(Order res)
+        {
+            try
+            {
+                if (res.PickUpPointId.HasValue)
+                {
+                    res.PickUpPoint = _pickupPointService.GetPickupPoint(res.PickUpPointId.Value);
+                }
+            }
+            catch
+            {
+                
+            }
         }
 
         private void FillClient(Order order)

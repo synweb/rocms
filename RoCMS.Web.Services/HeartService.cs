@@ -120,11 +120,27 @@ namespace RoCMS.Web.Services
                     child.ParentHeartId = null;
                     _heartGateway.Update(child);
                 }
+                RemoveChildrenCachedCanonicalUrl(id);
                 _heartGateway.Delete(id);
                 ts.Complete();
             }
             RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
             RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.HeartId));
+        }
+
+        private void RemoveChildrenCachedCanonicalUrl(int parentHeartId)
+        {
+            var children = _heartGateway.SelectChildren(parentHeartId);
+            foreach (var heart in children)
+            {
+                RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
+                RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.HeartId));
+
+                DeleteRoute(heart);
+                CreateRoute(Mapper.Map<Heart>(heart));
+
+                RemoveChildrenCachedCanonicalUrl(heart.HeartId);
+            }
         }
 
         public string GetCanonicalUrl(int heartId)
@@ -229,11 +245,21 @@ namespace RoCMS.Web.Services
             heart.Type = originalHeart.Type; //небольшие костыли для товаров и категорий
             var dataHeart = Mapper.Map<Data.Models.Heart>(heart);
             _heartGateway.Update(dataHeart);
-            RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
-            // удаляем маршрут старого heart
-            DeleteRoute(originalHeart);
-            // добавляем новый
-            CreateRoute(heart);
+            
+
+            if (originalHeart.RelativeUrl != heart.RelativeUrl || originalHeart.ParentHeartId != heart.ParentHeartId)
+            {
+                RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
+                RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.HeartId));
+
+                RemoveChildrenCachedCanonicalUrl(heart.HeartId);
+
+                // удаляем маршрут старого heart
+                DeleteRoute(originalHeart);
+                // добавляем новый
+                CreateRoute(heart);
+            }
+
         }
 
         private void CreateRoute(Heart heart)

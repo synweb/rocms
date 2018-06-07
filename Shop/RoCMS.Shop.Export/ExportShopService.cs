@@ -224,7 +224,7 @@ namespace RoCMS.Shop.Export
                 try
                 {
                     if (!goodsItem.Categories.Any()) continue;
-
+                    if(goodsItem.NotAvailable) continue;
 
                     XmlNode offerElement = resultDocument.CreateElement("offer");
                     offersElement.AppendChild(offerElement);

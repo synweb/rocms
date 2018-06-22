@@ -226,101 +226,17 @@ namespace RoCMS.Shop.Export
                     if (!goodsItem.Categories.Any()) continue;
                     if(goodsItem.NotAvailable) continue;
 
-                    XmlNode offerElement = resultDocument.CreateElement("offer");
-                    offersElement.AppendChild(offerElement);
-
-                    XmlAttribute currentAttribute = resultDocument.CreateAttribute("id");
-                    currentAttribute.Value = goodsItem.HeartId.ToString();
-                    offerElement.Attributes.Append(currentAttribute);
-
-                    currentAttribute = resultDocument.CreateAttribute("type");
-                    currentAttribute.Value = "vendor.model";
-                    offerElement.Attributes.Append(currentAttribute);
-
-                    currentAttribute = resultDocument.CreateAttribute("available");
-                    currentAttribute.Value = "true";
-                    offerElement.Attributes.Append(currentAttribute);
-
-                    if (bid != 0)
-                    {
-                        currentAttribute = resultDocument.CreateAttribute("bid");
-                        currentAttribute.Value = bid.ToString(CultureInfo.InvariantCulture);
-                        offerElement.Attributes.Append(currentAttribute);
-                    }
-
-                    var url = _heartService.GetCanonicalUrl(goodsItem.HeartId);
-
-                    XmlNode currentElement = resultDocument.CreateElement("url");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = $"{siteUrl}/{url}";
-
-
-
-                    currentElement = resultDocument.CreateElement("price");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = goodsItem.DiscountedPrice.ToString(CultureInfo.InvariantCulture);
-
-
-                    currentElement = resultDocument.CreateElement("currencyId");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = "RUR";
-
-                    currentElement = resultDocument.CreateElement("categoryId");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText =
-                        (goodsItem.ParentHeartId ?? goodsItem.Categories.First().ID).ToString();
-
-                    if (!string.IsNullOrEmpty(goodsItem.MainImageId))
-                    {
-                        currentElement = resultDocument.CreateElement("picture");
-                        offerElement.AppendChild(currentElement);
-                        currentElement.InnerText = $"{siteUrl}/Gallery/Image/{goodsItem.MainImageId}";
-                    }
-                    currentElement = resultDocument.CreateElement("pickup");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = settings.Pickup.ToString().ToLower();
-
-                    currentElement = resultDocument.CreateElement("delivery");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = "true";
-
-                    currentElement = resultDocument.CreateElement("vendor");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = goodsItem.ManufacturerId.HasValue
-                        ? goodsItem.Manufacturer.Name
-                        : "Manufacturer";
-
-                    currentElement = resultDocument.CreateElement("model");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = goodsItem.Name;
-
-                    currentElement = resultDocument.CreateElement("description");
-                    offerElement.AppendChild(currentElement);
-                    currentElement.InnerText = goodsItem.Description;
-
-                    // Код ниже неверен
-                    if (goodsItem.CompatibleGoods.Any())
-                    {
-                        List<int> ids = new List<int>();
-                        foreach (var set in goodsItem.CompatibleGoods)
-                        {
-                            foreach (var pair in set.CompatibleGoods)
-                            {
-                                ids.Add(pair.ID);
-                            }
-                        }
-                        ids = ids.Distinct().ToList();
-                        string recs = String.Join(",", ids.Distinct());
-                        currentElement = resultDocument.CreateElement("rec");
-                        offerElement.AppendChild(currentElement);
-                        currentElement.InnerText = recs;
-                    }
 
                     if (goodsItem.Packs.Any())
                     {
-                        currentElement = resultDocument.CreateElement("weight");
-                        offerElement.AppendChild(currentElement);
-                        currentElement.InnerText = Math.Round(goodsItem.BasePack.Size / 1000, 2).ToString();
+                        foreach (var pack in goodsItem.Packs)
+                        {
+                            AddElementToYml(resultDocument, offersElement, bid, siteUrl, settings, goodsItem, pack);
+                        }
+                    }
+                    else
+                    {
+                        AddElementToYml(resultDocument, offersElement, bid, siteUrl, settings, goodsItem);
                     }
                 }
                 catch (Exception e)
@@ -369,6 +285,151 @@ namespace RoCMS.Shop.Export
             //</offer>
 
             #endregion
+        }
+
+
+        private void AddElementToYml(XmlDocument resultDocument, XmlNode offersElement, decimal bid, string siteUrl, YmlExportSettings settings, GoodsItem goodsItem, GoodsPack goodsPack = null)
+        {
+            XmlNode offerElement = resultDocument.CreateElement("offer");
+            offersElement.AppendChild(offerElement);
+
+            XmlAttribute currentAttribute = resultDocument.CreateAttribute("id");
+            currentAttribute.Value = goodsPack == null ? goodsItem.HeartId.ToString() : $"{goodsItem.HeartId}p{goodsPack.PackInfo.Size}";
+            offerElement.Attributes.Append(currentAttribute);
+
+            currentAttribute = resultDocument.CreateAttribute("available");
+            currentAttribute.Value = "true";
+            offerElement.Attributes.Append(currentAttribute);
+
+            if (bid != 0)
+            {
+                currentAttribute = resultDocument.CreateAttribute("bid");
+                currentAttribute.Value = bid.ToString(CultureInfo.InvariantCulture);
+                offerElement.Attributes.Append(currentAttribute);
+            }
+
+            var url = _heartService.GetCanonicalUrl(goodsItem.HeartId);
+
+            if (goodsPack != null)
+            {
+                url = $"{url}#p{goodsPack.PackInfo.Size}";
+            }
+
+            XmlNode currentElement = resultDocument.CreateElement("url");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = $"{siteUrl}/{url}";
+
+            decimal price = goodsPack == null
+                ? goodsItem.DiscountedPrice
+                : goodsItem.DiscountedPriceForPack(goodsPack.PackId);
+
+            currentElement = resultDocument.CreateElement("price");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = price.ToString(CultureInfo.InvariantCulture);
+
+            decimal oldPrice = goodsPack == null
+                ? goodsItem.Price
+                : goodsItem.PriceForPack(goodsPack.PackId);
+
+            if (oldPrice > price)
+            {
+                currentElement = resultDocument.CreateElement("oldprice");
+                offerElement.AppendChild(currentElement);
+                currentElement.InnerText = oldPrice.ToString(CultureInfo.InvariantCulture);
+            }
+
+            currentElement = resultDocument.CreateElement("currencyId");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = "RUR";
+
+            currentElement = resultDocument.CreateElement("categoryId");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText =
+                (goodsItem.ParentHeartId ?? goodsItem.Categories.First().ID).ToString();
+
+            if (!string.IsNullOrEmpty(goodsItem.MainImageId))
+            {
+                currentElement = resultDocument.CreateElement("picture");
+                offerElement.AppendChild(currentElement);
+                currentElement.InnerText = $"{siteUrl}/Gallery/Image/{goodsItem.MainImageId}";
+            }
+            currentElement = resultDocument.CreateElement("pickup");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = settings.Pickup.ToString().ToLower();
+
+            currentElement = resultDocument.CreateElement("delivery");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = "true";
+
+            currentElement = resultDocument.CreateElement("name");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = goodsPack == null ? goodsItem.Name : $"{goodsItem.Name} {goodsPack.PackInfo.Name}";
+
+
+            if (goodsItem.ManufacturerId.HasValue)
+            {
+                currentElement = resultDocument.CreateElement("vendor");
+                offerElement.AppendChild(currentElement);
+                currentElement.InnerText = goodsItem.Manufacturer.Name;
+            }
+
+            currentElement = resultDocument.CreateElement("description");
+            offerElement.AppendChild(currentElement);
+            currentElement.InnerText = goodsItem.Description;
+
+            // Код ниже неверен
+            if (goodsItem.CompatibleGoods.Any())
+            {
+                List<int> ids = new List<int>();
+                foreach (var set in goodsItem.CompatibleGoods)
+                {
+                    foreach (var pair in set.CompatibleGoods)
+                    {
+                        ids.Add(pair.ID);
+                    }
+                }
+                ids = ids.Distinct().ToList();
+                string recs = String.Join(",", ids.Distinct());
+                currentElement = resultDocument.CreateElement("rec");
+                offerElement.AppendChild(currentElement);
+                currentElement.InnerText = recs;
+            }
+
+
+            foreach (var specVal in goodsItem.GoodsSpecs)
+            {
+                currentElement = resultDocument.CreateElement("param");
+                offerElement.AppendChild(currentElement);
+                currentElement.InnerText = specVal.Value;
+
+                currentAttribute = resultDocument.CreateAttribute("name");
+                currentAttribute.Value = specVal.Spec.Name;
+                currentElement.Attributes.Append(currentAttribute);
+
+                if (!String.IsNullOrEmpty(specVal.Spec.Postfix))
+                {
+                    currentAttribute = resultDocument.CreateAttribute("unit");
+                    currentAttribute.Value = specVal.Spec.Postfix;
+                    currentElement.Attributes.Append(currentAttribute);
+                }
+
+            }
+
+            if (goodsPack != null)
+            {
+                currentElement = resultDocument.CreateElement("param");
+                offerElement.AppendChild(currentElement);
+                currentElement.InnerText = goodsPack.PackInfo.Size.ToString(CultureInfo.InvariantCulture);
+
+                currentAttribute = resultDocument.CreateAttribute("name");
+                currentAttribute.Value = "Вес";
+                currentElement.Attributes.Append(currentAttribute);
+
+                currentAttribute = resultDocument.CreateAttribute("unit");
+                currentAttribute.Value = goodsPack.PackInfo.Dimension.Short;
+                currentElement.Attributes.Append(currentAttribute);
+            }
+
         }
 
 

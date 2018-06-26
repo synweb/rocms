@@ -13,6 +13,33 @@ function mapCategoriesToIds(categories) {
 
 function categoriesEditorLoaded(onSelected, context) {
     blockUI();
+
+    if (context) {
+        $(context).on("click",
+            ".category .toggler",
+            function() {
+                $(this).closest(".category").find(".child-categories").first().collapse('toggle');
+                var toggler = $(this);
+                if (toggler.is(".collapsed2")) {
+                    toggler.removeClass("collapsed2");
+                } else {
+                    toggler.addClass("collapsed2");
+                }
+            });
+    } else {
+        $("#categoryEditor").on("click",
+            ".category .toggler",
+            function () {
+                $(this).closest(".category").find(".child-categories").first().collapse('toggle');
+                var toggler = $(this);
+                if (toggler.is(".collapsed2")) {
+                    toggler.removeClass("collapsed2");
+                } else {
+                    toggler.addClass("collapsed2");
+                }
+            });
+    }
+
     var vm = {
         childrenCategories: ko.observableArray(),
         orderEditingEnabled: ko.observable(false),

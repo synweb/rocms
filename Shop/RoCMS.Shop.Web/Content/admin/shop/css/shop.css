@@ -227,7 +227,7 @@ textarea.shop-item-description {
             transform: none;
         }
 
-        .categoryEditor .category .collapse-container .collapsed em {
+        .categoryEditor .category .collapse-container .collapsed2 em {
             transform: rotate(-90deg);
         }
 

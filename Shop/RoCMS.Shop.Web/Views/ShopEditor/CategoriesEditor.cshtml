@@ -24,8 +24,7 @@
 @Js("/Content/base/vendor/ckeditor")
 @Js("/bin/Content/admin/shop")
 
-<div class="categoryEditor">
-
+<div class="categoryEditor" id="categoryEditor">
     <div>
         <a class="button-add btn btn-success" data-bind="click: createCategory"><i class="fa fa-plus"></i>&nbsp;@ShopStrings.Shop_Category_CreateCategory</a>
         <a class="button-edit-order btn btn-success" data-bind="click: enableEditOrder"><i class="fa fa-pencil"></i>&nbsp;Изменить порядок категорий</a>
@@ -38,7 +37,7 @@
     <script type="text/html" id="category-list-item-template">
         <li class="category">
             <div class="collapse-container" data-bind="style: {display: childrenCategories().length > 0 ? 'inline-block': 'none'}">
-                <a class="collapsed" data-bind="attr: {href: '#cat'+heartId()}" data-toggle="collapse" data-target=""><em class="fa fa-angle-down"></em></a>
+                <a class="toggler collapsed2" @*data-bind="attr: {href: '#cat'+heartId()}"*@ data-toggle="collapse" data-target=""><em class="fa fa-angle-down"></em></a>
             </div>
             <div class="category-name" data-bind="click: $root.selectCategory">
                 <div style="float: right">

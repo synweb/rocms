@@ -16,8 +16,8 @@
     @SortBy VARCHAR(20),
     @SortOrder VARCHAR(4),
     
-    @StartIndex INT,
-    @Count INT,
+    @StartIndex INT, -- deprecated
+    @Count INT, -- deprecated
     @TotalCount INT OUTPUT
 AS
     
@@ -277,7 +277,7 @@ END
 SELECT HeartId FROM @HeartIds
 ORDER BY RowNumber
 --CASE WHEN @SortOrder = 'Asc' THEN RowNumber else -RowNumber END asc
-OFFSET (@StartIndex-1) ROWS
-FETCH NEXT @Count ROWS ONLY --g JOIN [GoodsWithActualDiscounts] gd ON g.HeartId = gd.HeartId
+-- OFFSET (@StartIndex-1) ROWS
+-- FETCH NEXT @Count ROWS ONLY --g JOIN [GoodsWithActualDiscounts] gd ON g.HeartId = gd.HeartId
 
 --SET TRANSACTION ISOLATION LEVEL READ COMMITTED

@@ -538,8 +538,8 @@ namespace RoCMS.Shop.Services
                 }
             }
 
-            //var goodsPage = startIndex > 1 ? heartIds.Skip(startIndex - 1).Take(count) : heartIds.Take(count);
-            var goodsPage = heartIds;
+            var goodsPage = heartIds.Skip(startIndex - 1).Take(count);
+            //var goodsPage = heartIds;
 
             var result = new List<GoodsItem>();
             foreach (int heartId in goodsPage)

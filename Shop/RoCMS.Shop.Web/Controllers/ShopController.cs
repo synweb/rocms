@@ -233,10 +233,12 @@ namespace RoCMS.Shop.Web.Controllers
             ViewBag.Sort = filter.SortBy;
 
             var specIdValues = new Dictionary<int, string>();
-            if (specs != null)
+            if (!string.IsNullOrEmpty(specs))
             {
                 foreach (var specIdValue in specs.Split(','))
                 {
+                    if(string.IsNullOrWhiteSpace(specIdValue))
+                        continue;
                     var idVal = specIdValue.Split(':');
                     specIdValues.Add(int.Parse(idVal[0]), idVal[1]);
                 }

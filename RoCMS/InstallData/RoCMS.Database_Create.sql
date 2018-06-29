@@ -143,7 +143,7 @@ PRINT N'Creating [dbo].[Int_String_Table]...';
 GO
 CREATE TYPE [dbo].[Int_String_Table] AS TABLE (
     [Key] INT           NULL,
-    [Val] VARCHAR (255) NULL);
+    [Val] NVARCHAR (255) NULL);
 
 
 GO
@@ -161,7 +161,7 @@ PRINT N'Creating [dbo].[String_Table]...';
 
 GO
 CREATE TYPE [dbo].[String_Table] AS TABLE (
-    [Val] VARCHAR (255) NULL);
+    [Val] NVARCHAR (255) NULL);
 
 
 GO

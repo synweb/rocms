@@ -1,4 +1,4 @@
 ﻿CREATE TYPE [String_Table] AS TABLE
 (
-	Val VARCHAR(255)
+	Val NVARCHAR(255)
 )

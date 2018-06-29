@@ -9,7 +9,7 @@
 @{
     int? countryCode = ViewBag.CountryId as int?;
     int? packCode = ViewBag.PackId as int?;
-    
+
     SortCriterion? sort = ViewBag.Sort as SortCriterion?;
 
     var routeParams = new RouteValueDictionary(ParamExtractor.ExtractAllParams(Request)).RemovePaging();
@@ -23,7 +23,14 @@
     {
         manufacturers = (IEnumerable<IdNamePair<int>>)ViewBag.Manufacturers;
     }
-    RouteValueDictionary rv = null; 
+    RouteValueDictionary rv = null;
+
+
+    string pagingRoute = ViewBag.PagingRoute ?? typeof(Category).FullName;
+
+    Dictionary<Spec, IList<string>> specValues = ViewBag.SpecValues;
+
+    var requestedSpecs = ViewBag.RequestedSpecIdValues as Dictionary<int, string>;
 }
 
 <div class="row">
@@ -53,6 +60,34 @@
             </div>
         </div>
     }
+
+    @foreach(var specPair in specValues) 
+    {
+        var values = specValues.Where(x => x.Key.SpecId == specPair.Key.SpecId).SelectMany(x => x.Value);
+    
+        <div class="col">
+            <div class="dropdown">
+                <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                    @(requestedSpecs != null && requestedSpecs.Any(x => x.Key == specPair.Key.SpecId) ? requestedSpecs[specPair.Key.SpecId] : specPair.Key.Name)
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    @{
+                        rv = routeParams.RemoveKeyValueRouteParam("specs", specPair.Key.SpecId.ToString());
+                    }
+                    <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Не важно</a></li>
+                    <li class="dropdown-item" role="presentation" class="divider"></li>
+
+                    @foreach (var tt in values)
+                    {
+                        var routeValues = routeParams.AddKeyValueRouteParam("specs", specPair.Key.SpecId.ToString(), tt);
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@tt</a></li>
+
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
     @*@if (hasPacks)
     {
         <div class="col-xs-2">

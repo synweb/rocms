@@ -88,5 +88,13 @@ App.Admin.HeartFunctions = {
         self.styles(styles);
         var additionalHeaders = getTextFromEditor('page_headers');
         self.additionalHeaders(additionalHeaders);
+    },
+
+    generateUrl : function() {
+        var self = this;
+        if (self.title()) {
+            self.relativeUrl(textToUrl(self.title()));
+        }
+        return false;
     }
 }

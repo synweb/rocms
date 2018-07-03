@@ -14,7 +14,7 @@
         Layout = "~/Views/Shared/_adminLayout.cshtml";
     }
 
-    
+
 }
 @Js("/Content/base/vendor/ckeditor")
 @Js("/bin/Content/admin/shop")
@@ -71,7 +71,7 @@
             <div class="row" data-bind="template: { name: 'goods-list-item-template', foreach: goods }">
 
             </div>
-            
+
             <div class="text-center">
                 <button title="Загрузить еще" style="margin: 0 auto;" class="btn btn-success btn-xs" data-bind="click: moreGoods, style: {display: hasMore() === true ? 'block': 'none'}"><em class="fa fa-caret-square-o-down"></em></button>
             </div>
@@ -126,18 +126,19 @@
     </script>
 
     <script type="text/x-jquery-tmpl" id="goods-list-item-template">
-        <div  data-bind="attr:{title: name}, click: $root.selectGoods" class="goodsItem col-xs-4 col-sm-4 col-md-3">
+        <div data-bind="attr:{title: name}, click: $root.selectGoods" class="goodsItem col-xs-4 col-sm-4 col-md-3">
             <div class="box">
                 <header style="white-space: nowrap;">
                     <div class="toolbar">
                         <a data-bind="click: edit, clickBubble: false, attr:{title: name} " class="btn btn-xs btn-warning" onclick="true"><i class="fa fa-pencil"></i></a>
                         <a data-bind="click: function() { $root.copyGoodsItem($data); return false; }, clickBubble: false, attr:{ title: 'Создать копию' } " class="btn btn-xs btn-info" onclick="true"><i class="fa fa-copy"></i></a>
+                        <a class="btn btn-xs btn-primary" target="_blank" data-bind="attr: {href: '/' + relativeUrl(), title: 'Перейти на страницу объекта'}"><i class="fa fa-link"></i></a>
                         @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                         {
                             <a data-bind="click: function () {if(!confirmRemoval()) { return false;}  remove($data, $parent); }, clickBubble: false" class="btn btn-xs btn-danger" onclick="true"><i class="fa fa-trash-o"></i></a>
                         }
                     </div>
-                    <h5 data-bind="text: breadcrumbsTitle"></h5>
+                    <h5 data-bind="text: heartId() + ': ' + name()"></h5>
                 </header>
                 <div class="body">
                     <form class="form-horizontal">

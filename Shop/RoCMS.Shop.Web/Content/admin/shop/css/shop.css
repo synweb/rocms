@@ -201,6 +201,10 @@ textarea.shop-item-description {
     display: none;
 }
 
+.ui-dialog .categoryEditor .add-child-cat {
+    display: none;
+}
+
 .ui-dialog .goodsEditor .toolbar {
     display: none;
 }

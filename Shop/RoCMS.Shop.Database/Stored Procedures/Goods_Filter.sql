@@ -143,13 +143,17 @@ g.Deleted=0
 AND
 (@CategoryIdsExist = 0 OR EXISTS (SELECT * FROM @FullCategoryIds WHERE Val=gc1.CategoryId)) --gc1.CategoryId IN (SELECT Val FROM @FullCategoryIds))
 AND
+((
+	@MaxPrice IS NULL AND @MinPrice IS NOT NULL AND EXISTS(SELECT * FROM GoodsWithActualDiscounts gwad WHERE  gwad.HeartId = gc1.GoodsId AND (gwad.ActualPrice >= @MinPrice OR gwad.ActualPrice = 0))
+)
+OR
 (
-	@MaxPrice IS NULL OR EXISTS(SELECT * FROM GoodsWithActualDiscounts gwad WHERE  gwad.HeartId = gc1.GoodsId AND gwad.ActualPrice <= @MaxPrice)
+	@MaxPrice IS NULL OR EXISTS(SELECT * FROM GoodsWithActualDiscounts gwad WHERE  gwad.HeartId = gc1.GoodsId AND gwad.ActualPrice > 0 AND gwad.ActualPrice <= @MaxPrice)
 )
 AND
 (
 	@MinPrice IS NULL OR EXISTS(SELECT * FROM GoodsWithActualDiscounts gwad WHERE  gwad.HeartId = gc1.GoodsId AND gwad.ActualPrice >= @MinPrice)
-)            
+))            
 AND
 ( (@ManufacturerIdsExist = 0 AND @CountriesExist = 0) OR
         

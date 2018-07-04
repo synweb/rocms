@@ -17,5 +17,6 @@ namespace RoCMS.News.Data.Models
         public string ContentContainerSelector { get; set; }
         public string LinkText { get; set; }
         public string Tags { get; set; }
+        public string ExcludeTags { get; set; }
     }
 }

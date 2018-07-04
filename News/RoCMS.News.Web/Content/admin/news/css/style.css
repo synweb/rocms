@@ -48,6 +48,6 @@ div.tagsinput {
     width: 100%;
 }
 
-.rss-filters .filter-item {
+.rss-filters .filter-item, .excludes .exclude-item {
     margin-bottom: 5px;
 }

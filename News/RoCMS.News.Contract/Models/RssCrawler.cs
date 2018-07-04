@@ -22,5 +22,6 @@ namespace RoCMS.News.Contract.Models
         public IdNamePair<int> TargetCategory { get; set; }
 
         public ICollection<RssCrawlerFilter> Filters { get; set; }
+        public ICollection<RssCrawlerExcludeItem> ExcludeItems { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using RoCMS.Base.Helpers;
 using RoCMS.Base.Services;
 using RoCMS.News.Contract.Models;
@@ -54,8 +56,12 @@ namespace RoCMS.News.Services
 
             Mapper.CreateMap<Data.Models.RssCrawler, Contract.Models.RssCrawler>()
                 .ForMember(x => x.Filters, x => x.Ignore())
-                .ForMember(x => x.TargetCategory, x => x.Ignore());
-            Mapper.CreateMap<Contract.Models.RssCrawler, Data.Models.RssCrawler>();
+                .ForMember(x => x.TargetCategory, x => x.Ignore())
+                .ForMember(x => x.ExcludeItems, x => x.ResolveUsing(y =>  y.ExcludeTags?.Split(',').Select(z => z.Trim()).Select(z => new RssCrawlerExcludeItem(){RssCrawlerId = y.RssCrawlerId,Selector = z, ExcludeItemIndex = 0}) ?? new List<RssCrawlerExcludeItem>()));
+            ;
+            Mapper.CreateMap<Contract.Models.RssCrawler, Data.Models.RssCrawler>()
+                .ForMember(x => x.ExcludeTags, x => x.ResolveUsing(y => string.Join(", ", y.ExcludeItems.Select(z => z.Selector).Where(z => !string.IsNullOrWhiteSpace(z)).ToArray())));
+                
             Mapper.CreateMap<Data.Models.RssCrawlerFilter, Contract.Models.RssCrawlerFilter>();
             Mapper.CreateMap<Contract.Models.RssCrawlerFilter, Data.Models.RssCrawlerFilter>();
 

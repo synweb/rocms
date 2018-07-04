@@ -13,6 +13,7 @@
             var dm = ko.validatedObservable(self.settings);
             if (dm.isValid()) {
                 blockUI();
+                console.log(ko.toJS(vm.crawlers));
                 $.when(
                     vm.settings().save(),
                     postJSON("/api/news/settings/crawlers/update",
@@ -73,6 +74,19 @@ App.Admin.RssCrawlerFilter = function (data) {
     }
 }
 
+
+App.Admin.ExcludeItem = function (data) {
+    var self = this;
+    self.excludeItemIndex = ko.observable();
+    self.rssCrawlerId = ko.observable();
+    self.selector = ko.observable();
+    if (data) {
+        self.excludeItemIndex(data.excludeItemIndex);
+        self.rssCrawlerId(data.rssCrawlerId);
+        self.selector(data.selector);
+    }
+}
+
 App.Admin.RssCrawler = function(data) {
     var self = this;
     self.rssCrawlerId = ko.observable();
@@ -82,6 +96,7 @@ App.Admin.RssCrawler = function(data) {
     self.targetCategory = ko.observable();
     self.targetCategoryId = ko.observable();
     self.filters = ko.observableArray();
+    self.excludeItems = ko.observableArray();
     self.imageSelector = ko.observable();
     self.contentContainerSelector = ko.observable();
     self.linkText = ko.observable();
@@ -116,6 +131,12 @@ App.Admin.RssCrawler = function(data) {
     self.removeFilter = function (item) {
         self.filters.remove(item);
     };
+    self.addExcludeItem = function () {
+        self.excludeItems.push(new App.Admin.ExcludeItem());
+    };
+    self.removeExcludeItem = function (item) {
+        self.excludeItems.remove(item);
+    };
     if (data) {
         self.rssCrawlerId(data.rssCrawlerId);
         self.checkInterval(data.checkInterval);
@@ -124,6 +145,7 @@ App.Admin.RssCrawler = function(data) {
         self.targetCategory(data.targetCategory);
         self.targetCategoryId(data.targetCategoryId);
         self.filters(data.filters);
+        self.excludeItems(data.excludeItems);
         self.imageSelector(data.imageSelector);
         self.contentContainerSelector(data.contentContainerSelector);
         self.linkText(data.linkText);

@@ -6,8 +6,9 @@
 @ImageSelector nvarchar(max),
 @ContentContainerSelector nvarchar(max),
 @LinkText nvarchar(max),
-@Tags nvarchar(max)
+@Tags nvarchar(max),
+@ExcludeTags nvarchar(max)
 AS
-	INSERT INTO [News].[RssCrawler] ([RssFeedUrl], [IsEnabled], [CheckInterval], [TargetCategoryId], [ImageSelector], [ContentContainerSelector], [LinkText], [Tags])
-	VALUES (@RssFeedUrl, @IsEnabled, @CheckInterval, @TargetCategoryId, @ImageSelector, @ContentContainerSelector, @LinkText, @Tags)
+	INSERT INTO [News].[RssCrawler] ([RssFeedUrl], [IsEnabled], [CheckInterval], [TargetCategoryId], [ImageSelector], [ContentContainerSelector], [LinkText], [Tags], [ExcludeTags])
+	VALUES (@RssFeedUrl, @IsEnabled, @CheckInterval, @TargetCategoryId, @ImageSelector, @ContentContainerSelector, @LinkText, @Tags, @ExcludeTags)
 	SELECT @@IDENTITY

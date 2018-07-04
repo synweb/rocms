@@ -7,7 +7,8 @@
 @ImageSelector nvarchar(max),
 @ContentContainerSelector nvarchar(max),
 @LinkText nvarchar(max),
-@Tags nvarchar(max)
+@Tags nvarchar(max),
+@ExcludeTags nvarchar(max)
 AS
 	UPDATE [News].[RssCrawler] SET
 		[RssFeedUrl]=@RssFeedUrl,
@@ -17,5 +18,6 @@ AS
 		[ImageSelector]=@ImageSelector,
 		[ContentContainerSelector]=@ContentContainerSelector,
 		[LinkText]=@LinkText,
-		[Tags]=@Tags
+		[Tags]=@Tags,
+		[ExcludeTags]=@ExcludeTags
 	WHERE [RssCrawlerId]=@RssCrawlerId

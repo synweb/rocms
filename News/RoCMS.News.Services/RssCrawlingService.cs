@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
@@ -7,6 +8,9 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using AngleSharp;
+using AngleSharp.Extensions;
+using AngleSharp.Html;
+using AngleSharp.Parser.Html;
 using AutoMapper;
 using Quartz;
 using Quartz.Impl;
@@ -66,6 +70,8 @@ namespace RoCMS.News.Services
             var dataFilters = _rssCrawlerFilterGateway.SelectByRssCrawler(rssCrawler.RssCrawlerId);
             var filters = Mapper.Map<ICollection<RssCrawlerFilter>>(dataFilters);
             rssCrawler.Filters = filters;
+            //rssCrawler.ExcludeItems = //TODO 
+
             if (rssCrawler.TargetCategoryId != null)
             {
                 var cat = _categoryGateway.SelectOne(rssCrawler.TargetCategoryId.Value);
@@ -222,21 +228,30 @@ namespace RoCMS.News.Services
                         if (!filterOk)
                             continue;
 
-                        string imageId = null;
                         var newsItemTextStringBuilder = new StringBuilder();
+
+                        // html parsing
+                        var config = Configuration.Default.WithDefaultLoader();
+                        var address = item.Links.First().Uri;
+                        var document = await BrowsingContext.New(config).OpenAsync(address.ToString());
+                        string imageId = null;
                         if (!string.IsNullOrEmpty(feed.ImageSelector))
                         {
                             // есть селектор для парсинга картинок
-                            // Setup the configuration to support document loading
-                            var config = Configuration.Default.WithDefaultLoader();
-                            var address = item.Links.First().Uri;
                             // Asynchronously get the document in a new context using the configuration
-                            var document = await BrowsingContext.New(config).OpenAsync(address.ToString());
                             // Perform the query to get all cells with the content
                             var cell = document.QuerySelector(feed.ImageSelector);
                             if (cell != null)
                             {
+                                
                                 var url = cell.Attributes["src"].Value;
+                                if (url.StartsWith("/") && url[1] != '/')
+                                {
+                                    var uri = new Uri(reader.BaseURI);
+                                    var feedRootUrl = uri.AbsoluteUri.Replace(uri.AbsolutePath, "");
+                                    var endsWithSlash = feedRootUrl.EndsWith("/");
+                                    url = $"{feedRootUrl}{(endsWithSlash?"":"/")}{url}";
+                                }
                                 if (url.StartsWith("//"))
                                 {
                                     // ссылку вида //site.ru/img.jpg преобразуем в http://site.ru/img.jpg
@@ -246,23 +261,23 @@ namespace RoCMS.News.Services
                                 imageId = await albumService.DownloadImage(url);
                                 logService.TraceMessage($"Downloading image {url} OK");
                             }
+                        }
 
-                            if (string.IsNullOrEmpty(feed.ContentContainerSelector))
+                        if (string.IsNullOrEmpty(feed.ContentContainerSelector))
+                        {
+                            newsItemTextStringBuilder.Append(item.Summary.Text.Trim());
+                        }
+                        else
+                        {
+                            var content = document.QuerySelector(feed.ContentContainerSelector).InnerHtml;
+                            // удаляем все изображения
+                            var images = document.QuerySelectorAll($"{feed.ContentContainerSelector} img");
+                            foreach (var img in images)
                             {
-                                newsItemTextStringBuilder.Append(item.Summary.Text.Trim());
+                                content = content.Replace(img.OuterHtml, "");
                             }
-                            else
-                            {
-                                var content = document.QuerySelector(feed.ContentContainerSelector).InnerHtml;
-                                // удаляем все изображения
-                                var images = document.QuerySelectorAll($"{feed.ContentContainerSelector} img");
-                                foreach (var img in images)
-                                {
-                                    content = content.Replace(img.OuterHtml, "");
-                                }
-                                content = content.Replace("<p></p>", "").Trim();
-                                newsItemTextStringBuilder.Append(content);
-                            }
+                            content = content.Replace("<p></p>", "").Trim();
+                            newsItemTextStringBuilder.Append(content);
                         }
                         lock (feed)
                         {
@@ -287,6 +302,11 @@ namespace RoCMS.News.Services
                                 newsItemTextStringBuilder.Append($@"<a href=""{item.Links.First().Uri.AbsoluteUri}"" target=""_blank"">{linkText}</a>");
                             }
                             var newsItemText = newsItemTextStringBuilder.ToString();
+                            if (feed.ExcludeItems.Any())
+                            {
+                                newsItemText = RemoveDomElements(newsItemText, feed.ExcludeItems.Select(x => x.Selector), logService);
+                            }
+
                             var blogUrl = settingsService.GetSettings<string>(nameof(NewsSettings.BlogUrl));
                             var parentHeart = heartService.GetHeart(blogUrl);
                             var newNewsItem = new NewsItem()
@@ -322,6 +342,54 @@ namespace RoCMS.News.Services
                 {
                     logService.LogError(e);
                 }
+            }
+
+            private static IMarkupFormatter _prettyMarkupFormatter = new PrettyMarkupFormatter();
+
+            private string RemoveDomElements(string input, IEnumerable<string> selectors, ILogService logger)
+            {
+                // html parsing
+                try
+                {
+                    var document = new HtmlParser().Parse(input);
+                    foreach (var selector in selectors)
+                    {
+
+                        try
+                        {
+                            var foundElements = document.QuerySelectorAll(selector);
+                    
+                            foreach (var foundElement in foundElements)
+                            {
+                                try
+                                {
+                                    foundElement.Parent.RemoveElement(foundElement);
+                                    //document.RemoveElement(foundElement);
+                                    var sb = new StringBuilder();
+                                    using (var sw = new StringWriter(sb))
+                                    {
+                                        document.ToHtml(sw, _prettyMarkupFormatter);
+                                    }
+
+                                    input = sb.ToString();
+                                }
+                                catch (Exception e)
+                                {
+                                    logger.LogError(e);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            logger.LogError(e);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.LogError(e);
+                }
+                return input;
             }
 
             private static bool CheckIfItemIsNew(SyndicationItem item, INewsItemService newsItemService)

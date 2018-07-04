@@ -9,6 +9,7 @@
 	[ContentContainerSelector] nvarchar(max) NULL,
 	[LinkText] nvarchar(max) NULL,
 	[Tags] nvarchar(max) NULL,
+	[ExcludeTags] nvarchar(max) NULL,
     CONSTRAINT [FK_RssCrawler_Category] FOREIGN KEY ([TargetCategoryId]) REFERENCES [News].[Category]([CategoryId]) ON DELETE SET NULL, 
     CONSTRAINT [CK_RssCrawler_Interval] CHECK (CheckInterval > 0)
 

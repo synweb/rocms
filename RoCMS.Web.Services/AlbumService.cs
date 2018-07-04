@@ -227,6 +227,8 @@ namespace RoCMS.Web.Services
         public async Task<string> DownloadImage(string url)
         {
             string imageId = await _imageService.DownloadImage(url);
+            if (imageId == null)
+                return null;
             var albums = GetAlbums();
             int albumId;
             lock (this)

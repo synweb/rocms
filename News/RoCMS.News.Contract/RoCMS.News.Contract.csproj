@@ -73,6 +73,7 @@
     <Compile Include="Models\NewsItemSortBy.cs" />
     <Compile Include="Models\NewsSettings.cs" />
     <Compile Include="Models\RssCrawler.cs" />
+    <Compile Include="Models\RssCrawlerExcludeItem.cs" />
     <Compile Include="Models\RssCrawlerFilter.cs" />
     <Compile Include="Models\TagStat.cs" />
     <Compile Include="Models\NewsFilter.cs" />

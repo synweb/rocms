@@ -16,7 +16,10 @@ namespace Shop.Web
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/categories/order/update", "CategoryApi", "UpdateSortOrder");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/categories/{parentId}/stats", "CategoryApi", "GetCategoriesWithStats");
 
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/categories/{parentCategoryId}/get", "CategoryApi", "GetChildCategories");
             
+
+
 
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/category/create", "CategoryApi", "Create");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/category/update", "CategoryApi", "Update");

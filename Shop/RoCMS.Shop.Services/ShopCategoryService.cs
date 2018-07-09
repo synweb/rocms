@@ -69,6 +69,7 @@ namespace RoCMS.Shop.Services
                 _categoryGateway.Insert(dataCategory);
                 RemoveObjectFromCache("Categories");
                 RemoveObjectFromCache("AllCategories");
+                RemoveObjectFromCache($"ChildCategoriesFor{category.ParentCategoryId}");
                 ts.Complete();
                 return id;
             }
@@ -101,6 +102,13 @@ namespace RoCMS.Shop.Services
                 }
                 ts.Complete();
             }
+
+            if (dataRec.ParentCategoryId != category.ParentCategoryId)
+            {
+                RemoveObjectFromCache($"ChildCategoriesFor{dataRec.ParentCategoryId}");
+                RemoveObjectFromCache($"ChildCategoriesFor{category.ParentCategoryId}");
+            }
+
             RemoveObjectFromCache("Categories");
             RemoveObjectFromCache("AllCategories");
             RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(category.RelativeUrl));
@@ -129,6 +137,8 @@ namespace RoCMS.Shop.Services
 
                 RemoveObjectFromCache("Categories");
                 RemoveObjectFromCache("AllCategories");
+                RemoveObjectFromCache($"ChildCategoriesFor{dataCategory.ParentCategoryId}");
+
                 RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(heart.RelativeUrl));
                 RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(dataCategory.HeartId));
 
@@ -200,12 +210,14 @@ namespace RoCMS.Shop.Services
                 int i = 0;
                 foreach (var cat in categories)
                 {
+                    RemoveObjectFromCache($"ChildCategoriesFor{null}");
                     var category = _categoryGateway.SelectOne(cat.HeartId);
                     category.SortOrder = i;
                     _categoryGateway.Update(category);
                     i++;
                     if (cat.ChildrenCategories.Any())
                     {
+                        RemoveObjectFromCache($"ChildCategoriesFor{cat.HeartId}");
                         UpdateCategoriesSortOrder(cat.ChildrenCategories);
                     }
                 }
@@ -278,7 +290,6 @@ namespace RoCMS.Shop.Services
                     cat.ChildrenCategories = cats;
                 }
             }
-            RemoveObjectFromCache("Categories");
         }
 
         private string GetCategoryCanonicalUrlCacheKey(string url)
@@ -373,6 +384,25 @@ namespace RoCMS.Shop.Services
                 }
                 return dict;
             });
+        }
+
+        public IList<Category> GetChildCategories(int? parentCategoryId)
+        {
+            string cacheKey = $"ChildCategoriesFor{parentCategoryId}";
+            var res = GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
+            {
+                var dataCats = _categoryGateway.Select(parentCategoryId);
+                var cats = Mapper.Map<List<Category>>(dataCats);
+                foreach (var category in cats)
+                {
+                    FillData(category);
+                }
+                SortCategories(cats);
+                return cats;
+            });
+
+            
+            return res;
         }
     }
 }

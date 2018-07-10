@@ -47,6 +47,12 @@ namespace RoCMS.Shop.Web.ApiControllers
             return _shopCategoryService.GetCategories();
         }
 
+        [HttpGet]
+        public IList<Category> GetChildCategories(int? parentCategoryId)
+        {
+            return _shopCategoryService.GetChildCategories(parentCategoryId);
+        }
+
         [HttpPost]
         public ResultModel UpdateSortOrder(IList<Category> categories)
         {

@@ -6,6 +6,7 @@ App.Admin.usedManufacturers = ko.observableArray();
 App.Admin.suppliers = ko.observableArray();
 App.Admin.packs = ko.observableArray();
 App.Admin.currencies = ko.observableArray();
+App.Admin.specs = ko.observableArray();
 
 App.Admin.Shop.GoodsFilter = {
     categoryIds: ko.observable(),
@@ -149,6 +150,20 @@ function goodsEditorLoaded(onSelected, context) {
                 }));
                 goodsItem.parentHeartId(vm.filters().categoryIds());
             }
+            if (App.Admin.specs().length > 0) {
+                $(App.Admin.specs()).each(function() {
+                    var specValue = {
+                        spec: this,
+                        heartId: ko.observable(),
+                        value: ko.observable().extend({ required: true }),
+                        isPrimary: ko.observable(),
+                        inputValue: ko.observable()
+                    };
+                    goodsItem.goodsSpecs.push(specValue);
+                });
+                
+            }
+
             goodsItem.create(function () {
                 vm.goods.push(goodsItem);
             });
@@ -266,6 +281,15 @@ function goodsEditorLoaded(onSelected, context) {
                 App.Admin.packs.push(ko.mapping.fromJS({ name: "единицу товара", packId: null }));
                 $(result).each(function () {
                     App.Admin.packs.push(ko.mapping.fromJS(this));
+                });
+            });
+    }
+    if (App.Admin.specs().length === 0) {
+        getJSON("/api/shop/specs/get",
+            "",
+            function(result) {
+                $(result).each(function() {
+                    App.Admin.specs.push(new App.Admin.Spec(this));
                 });
             });
     }
@@ -411,7 +435,7 @@ App.Admin.Shop.GoodsItemFunctions = {
             var specValue = {
                 spec: item,
                 heartId: ko.observable(self.heartId()),
-                value: ko.observable(),
+                value: ko.observable().extend({ required: true }),
                 isPrimary: ko.observable(),
                 inputValue: ko.observable()
             };

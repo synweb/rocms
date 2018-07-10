@@ -23,6 +23,7 @@ namespace RoCMS.Shop.Contract.Services
         IList<Category> GetAllCategories();
 
         Dictionary<int, int> GetCategoryStats();
+        IList<Category> GetChildCategories(int? parentCategoryId);
         //string GetCategoryCanonicalUrl(int categoryId);
         //string GetCategoryCanonicalUrl(string relativeUrl);
     }

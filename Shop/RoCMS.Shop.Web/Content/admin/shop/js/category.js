@@ -17,7 +17,7 @@ function categoriesEditorLoaded(onSelected, context) {
     if (context) {
         $(context).on("click",
             ".category .toggler",
-            function() {
+            function () {
                 $(this).closest(".category").find(".child-categories").first().collapse('toggle');
                 var toggler = $(this);
                 if (toggler.is(".collapsed2")) {
@@ -77,9 +77,10 @@ function categoriesEditorLoaded(onSelected, context) {
                 });
         }
     };
-    getJSON("/api/shop/categories/get", "", function (result) {
+    getJSON("/api/shop/categories/null/get", "", function (result) {
         $(result).each(function () {
             var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.CategoryValidationMapping), App.Admin.Shop.CategoryFunctions);
+            res.hasChildren = ko.observable(true);
             vm.childrenCategories.push(res);
         });
     })
@@ -143,7 +144,7 @@ App.Admin.Shop.Category = function () {
     self.orderFormSpecs = ko.observableArray();
 
 
-
+    self.hasChildren = ko.observable(true);
 
     //self.init = function (data) {
     //    self.heartId(data.heartId);
@@ -164,7 +165,6 @@ App.Admin.Shop.Category = function () {
     //        self.orderFormSpecs.push(new App.Admin.Spec(this));
     //    });
     //};
-
 
 
     //if (data)
@@ -204,6 +204,8 @@ App.Admin.Shop.CategoryFunctions = {
                 }
             }
         });
+
+
     },
 
     prepareCategoryForUpdate: function () {
@@ -217,6 +219,32 @@ App.Admin.Shop.CategoryFunctions = {
 
     },
 
+    loadChildren: function (onSuccess) {
+        var self = this;
+        if (self.childrenCategories().length > 0) {
+            return;
+        };
+        getJSON("/api/shop/categories/" + self.heartId() + "/get", "", function (result) {
+            if (result.length == 0) {
+                self.hasChildren(false);
+            }
+            $(result).each(function () {
+                var res = $.extend(ko.mapping.fromJS(this, App.Admin.Shop.CategoryValidationMapping), App.Admin.Shop.CategoryFunctions);
+                res.hasChildren = ko.observable(true);
+                self.childrenCategories.push(res);
+            });
+            if (onSuccess) {
+                onSuccess();
+            }
+        })
+            .fail(function () {
+                smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+            })
+            .always(function () {
+                unblockUI();
+            });
+    },
+
     addChild: function () {
         var self = this;
         var category = $.extend(new App.Admin.Shop.Category(), App.Admin.Shop.CategoryFunctions);
@@ -225,7 +253,16 @@ App.Admin.Shop.CategoryFunctions = {
         category.parentCategory().id = self.heartId();
         category.parentHeartId(self.heartId());
         category.newCategory(function () {
-            self.childrenCategories.push(category);
+            if (self.childrenCategories().length > 0) {
+                self.childrenCategories.push(category);
+                
+            }
+            else {
+                self.loadChildren(function () {
+                    //self.childrenCategories.push(category);
+                });
+            }
+            self.hasChildren(true);
         });
     },
 
@@ -260,7 +297,7 @@ App.Admin.Shop.CategoryFunctions = {
     edit: function () {
         var self = this;
         self.dialog("/api/shop/category/update", function () {
-            
+
         });
     },
 
@@ -372,7 +409,7 @@ App.Admin.Shop.CategoryFunctions = {
 
                 if (self.parentCategoryId() && self.parentCategory()) {
                     parents.push({ heartId: self.parentCategory().id, title: self.parentCategory().name, type: 'Категории' });
-                    
+
                 }
 
                 var that = this;
@@ -397,7 +434,7 @@ App.Admin.Shop.CategoryFunctions = {
 
                     self.parentHeartId.notifySubscribers();
 
-                    
+
                     setTimeout(function () {
                         $(".withsearch").selectpicker('refresh');
 
@@ -406,11 +443,11 @@ App.Admin.Shop.CategoryFunctions = {
 
                 ko.applyBindings(vm, that);
 
-                setTimeout(function() {
+                setTimeout(function () {
                     $(".withsearch").selectpicker();
 
                 }, 100);
-                
+
 
             },
             buttons: [

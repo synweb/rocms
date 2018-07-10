@@ -392,9 +392,15 @@ namespace RoCMS.Shop.Services
             var res = GetFromCacheOrLoadAndAddToCache(cacheKey, () =>
             {
                 var dataCats = _categoryGateway.Select(parentCategoryId);
+                Data.Models.Category parentCategory = null;
+                if (parentCategoryId.HasValue)
+                {
+                    parentCategory = _categoryGateway.SelectOne(parentCategoryId.Value);
+                }
                 var cats = Mapper.Map<List<Category>>(dataCats);
                 foreach (var category in cats)
                 {
+                    category.ParentCategory = parentCategory == null ? null : new IdNamePair<int>(parentCategory.HeartId, parentCategory.Name);
                     FillData(category);
                 }
                 SortCategories(cats);

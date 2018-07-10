@@ -327,6 +327,9 @@ App.Admin.Shop.CategoryFunctions = {
             postJSON(url, "", function (result) {
                 if (result.succeed) {
                     parent.childrenCategories.remove(item);
+                    if (parent.childrenCategories().length === 0) {
+                        parent.hasChildren(false);
+                    }
                 }
             })
                 .fail(function () {
@@ -506,6 +509,7 @@ App.Admin.Shop.CategoryFunctions = {
 $.extend(App.Admin.Shop.CategoryFunctions, App.Admin.HeartFunctions);
 
 function showCategoriesDialog(onSelected) {
+    blockUI();
     var options = {
         title: "Категории",
         modal: true,
@@ -516,12 +520,14 @@ function showCategoriesDialog(onSelected) {
         open: function () {
             var $dialog = $(this).dialog("widget");
             var that = this;
+            unblockUI();
             categoriesEditorLoaded(function (item) {
                 if (onSelected) {
                     onSelected({ id: item.heartId(), name: item.name() });
                 }
                 $(that).dialog("close");
             }, $dialog);
+            
         }
     };
     showDialogFromUrl("/ShopEditor/CategoriesEditor", options);

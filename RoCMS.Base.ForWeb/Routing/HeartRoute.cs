@@ -16,7 +16,7 @@ namespace RoCMS.Base.ForWeb.Routing
     {
         private readonly string _controller;
         private readonly string _action;
-        private readonly ICollection<UrlPair> _urls;
+        private readonly Dictionary<string, string> _relativeUrlCanonicalUrlDictionary;
 
         /// <summary>
         /// 
@@ -38,28 +38,27 @@ namespace RoCMS.Base.ForWeb.Routing
             {
                 throw new ArgumentException(nameof(action));
             }
-            _urls = urls;
+            _relativeUrlCanonicalUrlDictionary = urls.ToDictionary(x => x.RelativeUrl.ToLowerInvariant(), x => x.CanonicalUrl);
             _controller = controller;
             _action = action;
         }
 
+
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
             var relativeUrl = httpContext.Request.Path.Split('/').Last();
-            var urlPair = _urls.FirstOrDefault(x => x.RelativeUrl.Equals(relativeUrl, StringComparison.InvariantCultureIgnoreCase));
-            if (urlPair == null)
+            if (!_relativeUrlCanonicalUrlDictionary.ContainsKey(relativeUrl))
                 return null;
             var result = new RouteData(this, new MvcRouteHandler());
             this.AddQueryStringParametersToRouteData(result, httpContext);
             result.Values["controller"] = _controller;
             result.Values["action"] = _action;
-            result.Values["relativeUrl"] = urlPair.RelativeUrl;
+            result.Values["relativeUrl"] = relativeUrl;
             return result;
         }
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-
             string relativeUrl;
             if (values.ContainsKey("relativeUrl"))
             {
@@ -69,14 +68,10 @@ namespace RoCMS.Base.ForWeb.Routing
             {
                 relativeUrl = requestContext.HttpContext.Request.Path;
             }
-
-            relativeUrl = relativeUrl.Split('/').Last().ToLower();
-
-            var urlPair =
-                _urls.FirstOrDefault(x => x.RelativeUrl.Equals(relativeUrl, StringComparison.InvariantCultureIgnoreCase));
-            if (urlPair == null)
+            relativeUrl = relativeUrl.Split('/').Last().ToLowerInvariant();
+            if (!_relativeUrlCanonicalUrlDictionary.ContainsKey(relativeUrl))
                 return null;
-
+            var canonicalUrl = _relativeUrlCanonicalUrlDictionary[relativeUrl];
             var otherParams = new Dictionary<string, object>();
             foreach (var param in values)
             {
@@ -86,8 +81,6 @@ namespace RoCMS.Base.ForWeb.Routing
                     otherParams.Add(param.Key, param.Value);
                 }
             }
-
-
             StringBuilder otherParamsString = new StringBuilder();
             if (otherParams.Any())
             {
@@ -101,9 +94,7 @@ namespace RoCMS.Base.ForWeb.Routing
                     otherParamsString.Append("&");
                 }
             }
-
-            var result = new VirtualPathData(this, $"{urlPair.CanonicalUrl}{otherParamsString}");
-
+            var result = new VirtualPathData(this, $"{canonicalUrl}{otherParamsString}");
             return result;
         }
 

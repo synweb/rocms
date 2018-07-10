@@ -14,6 +14,8 @@ namespace RoCMS.Web.Services
 {
     public class HeartService : BaseCoreService, IHeartService
     {
+        protected override int CacheExpirationInMinutes => 320; //8h
+
         public HeartService()
         {
             InitCache(nameof(HeartService));

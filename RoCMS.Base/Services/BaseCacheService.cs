@@ -47,11 +47,13 @@ namespace RoCMS.Base.Services
                 cachedObject = loader();
                 if (cachedObject != null)
                 {
-                    _cache.Add(cacheKey, cachedObject, DateTimeOffset.Now.AddMinutes(CacheExpirationInMinutes));
+                    _cache.Add(cacheKey, cachedObject, GetCacheItemPolicy());
                 }
             }
             return (T)cachedObject;
         }
+
+        private CacheItemPolicy GetCacheItemPolicy() => new CacheItemPolicy() {SlidingExpiration = TimeSpan.FromMinutes(CacheExpirationInMinutes)};
 
         protected T GetFromCache<T>(string cacheKey)
         {
@@ -90,7 +92,7 @@ namespace RoCMS.Base.Services
             {
                 _cache.Remove(cacheKey);
             }
-            _cache.Add(cacheKey, obj, DateTimeOffset.Now.AddMinutes(CacheExpirationInMinutes));
+            _cache.Add(cacheKey, obj, GetCacheItemPolicy());
         }
 
         protected void RemoveObjectFromCache(string cacheKey)
@@ -113,7 +115,7 @@ namespace RoCMS.Base.Services
             if (cachedObject == null) return;
 
             _cache.Remove(cacheKey);
-            _cache.Add(cacheKey, cachedObject, DateTimeOffset.Now.AddMinutes(CacheExpirationInMinutes));
+            _cache.Add(cacheKey, cachedObject, GetCacheItemPolicy());
         }
     }
 }

@@ -28,6 +28,7 @@ namespace RoCMS.News.Web.Helpers
                     dynamicNode.RouteValues.Add("newsUrl", newsItem.RelativeUrl);
                     dynamicNode.RouteValues.Add("blogUrl", blog.RelativeUrl);
                     dynamicNode.Route = "UserBlogItem";
+                    dynamicNode.Protocol = "*";
 
                     dynamicNode.Title = newsItem.Title;
 

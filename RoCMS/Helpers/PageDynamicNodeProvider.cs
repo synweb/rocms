@@ -25,6 +25,7 @@ namespace RoCMS.Helpers
                     dynamicNode.RouteValues.Add("relativeUrl", page.CannonicalUrl);
                     dynamicNode.Route = "PageSEF";
                     dynamicNode.Title = page.Title;
+                    dynamicNode.Protocol = "*";
 
                     dynamicNode.Attributes.Add("visibility", "MvcSiteMapProvider.Web.Mvc.XmlSiteMapResult");
 

@@ -129,6 +129,7 @@
     <Build Include="Stored Procedures\RssCrawlerFilter_SelectOne.sql" />
     <Build Include="Stored Procedures\RssCrawlerFilter_Update.sql" />
     <Build Include="Stored Procedures\RssCrawlerFilter_SelectByRssCrawler.sql" />
+    <Build Include="Stored Procedures\NewsItem_SelectIdByRssSource.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">

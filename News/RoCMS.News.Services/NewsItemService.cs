@@ -447,6 +447,14 @@ namespace RoCMS.News.Services
             _newsItemGateway.IncreaseViewCount(newsId);
         }
 
+        public NewsItem GetNewsItemByRssSource(string rssSource)
+        {
+            var id = _newsItemGateway.SelectIdByRssSource(rssSource);
+            if (id == null)
+                return null;
+            return GetNewsItem(id.Value);
+        }
+
         protected override int CacheExpirationInMinutes { get; }
     }
 }

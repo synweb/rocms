@@ -394,9 +394,8 @@ namespace RoCMS.News.Services
 
             private static bool CheckIfItemIsNew(SyndicationItem item, INewsItemService newsItemService)
             {
-                // можно оптимизировать, вынимая новость по конкретному RssSource
-                var news = newsItemService.GetAllNews();
-                return news.Where(x => x.RssSource != null).All(x => !x.RssSource.Equals(item.Id));
+                NewsItem newsItem = newsItemService.GetNewsItemByRssSource(item.Id);
+                return newsItem != null;
             }
         }
     }

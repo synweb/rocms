@@ -40,5 +40,6 @@ namespace RoCMS.News.Contract.Services
 
         IEnumerable<string> GetTagByPattern(string pattern, int records);
         void IncreaseViewCount(int newsId);
+        NewsItem GetNewsItemByRssSource(string rssSource);
     }
 }

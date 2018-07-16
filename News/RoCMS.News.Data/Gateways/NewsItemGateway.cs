@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using RoCMS.Base.Data;
 using RoCMS.News.Data.Models;
 using NewsItem = RoCMS.News.Data.Models.NewsItem;
@@ -59,6 +60,11 @@ namespace RoCMS.News.Data.Gateways
         public void IncreaseViewCount(int newsId)
         {
             Exec(GetProcedureString(), newsId);
+        }
+
+        public int? SelectIdByRssSource(string rssSource)
+        {
+            return Exec<int?>(GetProcedureString(), rssSource);
         }
     }
 }

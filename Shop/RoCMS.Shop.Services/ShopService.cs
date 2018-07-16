@@ -510,7 +510,7 @@ namespace RoCMS.Shop.Services
             bool activeActionsOnly = true)
         {
             var dataFilter = Mapper.Map<Data.Models.GoodsFilter>(filter);
-            var heartIds = _goodsItemGateway.FilterGoods(dataFilter, startIndex, count, out totalCount);
+            var heartIds = _goodsItemGateway.FilterGoods(dataFilter, startIndex, int.MaxValue, out totalCount);
             collections = new FilterCollections();
             if (heartIds != null && heartIds.Any())
             {

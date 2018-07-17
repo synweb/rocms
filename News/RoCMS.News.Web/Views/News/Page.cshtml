@@ -9,7 +9,7 @@
 @{
 
     var blockService = DependencyResolver.Current.GetService<IBlockService>();
-    var sidebarBlock = blockService.GetBlock(6);
+    var sidebarBlock = blockService.GetBlock(8);
 
     var userService = DependencyResolver.Current.GetService<ISecurityService>();
 
@@ -25,30 +25,30 @@ else
 
 
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-9 blog-page">
         @foreach (var item in Model)
         {
-            
-
-
-
-            <div class="blog-item">
-                @if (!string.IsNullOrEmpty(item.ImageId))
-                {
-                    <div class="blog-image">
-                        <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})">
-                            <img src="@Url.Action("Image", "Gallery", new {id = item.ImageId})" class="img-responsive" alt="@item.Title">
-                        </a>
+            <div class="mb-4">
+                <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" class="blog-item">
+                    @if (!string.IsNullOrEmpty(item.ImageId))
+                    {
+                        <div class="blog-item-image">
+                            <img src="@Url.RouteUrl("Image", new {id = item.ImageId})" class="img-fluid" alt="@item.Title">
+                        </div>
+                    }
+                    <div class="blog-item-content">
+                        <div class="blog-item-meta">
+                            <em class="fa fa-calendar"></em>&nbsp;@item.PostingDate.ApplySiteTimezone().ToString("dd.MM.yyyy", CultureInfo.CurrentUICulture)
+                        </div>
+                        <div class="blog-item-title">
+                            @item.Title
+                        </div>
+                        <div class="blog-item-description">
+                            @item.Description
+                        </div>
                     </div>
-                }
-
-                <div class="post-meta"><em class="fa fa-clock-o"></em>&nbsp;@item.PostingDate.ApplySiteTimezone().ToString("d MMM yyyy HH:mm", CultureInfo.CurrentUICulture)</div>
-                <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" class="heading">@item.Title</a>
-                <p>@item.Description</p>
-                <a class="btn btn-dark" href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})">Читать далее...</a>
-
+                </a>
             </div>
-
         }
 
         @Html.Partial("_Pager")

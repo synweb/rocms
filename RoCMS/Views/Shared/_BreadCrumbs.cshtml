@@ -2,59 +2,56 @@
 @model IList<RoCMS.Base.ForWeb.Models.BreadCrumb>
 
 
-@{
-    var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
-    var settings = settingsService.GetSettings();
+    @{
+        var settingsService = DependencyResolver.Current.GetService<ISettingsService>();
+        var settings = settingsService.GetSettings();
 
-    string mainTitle = settings.RootBreadcrumbsTitle;
-}
+        string mainTitle = settings.RootBreadcrumbsTitle;
+    }
 
-<ol class="breadcrumb" xmlns:v="http://rdf.data-vocabulary.org/#">
-    @if (Model.Any())
-    {
-        <li class="home" typeof="v:Breadcrumb">
-            <a href="/" title="Главная" rel="v:url" property="v:title">
-                @if (String.IsNullOrEmpty(mainTitle))
-                {
-                    <i class="fa fa-home"></i>
-                }
-                else
-                {
-                    <text>@mainTitle</text>
-                }
-            </a>
-        </li>
-    }
-    else
-    {
-        <li class="active" typeof="v:Breadcrumb">
-            <span title="Главная" rel="v:url" property="v:title">
-                @if (String.IsNullOrEmpty(mainTitle))
-                {
-                    <i class="fa fa-home"></i>
-                }
-                else
-                {
-                    <text>@mainTitle</text>
-                }
-            </span>
-        </li>
-    }
-    @foreach (var crumb in Model)
-    {
-        if (!String.IsNullOrEmpty(crumb.Url) && !crumb.IsLast)
+
+    <ol class="breadcrumb justify-content-center" xmlns:v="http://rdf.data-vocabulary.org/#">
+        @if (Model.Any())
         {
-            <li typeof="v:Breadcrumb">
-                <a href="@crumb.Url" rel="v:url" property="v:title" title="@crumb.Title">@crumb.Title</a>
+            <li class="breadcrumb-item" typeof="v:Breadcrumb">
+                <a href="/" title="Главная" rel="v:url" property="v:title">
+                    @if (String.IsNullOrEmpty(mainTitle))
+                    {
+                        <i class="fa fa-home"></i>
+                    }
+                    else
+                    {
+                        <text>@mainTitle</text>
+                    }
+                </a>
             </li>
-
         }
         else
         {
-            <li class="active"><span>@crumb.Title</span></li>
+            <li class="breadcrumb-item" typeof="v:Breadcrumb">
+                <span title="Главная" rel="v:url" property="v:title">
+                    @if (String.IsNullOrEmpty(mainTitle))
+                    {
+                        <i class="fa fa-home"></i>
+                    }
+                    else
+                    {
+                        <text>@mainTitle</text>
+                    }
+                </span>
+            </li>
         }
-    }
-</ol>
+        @foreach (var crumb in Model)
+        {
+            if (!String.IsNullOrEmpty(crumb.Url) && !crumb.IsLast)
+            {
+                <li class="breadcrumb-item" typeof="v:Breadcrumb">
+                    <a href="@crumb.Url" rel="v:url" property="v:title" title="@crumb.Title">@crumb.Title</a>
+                </li>
+
+            }
+        }
+    </ol>
 
 
 

@@ -19,25 +19,28 @@
 }
 
 
-<ul>
+
+<ul class="no no-pd">
     @foreach (var item in news)
     {
-        string imgUrl = Url.Action("Thumbnail", "Gallery", new { id = item.ImageId });
+        string imgUrl = Url.RouteUrl("Thumbnail", new { id = item.ImageId });
         <li class="short">
-
-            <div class="short-left">
-                <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" title="@item.Title">
-                    <img class="img-responsive" src="@imgUrl" alt="@item.Title">
-                </a>
-            </div>
-            <div class="short-body">
-
-                <a class="heading" href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" title="@item.Title">
-                    @item.Title
-                </a>
-
-                <span>@item.PostingDate.ApplySiteTimezone().ToString("d MMM yyyy", CultureInfo.CurrentUICulture)</span>
-            </div>
+            <a href="@Url.RouteUrl(typeof(RoCMS.News.Contract.Models.NewsItem).FullName, new {relativeUrl = item.CanonicalUrl})" class="blog-item">
+                @if (!string.IsNullOrEmpty(item.ImageId))
+                {
+                    <div class="blog-item-image">
+                        <img src="@imgUrl" alt="@item.Title" class="img-fluid">
+                    </div>
+                }
+                <div class="blog-item-content @(string.IsNullOrEmpty(item.ImageId) ? "noimage":"")">
+                    <div class="blog-item-meta">
+                        <em class="fa fa-calendar"></em>&nbsp;@item.PostingDate.ApplySiteTimezone().ToString("dd.MM.yyyy", CultureInfo.CurrentUICulture)
+                    </div>
+                    <div class="blog-item-title">
+                        @item.Title
+                    </div>
+                </div>
+            </a>
         </li>
     }
 </ul>

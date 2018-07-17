@@ -47,41 +47,39 @@
 
 <div class="row">
     <div class="col-md-9">
-        <div class="blog-item news-item" data-news-id="@Model.HeartId">
-            @if (!string.IsNullOrEmpty(Model.ImageId))
-            {
-
-                <img src="@Url.Action("Image", "Gallery", new {id = Model.ImageId})" class="img-responsive" alt="@Model.Title">
-
-            }
-            <div class="post-meta">
-                <em class="fa fa-clock-o"></em>&nbsp;@Model.PostingDate.ApplySiteTimezone().ToString("d MMM yyyy HH:mm", CultureInfo.CurrentUICulture)
+        <div class="news-item" data-news-id="@Model.HeartId">
+            <div class="post-meta mb-4">
+                <em class="fa fa-calendar"></em>&nbsp;@Model.PostingDate.ApplySiteTimezone().ToString("dd.MM.yyyy", CultureInfo.CurrentUICulture)
 
                 @if (!string.IsNullOrEmpty(Model.Tags))
                 {
-                    <text> / </text>
+                    <text> | </text>
                     foreach (var tag in Model.Tags.Split(','))
                     {
-                        //TODO: Роута здесь нет. придумать, как быть с тегами
                         <a href="@Url.RouteUrl("BlogTagSearch", new {tag = tag})">@tag</a>
                         if (!Model.Tags.EndsWith(tag))
                         {
-                            <text> / </text>
+                            <text> | </text>
                         }
                     }
                 }
 
             </div>
+            @if (!string.IsNullOrEmpty(Model.ImageId))
+            {
 
+                <img src="@Url.RouteUrl("Image", new {id = Model.ImageId})" class="img-fluid main-img mb-4" alt="@Model.Title">
+
+            }
             @Ro(Model.Text)
 
         </div>
 
 
-                  @Html.Partial("_CommentsBlock", new CommentsBlockVM(Model.HeartId,
+                  @*@Html.Partial("_CommentsBlock", new CommentsBlockVM(Model.HeartId,
     
     "Комментировать",
-    "Комментарии"))
+    "Комментарии"))*@
 
         @Block(shareBlock)
     </div>

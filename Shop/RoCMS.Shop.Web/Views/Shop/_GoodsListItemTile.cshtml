@@ -48,9 +48,9 @@ var currencyService = DependencyResolver.Current.GetService<IShopCurrencyService
                     else
                     {
                         <text>
-                            @goodsItem.Price.ToString("# ###.##", nfi)&nbsp;@goodsItem.Currency1.ShortName
+                            @*@goodsItem.Price.ToString("# ###.##", nfi)&nbsp;@goodsItem.Currency1.ShortName*@
                             <br />
-                            (@currencyService.Convert(goodsItem.Price, goodsItem.Currency, "RUR").ToString("# ###.##", nfi) & nbsp;
+                            @*(@currencyService.Convert(goodsItem.Price, goodsItem.Currency, "RUR").ToString("# ###.##", nfi) & nbsp;*@
                             <em class="fa fa-rub"></em>)
                         </text>
                     }

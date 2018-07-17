@@ -17,6 +17,7 @@
     var footerBlock = blockService.GetBlock(2);
     var metriksBlock = blockService.GetBlock(3);
     var copyrightBlock = blockService.GetBlock(4);
+    var ctaBlock = blockService.GetBlock(5);
 
 
     var rootUrl = settingsService.GetSettings<string>("RootUrl");
@@ -47,7 +48,7 @@
     @Js("Content/client/ro/js/rocms.client.orderform.js")
     @Css("Content/client/vendor/bootstrap-image-gallery/js")
     @Html.Partial("_BaseMetas")
- 
+
     @Css("Content/base/vendor/Font-Awesome")
     @Css("Content/base/ro/css")
     @Css("Content/theme/css")
@@ -55,11 +56,10 @@
     @Css("Content/client/vendor/bootstrap-image-gallery/css")
 
     <link rel="shortcut icon" href="@Url.Content("~/Content/theme/images/favicon.ico")" type="image/x-icon" />
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,500&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:100,400,700|Roboto:100,300,400,400i,700&amp;subset=cyrillic" rel="stylesheet">
 
     @RenderStylesheets()
-    
+
     <style>
         @Html.Raw(ViewBag.Styles)
     </style>
@@ -68,36 +68,43 @@
 
 
 
-
-
-<div class="fixed-header">
-    <div id="header">
+    <header class="fixed-top">
         <div class="container">
-            @Block(headerBlock)
+            <div class="top-head d-flex justify-content-between align-items-center navbar-expand-md">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav3" aria-controls="navbarNav3" aria-expanded="false" aria-label="Toggle navigation"><span class="fa fa-list"></span></button>
+                @Block(headerBlock)
+            </div>
+        </div>
+        <nav class="navbar navbar-expand-md">
+            <div class="container">
+                <div class="collapse navbar-collapse" id="navbarNav3">
+                    @Html.Partial("_MainMenu")
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="main">
+        @RenderBody()
+    </div>
+
+    <div class="cta">
+        <div class="container">
+            @Block(ctaBlock)
         </div>
     </div>
-</div>
 
-
-    @RenderBody()
-
-
-    <div id="footer" class="fixed-background bg3 text-center">
-        <div class="up-footer">
+    <footer>
+        <div class="up">
             <div class="container">
                 @Block(footerBlock)
-
-
             </div>
         </div>
-        <div class="down-footer">
-            <div class="container text-center">
-                @Block(copyrightBlock)
-                <p><a href="http://synweb.ru" target="_blank">Создание сайта</a> - веб-студия "Синвеб"</p>
-
-            </div>
+        <div class="down text-center">
+            @Block(copyrightBlock) Создание сайта - <a href="http://synweb.ru">веб-студия Синвеб</a>
         </div>
-    </div>
+    </footer>
+
 
     <div class="totop">
         <div class="gototop">
@@ -107,20 +114,21 @@
         </div>
     </div>
 
-@Html.Partial("_BlueimpGallery")
-@Html.Partial("_DialogContainer")
-@Html.Partial("_SmartAlert")
-@if (!Request.IsLocal)
-{
-    @Block(metriksBlock)
-}
+    @Html.Partial("_BlueimpGallery")
+    @Html.Partial("_DialogContainer")
+    @Html.Partial("_SmartAlert")
+    @if (!Request.IsLocal)
+    {
+        @Block(metriksBlock)
+    }
 
-@RenderScripts()
+    @RenderScripts()
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-
-<script>
+    <script>
     @Html.Raw(ViewBag.Scripts)
-</script>
+    </script>
 </body>
 </html>

@@ -11,36 +11,27 @@
 
     var blockService = DependencyResolver.Current.GetService<IBlockService>();
 
-    var ctaBlock = blockService.GetBlock(5);
-    var orderFormBlock = blockService.GetBlock(6);
+
 }
 
 @if (ViewBag.Header != null)
 {
-    <div class="fixed-background bg1 page-title">
+    <div class="bg11 page-title">
         <div class="container text-center">
+            @Html.Partial("_BreadCrumbsBlock")
             <h1>@ViewBag.Header</h1>
         </div>
     </div>
 }
 
-@Html.Partial("_BreadCrumbsBlock")
 
 
-<div id="main">
-    <div class="container">
-        <div class="page-content">
-            @RenderBody()
-        </div>
-    </div>
-</div>
+
 
 <div class="container">
-    @Block(orderFormBlock)
-</div>
-
-<div id="cta">
-    <div class="container">
-        @Block(ctaBlock)
+    <div class="page-content">
+        @RenderBody()
     </div>
 </div>
+
+

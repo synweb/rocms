@@ -12,9 +12,8 @@
     var heartService = DependencyResolver.Current.GetService<IHeartService>();
 }
 
-
-<ul class="nav navbar-nav">
-    <li class="@(Request.Url.AbsolutePath == Url.Action("Index", "Home") ? "active" : "")"><a href="/"><i class="fa fa-home"></i></a></li>
+<ul class="navbar-nav justify-content-between">
+    <li class="nav-item @(Request.Url.AbsolutePath == Url.Action("Index", "Home") ? "active" : "")"><a class="nav-link" href="/"><i class="fa fa-home"></i></a></li>
     @foreach (var menuItem in mainMenu.Items)
     {
         string url = "#";
@@ -26,12 +25,9 @@
 
             url = String.Format("/{0}", heartService.GetCanonicalUrl(menuItem.HeartId.Value));
         }
-        <li class="@((curPath == url || curPath.Contains(String.Format("{0}/", url))) ? "active" : "") @(showCaret ? "dropdown" : "" )">
-            <a href="@url" @(showCaret ? "class=dropdown-toggle data-toggle=dropdown aria-haspopup=true aria-expanded=false role=button" : "")>
-                @menuItem.Name @if (showCaret)
-                               {
-                                   <span class=caret></span>
-                               }
+        <li class="nav-item @((curPath == url || curPath.Contains(String.Format("{0}/", url))) ? "active" : "") @(showCaret ? "dropdown" : "" )">
+            <a href="@url" class="nav-link @(showCaret ? "dropdown-toggle" : "")" @(showCaret ? "data-toggle=dropdown aria-haspopup=true aria-expanded=false role=button" : "")>
+                @menuItem.Name
             </a>
             @if (hasMegaMenu)
             {
@@ -58,7 +54,7 @@
                             suburl = String.Format("/{0}", heartService.GetCanonicalUrl(subItem.HeartId.Value));
                         }
                         <li class="@((curPath == suburl || curPath.Contains(String.Format("{0}/", suburl))) ? "active" : "")">
-                            <a href="@suburl">@subItem.Name</a>
+                            <a class="dropdown-item" href="@suburl">@subItem.Name</a>
                         </li>
                     }
                 </ul>

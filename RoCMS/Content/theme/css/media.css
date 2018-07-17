@@ -1,69 +1,32 @@
 /*
-@reference theme-greyscale.css
+@reference theme.css
 */
 
-@media only screen and (min-width: 768px) {
-    .fixed-background.img-1 {
-        background-image: url("../img/img-1.jpg");
-    }
+@media (max-width: 1199px) and (min-width: 992px){
 
-    .fixed-background.img-1 {
-        background-color: #bf5138;
-    }
-
-    .navbar-form.navbar-right:last-child {
-        margin-right: inherit;
-    }
 }
 
-@media only screen and (min-width: 992px) {
-    .fixed-background {
-        background-attachment: fixed;
-    }
+@media (max-width: 1199px){
+
 }
 
-@media (max-width: 1199px) {
-    #header .contacts {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+@media (min-width: 992px) {
 
-    #header .pull-right {
-        float: none !important;
-    }
-
-    #header .logo {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .full-height-header {
-        height: auto;
-        padding: 150px 0;
-    }
-
-        .full-height-header .arrow-down {
-            display: none;
-        }
 }
 
-@media (max-width: 991px) {
-    #header .contacts .mail {
-        margin: 0 40px;
-    }
+@media (max-width: 991px){
 
-    .full-height-header {
-        height: auto;
-        padding: 100px 0;
-    }
+}
+	
 
-    .full-height {
-        height: auto;
-    }
+@media (max-width: 767px){
+
 }
 
-@media (max-width: 767px) {
-    .full-height-header {
-        padding: 50px 0;
-    }
+@media (max-width: 575px){ 
+	
+}
+
+@media (max-width: 399px){ 
+
 }

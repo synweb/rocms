@@ -16,15 +16,15 @@ namespace RoCMS.Base.ForWeb.Routing
     {
         private readonly string _controller;
         private readonly string _action;
-        private readonly Dictionary<string, string> _relativeUrlCanonicalUrlDictionary;
+        private readonly IDictionary<string, string> _relativeUrlCanonicalUrlDictionary;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="urls">Словарь, в котором ключ - relativeUrl, а значение - canonicalUrl</param>
+        /// <param name="relativeUrlCanonicalUrlDictionary">Словарь, в котором ключ - relativeUrl, а значение - canonicalUrl</param>
         /// <param name="controller"></param>
         /// <param name="action"></param>
-        public HeartRoute(ICollection<UrlPair> urls, [AspMvcController] string controller, [AspMvcAction] string action)
+        public HeartRoute(IDictionary<string, string> urls, [AspMvcController] string controller, [AspMvcAction] string action)
         {
             if (urls == null)
             {
@@ -38,7 +38,7 @@ namespace RoCMS.Base.ForWeb.Routing
             {
                 throw new ArgumentException(nameof(action));
             }
-            _relativeUrlCanonicalUrlDictionary = urls.ToDictionary(x => x.RelativeUrl.ToLowerInvariant(), x => x.CanonicalUrl);
+            _relativeUrlCanonicalUrlDictionary = urls;
             _controller = controller;
             _action = action;
         }

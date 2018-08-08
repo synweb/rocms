@@ -20,12 +20,10 @@ namespace RoCMS.Web.Contract.Services
         void Fill(Heart heart);
         Heart GetHeart(string relativeUrl);
         Heart GetHeart(int heartId);
-        ICollection<UrlPair> GetHeartUrls(Type type);
+        IDictionary<string,string> GetHeartUrls(Type type);
         ICollection<Heart> GetHearts();
-
         ICollection<Heart> GetHearts(IEnumerable<int> heartIds);
         ICollection<Heart> GetHearts(string type);
         bool CheckIfUrlExists(string relativeUrl);
-
     }
 }

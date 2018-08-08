@@ -30,10 +30,11 @@ namespace RoCMS.Web.Services
 
 
             var groups = hearts.GroupBy(x => x.Type);
-            _heartUrlPairs = new Dictionary<string, List<UrlPair>>();
+            // grouped by type
+            _heartUrlPairs = new Dictionary<string, IDictionary<string,string>>();
             foreach (var @group in groups)
             {
-                var urls = group.Select(x => new UrlPair(x.RelativeUrl, canonicals[x.HeartId])).ToList();
+                var urls = group.ToDictionary(x => x.RelativeUrl, x => canonicals[x.HeartId]);//Select(x => new KeyValuePair<string,string>(x.RelativeUrl, canonicals[x.HeartId])).ToList();
                 _heartUrlPairs.Add(group.Key, urls);
             }
         }
@@ -64,14 +65,17 @@ namespace RoCMS.Web.Services
             return result;
         }
 
-        private List<UrlPair> CanonicalUrlPairs
+        private IDictionary<string,string> CanonicalUrlPairs
         {
             get
             {
-                var result = new List<UrlPair>();
+                var result = new Dictionary<string, string>();
                 foreach (var val in _heartUrlPairs.Values)
                 {
-                    result.AddRange(val);
+                    foreach (var kvp in val)
+                    {
+                        result.Add(kvp.Key, kvp.Value);
+                    }
                 }
                 return result;
             }
@@ -83,7 +87,11 @@ namespace RoCMS.Web.Services
             return String.IsNullOrEmpty(prefix) ? relativeUrl : $"{prefix}/{relativeUrl}";
         }
 
-        private IDictionary<string, List<UrlPair>> _heartUrlPairs;
+        /// <summary>
+        /// Grouped by type.
+        /// {type: {relativeUrl: canonicalUrl}}
+        /// </summary>
+        private IDictionary<string, IDictionary<string,string>> _heartUrlPairs;
 
         private readonly HeartGateway _heartGateway = new HeartGateway();
         public string GetCanonicalUrl(string relativeUrl)
@@ -165,7 +173,7 @@ namespace RoCMS.Web.Services
             return res;
         }
 
-        public ICollection<UrlPair> GetHeartUrls(Type type)
+        public IDictionary<string, string> GetHeartUrls(Type type)
         {
             lock (this)
             {
@@ -180,7 +188,7 @@ namespace RoCMS.Web.Services
                 }
                 if (!_heartUrlPairs.ContainsKey(typeName))
                 {
-                    _heartUrlPairs.Add(typeName, new List<UrlPair>());
+                    _heartUrlPairs.Add(typeName, new Dictionary<string, string>());
                 }
 
                 return _heartUrlPairs[typeName];
@@ -194,16 +202,9 @@ namespace RoCMS.Web.Services
             var res = Mapper.Map<ICollection<Heart>>(dataRes);
             foreach (var heart in res)
             {
-
-                var pair = CanonicalUrlPairs.SingleOrDefault(x => x.RelativeUrl == heart.RelativeUrl);
-                if (pair != null)
-                {
-                    heart.CanonicalUrl = pair.CanonicalUrl;
-                }
-                else
-                {
-                    heart.CanonicalUrl = GetCanonicalUrl(heart.HeartId);
-                }
+                heart.CanonicalUrl = CanonicalUrlPairs.ContainsKey(heart.RelativeUrl)
+                    ? CanonicalUrlPairs[heart.RelativeUrl]
+                    : GetCanonicalUrl(heart.HeartId); 
             }
             return res;
         }
@@ -252,6 +253,7 @@ namespace RoCMS.Web.Services
             if (originalHeart.RelativeUrl != heart.RelativeUrl || originalHeart.ParentHeartId != heart.ParentHeartId)
             {
                 RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.RelativeUrl));
+                RemoveObjectFromCache(GetCanonicalUrlCacheKey(originalHeart.RelativeUrl));
                 RemoveObjectFromCache(GetCanonicalUrlCacheKey(heart.HeartId));
 
                 RemoveChildrenCachedCanonicalUrl(heart.HeartId);
@@ -266,24 +268,23 @@ namespace RoCMS.Web.Services
 
         private void CreateRoute(Heart heart)
         {
-            List<UrlPair> typeRoutes;
+            IDictionary<string, string> typeRoutes;
             if (!_heartUrlPairs.ContainsKey(heart.Type))
             {
-                typeRoutes = new List<UrlPair>();
+                typeRoutes = new Dictionary<string, string>();
                 _heartUrlPairs.Add(heart.Type, typeRoutes);
             }
             else
             {
                 typeRoutes = _heartUrlPairs[heart.Type];
             }
-            typeRoutes.Add(new UrlPair(heart.RelativeUrl.ToLower(), GetUncachedCanonicalUrl(heart.RelativeUrl)));
+            typeRoutes.Add(heart.RelativeUrl.ToLower(), GetUncachedCanonicalUrl(heart.RelativeUrl));
         }
 
         private void DeleteRoute(Data.Models.Heart heart)
         {
             var typeRoutes = _heartUrlPairs[heart.Type];
-            typeRoutes.RemoveAll(x => x.RelativeUrl.Equals(heart.RelativeUrl,
-                StringComparison.InvariantCultureIgnoreCase));
+            typeRoutes.Remove(heart.RelativeUrl);
         }
 
         public int CreateHeart(Heart heart)

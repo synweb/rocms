@@ -34,7 +34,7 @@ namespace RoCMS.Web.Services
             _heartUrlPairs = new Dictionary<string, IDictionary<string,string>>();
             foreach (var @group in groups)
             {
-                var urls = group.ToDictionary(x => x.RelativeUrl, x => canonicals[x.HeartId]);//Select(x => new KeyValuePair<string,string>(x.RelativeUrl, canonicals[x.HeartId])).ToList();
+                var urls = group.ToDictionary(x => x.RelativeUrl, x => canonicals[x.HeartId], StringComparer.InvariantCultureIgnoreCase);//Select(x => new KeyValuePair<string,string>(x.RelativeUrl, canonicals[x.HeartId])).ToList();
                 _heartUrlPairs.Add(group.Key, urls);
             }
         }
@@ -188,7 +188,7 @@ namespace RoCMS.Web.Services
                 }
                 if (!_heartUrlPairs.ContainsKey(typeName))
                 {
-                    _heartUrlPairs.Add(typeName, new Dictionary<string, string>());
+                    _heartUrlPairs.Add(typeName, new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase));
                 }
 
                 return _heartUrlPairs[typeName];

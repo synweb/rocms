@@ -202,7 +202,7 @@ namespace RoCMS.News.Services
                     logService.TraceMessage($"Got {syndicationFeed.Items.Count()} items");
                     foreach (SyndicationItem item in syndicationFeed.Items)
                     {
-                        if (!CheckIfItemIsNew(item, newsItemService))
+                         if (!CheckIfItemIsNew(item, newsItemService))
                             continue;
 
                         // проверка текста по фильтрам
@@ -395,7 +395,7 @@ namespace RoCMS.News.Services
             private static bool CheckIfItemIsNew(SyndicationItem item, INewsItemService newsItemService)
             {
                 NewsItem newsItem = newsItemService.GetNewsItemByRssSource(item.Id);
-                return newsItem != null;
+                return newsItem == null;
             }
         }
     }

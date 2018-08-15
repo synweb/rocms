@@ -13,49 +13,49 @@ Post-Deployment Script Template
 -- Если нет ресурсов
 IF (SELECT COUNT(*) FROM [dbo].[CmsResource]) = 0
 BEGIN
-	SET IDENTITY_INSERT [dbo].[CmsResource] ON
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (1, N'Users', N'Пользователи')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (2, N'News', N'Новости')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (3, N'Gallery', N'Галерея')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (4, N'Albums', N'Альбомы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (5, N'CommonSettings', N'Настройка')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (6, N'Menus', N'Меню')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (7, N'Pages', N'Страницы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (8, N'Blocks', N'Блоки')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (9, N'Sliders', N'Слайдеры')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (10, N'Shop', N'Магазин')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (11, N'Reviews', N'Отзывы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (13, N'Analytics', N'Аналитика')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (15, N'AdminPanel', N'Админка')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (16, N'Shop_Actions', N'Магазин: Акции')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (17, N'Shop_Orders', N'Магазин: Заказы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (18, N'Shop_Packs', N'Магазин: Упаковки')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (19, N'Shop_Clients', N'Магазин: Клиенты')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (20, N'Shop_Reviews', N'Магазин: Отзывы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (21, N'Shop_YmlExport', N'Магазин: Экспорт YML')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (22, N'Shop_Settings', N'Магазин: Настройки')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (23, N'Shop_PickUpPoints', N'Магазин: Пункты самовывоза')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (24, N'Shop_RegularClients', N'Магазин: Постоянным клиентам')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (25, N'DeleteObjects', N'Удаление объектов')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (26, N'SupportTickets', N'Поддержка')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (27, N'Shop_Currencies', N'Магазин: Валюты')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (28, N'Shop_OrderForms', N'Магазин: Формы заказа')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (100, N'Shop_MassPriceChange', N'Магазин: Пакетные изменения цен')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (34, N'CommentsEditor', N'Комментарии')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (40, N'Emails', N'Письма')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (50, N'UploadFiles', N'Файлы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (51, N'Requests', N'База заявок')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (52, N'FAQ', N'Вопросы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (60, N'Development', N'Разработка')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (61, N'Dev_CodeEditor', N'Разработка: Редактор кода')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (62, N'Dev_Widgets', N'Разработка: Виджеты')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (63, N'Dev_InterfaceStrings', N'Разработка: Строки интерфейса')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (64, N'Dev_Database', N'Разработка: База данных')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (65, N'RedirectToPageRoutes', N'Редиректы')
-	INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (70, N'Dev_MagicButton', N'Разработка: Кнопка входа')
+    SET IDENTITY_INSERT [dbo].[CmsResource] ON
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (1, N'Users', N'Пользователи')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (2, N'News', N'Новости')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (3, N'Gallery', N'Галерея')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (4, N'Albums', N'Альбомы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (5, N'CommonSettings', N'Настройка')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (6, N'Menus', N'Меню')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (7, N'Pages', N'Страницы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (8, N'Blocks', N'Блоки')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (9, N'Sliders', N'Слайдеры')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (10, N'Shop', N'Магазин')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (11, N'Reviews', N'Отзывы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (13, N'Analytics', N'Аналитика')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (15, N'AdminPanel', N'Админка')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (16, N'Shop_Actions', N'Магазин: Акции')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (17, N'Shop_Orders', N'Магазин: Заказы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (18, N'Shop_Packs', N'Магазин: Упаковки')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (19, N'Shop_Clients', N'Магазин: Клиенты')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (20, N'Shop_Reviews', N'Магазин: Отзывы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (21, N'Shop_YmlExport', N'Магазин: Экспорт YML')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (22, N'Shop_Settings', N'Магазин: Настройки')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (23, N'Shop_PickUpPoints', N'Магазин: Пункты самовывоза')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (24, N'Shop_RegularClients', N'Магазин: Постоянным клиентам')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (25, N'DeleteObjects', N'Удаление объектов')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (26, N'SupportTickets', N'Поддержка')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (27, N'Shop_Currencies', N'Магазин: Валюты')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (28, N'Shop_OrderForms', N'Магазин: Формы заказа')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (100, N'Shop_MassPriceChange', N'Магазин: Пакетные изменения цен')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (34, N'CommentsEditor', N'Комментарии')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (40, N'Emails', N'Письма')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (50, N'UploadFiles', N'Файлы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (51, N'Requests', N'База заявок')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (52, N'FAQ', N'Вопросы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (60, N'Development', N'Разработка')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (61, N'Dev_CodeEditor', N'Разработка: Редактор кода')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (62, N'Dev_Widgets', N'Разработка: Виджеты')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (63, N'Dev_InterfaceStrings', N'Разработка: Строки интерфейса')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (64, N'Dev_Database', N'Разработка: База данных')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (65, N'RedirectToPageRoutes', N'Редиректы')
+    INSERT INTO [dbo].[CmsResource] ([CmsResourceId], [Name], [Description]) VALUES (70, N'Dev_MagicButton', N'Разработка: Кнопка входа')
 
-	SET IDENTITY_INSERT [dbo].[CmsResource] OFF
-	
+    SET IDENTITY_INSERT [dbo].[CmsResource] OFF
+    
 END
 GO
 
@@ -63,15 +63,15 @@ GO
 -- Если нет юзверя admin
 IF (SELECT COUNT(*) FROM [dbo].[User] WHERE [Username]='admin') = 0
 BEGIN
-	SET IDENTITY_INSERT [dbo].[User] ON
-	-- Login/Password: admin/admin
-	INSERT INTO [dbo].[User] ([UserId], [Username], [Password]) VALUES (1, N'admin', N'21232f297a57a5a743894a0e4a801fc3')
-	SET IDENTITY_INSERT [dbo].[User] OFF
+    SET IDENTITY_INSERT [dbo].[User] ON
+    -- Login/Password: admin/admin
+    INSERT INTO [dbo].[User] ([UserId], [Username], [Password]) VALUES (1, N'admin', N'21232f297a57a5a743894a0e4a801fc3')
+    SET IDENTITY_INSERT [dbo].[User] OFF
 
-	-- Выдача всех прав админу
-	INSERT INTO [dbo].[UserCmsResource]
-	SELECT [CmsResourceId], 1
-	FROM [dbo].[CmsResource]
+    -- Выдача всех прав админу
+    INSERT INTO [dbo].[UserCmsResource]
+    SELECT [CmsResourceId], 1
+    FROM [dbo].[CmsResource]
 END
 GO
 
@@ -88,21 +88,21 @@ GO
 -- Если нет блоков
 IF (SELECT COUNT(*) FROM [dbo].[Block]) = 0
 BEGIN
-	SET IDENTITY_INSERT [dbo].[Block] ON
-	INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (1, N'Шапка', N'<p>Шапка</p>')
-	INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (2, N'Подвал', N'<p>Подвал</p>')
-	INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (3, N'Метрики', N'<p></p>')
-	INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (4, N'Копирайт', N'<p>&copy;</p>')
-	SET IDENTITY_INSERT [dbo].[Block] OFF
+    SET IDENTITY_INSERT [dbo].[Block] ON
+    INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (1, N'Шапка', N'<p>Шапка</p>')
+    INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (2, N'Подвал', N'<p>Подвал</p>')
+    INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (3, N'Метрики', N'<p></p>')
+    INSERT INTO [dbo].[Block] ([BlockId], [Title], [Content]) VALUES (4, N'Копирайт', N'<p>&copy;</p>')
+    SET IDENTITY_INSERT [dbo].[Block] OFF
 END
 GO
 
 -- Если нет меню
 IF (SELECT COUNT(*) FROM [dbo].Menu) = 0
 BEGIN
-	SET IDENTITY_INSERT [dbo].[Menu] ON
-	INSERT INTO [dbo].[Menu] ([MenuId], [Name]) VALUES (1, N'Главное')
-	SET IDENTITY_INSERT [dbo].[Menu] OFF
+    SET IDENTITY_INSERT [dbo].[Menu] ON
+    INSERT INTO [dbo].[Menu] ([MenuId], [Name]) VALUES (1, N'Главное')
+    SET IDENTITY_INSERT [dbo].[Menu] OFF
 END
 GO
 
@@ -118,60 +118,60 @@ GO
 -- Если нет настроек
 IF (SELECT COUNT(*) FROM [dbo].Setting) = 0
 BEGIN
-	--SET IDENTITY_INSERT [dbo].[Setting] ON
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MainMenuId', N'1')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MainPageUrl', N'Главная')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SiteName', N'Новый сайт')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'Reviews', N'False')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'TicketLifetime', N'02:00:00')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'CommentsPremoderation', N'False')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'Timezone', 3)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplOrderAutoReply', N'<p>Здравствуйте, {0}!<br /><br />Мы получили Ваше обращение и свяжемся с Вами.<br /><br />Данные, которые Вы нам отправили:<br /><br />{1}</p>')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplOrder', N'<p><strong>Имя клиента: </strong>{0}</p>
+    --SET IDENTITY_INSERT [dbo].[Setting] ON
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MainMenuId', N'1')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MainPageUrl', N'Главная')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SiteName', N'Новый сайт')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'Reviews', N'False')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'TicketLifetime', N'02:00:00')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'CommentsPremoderation', N'False')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'Timezone', 3)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplOrderAutoReply', N'<p>Здравствуйте, {0}!<br /><br />Мы получили Ваше обращение и свяжемся с Вами.<br /><br />Данные, которые Вы нам отправили:<br /><br />{1}</p>')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplOrder', N'<p><strong>Имя клиента: </strong>{0}</p>
 <p><strong>Email: </strong>
 <a href="mailto:{1}">{1}
 </a>
 </p>
 <p><strong>Телефон: </strong>{2}</p>
 <p>{4}</p>')
-		INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplCallback', N'<h1>Обратный звонок</h1>
+        INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplCallback', N'<h1>Обратный звонок</h1>
 <p><strong>Имя клиента: </strong>{0}</p>
 <p><strong>Телефон: </strong>{1}</p>
 <p><strong>Удобное время: </strong>{2}</p>')
-		INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplReviewCreated', N'<h1>Новый отзыв</h1>
+        INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'MailTmplReviewCreated', N'<h1>Новый отзыв</h1>
 <p><strong>Имя: </strong>{0}</p>
 <p><strong>Email: </strong>{1}</p>
 <p><strong>Текст отзыва:</strong></p>
 <p>{2}</p>')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'RootUrl', N'http://localhost:4014')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageMaxHeight', 1080)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageMaxWidth', 1920)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageQuality', 90)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailHeight', 350)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailWidth', 300)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'AutoEmailReplyEnabled', N'True')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailSmtpUrl', N'smtp.yandex.ru')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailSmtpPort', 587)
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SmtpSslEnabled', N'True')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailLogin', N'mail1@yandex.ru')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailPassword', N'mailPassword')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'OrderEmailAddress', N'mail2@yandex.ru')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SystemEmailAddress', N'mail1@yandex.ru')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SystemEmailSenderName', N'Автоматическое сообщение')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'TranslitEnabled', N'True')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'AllowedFileExtensions', N'.doc,.docx,.xls,.xlsx,.pdf,.txt')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'YoutubeAPIKey', N'AIzaSyCQgKGPuIQwKvZvFLHjZ_sjr3ZB8ijQ4rA')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailSizes', N'400w,200h')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ReviewCreatedNotification', N'False')
-	INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ReviewSort', N'CreationDateDesc')
-	--SET IDENTITY_INSERT [dbo].[Setting] OFF
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'RootUrl', N'http://localhost:4014')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageMaxHeight', 1080)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageMaxWidth', 1920)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ImageQuality', 90)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailHeight', 350)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailWidth', 300)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'AutoEmailReplyEnabled', N'True')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailSmtpUrl', N'smtp.yandex.ru')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailSmtpPort', 587)
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SmtpSslEnabled', N'True')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailLogin', N'mail1@yandex.ru')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'EmailPassword', N'mailPassword')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'OrderEmailAddress', N'mail2@yandex.ru')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SystemEmailAddress', N'mail1@yandex.ru')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'SystemEmailSenderName', N'Автоматическое сообщение')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'TranslitEnabled', N'True')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'AllowedFileExtensions', N'.doc,.docx,.xls,.xlsx,.pdf,.txt')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'YoutubeAPIKey', N'AIzaSyCQgKGPuIQwKvZvFLHjZ_sjr3ZB8ijQ4rA')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ThumbnailSizes', N'400w,200h')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ReviewCreatedNotification', N'False')
+    INSERT INTO [dbo].[Setting] ([Key], [Value]) VALUES (N'ReviewSort', N'CreationDateDesc')
+    --SET IDENTITY_INSERT [dbo].[Setting] OFF
 END
 GO
 
 -- Если нет стран
 IF (SELECT COUNT(*) FROM [dbo].Country) = 0
 BEGIN
-	INSERT INTO [dbo].[Country] ([CountryId], [Name]) VALUES (1, N'Россия')
+    INSERT INTO [dbo].[Country] ([CountryId], [Name]) VALUES (1, N'Россия')
 INSERT INTO [dbo].[Country] ([CountryId], [Name]) VALUES (2, N'Австралия')
 INSERT INTO [dbo].[Country] ([CountryId], [Name]) VALUES (3, N'Австрия')
 INSERT INTO [dbo].[Country] ([CountryId], [Name]) VALUES (4, N'Азербайджан')

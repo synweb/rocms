@@ -13,14 +13,14 @@ Post-Deployment Script Template
 -- Если нет блогов
 IF NOT EXISTS (SELECT * FROM [News].[Blog])
 BEGIN
-	DECLARE @adminId INT
+    DECLARE @adminId INT
 
-	SELECT @adminId=UserId FROM [dbo].[User] WHERE Username='admin'
+    SELECT @adminId=UserId FROM [dbo].[User] WHERE Username='admin'
 
-	SET IDENTITY_INSERT [News].[Blog] ON
-	INSERT INTO [News].[Blog] ([BlogId], [Title], [OwnerId]) VALUES 
-		(1, N'Новости сайта', @adminId)
-	INSERT INTO [News].[Blog_User] ([BlogId],[UserId]) VALUES (1, @adminId) 
-	SET IDENTITY_INSERT [News].[Blog] OFF
+    SET IDENTITY_INSERT [News].[Blog] ON
+    INSERT INTO [News].[Blog] ([BlogId], [Title], [OwnerId]) VALUES 
+        (1, N'Новости сайта', @adminId)
+    INSERT INTO [News].[Blog_User] ([BlogId],[UserId]) VALUES (1, @adminId) 
+    SET IDENTITY_INSERT [News].[Blog] OFF
 END
 GO

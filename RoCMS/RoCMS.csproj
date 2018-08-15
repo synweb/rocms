@@ -926,6 +926,10 @@
       <Project>{5bb656e0-bfeb-42a2-b308-52ab78af8d38}</Project>
       <Name>RoCMS.Web.Contract</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Shop\RoCMS.Shop.Contract\RoCMS.Shop.Contract.csproj">
+      <Project>{1C506F25-014A-4025-8E15-07FD5094F85E}</Project>
+      <Name>RoCMS.Shop.Contract</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shop\RoCMS.Shop.Export\RoCMS.Shop.Export.csproj">
       <Project>{7c970a14-7c13-43e1-af59-f592652d1cd5}</Project>
       <Name>RoCMS.Shop.Export</Name>

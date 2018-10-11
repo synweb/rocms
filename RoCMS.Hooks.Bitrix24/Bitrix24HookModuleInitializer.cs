@@ -14,6 +14,11 @@ namespace RoCMS.Hooks.Bitrix24
 {
     public class Bitrix24HookModuleInitializer : IModuleInitializer
     {
+        // required settings:
+        // Hooks_Bitrix24_ApiKey
+        // Hooks_Bitrix24_UserId
+        // Hooks_Bitrix24_InstanceName
+
         public void Init()
         {
             var formRequestService = DependencyResolver.Current.GetService<IFormRequestService>();
@@ -27,8 +32,12 @@ namespace RoCMS.Hooks.Bitrix24
             // {0}: userId
             // {1}: api key
             // {2}: method
-            int bitrixUserId = settingsService.GetSettings<int>("Hooks_Bitrix24_UserId");
             string bitrixApiKey = settingsService.GetSettings<string>("Hooks_Bitrix24_ApiKey");
+            if (string.IsNullOrWhiteSpace(bitrixApiKey))
+            {
+                return;
+            }
+            int bitrixUserId = settingsService.GetSettings<int>("Hooks_Bitrix24_UserId");
             string instanceName = settingsService.GetSettings<string>("Hooks_Bitrix24_InstanceName");
             const string METHOD_LEAD_ADD = "crm.lead.add";
             var leadAddUrl = string.Format(URL_FORMAT, instanceName, bitrixUserId, bitrixApiKey, METHOD_LEAD_ADD);
@@ -64,6 +73,7 @@ namespace RoCMS.Hooks.Bitrix24
                 var model = new BitrixApiModel() { Fields = lead, Params = new { REGISTER_SONET_EVENT = "Y" } };
                 var json = JsonConvert.SerializeObject(model);
                 var response = await client.PostAsync(leadAddUrl, new StringContent(json, Encoding.UTF8, "application/json"));
+                var responseString = await response.Content.ReadAsStringAsync();
             }
         }
     }

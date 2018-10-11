@@ -71,7 +71,6 @@ namespace RoCMS.Web.Services
 
         public void Send(MailMsg msg)
         {
-            return;
             var mail = Mapper.Map<RoCMS.Data.Models.Mail>(msg);
             using (MailMessage mailMessage = MailMsgToMailMessage(msg))
             {
@@ -85,7 +84,6 @@ namespace RoCMS.Web.Services
 
         private MailMessage MailMsgToMailMessage(MailMsg msg)
         {
-            return new MailMessage();
             var mailMessage = new MailMessage();
             mailMessage.From = new MailAddress(_settingsService.GetSettings<string>("SystemEmailAddress"), _settingsService.GetSettings<string>("SystemEmailSenderName"));
             var receivers = msg.Receiver.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -110,7 +108,6 @@ namespace RoCMS.Web.Services
 
         private MailSendResult Send(MailMessage message)
         {
-            return new MailSendResult();
             MailSendResult sendResult = new MailSendResult();
 
             if (message.From == null || String.IsNullOrEmpty(message.From.Address))

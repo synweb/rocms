@@ -29,19 +29,6 @@ namespace RoCMS.Web.Services
             _settingsService = settingsService;
             _orderFormService = orderFormService;
             _logService = logService;
-
-            Task.Run(async () =>
-            {
-                await Task.Delay(5000);
-                CreateFormRequest(new FormRequest()
-                {
-                    Email = "order@synweb.ru",
-                    CreationDate = new DateTime(1970, 1, 1),
-                    Name = "FormRequest Lead",
-                    Text = "Text",
-                    Phone = "+74959281517"
-                });
-            });
         }
         protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 

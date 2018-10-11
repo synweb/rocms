@@ -613,7 +613,7 @@
     <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff" />
     <Content Include="Content\base\vendor\Font-Awesome\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\base\vendor\Font-Awesome\fonts\FontAwesome.otf" />
-    <Content Include="Connections.config" />
+    <None Include="Connections.config" />
     <None Include="INSTRUCTIONS.txt" />
     <Content Include="InstallData\RoCMS.Database_Create.sql" />
     <Content Include="Mvc.sitemap" />
@@ -913,6 +913,10 @@
     <ProjectReference Include="..\RoCMS.Data.Mapping\RoCMS.Data.Mapping.csproj">
       <Project>{5fe8e738-9ee6-4eee-b66d-95a76f36478a}</Project>
       <Name>RoCMS.Data.Mapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCMS.Hooks.Bitrix24\RoCMS.Hooks.Bitrix24.csproj">
+      <Project>{9a160fc8-9f03-489c-9b23-d99a3c6617d9}</Project>
+      <Name>RoCMS.Hooks.Bitrix24</Name>
     </ProjectReference>
     <ProjectReference Include="..\RoCMS.Logging\RoCMS.Logging.csproj">
       <Project>{074e61fd-9e09-45ef-95b3-66175f234eb4}</Project>

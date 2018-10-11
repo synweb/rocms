@@ -20,6 +20,6 @@ namespace RoCMS.Web.Contract.Services
         void DeleteFormRequest(int formRequestId);
 
         void ProcessMessage(Message message);
-
+        event EventHandler<FormRequest> RequestCreated;
     }
 }

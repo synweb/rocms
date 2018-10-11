@@ -305,20 +305,15 @@ namespace RoCMS
         private void ConfigureModules(BundleCollection bundleCollection, HttpConfiguration httpConfiguration,
             GlobalFilterCollection globalFilterCollection, RouteCollection routeCollection)
         {
-
-
-
             List<Type> moduleInitializers = new List<Type>();
-
-
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith("RoCMS")))
+            IEnumerable<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.StartsWith("RoCMS"));
+            foreach (Assembly a in assemblies)
             {
                 foreach (Type t in a.GetTypes().Where(t => t.Name.EndsWith("ModuleInitializer")).Where(t => !t.IsAbstract))
                 {
                     moduleInitializers.Add(t);
                 }
             }
-
             foreach (Type moduleInitializerType in moduleInitializers)
             {
                 IModuleInitializer instance = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);

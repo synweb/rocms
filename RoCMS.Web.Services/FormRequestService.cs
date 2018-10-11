@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using RoCMS.Base.Helpers;
 using RoCMS.Data.Gateways;
@@ -17,19 +18,46 @@ namespace RoCMS.Web.Services
         private readonly IMailService _mailService;
         private readonly ISettingsService _settingsService;
         private readonly IOrderFormService _orderFormService;
+        private readonly ILogService _logService;
 
-        public FormRequestService(IMailService mailService, ISettingsService settingsService, IOrderFormService orderFormService)
+        public event EventHandler<FormRequest> RequestCreated = (o,e)=> { };
+
+        public FormRequestService(IMailService mailService, ISettingsService settingsService, IOrderFormService orderFormService, ILogService logService)
         {
             _formRequestGateway = new FormRequestGateway();
             _mailService = mailService;
             _settingsService = settingsService;
             _orderFormService = orderFormService;
+            _logService = logService;
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(5000);
+                CreateFormRequest(new FormRequest()
+                {
+                    Email = "order@synweb.ru",
+                    CreationDate = new DateTime(1970, 1, 1),
+                    Name = "FormRequest Lead",
+                    Text = "Text",
+                    Phone = "+74959281517"
+                });
+            });
         }
         protected override int CacheExpirationInMinutes => AppSettingsHelper.HoursToExpireCartCache * 60;
 
         public int CreateFormRequest(FormRequest formRequest)
         {
-            return _formRequestGateway.Insert(Mapper.Map<Data.Models.FormRequest>(formRequest));
+            var res = _formRequestGateway.Insert(Mapper.Map<Data.Models.FormRequest>(formRequest));
+            formRequest.FormRequestId = res;
+            try
+            {
+                RequestCreated(this, formRequest);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+            }
+            return res;
         }
 
         public void DeleteFormRequest(int formRequestId)

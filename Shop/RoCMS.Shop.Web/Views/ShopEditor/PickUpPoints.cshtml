@@ -133,6 +133,12 @@
 
     @JsInline(@<script>
                    $(function () {
+                       InitImageUploader();
+                       InitFileUploader();
+                   });
+               </script>)
+    @JsInline(@<script>
+                   $(function () {
                        pickUpPointsLoaded();
                    });
     </script>)

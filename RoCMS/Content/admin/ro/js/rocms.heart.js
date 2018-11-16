@@ -32,6 +32,11 @@ App.Admin.HeartValidationMapping = {
         create: function (options) {
             return ko.observable(options.data).extend({ required: true });
         }
+    },
+    options: {
+        create: function(options) {
+            return ko.observable(options.data);
+        }
     }
 };
 
@@ -83,7 +88,7 @@ App.Admin.HeartFunctions = {
         }
 
         if (self.options()) {
-            setTextToEditor("page_options", self.options());
+            setTextToEditor("page_options", ko.toJSON(self.options()));
         }
     },
 
@@ -96,7 +101,8 @@ App.Admin.HeartFunctions = {
         var additionalHeaders = getTextFromEditor('page_headers');
         self.additionalHeaders(additionalHeaders);
         var options = getTextFromEditor('page_options');
-        self.options(options);
+        temp = JSON.parse(options);
+        self.options(JSON.parse(options));
     },
 
     generateUrl : function() {

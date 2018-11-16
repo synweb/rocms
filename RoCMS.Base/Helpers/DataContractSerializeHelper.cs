@@ -88,12 +88,14 @@ namespace RoCMS.Base.Helpers
 
         public static Dictionary<string, string> DeserializeJson(string jsonData)
         {
+            if (String.IsNullOrEmpty(jsonData)) return null;
             var res = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonData);
             return res;
         }
 
         public static string SerializeJson(Dictionary<string, string> data)
         {
+            if (data == null) return null;
             var res = JsonConvert.SerializeObject(data);
             return res;
         }

@@ -96,6 +96,7 @@
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\PasswordTicket.cs" />
     <Compile Include="Models\Review.cs" />
+    <Compile Include="Models\RoJsonAttribute.cs" />
     <Compile Include="Models\SearchItem.cs" />
     <Compile Include="Models\SearchResultItem.cs" />
     <Compile Include="Models\Setting.cs" />

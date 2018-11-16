@@ -30,6 +30,10 @@ namespace RoCMS.Web.Contract.Models
         public string CanonicalUrl { get; set; }
         public string Type { get; set; }
 
+        public Dictionary<string,string> Options { get; set; }
+
+        public HeartState State { get; set; }
+
         public void FillHeart(Heart anotherHeart)
         {
             this.HeartId = anotherHeart.HeartId;
@@ -47,6 +51,8 @@ namespace RoCMS.Web.Contract.Models
             this.AdditionalHeaders = anotherHeart.AdditionalHeaders;
             this.CanonicalUrl = anotherHeart.CanonicalUrl;
             this.Type = anotherHeart.Type;
+            this.Options = anotherHeart.Options.ToDictionary(x => x.Key, x => x.Value);
+            this.State = anotherHeart.State;
         }
     }
 }

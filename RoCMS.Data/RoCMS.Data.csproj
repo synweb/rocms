@@ -84,6 +84,7 @@
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\FormRequest.cs" />
     <Compile Include="Models\Heart.cs" />
+    <Compile Include="Models\HeartState.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\ImageInAlbum.cs" />
     <Compile Include="Models\Mail.cs" />

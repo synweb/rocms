@@ -22,5 +22,7 @@ namespace RoCMS.Data.Models
         public string Layout { get; set; }
         public string AdditionalHeaders { get; set; }
         public string Type { get; set; }
+        public Dictionary<string, string> Options { get; set; }
+        public HeartState State { get; set; }
     }
 }

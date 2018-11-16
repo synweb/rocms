@@ -16,6 +16,8 @@ App.Admin.Heart = function () {
     self.scripts = ko.observable();
     self.additionalHeaders = ko.observable();
     self.canonicalUrl = ko.observable();
+    self.options = ko.observable();
+    self.state = ko.observable('Public');
 
     $.extend(self, App.Admin.HeartFunctions);
 }
@@ -68,6 +70,7 @@ App.Admin.HeartFunctions = {
         createACEEditor("page_scripts", $("#page_scripts").data("aceMode"));
         createACEEditor("page_styles", $("#page_styles").data("aceMode"));
         createACEEditor("page_headers", $("#page_headers").data("aceMode"));
+        createACEEditor("page_options", $("#page_options").data("aceMode"));
 
         if (self.scripts()) {
             setTextToEditor("page_scripts", self.scripts());
@@ -77,6 +80,10 @@ App.Admin.HeartFunctions = {
         }
         if (self.additionalHeaders()) {
             setTextToEditor("page_headers", self.additionalHeaders());
+        }
+
+        if (self.options()) {
+            setTextToEditor("page_options", self.options());
         }
     },
 
@@ -88,6 +95,8 @@ App.Admin.HeartFunctions = {
         self.styles(styles);
         var additionalHeaders = getTextFromEditor('page_headers');
         self.additionalHeaders(additionalHeaders);
+        var options = getTextFromEditor('page_options');
+        self.options(options);
     },
 
     generateUrl : function() {

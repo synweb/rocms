@@ -14,7 +14,9 @@
 	[Layout] VARCHAR(300) NOT NULL DEFAULT 'clientLayout', 
 	[AdditionalHeaders] NVARCHAR (MAX) NULL,
 	[Type] VARCHAR(300) NULL,
-	UNIQUE NONCLUSTERED ([RelativeUrl] ASC), 
+	[Options] NVARCHAR(MAX) NULL, 
+    [State] VARCHAR(20) NOT NULL DEFAULT 'Public', 
+    UNIQUE NONCLUSTERED ([RelativeUrl] ASC), 
 	CONSTRAINT [FK_Heart_ChildHeart] FOREIGN KEY ([ParentHeartId]) REFERENCES [Heart]([HeartId])
 	
 )

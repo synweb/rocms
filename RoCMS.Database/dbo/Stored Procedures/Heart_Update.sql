@@ -10,7 +10,9 @@
 @Scripts nvarchar(MAX),
 @Layout varchar(300),
 @AdditionalHeaders nvarchar(MAX),
-@HeartId int
+@HeartId int,
+@Options NVARCHAR(MAX), 
+@State VARCHAR(20)
 AS
 	UPDATE [dbo].[Heart] SET
 		[RelativeUrl]=@RelativeUrl,
@@ -23,5 +25,7 @@ AS
 		[Styles]=@Styles,
 		[Scripts]=@Scripts,
 		[Layout]=@Layout,
-		[AdditionalHeaders]=@AdditionalHeaders
+		[AdditionalHeaders]=@AdditionalHeaders,
+		[Options]=@Options,
+		[State]=@State
 	WHERE [HeartId]=@HeartId

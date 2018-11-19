@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Practices.EnterpriseLibrary.Data;
 using RoCMS.Base.Extentions;
+using RoCMS.Base.Helpers;
 
 namespace RoCMS.Base.Data
 {
@@ -273,6 +274,11 @@ namespace RoCMS.Base.Data
                 {
                     SetCollectionParameterValue(cmd, db, parameter, (IEnumerable) paramValue);
                 }
+                else if (paramValue is Dictionary<string, string>)
+                {
+                    string jsonValue = DataContractSerializeHelper.SerializeJson((Dictionary<string, string>)paramValue);
+                    db.SetParameterValue(cmd, paramName, jsonValue);
+                }
                 else
                 {
                     db.SetParameterValue(cmd, paramName, paramValue);
@@ -441,16 +447,19 @@ namespace RoCMS.Base.Data
                     propertyInfo.SetValue(res, null);
                     continue;
                 }
-                if (propertyInfo.PropertyType.IsEnum)
+                bool isJson = propertyInfo.PropertyType == typeof(Dictionary<string, string>);
+                if (isJson)
+                {
+                    var dict = DataContractSerializeHelper.DeserializeJson(Convert.ToString(dbValue));
+                    propertyInfo.SetValue(res, dict);
+                }
+                else if (propertyInfo.PropertyType.IsEnum)
                 {
                     var value = Enum.Parse(propertyInfo.PropertyType, Convert.ToString(dbValue));
                     propertyInfo.SetValue(res, value);
                 }
                 else
                 {
-                    //Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
-                    //object safeValue = Convert.ChangeType(dbValue, t);
-                    //propertyInfo.SetValue(res, safeValue);
                     Type t = Nullable.GetUnderlyingType(propertyInfo.PropertyType) ?? propertyInfo.PropertyType;
                     if (t.IsEnum)
                     {

@@ -114,6 +114,7 @@ function pageEditorLoad(relativeUrl) {
             getJSON("/api/page/" + relativeUrl + "/get", "", function (res) {
                 if (res.succeed && res.data) {
                     var page = $.extend(ko.mapping.fromJS(res.data, App.Admin.PageValidationMapping), App.Admin.PageFunctions);
+                    temp = page;
                     vm.page(page);
                 }
                 vm.page().initPage();

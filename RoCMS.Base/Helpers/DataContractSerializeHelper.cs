@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace RoCMS.Base.Helpers
 {
@@ -83,6 +84,20 @@ namespace RoCMS.Base.Helpers
                 var serializer = new DataContractSerializer(typeof(T));
                 return (T)serializer.ReadObject(stream);
             }
+        }
+
+        public static Dictionary<string, string> DeserializeJson(string jsonData)
+        {
+            if (String.IsNullOrEmpty(jsonData)) return null;
+            var res = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonData);
+            return res;
+        }
+
+        public static string SerializeJson(Dictionary<string, string> data)
+        {
+            if (data == null) return null;
+            var res = JsonConvert.SerializeObject(data);
+            return res;
         }
     }
 }

@@ -254,7 +254,7 @@ namespace RoCMS.Shop.Services
 
         private void FillImages(GoodsItem goodsItem)
         {
-            var imageIds = _goodsImageGateway.SelectByGoods(goodsItem.HeartId).Select(x => x.ImageId);
+            var imageIds = _goodsImageGateway.SelectByGoods(goodsItem.HeartId).OrderBy(x => x.SortOrder).Select(x => x.ImageId);
             goodsItem.Images = imageIds.ToList();
         }
 
@@ -290,10 +290,12 @@ namespace RoCMS.Shop.Services
                     _goodsCategoryGateway.Insert(new GoodsCategory()
                     {CategoryId = goodsCategory.ID, GoodsId = id});
                 }
+                int k = 0;
                 foreach (var goodsImageId in goods.Images)
                 {
                     _goodsImageGateway.Insert(new GoodsImage()
-                    { ImageId = goodsImageId, HeartId = id });
+                    { ImageId = goodsImageId, HeartId = id, SortOrder = k });
+                    k++;
                 }
                 foreach (var goodsPack in goods.Packs)
                 {
@@ -392,6 +394,18 @@ namespace RoCMS.Shop.Services
                             ImageId = newImage
                         });
                     }
+                }
+
+                int k = 0;
+                foreach (var image in goods.Images)
+                {
+                    _goodsImageGateway.Update(new GoodsImage()
+                    {
+                        HeartId = heartId,
+                        ImageId = image,
+                        SortOrder = k
+                    });
+                    k++;
                 }
 
                 var oldPacks = _goodsPackGateway.SelectByGoods(heartId);

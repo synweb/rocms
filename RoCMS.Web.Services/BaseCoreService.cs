@@ -32,6 +32,8 @@ namespace RoCMS.Web.Services
 
         private static void ConfigureMapper()
         {
+            Mapper.CreateMap<Data.Models.HeartState, Contract.Models.HeartState>();
+            Mapper.CreateMap<Contract.Models.HeartState, Data.Models.HeartState>();
             Mapper.CreateMap<Data.Models.Heart, Contract.Models.Heart>()
                 .ForMember(x => x.CanonicalUrl, x => x.Ignore());
             Mapper.CreateMap<Contract.Models.Heart, Data.Models.Heart>()
@@ -56,7 +58,9 @@ namespace RoCMS.Web.Services
                 .ForMember(x => x.Scripts, x => x.Ignore())
                 .ForMember(x => x.Layout, x => x.Ignore())
                 .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
-                .ForMember(x => x.CanonicalUrl, x => x.Ignore());
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore())
+                .ForMember(x => x.Options, x => x.Ignore())
+                .ForMember(x => x.State, x => x.Ignore());
             Mapper.CreateMap<Contract.Models.Page, Page>();
 
 

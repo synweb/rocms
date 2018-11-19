@@ -56,8 +56,8 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.Scripts, x => x.Ignore())
                 .ForMember(x => x.Layout, x => x.Ignore())
                 .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
-
-                ;
+                .ForMember(x => x.Options, x => x.Ignore())
+                .ForMember(x => x.State, x => x.Ignore());
 
             Mapper.CreateMap<Spec, Data.Models.Spec>();
             Mapper.CreateMap<Data.Models.Spec, Spec>();
@@ -83,8 +83,8 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.Scripts, x => x.Ignore())
                 .ForMember(x => x.Layout, x => x.Ignore())
                 .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
-
-                ;
+                .ForMember(x => x.Options, x => x.Ignore())
+                .ForMember(x => x.State, x => x.Ignore());
 
             Mapper.CreateMap<Data.Models.Category, IdNamePair<int>>()
                 .ForMember(x => x.ID, x => x.MapFrom(y => y.HeartId))
@@ -135,7 +135,8 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.Scripts, x => x.Ignore())
                 .ForMember(x => x.Layout, x => x.Ignore())
                 .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
-                ;
+                .ForMember(x => x.Options, x => x.Ignore())
+                .ForMember(x => x.State, x => x.Ignore());
 
             Mapper.CreateMap<GoodsFilter, Data.Models.GoodsFilter>()
                 .ForMember(x => x.WithSubcategories, x => x.MapFrom(y => y.ClientMode??false))
@@ -199,7 +200,9 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.Layout, x => x.Ignore())
                 .ForMember(x => x.AdditionalHeaders, x => x.Ignore())
                 .ForMember(x => x.Categories, x => x.Ignore())
-                .ForMember(x => x.CanonicalUrl, x => x.Ignore());
+                .ForMember(x => x.CanonicalUrl, x => x.Ignore())
+                .ForMember(x => x.Options, x => x.Ignore())
+                .ForMember(x => x.State, x => x.Ignore());
 
             Mapper.CreateMap<CartItem, GoodsInOrder>()
                 .ForMember(x => x.OrderId, x => x.Ignore())

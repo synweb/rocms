@@ -97,6 +97,7 @@
     <Compile Include="Gateways\NewsItemTagGateway.cs" />
     <Compile Include="Gateways\RssCrawlerGateway.cs" />
     <Compile Include="Gateways\RssCrawlerFilterGateway.cs" />
+    <Compile Include="Gateways\RssProcessedItemGateway.cs" />
     <Compile Include="Gateways\TagGateway.cs" />
     <Compile Include="Models\Blog.cs" />
     <Compile Include="Models\BlogUser.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Models\FinalNewsFilter.cs" />
     <Compile Include="Models\RssCrawler.cs" />
     <Compile Include="Models\RssCrawlerFilter.cs" />
+    <Compile Include="Models\RssProcessedItem.cs" />
     <Compile Include="Models\TagStat.cs" />
     <Compile Include="Models\NewsItem.cs" />
     <Compile Include="Models\RecordType.cs" />

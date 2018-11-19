@@ -130,6 +130,13 @@
     <Build Include="Stored Procedures\RssCrawlerFilter_Update.sql" />
     <Build Include="Stored Procedures\RssCrawlerFilter_SelectByRssCrawler.sql" />
     <Build Include="Stored Procedures\NewsItem_SelectIdByRssSource.sql" />
+    <Build Include="Tables\RssProcessedItem.sql" />
+    <Build Include="Stored Procedures\RssProcessedItem_Select.sql" />
+    <Build Include="Stored Procedures\RssProcessedItem_Insert.sql" />
+    <Build Include="Stored Procedures\RssProcessedItem_Update.sql" />
+    <Build Include="Stored Procedures\RssProcessedItem_SelectOne.sql" />
+    <Build Include="Stored Procedures\RssProcessedItem_Delete.sql" />
+    <Build Include="Stored Procedures\RssProcessedItem_SelectByRssSource.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">

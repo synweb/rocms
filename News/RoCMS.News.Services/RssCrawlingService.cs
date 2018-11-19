@@ -29,6 +29,7 @@ namespace RoCMS.News.Services
         private readonly RssCrawlerGateway _rssCrawlerGateway = new RssCrawlerGateway();
         private readonly CategoryGateway _categoryGateway = new CategoryGateway();
         private readonly RssCrawlerFilterGateway _rssCrawlerFilterGateway = new RssCrawlerFilterGateway();
+        private readonly RssProcessedItemGateway _rssProcessedItemGateway = new RssProcessedItemGateway();
         private readonly INewsItemService _newsItemService;
         private readonly IAlbumService _albumService;
         private readonly IImageService _imageService;
@@ -136,6 +137,7 @@ namespace RoCMS.News.Services
         private const string SETTINGS_SERVICE = "settingsService";
         private const string LOG_SERVICE = "logService";
         private const string HEART_SERVICE = "heartService";
+        private const string RSS_PROCESSED_ITEM_GATEWAY = "RssProcessedItemGateway";
 
         public void StartCrawling()
         {
@@ -153,7 +155,8 @@ namespace RoCMS.News.Services
                     {NEWS_ITEM_SERVICE, _newsItemService},
                     {SETTINGS_SERVICE, _settingsService},
                     {LOG_SERVICE, _logService},
-                    {HEART_SERVICE, _heartService}
+                    {HEART_SERVICE, _heartService},
+                    {RSS_PROCESSED_ITEM_GATEWAY, _rssProcessedItemGateway},
                 });
                 var builtJob = job.Build();
                 var trigger = TriggerBuilder.Create()
@@ -182,6 +185,7 @@ namespace RoCMS.News.Services
                         ext.OuterNamespace).FirstOrDefault();
             }
 
+
             public async void Execute(IJobExecutionContext context)
             {
                 var dataMap = context.JobDetail.JobDataMap;
@@ -194,6 +198,7 @@ namespace RoCMS.News.Services
                     var newsItemService = (INewsItemService) dataMap[NEWS_ITEM_SERVICE];
                     var settingsService = (ISettingsService) dataMap[SETTINGS_SERVICE];
                     var heartService = (IHeartService)dataMap[HEART_SERVICE];
+                    var rssProcessedItemGateway = (RssProcessedItemGateway)dataMap[RSS_PROCESSED_ITEM_GATEWAY];
 
                     logService.TraceMessage($"Starting crawling {feed.RssFeedUrl}");
                     var feedUrl = feed.RssFeedUrl.StartsWith("//") ? $"https:{feed.RssFeedUrl}" : feed.RssFeedUrl;
@@ -202,7 +207,7 @@ namespace RoCMS.News.Services
                     logService.TraceMessage($"Got {syndicationFeed.Items.Count()} items");
                     foreach (SyndicationItem item in syndicationFeed.Items)
                     {
-                         if (!CheckIfItemIsNew(item, newsItemService))
+                         if (!CheckIfItemIsNew(item, rssProcessedItemGateway))
                             continue;
 
                         // проверка текста по фильтрам
@@ -225,11 +230,18 @@ namespace RoCMS.News.Services
                         }
                         logService.TraceMessage(
                             $@"Item with title ""{item.Title.Text}"" {(filterOk ? "matches" : "does not match")}");
+
+                        Data.Models.RssProcessedItem rssProcessedItem = new Data.Models.RssProcessedItem
+                        {
+                            NewsItemId = null,
+                            RssSource = item.Id,
+                        };
                         if (!filterOk)
+                        {
+                            rssProcessedItemGateway.Insert(rssProcessedItem);
                             continue;
-
+                        }
                         var newsItemTextStringBuilder = new StringBuilder();
-
                         // html parsing
                         var config = Configuration.Default.WithDefaultLoader();
                         var address = item.Links.First().Uri;
@@ -281,7 +293,7 @@ namespace RoCMS.News.Services
                         }
                         lock (feed)
                         {
-                            if (!CheckIfItemIsNew(item, newsItemService))
+                            if (!CheckIfItemIsNew(item, rssProcessedItemGateway))
                             {
                                 // если вдруг за время скачивания картинки другой поток успел добавить эту же новость
                                 imageService.RemoveImage(imageId);
@@ -334,7 +346,9 @@ namespace RoCMS.News.Services
                                 };
                             }
                             logService.TraceMessage($"Creating NewsItem for {item.Id}");
-                            newsItemService.CreateNewsItem(newNewsItem);
+                            int newsItemId = newsItemService.CreateNewsItem(newNewsItem);
+                            rssProcessedItem.NewsItemId = newsItemId;
+                            rssProcessedItemGateway.Insert(rssProcessedItem);
                         }
                     }
                 }
@@ -392,10 +406,11 @@ namespace RoCMS.News.Services
                 return input;
             }
 
-            private static bool CheckIfItemIsNew(SyndicationItem item, INewsItemService newsItemService)
+            private static bool CheckIfItemIsNew(SyndicationItem item, RssProcessedItemGateway rssProcessedItemGateway)
             {
-                NewsItem newsItem = newsItemService.GetNewsItemByRssSource(item.Id);
-                return newsItem == null;
+                var processedItem = rssProcessedItemGateway.SelectByRssSource(item.Id);
+                // new if item is null
+                return processedItem == null;
             }
         }
     }

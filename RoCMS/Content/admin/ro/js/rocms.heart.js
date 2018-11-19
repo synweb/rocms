@@ -101,8 +101,7 @@ App.Admin.HeartFunctions = {
         var additionalHeaders = getTextFromEditor('page_headers');
         self.additionalHeaders(additionalHeaders);
         var options = getTextFromEditor('page_options');
-        temp = JSON.parse(options);
-        self.options(JSON.parse(options));
+        self.options(JSON.parse(options||"{}"));
     },
 
     generateUrl : function() {

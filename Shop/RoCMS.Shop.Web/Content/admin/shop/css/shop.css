@@ -263,3 +263,11 @@ li.compatible {
         content: ' ';
         clear: both;
     }
+
+
+.extendedImages .ui-sortable-placeholder {
+    width: 25px;
+    height: 45px;
+    background: #eee;
+    vertical-align: middle;
+}

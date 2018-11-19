@@ -272,7 +272,7 @@
                     <div class="form-group">
                         <label class="control-label col-xs-3">Дополнительные изображения</label>
                         <div class="col-xs-8">
-                            <ul class="extendedImages" data-bind="foreach: images">
+                            <ul class="extendedImages ui-sortable" data-bind="sortable: {data: images}">
                                 <li><img alt="Изображение" data-bind="click: function() {$parent.removeImage($data, $parent);}, thumbnailSrc: $data" /></li>
                             </ul>
                         </div>

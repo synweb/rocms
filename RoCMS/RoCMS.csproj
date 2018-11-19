@@ -523,6 +523,7 @@
     <Content Include="Content\base\vendor\jquery\core\jquery.mask.js" />
     <Content Include="Content\base\vendor\jquery\ui-short\jquery.blockUI.js" />
     <Content Include="Content\base\vendor\jquery\ui\jquery-ui-1.10.3.js" />
+    <Content Include="Content\base\vendor\knockout\knockout-sortable.js" />
     <Content Include="Content\base\vendor\knockout\knockout.groupedOptions.js" />
     <Content Include="Content\base\vendor\knockout\ru-RU.js" />
     <Content Include="Content\client\ro\js\rocms.client.orderform.js" />

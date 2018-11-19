@@ -55,12 +55,18 @@
     <div class="row">
         <div class="col-md-6">
             <figure>
-                <img src="@Url.Action("Image", "Gallery", new {id = goodsItem.MainImageId})" alt="@goodsItem.Description" class="img-responsive">
+                <img src="@Url.RouteUrl("Image", new {id = goodsItem.MainImageId})" alt="@goodsItem.Description" class="img-fluid">
                 @if (goodsItem.Actions.Any())
                 {
                     <div class="goods-tag"><em class="glyphicon glyphicon-fire"></em></div>
                 }
             </figure>
+            @foreach (var img in goodsItem.Images)
+            {
+                <ul>
+                    <li><img src="@Url.RouteUrl("Thumbnail", new {id = img})" class="img-fluid"/></li>
+                </ul>
+            }
         </div>
         <div class="col-md-6">
 

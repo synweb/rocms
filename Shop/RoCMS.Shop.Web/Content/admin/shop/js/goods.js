@@ -429,6 +429,7 @@ App.Admin.Shop.GoodsItemFunctions = {
         });
 
     },
+
     addSpec: function () {
         var self = this;
         showSpecDialog(function (item) {
@@ -618,9 +619,11 @@ App.Admin.Shop.GoodsItemFunctions = {
     },
 
     removeImage: function (image, parent) {
-        parent.images.remove(function (item) {
-            return item == image;
-        });
+        if (confirm("Удалить изображение?")) {
+            parent.images.remove(function(item) {
+                return item == image;
+            });
+        }
     },
 
     dialog: function (url, onSave) {

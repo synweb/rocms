@@ -54,6 +54,10 @@ namespace RoCMS
                 url: "Gallery/Image/{id}",
                 defaults: new { controller = "Gallery", action = "Image", id = UrlParameter.Optional });
             routes.MapRoute(
+                name: "Pages",
+                url: "Page/{relativeUrl}",
+                defaults: new { controller = "Page", action = "GetPage", relativeUrl = UrlParameter.Optional });
+            routes.MapRoute(
                 name: "SetAlbumWatermark",
                 url: "api/album/{albumId}/{watermarkImageId}/watermark/set",
                 defaults: new { controller = "Gallery", action = "SetAlbumWatermark" });

@@ -239,7 +239,7 @@ namespace RoCMS.Shop.Services
                 actionIds = actionIds.Concat(catActionIds);
             }
 
-            var actions = actionIds.Select(x => _actionGateway.SelectOne(x));
+            var actions = actionIds.Distinct().Select(x => _actionGateway.SelectOne(x));
             var res = actions.Where(x => x.Active &&
                                            (!x.DateOfEnding.HasValue || x.DateOfEnding >= DateTime.UtcNow))
                                            .Select(x => new ActionShortInfo(x.HeartId, x.Name, x.Discount))

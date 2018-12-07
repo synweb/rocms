@@ -24,9 +24,10 @@ namespace RoCMS.Shop.Services
         private readonly ISettingsService _settingsService;
         private readonly IShopService _shopService;
         private readonly IShopPickupPointService _pickupPointService;
+        private readonly IShopPackService _shopPackService;
         private readonly OrderGateway _orderGateway = new OrderGateway();
         private readonly GoodsInOrderGateway _goodsInOrderGateway = new GoodsInOrderGateway();
-        public ShopOrderService(IRazorEngineService razorService, IShopClientService clientService, IMailService mailService, ISettingsService settingsService, IShopService shopService, IShopPickupPointService pickupPointService)
+        public ShopOrderService(IRazorEngineService razorService, IShopClientService clientService, IMailService mailService, ISettingsService settingsService, IShopService shopService, IShopPickupPointService pickupPointService, IShopPackService shopPackService)
         {
             _razorService = razorService;
             _clientService = clientService;
@@ -34,6 +35,7 @@ namespace RoCMS.Shop.Services
             _settingsService = settingsService;
             _shopService = shopService;
             _pickupPointService = pickupPointService;
+            _shopPackService = shopPackService;
         }
         public IEnumerable<Order> GetOrderPage(int startIndex, int pageSize, out int total, int? clientId = null)
         {
@@ -85,6 +87,10 @@ namespace RoCMS.Shop.Services
             {
                 try
                 {
+                    if (goodsInOrder.PackId.HasValue)
+                    {
+                        goodsInOrder.Pack = _shopPackService.GetPack(goodsInOrder.PackId.Value);
+                    }
                     goodsInOrder.Goods = _shopService.GetGoods(goodsInOrder.HeartId);
                 }
                 catch (GoodsNotFoundException)

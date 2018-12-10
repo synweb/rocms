@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Transactions;
 using AutoMapper;
 using RoCMS.Base.Exceptions;
@@ -44,7 +45,34 @@ namespace RoCMS.News.Services
 
             InitCache("TagMemoryCache");
             CacheExpirationInMinutes = 30;
+
+            
         }
+
+
+        //Для транслитерации урлов в уже существующих новостях
+        //private void GenerateRelativeUrls()
+        //{
+
+        //    var hearts = _heartService.GetHearts(typeof(NewsItem).FullName);
+        //    StringBuilder sb = new StringBuilder("");
+        //    foreach (var heart in hearts)
+        //    {
+        //        string old = heart.RelativeUrl;
+        //        string url = FormattingHelper.ToTranslitedUrl(heart.RelativeUrl, 250);
+        //        heart.RelativeUrl = url;
+        //        _heartService.UpdateHeart(heart);
+
+
+        //        sb.AppendLine($"@@@{old}***{url}###");
+
+                
+        //    }
+
+        //    Console.Write(sb.ToString());
+
+
+        //}
 
         public IEnumerable<NewsItem> GetAllNews()
         {

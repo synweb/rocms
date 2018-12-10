@@ -63,12 +63,18 @@ namespace RoCMS.Base.Helpers
                 });
         }
 
-        public static string ToTranslitedUrl(string title, int? maxLength = null)
+        public static string ToTranslitedUrl(string title, int? maxLength = null, bool allowSlash = false)
         {
             var value = Regex.Replace(title.ToLower(), @"([а-яё])|([\s_-])|([^a-z\d])",
                 (ch) =>
                 {
-                    if (ch.Value.Equals(" ") || ch.Value.Equals("-"))
+                    if (allowSlash)
+                    {
+                        if (ch.Value.Equals("/"))
+                            return "/";
+                    }
+
+                    if (ch.Value.Equals(" ") || ch.Value.Equals("-") || ch.Value.Equals("_"))
                     {
                         return "-";
                     }

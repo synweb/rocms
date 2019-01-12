@@ -80,9 +80,8 @@
     <Reference Include="MvcSiteMapProvider.WebActivator">
       <HintPath>..\packages\MvcSiteMapProvider.MVC4.4.6.17\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -918,6 +917,10 @@
     <ProjectReference Include="..\RoCMS.Hooks.Bitrix24\RoCMS.Hooks.Bitrix24.csproj">
       <Project>{9a160fc8-9f03-489c-9b23-d99a3c6617d9}</Project>
       <Name>RoCMS.Hooks.Bitrix24</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RoCMS.Hooks.TelegramBot\RoCMS.Hooks.TelegramBot.csproj">
+      <Project>{ad760b57-b621-4143-bc86-47dc9e0bad3d}</Project>
+      <Name>RoCMS.Hooks.TelegramBot</Name>
     </ProjectReference>
     <ProjectReference Include="..\RoCMS.Logging\RoCMS.Logging.csproj">
       <Project>{074e61fd-9e09-45ef-95b3-66175f234eb4}</Project>

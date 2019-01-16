@@ -42,12 +42,12 @@ namespace RoCMS.Web.Services
                 var fields = Mapper.Map<ICollection<Data.Models.OrderFormField>>(form.Fields);
                 var oldFields = _orderFormFieldGateway.SelectByForm(form.OrderFormId);
 
-                foreach (var orderFormField in oldFields.Where(x => fields.All(y => x.OrderFormId != y.OrderFormId ))) //удаление
+                foreach (var orderFormField in oldFields.Where(x => fields.All(y => x.OrderFormFieldId != y.OrderFormFieldId))) //удаление
                 {
                     _orderFormFieldGateway.Delete(orderFormField.OrderFormFieldId);
                 }
 
-                foreach (var orderFormField in fields.Where(x => oldFields.All(y => x.OrderFormId != y.OrderFormId))) //добавление
+                foreach (var orderFormField in fields.Where(x => oldFields.All(y => x.OrderFormFieldId != y.OrderFormFieldId))) //добавление
                 {
                     orderFormField.OrderFormId = form.OrderFormId;
                     _orderFormFieldGateway.Insert(orderFormField);

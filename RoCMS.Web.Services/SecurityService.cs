@@ -220,7 +220,16 @@ namespace RoCMS.Web.Services
 
         public void SetResources(int userId, ICollection<int> resourceIds)
         {
-            using(var ts = new TransactionScope())
+
+            var resources = GetResources();
+            foreach (var res in resources)
+            {
+                string cacheKey = GetAuthorizedCacheKey(userId, res.Name);
+                RemoveObjectFromCache(cacheKey);
+            }
+            
+
+            using (var ts = new TransactionScope())
             {
                 var currentResources =
                     _userCMSResourceGateway.SelectByUser(userId).Select(x => x.CmsResourceId).ToList();

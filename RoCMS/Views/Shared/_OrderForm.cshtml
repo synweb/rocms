@@ -13,7 +13,7 @@
 {
     <div>
         <div class="order-container" id="@formId">
-            <form class="message-container form-horizontal pd-sm">
+            <form class="message-container form-horizontal">
                 @if (String.IsNullOrEmpty(form.HtmlTemplate))
                 {
                     foreach (var field in form.Fields.OrderBy(x => x.SortOrder))

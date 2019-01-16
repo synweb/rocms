@@ -10,6 +10,9 @@
 
     string curPath = HttpUtility.UrlDecode(Request.Url.AbsolutePath);
     var heartService = DependencyResolver.Current.GetService<IHeartService>();
+
+    var mainPage = DependencyResolver.Current.GetService<ISettingsService>().GetHomepageUrl();
+
 }
 
 <ul class="navbar-nav justify-content-between">
@@ -22,11 +25,14 @@
         bool showCaret = hasChildren || hasMegaMenu;
         if (menuItem.HeartId.HasValue)
         {
-
             url = String.Format("/{0}", heartService.GetCanonicalUrl(menuItem.HeartId.Value));
+            if (url == "/" + mainPage)
+            {
+                url = "/";
+            }
         }
-        <li class="nav-item @((curPath == url || curPath.Contains(String.Format("{0}/", url))) ? "active" : "") @(showCaret ? "dropdown" : "" )">
-            <a href="@url" class="nav-link @(showCaret ? "dropdown-toggle" : "")" @(showCaret ? "data-toggle=dropdown aria-haspopup=true aria-expanded=false role=button" : "")>
+        <li class="nav-item @((curPath == url || curPath.Contains(String.Format("{0}/", url))) ? "active" : "") @(hasMegaMenu ? "mega":"") @(showCaret ? "dropdown" : "" )">
+            <a href="@url" class="nav-link @(showCaret ? "dropdown-toggle" : "")">
                 @menuItem.Name
             </a>
             @if (hasMegaMenu)
@@ -34,13 +40,9 @@
                 var block = blockService.GetBlock(menuItem.BlockId.Value);
                 if (block != null)
                 {
-                    <ul class="dropdown-menu">
-                        <li>
-                            <div class="yamm-content">
-                                @Html.Raw(block.Content)
-                            </div>
-                        </li>
-                    </ul>
+                    <div class="megamenu">
+                        @Html.Raw(block.Content)
+                    </div>
                 }
             }
             else if (hasChildren)

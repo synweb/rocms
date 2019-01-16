@@ -1,150 +1,236 @@
-﻿@using RoCMS.Base.ForWeb.Helpers
-@using RoCMS.Base.Models
-@using RoCMS.Helpers
-@using RoCMS.Shop.Contract.Models
-@using RoCMS.Shop.Contract.Services
-@using RoCMS.Shop.Web.Helpers
-@using RoCMS.Web.Contract.Models
+﻿@model IList<GoodsItem>
 
-@{
-    int? countryCode = ViewBag.CountryId as int?;
-    int? packCode = ViewBag.PackId as int?;
+    @using RoCMS.Base.ForWeb.Helpers
+    @using RoCMS.Base.Models
 
-    SortCriterion? sort = ViewBag.Sort as SortCriterion?;
+    @using RoCMS.Shop.Contract.Models
+    @using RoCMS.Shop.Contract.Services
+    @using RoCMS.Shop.Web.Helpers
+    @using RoCMS.Web.Contract.Models
 
-    var routeParams = new RouteValueDictionary(ParamExtractor.ExtractAllParams(Request)).RemovePaging();
-    IEnumerable<IdNamePair<int>> countries = null;
-    if (ViewBag.Countries != null)
-    {
-        countries = (IEnumerable<IdNamePair<int>>)ViewBag.Countries;
+    @{
+        int? countryCode = ViewBag.CountryId as int?;
+        int? packCode = ViewBag.PackId as int?;
+        int? manufacturerId = ViewBag.ManufacturerId as int?;
+
+        SortCriterion? sort = ViewBag.Sort as SortCriterion?;
+
+        var context = Request.RequestContext;
+        var shopService = DependencyResolver.Current.GetService<IShopService>();
+
+        var routeParams = new RouteValueDictionary(ParamExtractor.ExtractParamsForSEF(Request)).RemovePaging();
+        var goods = Model;
+
+        IEnumerable<IdNamePair<int>> countries = null;
+        if (ViewBag.Countries != null)
+        {
+            countries = (IEnumerable<IdNamePair<int>>)ViewBag.Countries;
+        }
+
+        IEnumerable<IdNamePair<int>> manufacturers = null;
+        if (ViewBag.Manufacturers != null)
+        {
+            manufacturers = (IEnumerable<IdNamePair<int>>)ViewBag.Manufacturers;
+        }
+
+        bool hasPacks = ViewBag.HasPacks;
+
+        var packs = ViewBag.Packs as IList<Pack>;
+
+        const int TEA_TYPE_SPEC_ID = 1;
+
+        RouteValueDictionary rv = null;
+
+        string pagingRoute = ViewBag.PagingRoute ?? typeof(Category).FullName;
+
+        Dictionary<Spec, IList<string>> specValues = ViewBag.SpecValues;
+        IEnumerable<string> teaTypes = null;
+        if (specValues != null && specValues.Any())
+        {
+            teaTypes = specValues.Where(x => x.Key.SpecId == TEA_TYPE_SPEC_ID).SelectMany(x => x.Value);
+        }
+        var requestedSpecs = ViewBag.RequestedSpecIdValues as Dictionary<int, string>;
+
     }
-    IEnumerable<IdNamePair<int>> manufacturers = null;
-    if (ViewBag.Manufacturers != null)
-    {
-        manufacturers = (IEnumerable<IdNamePair<int>>)ViewBag.Manufacturers;
-    }
-    RouteValueDictionary rv = null;
 
+    <div class="row filters">
+        @if (countries != null && countries.Any())
+        {
+            <div class="col">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        @(countryCode.HasValue && countries.Any(x => x.ID == countryCode) ? countries.First(x => x.ID == countryCode).Name : "Страна")
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        @{
+                            rv = routeParams.RemoveRouteParam("country");
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Любая</a></li>
+                        <li class="dropdown-item" role="presentation" class="divider"></li>
 
-    string pagingRoute = ViewBag.PagingRoute ?? typeof(Category).FullName;
+                        @foreach (var country in countries)
+                        {
+                            var routeValues = routeParams.AddRouteParam("country", country.ID);
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@country.Name</a></li>
 
-    Dictionary<Spec, IList<string>> specValues = ViewBag.SpecValues;
-
-    var requestedSpecs = ViewBag.RequestedSpecIdValues as Dictionary<int, string>;
-}
-
-<div class="row">
-    @if (countries != null && countries.Any())
-    {
-        <div class="col-xs-2">
-            <div class="dropdown">
-                <a role="button" data-toggle="dropdown" data-target="#" href="#">
-                    @(countryCode.HasValue && countries.Any(x => x.ID == countryCode) ? countries.First(x => x.ID == countryCode).Name : "Страна") <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    @{
-                        rv = routeParams.AddRouteParam("pack", packCode);
-                    }
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">Любая</a></li>
-                    <li role="presentation" class="divider"></li>
-
-
-
-                    @foreach (var country in countries)
-                    {
-                        var routeValues = routeParams.AddRouteParam("country", country.ID);
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(routeValues)">@country.Name</a></li>
-
-                    }
-                </ul>
+                        }
+                    </ul>
+                </div>
             </div>
-        </div>
-    }
+        }
+        @*
+            @if (teaTypes != null)
+            {
+                <div class="col">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                            @(requestedSpecs != null && requestedSpecs.Any(x => x.Key == TEA_TYPE_SPEC_ID) ? requestedSpecs[TEA_TYPE_SPEC_ID] : "Вид чая")
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            @{
+                                rv = routeParams.RemoveKeyValueRouteParam("specs", TEA_TYPE_SPEC_ID.ToString());
+                            }
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Любой</a></li>
+                            <li class="dropdown-item" role="presentation" class="divider"></li>
 
-    @foreach(var specPair in specValues) 
-    {
-        var values = specValues.Where(x => x.Key.SpecId == specPair.Key.SpecId).SelectMany(x => x.Value);
-    
-        <div class="col">
-            <div class="dropdown">
-                <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
-                    @(requestedSpecs != null && requestedSpecs.Any(x => x.Key == specPair.Key.SpecId) ? requestedSpecs[specPair.Key.SpecId] : specPair.Key.Name)
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    @{
-                        rv = routeParams.RemoveKeyValueRouteParam("specs", specPair.Key.SpecId.ToString());
-                    }
-                    <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Не важно</a></li>
-                    <li class="dropdown-item" role="presentation" class="divider"></li>
+                            @foreach (var teaType in teaTypes)
+                            {
+                                var routeValues = routeParams.AddKeyValueRouteParam("specs", TEA_TYPE_SPEC_ID.ToString(), teaType);
+                                <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@teaType</a></li>
 
-                    @foreach (var tt in values)
-                    {
-                        var routeValues = routeParams.AddKeyValueRouteParam("specs", specPair.Key.SpecId.ToString(), tt);
-                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@tt</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }*@
 
-                    }
-                </ul>
+        @foreach (var specPair in specValues)
+        {
+            var values = specValues.Where(x => x.Key.SpecId == specPair.Key.SpecId).SelectMany(x => x.Value);
+
+            <div class="col">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        @(requestedSpecs != null && requestedSpecs.Any(x => x.Key == specPair.Key.SpecId) ? requestedSpecs[specPair.Key.SpecId] : specPair.Key.Name)
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        @{
+                            rv = routeParams.RemoveKeyValueRouteParam("specs", specPair.Key.SpecId.ToString());
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Не важно</a></li>
+                        <li class="dropdown-item" role="presentation" class="divider"></li>
+
+                        @foreach (var tt in values)
+                        {
+                            var routeValues = routeParams.AddKeyValueRouteParam("specs", specPair.Key.SpecId.ToString(), tt);
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@tt</a></li>
+
+                        }
+                    </ul>
+                </div>
             </div>
-        </div>
-    }
+        }
 
-    @*@if (hasPacks)
-    {
-        <div class="col-xs-2">
-            <div class="dropdown">
-                <a role="button" data-toggle="dropdown" data-target="#" href="#">
-                    @(packCode.HasValue && packs.Any(x => x.PackId == packCode) ? packs.First(x => x.PackId == packCode).Name : "Упаковка") <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                    @{
-                        rv = routeParams.RemoveRouteParam("pack");
-                    }
-                    <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">Любая</a></li>
-                    <li role="presentation" class="divider"></li>
-                    @foreach (var pack in packs)
-                    {
-                        var routeValues = rv.AddRouteParam("pack", pack.PackId);
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(routeValues)">@pack.Name</a></li>
-                    }
-                </ul>
+
+        @if (manufacturers != null && manufacturers.Any())
+        {
+            <div class="col">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        @(manufacturerId.HasValue && manufacturers.Any(x => x.ID == manufacturerId) ? manufacturers.First(x => x.ID == manufacturerId).Name : "Производитель")
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        @{
+                            rv = routeParams.RemoveRouteParam("mnf");
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Любой</a></li>
+                        <li class="dropdown-item" role="presentation" class="divider"></li>
+
+
+
+                        @foreach (var manufacturer in manufacturers)
+                        {
+                            var routeValues = routeParams.AddRouteParam("mnf", manufacturer.ID);
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@manufacturer.Name</a></li>
+
+                        }
+                    </ul>
+                </div>
             </div>
-        </div>
-    }*@
-    <div class="col-xs-4">
-        <div class="dropdown">
-            <a role="button" data-toggle="dropdown" data-target="#" href="#">
-                @Html.Raw(sort.Description()) <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" role="menu">
-             @if (ViewBag.Action != null && ViewBag.Action == "Search")
-             {
-                 rv = routeParams.AddRouteParam("sort", SortCriterion.Relevance);
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.Relevance.Description())</a></li>
-             }
-                @{
-                    rv = routeParams.AddRouteParam("sort", SortCriterion.PriceDesc);
-                }
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.PriceDesc.Description())</a></li>
-                @{
+        }
 
-                    rv = routeParams.AddRouteParam("sort", SortCriterion.PriceAsc);
-                }
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.PriceAsc.Description())</a></li>
-                @{
-                    rv = routeParams.AddRouteParam("sort", SortCriterion.CreationDateDesc);
-                }
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.CreationDateDesc.Description())</a></li>
-                @{
 
-                    rv = routeParams.AddRouteParam("sort", SortCriterion.CreationDateAsc);
-                }
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.CreationDateAsc.Description())</a></li>
-                @{
+        @*@if (hasPacks)
+            {
+                <div class="col">
+                    <div class="dropdown">
+                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                            @(packCode.HasValue && packs.Any(x => x.PackId == packCode) ? packs.First(x => x.PackId == packCode).Name : "Упаковка")
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            @{
+                                rv = routeParams.RemoveRouteParam("pack");
+                            }
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Любая</a></li>
+                            <li class="dropdown-item" role="presentation" class="divider"></li>
+                            @foreach (var pack in packs)
+                            {
+                                var routeValues = rv.AddRouteParam("pack", pack.PackId);
+                                <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@pack.Name</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }*@
+        @if (goods != null && goods.Any())
+        {
+            <div class="col">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
+                        @Html.Raw(sort.Description())
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                        @* @if (ViewBag.Action != null && ViewBag.Action == "Search")
+                            {
+                                rv = routeParams.AddRouteParam("sort", SortCriterion.Relevance);
+                                <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.Relevance.Description())</a></li>
+                            }*@
+                        @{
+                            rv = routeParams.AddRouteParam("sort", SortCriterion.PriceDesc);
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.PriceDesc.Description())</a></li>
+                        @{
 
-                    rv = routeParams.AddRouteParam("sort", SortCriterion.Article);
-                }
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(rv)">@Html.Raw(SortCriterion.Article.Description())</a></li>
-            </ul>
-        </div>
+                            rv = routeParams.AddRouteParam("sort", SortCriterion.PriceAsc);
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.PriceAsc.Description())</a></li>
+                        @*@{
+                                rv = routeParams.AddRouteParam("sort", SortCriterion.CreationDateDesc);
+                            }
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.CreationDateDesc.Description())</a></li>
+                            @{
+
+                                rv = routeParams.AddRouteParam("sort", SortCriterion.CreationDateAsc);
+                            }
+                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.CreationDateAsc.Description())</a></li>*@
+                        @{
+
+                            rv = routeParams.AddRouteParam("sort", SortCriterion.RatingDesc);
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.RatingDesc.Description())</a></li>
+                        @{
+
+                            rv = routeParams.AddRouteParam("sort", SortCriterion.RatingAsc);
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.RatingAsc.Description())</a></li>
+                        @{
+
+                            rv = routeParams.AddRouteParam("sort", SortCriterion.Article);
+                        }
+                        <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">@Html.Raw(SortCriterion.Article.Description())</a></li>
+                    </ul>
+                </div>
+            </div>
+        }
     </div>
-</div>
+

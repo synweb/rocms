@@ -1,7 +1,13 @@
 ﻿@using RoCMS.Shop.Contract.Services
+@using RoCMS.Base.Helpers
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Web.Contract.Services
 @{
     var shopActionService = DependencyResolver.Current.GetService<IShopActionService>();
     IList<RoCMS.Shop.Contract.Models.Action> actions = shopActionService.GetActiveActions();
+    
+    IHeartService heartService = DependencyResolver.Current.GetService<IHeartService>();
+    
     
     
 }
@@ -11,22 +17,29 @@
 @foreach (var action in actions)
 {
     string url = action.Goods.Count() == 1 && !action.Categories.Any() && !action.Manufacturers.Any() ?
-        Url.Action("Goods", "Shop", new { id = action.Goods.Single().ID }) :
-        Url.Action("Action", "Shop", new { id = action.ActionId });
+        Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl = heartService.GetCanonicalUrl(action.Goods.Single().ID) }) :
+        Url.RouteUrl(typeof(RoCMS.Shop.Contract.Models.Action).FullName, new { relativeUrl = heartService.GetCanonicalUrl(action.HeartId) });
+
     
-    <div class="row article-container">
-        <a href="@url">
-            @if (action.ImageId != null)
+    <div class="blog-item">
+        <div class="row">
+            @if (!string.IsNullOrEmpty(action.ImageId))
             {
-                <div class="col-xs-4">
-                    <img src="@Url.Action("Thumbnail", "Gallery", new { id = action.ImageId })" />
+                <div class="col-sm-3 col-12">
+                    <div class="blog-image">
+                        <a href="@url">
+                            <img src="@Url.RouteUrl("Thumbnail", new {id = action.ImageId})" class="img-fluid" alt="@action.Title">
+                        </a>
+                    </div>
                 </div>
             }
-            <div class='@(action.ImageId != null ? "col-xs-8" : "col-xs-12")'>
-                <h4>@action.Name</h4>
-                <p>@Html.Raw(action.Description)</p>
-                <span class="article-link">Подробнее &raquo;</span>
+            <div class="col">
+                <div class="blog-action-data">
+                    <p class="h4"><a href="@url">@action.Title</a></p>
+                    <p>@Ro(action.Description)</p>
+                    <a class="more" href="@url">Подробнее >></a>
+                </div>
             </div>
-        </a>
+        </div>
     </div>
 }

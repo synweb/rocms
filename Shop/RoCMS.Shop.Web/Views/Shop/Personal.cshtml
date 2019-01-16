@@ -4,7 +4,7 @@
 
 @{
     Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
-    ViewBag.Title = "Личный кабинет";
+    ViewBag.Title = ViewBag.Header = "Личный кабинет";
 
     IEnumerable<Order> orders = ViewBag.Orders ?? new List<Order>();
 
@@ -13,186 +13,182 @@
 }
 
 <div class="personal">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="breadcrumb">
-                <a href="/">Главная</a>
-                <span class="delimiter"></span> <a class="last" href="#" title="Личный кабинет">Личный кабинет</a>
-            </div>
-            <h1>Личный кабинет</h1>
-        </div>
-    </div>
 
     @if (Model == null)
     {
-        <div class="row">
-            <div class="col-xs-12">
-                <span style="display: block; text-align:center;">Вы еще не совершали заказы в нашем магазине</span>
-            </div>
-        </div>
+
+        <p class="text-center">Вы еще не совершали заказы в нашем магазине</p>
+
     }
     else
-    {
-        <div class="row">
-            <form class="form-horizontal profile">
-                <div class="col-xs-6">
+    {<form class="form-horizontal profile">
+            <div class="row">
+
+                <div class="col-md-6">
                     <h2>Контакты</h2>
 
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Фамилия:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Фамилия:</label>
+                        <div class="col-8">
                             <input type="text" class="form-control last-name" value="@Model.LastName" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Имя:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Имя:</label>
+                        <div class="col-8">
                             <input type="text" class="form-control first-name" value="@Model.Name" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Телефон:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Телефон:</label>
+                        <div class="col-8">
                             <input type="text" value="@Model.Phone" class="form-control phone" placeholder="+7 (903) 555-1212" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Email:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Email:</label>
+                        <div class="col-8">
                             <input type="text" value="@Model.Email" class="email form-control" disabled="disabled" />
                         </div>
                     </div>
                     @*<div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Пароль:</label>
-                    <div class="col-xs-6">
-                        <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().password">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-2">Подтвердите пароль:</label>
-                    <div class="col-xs-6">
-                        <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().confirmPassword">
-                    </div>
-                </div>
-            </div>*@
+                            <div class="form-group row">
+                                <label class="col-form-label col">Пароль:</label>
+                                <div class="col-6">
+                                    <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-form-label col">Подтвердите пароль:</label>
+                                <div class="col-6">
+                                    <input class="form-control" name="password" value="" type="password" data-bind="value: $root.password().confirmPassword">
+                                </div>
+                            </div>
+                        </div>*@
 
                 </div>
-                <div class="col-xs-6">
+                <div class="col-md-6">
                     <h2>Базовый адрес доставки</h2>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Город:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Город:</label>
+                        <div class="col-8">
                             <input type="text" class="form-control city" value="@Model.Address.City" />
                         </div>
+
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Индекс:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Индекс:</label>
+                        <div class="col-8">
                             <input type="text" class="form-control post-code" value="@Model.Address.PostCode" />
                         </div>
+
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Метро:</label>
-                        <div class="col-xs-8">
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Метро:</label>
+                        <div class="col-8">
                             <input type="text" class="form-control metro" value="@Model.Address.Metro" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-4">Улица:</label>
-                        <div class="col-xs-8">
+                    <div class="form-group row">
+                        <label class="col-form-label col-4">Улица:</label>
+                        <div class="col-8">
                             <input type="text" class="form-control street" value="@Model.Address.Street" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-2">Дом:</label>
-                        <div class="col-xs-2 no-padding">
+                    <div class="form-group row">
+                        <label class="col-form-label col">Дом:</label>
+                        <div class="col no-padding">
                             <input type="text" class="form-control house" value="@Model.Address.House" />
                         </div>
-                        <label class="control-label col-xs-2">Корп./стр.:</label>
-                        <div class="col-xs-2 no-padding">
+                        <label class="col-form-label col">Корп./стр.:</label>
+                        <div class="col no-padding">
                             <input type="text" class="form-control houseIndex" value="@Model.Address.HouseIndex" />
                         </div>
-                        <label class="control-label col-xs-2">Под.:</label>
-                        <div class="col-xs-2 no-padding">
-                            <input type="text" class="form-control front-number" value="@Model.Address.FrontNumber" />
-                        </div>
+
 
                     </div>
-                    <div class="form-group">
-                        <label class="control-label  col-xs-2">Кв.:</label>
-                        <div class="col-xs-2 no-padding">
+                    <div class="form-group row">
+                        <label class="col-form-label  col">Кв.:</label>
+                        <div class="col no-padding">
                             <input type="text" class="form-control appartment" value="@Model.Address.Appartment" />
                         </div>
-                        <label class="control-label col-xs-2">Этаж:</label>
-                        <div class="col-xs-2 no-padding">
-                            <input type="text" class="form-control floor" value="@Model.Address.Floor" />
+                        <label class="col-form-label col">Под.:</label>
+                        <div class="col no-padding">
+                            <input type="text" class="form-control front-number" value="@Model.Address.FrontNumber" />
                         </div>
-                        <label class="control-label col-xs-2">Домофон:</label>
-                        <div class="col-xs-2 no-padding">
-                            <input type="text" class="form-control intercom" value="@Model.Address.Intercom" />
-                        </div>
+                        @*<label class="col-form-label col">Этаж:</label>
+                            <div class="col no-padding">
+                                <input type="text" class="form-control floor" value="@Model.Address.Floor" />
+                            </div>
+                            <label class="col-form-label col">Домофон:</label>
+                            <div class="col no-padding">
+                                <input type="text" class="form-control intercom" value="@Model.Address.Intercom" />
+                            </div>*@
                     </div>
                 </div>
-                <div class="col-xs-12">
-                    <button class="green-btn save-profile">Сохранить</button>
-                </div>
-            </form>
-        </div>
+
+
+            </div>
+            <div>
+                <button class="btn btn-green save-profile">Сохранить</button>
+            </div>
+        </form>
     }
 
     @if (orders.Any())
     {
-        <div class="row cart">
-            <div class="col-xs-12">
+        <div class="row cart mt-4">
+            <div class="col-12">
                 <h2>История заказов</h2>
                 @foreach (var order in orders)
                 {
                     <h4><a onclick="true" class="show-order-details">@order.CreationDate.ToShortDateString()</a></h4>
                     <div style="display: none;">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Наименование</th>
-                                    <th>Цена</th>
-                                    <th>Количество</th>
-                                    <th>Сумма</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var goodsItem in order.GoodsInOrder)
-                                {
 
-                                <tr>
-                                    <td class="thumb">
-                                        <a href="/Shop/Goods/@goodsItem.HeartId">
-                                            <img src="/Gallery/Thumbnail/@goodsItem.Goods.MainImageId" alt="@goodsItem.Goods.Name" />
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <a href="/Shop/Goods/@goodsItem.HeartId">
-                                            @(goodsItem.PackId.HasValue && goodsItem.Goods.Packs.Any(x => x.PackInfo.PackId == goodsItem.PackId) ?
-                                                      String.Format("{0} {1}", goodsItem.Goods.Name, goodsItem.Goods.Packs.First(x => x.PackInfo.PackId == goodsItem.PackId).PackInfo.Name) : goodsItem.Goods.Name)
-                                        </a>
-                                    </td>
-                                    <td class="price">
-                                        <span>@goodsItem.Price</span>&nbsp;<em class="fa fa-rub"></em>
-                                    </td>
-                                    <td class="quantity">
-                                        <span>@goodsItem.Quantity</span>
-                                    </td>
-                                    <td class="summary">@(Math.Round(goodsItem.Price * goodsItem.Quantity, 2))<span></span>&nbsp;<em class="fa fa-rub"></em></td>
-                                </tr>
+                        @foreach (var goodsItem in order.GoodsInOrder)
+                        {
+                            var url = String.IsNullOrEmpty(goodsItem.Goods.RelativeUrl) ? "#" : Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl = goodsItem.Goods.RelativeUrl });
 
-                                }
-                            </tbody>
-                        </table>
+
+                            <div class="cart-goods-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2 col-4">
+                                        @if (!String.IsNullOrEmpty(goodsItem.Goods.MainImageId))
+                                        {
+                                            <a href="@url">
+                                                <img class="img-fluid" src="/Gallery/Thumbnail/@goodsItem.Goods.MainImageId" alt="@goodsItem.Goods.Name" />
+                                            </a>
+                                        }
+                                    </div>
+                                    <div class="col-md-7 col-8">
+                                        <div class="cart-goods-item-header">
+                                            <a href="@url">
+                                                @(goodsItem.PackId.HasValue && goodsItem.Goods.Packs.Any(x => x.PackInfo.PackId == goodsItem.PackId) ?
+                                                                  String.Format("{0} {1}", goodsItem.Goods.Name, goodsItem.Goods.Packs.First(x => x.PackInfo.PackId == goodsItem.PackId).PackInfo.Name) : goodsItem.Goods.Name)
+                                            </a>
+                                        </div>
+                                        <div class="small">Артикул: @goodsItem.Goods.Article</div>
+                                    </div>
+                                    <div class="col-md-3 col-12">
+                                        <div class="row align-items-center">
+                                            <div class="col">
+                                                <div class="price">@(Math.Round(goodsItem.Price * goodsItem.Quantity, 2))<span></span>&nbsp;руб.</div>
+                                                <div class="small">@goodsItem.Quantity x <span>@goodsItem.Price</span>&nbsp;руб.</div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
                         @if (order.DeliveryPrice.HasValue)
                         {
                             <div class="row">
-                                <div class="col-xs-12">
-                                    Стоимость доставки: @order.DeliveryPrice <em class="fa fa-rub"></em>
+                                <div class="col-12">
+                                    Стоимость доставки: @order.DeliveryPrice руб.
                                 </div>
                             </div>
                         }
@@ -200,7 +196,7 @@
                         {
                             <div class="row">
 
-                                <div class="col-xs-12">
+                                <div class="col-12">
 
                                     Скидка постоянному покупателю: <strong>@order.TotalDiscount </strong> %
 
@@ -208,7 +204,7 @@
                             </div>
                         }
                         <div class="row">
-                            <div class="col-xs-12 total">
+                            <div class="col-12 total">
                                 @if (order.TotalDiscount > 0)
                                 {
                                     <text>Всего учетом скидки и доставки:</text>
@@ -221,7 +217,7 @@
                                 {
                                     <text>Всего без учета доставки</text>
                                 }
-                                <span>@order.Summary</span>&nbsp;<em class="fa fa-rub"></em>
+                                <span>@order.Summary</span>&nbsp;руб.
                             </div>
                         </div>
                         <hr />
@@ -260,9 +256,6 @@
                 var house = $("input.house").val();
                 var frontNumber = $("input.front-number").val();
                 var appartment = $("input.appartment").val();
-                var floor = $("input.floor").val();
-                var intercom = $("input.intercom").val();
-                var houseIndex = $("input.houseIndex").val();
 
                 blockUI();
 
@@ -277,10 +270,7 @@
                         house: house,
                         frontNumber: frontNumber,
                         appartment: appartment,
-                        postCode: postCode,
-                        floor: floor,
-                        houseIndex: houseIndex,
-                        intercom: intercom
+                        postCode: postCode
 
                     },
                     clientId: '@clientId'

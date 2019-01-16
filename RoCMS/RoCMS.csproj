@@ -725,7 +725,6 @@
     <Content Include="Views\Admin\_PickFile.cshtml" />
     <Content Include="Upload\TempUploadHandler.ashx" />
     <Content Include="Views\Admin\_PickAlbum.cshtml" />
-    <Content Include="Views\Shared\_ExternalCodes.cshtml" />
     <Content Include="Views\Shared\_BaseMetas.cshtml" />
     <Content Include="Views\Gallery\PickImageFromAlbum.cshtml" />
     <Content Include="Views\Gallery\PickImageAlbum.cshtml" />

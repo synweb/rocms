@@ -1,9 +1,9 @@
 ﻿@using RoCMS.Shop.Contract.Services
 @model string
-           
+
 @{
     var shopService = DependencyResolver.Current.GetService<IShopPickupPointService>();
-    var pickUpPoints = shopService.GetPickupPoints().Where(x => x.City == Model).ToArray();
+    var pickUpPoints = shopService.GetPickupPoints().Where(x => x.City == Model).OrderBy(x => x.Metro == null).ThenBy(x => x.Metro).ThenBy(x => x.Title).ToArray();
 }
 
 @if (pickUpPoints.Any())
@@ -11,7 +11,7 @@
     <ul>
         @foreach (var point in pickUpPoints)
         {
-            <li><a href="@Url.RouteUrl("PickUpPoint", new {id = point.PickUpPointId})">@point.Title</a></li>
+            <li><a href="@Url.Action("PickUpPoint", "Shop", new {id = point.PickUpPointId})">@point.Title</a></li>
         }
     </ul>
 }

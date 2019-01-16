@@ -1,26 +1,31 @@
 ﻿@using RoCMS.Shop.Contract.Services
+@using RoCMS.Shop.Contract.Models
+@using RoCMS.Web.Contract.Services
 
 @{
     IShopActionService shopActionService = DependencyResolver.Current.GetService<IShopActionService>();
     var actions = shopActionService.GetActionsForSlider();
+
+    IHeartService heartService = DependencyResolver.Current.GetService<IHeartService>();
+
 }
 
 @if (actions.Any())
 {
-    <div class="owl-carousel" id="actions-carousel">
+    <div class="owl-carousel mb-4" id="actions-carousel">
         @foreach (var action in actions)
         {
             string url = action.Goods.Count() == 1 && !action.Categories.Any() && !action.Manufacturers.Any() ?
-                Url.Action("Goods", "Shop", new { id = action.Goods.Single().ID }) :
-                Url.Action("Action", "Shop", new { id = action.HeartId });
+                Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl = heartService.GetCanonicalUrl(action.Goods.Single().ID) }) :
+                Url.RouteUrl(typeof(RoCMS.Shop.Contract.Models.Action).FullName, new { relativeUrl = heartService.GetCanonicalUrl(action.HeartId) });
             <div>
                 <a href="@url">
-                    <img src="@Url.RouteUrl("Image", new {id = action.ImageId})" alt="@action.Name" @(action.DateOfEnding.HasValue ? "title = #action" + action.HeartId : "")>
+                    <img src="@Url.RouteUrl("Image", new {id = action.ImageId})" alt="@action.Name" @(action.DateOfEnding.HasValue ? "title = #action" + action.HeartId : "") />
 
                     @if (action.DateOfEnding.HasValue)
                     {
                         string id = "action" + action.HeartId;
-                        <div id="@id" class="nivo-html-caption" style="text-align:center;">
+                        <div>
                             @Html.Partial("CountdownTimer", action.DateOfEnding.ToString())
                         </div>
                     }
@@ -31,19 +36,19 @@
     </div>
 
     @JsInline(@<script type="text/javascript">
-        $(function () {
-            $("#actions-carousel").ready(function () {
-                $('.owl-carousel').owlCarousel({
-                    margin: 10,
-                    responsiveClass: false,
-                    navText: ['<em class="fa fa-angle-left"></em>', '<em class="fa fa-angle-right"></em>'],
-                    autoWidth: false,
-                    items: 1,
-                    loop: true,
-                    nav: true
-                });
-            });
-        });
+                   $(function () {
+                       $("#actions-carousel").ready(function () {
+                           $('#actions-carousel').owlCarousel({
+                               margin: 10,
+                               responsiveClass: false,
+                               navText: ['<em class="fa fa-angle-left"></em>', '<em class="fa fa-angle-right"></em>'],
+                               autoWidth: false,
+                               items: 1,
+                               //loop: true,
+                               nav: true
+                           });
+                       });
+                   });
     </script>)
 
 }

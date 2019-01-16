@@ -2,8 +2,42 @@
 @using RoCMS.Shop.Contract.Models
 @using RoCMS.Shop.Contract.Services
 @model string
+
+@functions
+{
+
+    private string RatingClass(int rating)
+    {
+        string cls;
+        switch (rating)
+        {
+            case 1:
+                cls = "onestar";
+                break;
+            case 2:
+                cls = "twostar";
+                break;
+            case 3:
+                cls = "threestar";
+                break;
+            case 4:
+                cls = "fourstar";
+                break;
+            case 5:
+                cls = "fivestar";
+                break;
+            default:
+                cls = "";
+                break;
+        }
+        return cls;
+    }
+
+}
+
 @{
     var shopService = DependencyResolver.Current.GetService<IShopService>();
+    var reviewService = DependencyResolver.Current.GetService<IShopGoodsReviewService>();
 
     var goodsItem = shopService.GetGoods(Model);
     int heartId = goodsItem.HeartId;
@@ -18,7 +52,7 @@
     NumberFormatInfo nfi = new NumberFormatInfo { NumberGroupSeparator = " ", NumberDecimalDigits = 0 };
 
     ViewBag.Title = goodsItem.Title;
-    ViewBag.Header = goodsItem.BreadcrumbsTitle;
+    ViewBag.Header = goodsItem.Name;
 
     ViewBag.Styles = goodsItem.Styles;
     ViewBag.Scripts = goodsItem.Scripts;
@@ -46,102 +80,247 @@
     }
 
 
+
+    HttpCookie cookie = Request.Cookies["goodsRated"];
+    if (cookie != null)
+    {
+        string cookieVal = cookie.Value;
+        var cookieValArray = cookieVal.Replace("%2c", ",").Split(',');
+        bool alreadyRated = cookieValArray.Contains(heartId.ToString());
+        ViewBag.Rated = alreadyRated;
+    }
+    else
+    {
+        ViewBag.Rated = false;
+    }
+    var allReviews = reviewService.GetGoodsModeratedReviewsWithText(heartId);
+    var lastReviews = allReviews.Take(5);
+    var oldReviews = allReviews.Skip(5);
+
 }
 
-
-<h1>@goodsItem.Name</h1>
-
-<div class="goods">
+<div class="goods mb-4">
     <div class="row">
-        <div class="col-md-6">
-            <figure>
-                <img src="@Url.RouteUrl("Image", new {id = goodsItem.MainImageId})" alt="@goodsItem.Description" class="img-fluid">
-                @if (goodsItem.Actions.Any())
-                {
-                    <div class="goods-tag"><em class="glyphicon glyphicon-fire"></em></div>
-                }
-            </figure>
-            @foreach (var img in goodsItem.Images)
-            {
-                <ul>
-                    <li><img src="@Url.RouteUrl("Thumbnail", new {id = img})" class="img-fluid"/></li>
-                </ul>
-            }
-        </div>
-        <div class="col-md-6">
-
-            @if (goodsItem.Actions.Any())
-            {
-                <div class="goods-price action">@goodsItem.DiscountedPrice.ToString("# ###.##", nfi) руб. <span class="old-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</span></div>
-            }
-            else
-            {
-                <div class="goods-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</div>
-            }
-            <p>
-                @goodsItem.Description
-            </p>
-            <div class="buttons">
-                <a href="#" class="btn btn-lg btn-light">Купить в один клик</a>
-                <a href="#" class="btn btn-lg btn-dark"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
+        <div class="col-md-5">
+            <div class="goods-image">
+                <a href="@Url.RouteUrl("Image", new { id = goodsItem.MainImageId})" data-gallery="goods-@goodsItem.HeartId">
+                    <img src="@Url.RouteUrl("Thumbnail", new {id = goodsItem.MainImageId})" alt="" />
+                </a>
             </div>
-        </div>
-    </div>
-    <div class="pd-lg">
-
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#description" aria-controls="description" role="tab" data-toggle="tab">Описание</a></li>
-            <li role="presentation"><a href="#specs" aria-controls="specs" role="tab" data-toggle="tab">Характеристики</a></li>
-            <li role="presentation"><a href="#reviews" aria-controls="reviews" role="tab" data-toggle="tab">Отзывы</a></li>
-            <li role="presentation"><a href="#compatibles" aria-controls="compatibles" role="tab" data-toggle="tab">Аксессуары</a></li>
-            <li role="presentation"><a href="#delivery" aria-controls="delivery" role="tab" data-toggle="tab">Доставка и оплата</a></li>
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="description">
-                @Ro(goodsItem.HtmlDescription)
-            </div>
-            <div role="tabpanel" class="tab-pane" id="specs">
-                <div class="specs-list">
-                    @foreach (var spec in goodsItem.GoodsSpecs)
+            @if (goodsItem.Images.Any())
+            {
+                <div class="row mt-3">
+                    @for (int i = 0; i < goodsItem.Images.Count; i++)
                     {
-                        <div class="spec">
-                            <div class="row">
-                                <div class="col-sm-8">@spec.Spec.Name</div>
-                                <div class="col-sm-4">@(!string.IsNullOrEmpty(spec.Spec.Prefix)? spec.Spec.Prefix+" ":"")@spec.Value @spec.Spec.Postfix</div>
-                            </div>
+                        var img = goodsItem.Images[i];
+                        <div class="col-4@(i > 2 ? "hidden" : "")">
+                            <a data-gallery="goods-@goodsItem.HeartId" href="@Url.RouteUrl("Image", new { id = img})">
+                                <img src="@Url.RouteUrl("Thumbnail", new {id = img})" alt="" class="img-fluid" />
+                            </a>
                         </div>
                     }
                 </div>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="reviews">...</div>
-            <div role="tabpanel" class="tab-pane" id="compatibles">
-                <ul>
-                    @foreach (var item in compatibles)
-                    {
-                        <li>@item.Name</li>
-                    }
-                </ul>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="delivery">...</div>
+            }
+            <p class="goods-image-note">Фото товара может отличаться от оригинала.</p>
         </div>
+        <div class="col-md">
+
+            @if (goodsItem.NotAvailable)
+            {
+                <div class="row no-gutters align-items-center price-info">
+                    <div class="col">
+                        <span class="not-available">Нет в наличии</span>
+                    </div>
+                </div>
+            }
+            else if (goodsItem.HasPacks)
+            {
+                <div class="price-info">
+                    <table class="table">
+                        <tr>
+                            <th>Объем</th>
+                            <th class="text-center">Скидка</th>
+                            <th class="text-center">Цена</th>
+                            <th class="text-center" colspan="2">Количество</th>
+                            <!--  <th class="text-right"></th>-->
+                        </tr>
+                        @foreach (var pack in goodsItem.Packs.OrderBy(x => x.PackInfo.Size))
+                        {
+                            decimal oldPrice = goodsItem.PriceForPack(pack.PackInfo.PackId);
+
+                            <tr class="p@(pack.PackInfo.Size)">
+                                <td>@pack.PackInfo.Name</td>
+                                <td class="text-center">
+                                    @{
+                                        var discount = pack.Discount ?? pack.PackInfo.DefaultDiscount;
+                                    }
+                                    @if (discount > 0 && goodsItem.BasePackId != pack.PackId)
+                                    {
+                                        <strong>@(discount)%</strong>
+                                    }
+                                </td>
+                                @if (goodsItem.Actions.Any())
+                                {
+                                    decimal newPrice = goodsItem.DiscountedPriceForPack(pack.PackInfo.PackId);
+                                    <td class="text-center">
+                                        <div class="price action"><span class="old-price">@oldPrice.ToString("# ###.##", nfi) руб.</span> @newPrice.ToString("# ###.##", nfi) руб.</div>
+
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center"><div class="price">@oldPrice.ToString("# ###.##", nfi) руб.</div></td>
+                                }
+                                <td><input name="quantity@(pack.PackInfo.PackId)" class="quantity form-control" type="text" value="1"></td>
+                                <td class="text-right">
+                                    <a class="btn-green btn" data-bind="click: function(data,event){ onBuy(event, '/Shop/Checkout'); addItem(@goodsItem.HeartId, document.getElementsByName('quantity@(pack.PackInfo.PackId)')[0].value, @pack.PackInfo.PackId)}" href="#"><em class="fa fa-shopping-cart"></em>Купить</a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="row no-gutters align-items-center price-info">
+                    <div class="col">
+                        @if (goodsItem.Actions.Any())
+                        {
+                            <div class="price action"><span class="old-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</span> @goodsItem.DiscountedPrice.ToString("# ###.##", nfi) руб.</div>
+                        }
+                        else
+                        {
+                            <div class="price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</div>
+                        }
+                    </div>
+                    <div class="col">
+                        <input name="quantity" class="quantity form-control" type="text" value="1">
+                    </div>
+                    <div class="col">
+                        <div class="buy-btn-container">
+                            <a class="btn-green btn" data-bind="click: function(data,event){ onBuy(event, '/Shop/Checkout'); addItem(@goodsItem.HeartId, document.getElementsByName('quantity')[0].value)}" href="#"><em class="fa fa-shopping-cart"></em>Купить</a>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+            @if (goodsItem.Rating.HasValue)
+            {
+                int intRating = (int)Math.Round(goodsItem.Rating.Value, MidpointRounding.ToEven);
+                string rating = @goodsItem.Rating.Value.ToString("0.0");
+                string cls = RatingClass(intRating);
+                <div class="goods-item-rating">
+                    <span>Рейтинг: @rating</span>
+                    <ul class="rating @cls" title="@rating">
+                        <li class="one"><span title="1">1</span></li>
+                        <li class="two"><span title="2">2</span></li>
+                        <li class="three"><span title="3">3</span></li>
+                        <li class="four"><span title="4">4</span></li>
+                        <li class="five"><span title="5">5</span></li>
+                    </ul>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="description">
+        @Ro(goodsItem.HtmlDescription)
 
     </div>
-
-
 </div>
 
 
-@Js("/bin/Content/client/shop")
 
-@JsInline(@<script type="text/javascript">
-    $(function () {
-        $("select.pack").change(function () {
-            $("span[data-pack-id]").hide();
-            $("span[data-pack-id=" + $("select.pack").val() + "]").show();
-        });
-        $("select.pack").change();
-    });
-</script>)
+
+<div class="goods-reviews-container mt-4">
+    <a class="btn-green leaf" data-toggle="collapse" href="#reviewForm">Оставить отзыв</a>
+    <div id="reviewForm" class="collapse">
+        @Html.Partial("~/bin/Views/Shop/_LeaveGoodsReview.cshtml", goodsItem.HeartId)
+    </div>
+</div>
+
+
+
+@helper ShowReview(GoodsReview review)
+{
+    <div class="goods-review-item">
+        <div class="author">
+            <em class="fa fa-user"></em>&nbsp;@review.Author
+        </div>
+        @if (review.Rating.HasValue)
+        {
+            string cls = RatingClass(review.Rating.Value);
+            <div class="rating-view rating-container">
+                <ul class="rating @cls">
+                    <li class="one"><span title="1">1</span></li>
+                    <li class="two"><span title="2">2</span></li>
+                    <li class="three"><span title="3">3</span></li>
+                    <li class="four"><span title="4">4</span></li>
+                    <li class="five"><span title="5">5</span></li>
+                </ul>
+            </div>
+        }
+        <div class="review-text">
+            @review.Text
+        </div>
+    </div>
+}
+
+@if (lastReviews.Any())
+{
+    <div class="goods-reviews">
+        <h2 class="mb-4 mt-4">Отзывы</h2>
+        @foreach (var review in lastReviews)
+        {
+            @ShowReview(review)
+        }
+        @if (oldReviews.Any())
+        {
+            <div class="panel-group reviews-collapse" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" class="collapse-plus" data-parent="#accordion" href="#collapseOne">
+                                Все отзывы
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        @foreach (var review in oldReviews)
+                        {
+                            @ShowReview(review)
+                        }
+                    </div>
+                </div>
+            </div>
+
+        }
+
+
+    </div>
+}
+
+
+
+
+
+
+@if (goodsItem.CompatibleGoods.Any())
+{
+    <p class="h2 mt-4">С этим товаром покупают:</p>
+    @Html.Partial("_GoodsSet", compatibles)
+}
+<p class="h2 mt-4">Мы рекомендуем:</p>
+
+@Html.Action("RecommendedGoods", "Shop", new { count = 4, categoryIds = goodsItem.Categories, goodsItemId = goodsItem.HeartId })
+
+
+
+
+
+
+
+
+@Js("/bin/Content/client/shop")

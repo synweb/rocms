@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
 @using RoCMS.Shop.Contract.Models
 @using RoCMS.Shop.Contract.Services
+@using RoCMS.Base.Helpers;
 @model RoCMS.Shop.Contract.Models.GoodsItem
 @{
     var goodsItem = Model;
@@ -8,95 +9,59 @@
 }
 
 
-<div class="col-md-4">
+<div class="col-md-6">
     <div class="goods-item">
+        <div class="goods-body">
+            <a href="@goodsItem.CanonicalUrl" title="@goodsItem.Name">
+                <p class="title">@goodsItem.BreadcrumbsTitle</p>
+                <img src="@Url.RouteUrl("Thumbnail", new { id = goodsItem.MainImageId })" alt="@goodsItem.Title" class="img-fluid">
+                <div class="description">
+                    @TextCutHelper.Cut(goodsItem.Description, 190)
+                </div>
+            </a>
+        </div>
+        <div class="goods-footer">
+            @if (!goodsItem.NotAvailable)
+            {
+                <div class="buy-btn-container">
+                    @if (goodsItem.HasPacks)
+                    {
+                        <a class="btn btn-green" data-bind="click: function(data,event){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.HeartId, 1, @goodsItem.BasePackId) }" href="#"><em class="fa fa-shopping-cart"></em>Купить</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-green" data-bind="click: function(data,event){ onBuy(event, '@Url.Action("Checkout", "Shop")'); addItem(@goodsItem.HeartId, 1) }" href="#"><em class="fa fa-shopping-cart"></em>Купить</a>
+                    }
+                </div>
+            }
+            <span class="price">
+                @if (goodsItem.NotAvailable)
+                {
+                    <span class="not-available">Нет в наличии</span>
+                }
+                else
+                {
+                    if (goodsItem.Actions.Any())
+                    {
+                        <span class="action"><span class="old-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</span> @goodsItem.DiscountedPrice.ToString("# ###.##", nfi) руб.</span>
+                    }
+                    else
+                    {
+                        <text>@goodsItem.Price.ToString("# ###.##", nfi) руб.</text>
+                    }
+                    if (goodsItem.HasPacks)
+                    {
+                        <span class="packInfo">за @goodsItem.BasePack.Name</span>
+                    }
+                }
+            </span>
 
-        <img src="@Url.Action("Thumbnail", "Gallery", new { id = goodsItem.MainImageId })" alt="@goodsItem.Description" class="img-responsive">
-        <a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.CanonicalUrl})">@goodsItem.Name</a>
-        @if (goodsItem.Actions.Any())
-        {
-            <div class="goods-tag">
-                <em class="glyphicon glyphicon-fire"></em>
-            </div>
-            <div class="goods-price action">@goodsItem.DiscountedPrice.ToString("# ###.##", nfi) руб. <span class="old-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</span></div>
-        }
-        else
-        {
-            <div class="goods-price">@goodsItem.Price.ToString("# ###.##", nfi) руб.</div>
-        }
-
-
-
-        <p>@goodsItem.Description</p>
-        <div class="buttons cart">
-            <a href="#" class="btn btn-light">Купить в один клик</a>
-            <a href="#" class="btn btn-dark pull-right" data-bind="click: function(){ onBuy(event, '@Url.RouteUrl("Checkout")'); addItem(@goodsItem.HeartId, 1) }"><em class="glyphicon glyphicon-shopping-cart"></em>В корзину</a>
         </div>
     </div>
 </div>
 
 
 
-@*<div class="col-xs-6">
-        <div class="goods-item">
-            <img src="@Url.Action("Thumbnail", "Gallery", new { id = goodsItem.MainImageId })" alt="@goodsItem.Description" class="thumbnail">
-            <h5 class="title">@goodsItem.Name</h5>
-
-            <div class="description">@Html.Raw(goodsItem.HtmlDescription)</div>
-
-            <hr>
-            <p style="text-align: right;">
-
-                <sppan class="price">
-                    @if (goodsItem.HasDiscount)
-                    {
-                        <span class="price-new">
-                            @if (displayCurrency.CurrencyId == "RUR")
-                            {
-                                <text>
-                                    @goodsItem.DisplayDiscountedPrice.ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>
-                                </text>
-                            }
-                            else
-                            {
-                                <text>
-                                    @goodsItem.DisplayDiscountedPrice.ToString("# ###.##", nfi)&nbsp;@displayCurrency.ShortName
-                                    <br />
-                            (@goodsItem.MainCurrDiscountedPrice.ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>)
-                                </text>
-                            }
-
-                        </span>
-                        <span class="price-old">@goodsItem.Price.ToString("# ###.##", nfi)&nbsp;@goodsItem.Currency1.ShortName</span>
-                    }
-                    else
-                    {
-                        <span class="price">
-
-                            @if (displayCurrency.CurrencyId == "RUR")
-                            {
-                                <text>
-                                    @goodsItem.DisplayDiscountedPrice.ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>
-                                </text>
-                            }
-                            else
-                            {
-                                <text>
-                                    @goodsItem.DisplayDiscountedPrice.ToString("# ###.##", nfi)&nbsp;@displayCurrency.ShortName
-                                    <br />
-                                    (@goodsItem.MainCurrDiscountedPrice.ToString("# ###.##", nfi)&nbsp;<em class="fa fa-rub"></em>)
-                                </text>
-                            }
-                        </span>
-                    }
-
-                </sppan>
-                
-
-                <a class="green-btn" data-bind="click: function(){ addItem(@goodsItem.HeartId, 1) }" href="#">Купить</a>
-            </p>
-        </div>
-    </div>*@
 
 
 @Js("/bin/Content/client/shop")

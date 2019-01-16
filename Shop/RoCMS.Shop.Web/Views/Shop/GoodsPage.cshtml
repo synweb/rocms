@@ -2,49 +2,91 @@
 @using RoCMS.Shop.Contract.Models
 @using RoCMS.Shop.Contract.Services
 @model IList<RoCMS.Shop.Contract.Models.GoodsItem>
-@{
-    var shopService = DependencyResolver.Current.GetService<IShopCategoryService>();
+    @{
+        var shopService = DependencyResolver.Current.GetService<IShopCategoryService>();
+        var shopActionService = DependencyResolver.Current.GetService<IShopActionService>();
 
-    int? categoryId = ViewBag.CategoryId ?? null;
+        int? categoryId = ViewBag.CategoryId ?? null;
 
-    var category = categoryId.HasValue ? shopService.GetCategory(categoryId.Value) : null;
+        var category = categoryId.HasValue ? shopService.GetCategory(categoryId.Value) : null;
+        int? actionId = ViewBag.ActionId ?? null;
+        var actionInfo = actionId.HasValue ? shopActionService.GetAction(actionId.Value) : null;
 
-    if (!Request.IsAjaxRequest())
-    {
-        Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+        if (category != null)
+        {
+            ViewBag.Title = category.Title;
+            ViewBag.Header = category.BreadcrumbsTitle;
+
+            ViewBag.Styles = category.Styles;
+            ViewBag.Scripts = category.Scripts;
+
+            ViewBag.DisableIndexation = category.Noindex;
+
+            ViewBag.CanonicalUrl = Url.RouteUrl(typeof(Category).FullName, new { relativeUrl = category.RelativeUrl });
+
+        }
+        else if (actionInfo != null)
+        {
+            ViewBag.Title = actionInfo.Title;
+            ViewBag.Header = actionInfo.BreadcrumbsTitle;
+
+            ViewBag.Styles = actionInfo.Styles;
+            ViewBag.Scripts = actionInfo.Scripts;
+
+            ViewBag.DisableIndexation = actionInfo.Noindex;
+
+            ViewBag.CanonicalUrl = Url.RouteUrl(typeof(RoCMS.Shop.Contract.Models.Action).FullName, new { relativeUrl = actionInfo.RelativeUrl });
+
+        }
+
+
+
+
+
+        if (!Request.IsAjaxRequest())
+        {
+            Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
+        }
+
+
+        IList<GoodsItem> goods = Model;
+
+        int page = ViewBag.Page;
+
+
     }
 
+    @Js("/bin/Content/client/shop")
+    @Css("/bin/Content/client/shop/css/style.css")
 
-    IList<GoodsItem> goods = Model;
 
-    List<BreadCrumb> breadCrumbs = ViewBag.BreadCrumbs as List<BreadCrumb> ?? new List<BreadCrumb>();
 
-    if (category != null)
+    @if (category == null && actionInfo != null)
     {
-        ViewBag.Title = category.Title;
-        ViewBag.Header = category.BreadcrumbsTitle;
-
-        ViewBag.Styles = category.Styles;
-        ViewBag.Scripts = category.Scripts;
-
-        ViewBag.DisableIndexation = category.Noindex;
-
-        ViewBag.CanonicalUrl = Url.RouteUrl(typeof(Category).FullName, new {relativeUrl = category.CanonicalUrl});
+        if (page == 1 && !String.IsNullOrWhiteSpace(actionInfo.Description))
+        {
+            if (!String.IsNullOrEmpty(actionInfo.ImageId))
+            {
+                <img class="img-fluid" src="@Url.RouteUrl("Image", new {id = actionInfo.ImageId})" alt="@actionInfo.Name" />
+            }
+            if (actionInfo.DateOfEnding.HasValue)
+            {
+                @Html.Partial("CountdownTimer", actionInfo.DateOfEnding.ToString())
+            }
+            <div class="mt-4">
+                @Html.Raw(actionInfo.Description)
+            </div>
+        }
     }
 
+    @Html.Partial("_GoodsFilter", goods)
 
-    //Для отделения тысяч в ценах
+    @Html.Partial("_GoodsPage", goods)
 
-}
 
-@Js("/bin/Content/client/shop")
-@Css("/bin/Content/client/shop/css/style.css")
+    @if (category != null && page == 1 && !String.IsNullOrWhiteSpace(category.Description))
+    {
 
-@if (category != null)
-{
-    <h1>@category.Name</h1>
-    @Html.Partial("_CategoriesPage", categoryId)
-}
+        @Ro(category.Description)
 
-@Html.Partial("_GoodsPage", goods)
-
+    }

@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Web.Http;
+using System.Web.Mvc;
 using RoCMS.Base.Infrastructure;
 using RoCMS.Web.Contract.Services;
 using RoCMS.Hooks.TelegramBot.Services;
@@ -12,7 +13,7 @@ namespace RoCMS.Hooks.TelegramBot
         public void Init()
         {
 
-            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
 
             var telegramBotService = DependencyResolver.Current.GetService<ITelegramBotService>();
             telegramBotService.StartBot();

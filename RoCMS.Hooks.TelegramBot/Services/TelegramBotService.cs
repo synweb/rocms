@@ -15,6 +15,7 @@ using Telegram.Bot;
 using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using File = System.IO.File;
 using Message = Telegram.Bot.Types.Message;
 
 namespace RoCMS.Hooks.TelegramBot.Services
@@ -27,7 +28,7 @@ namespace RoCMS.Hooks.TelegramBot.Services
         private ISettingsService _settingsService;
 
         private readonly List<PhoneChatId> _phoneChatIds;
-        private List<string> _allowedPhoneNumbers;
+        private List<string> _allowedPhoneNumbers = new List<string>();
 
         private readonly string _phoneChatIdsFile;
 
@@ -41,7 +42,17 @@ namespace RoCMS.Hooks.TelegramBot.Services
 
             _phoneChatIds = new List<PhoneChatId>();
 
-            _phoneChatIdsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin/phonechatids.xml");
+            _phoneChatIdsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "phonechatids.xml");
+
+            if (!File.Exists(_phoneChatIdsFile))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(List<PhoneChatId>));
+                using (StreamWriter tw = new StreamWriter(_phoneChatIdsFile))
+                {
+                    xs.Serialize(tw, _phoneChatIds);
+                }
+            }
+
 
             XmlSerializer xsr = new XmlSerializer(typeof(List<PhoneChatId>));
             using (StreamReader tw = new StreamReader(_phoneChatIdsFile))

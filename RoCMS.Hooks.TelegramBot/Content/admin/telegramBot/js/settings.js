@@ -27,6 +27,17 @@ App.Admin.TelegramBotSettings = function (data) {
     self.webHookToken = ko.observable();
     self.allowedUserPhones = ko.observable();
 
+    self.allowedUserPhones.subscribe(function() {
+        self.allowedUserPhones(self.allowedUserPhones().replace(/\+/g, ''));
+    });
+
+    self.webhookurl = ko.computed(function() {
+        if (self.webHookToken()) {
+            return "WebHook: " + location.protocol + "//" + location.host+ "/api/webhook/telegrambot/" + self.webHookToken()+ "/receive";
+        }
+        return "";
+    });
+
     if (data) {
         if (data.proxyPort != 0) {
             self.proxyPort(data.proxyPort);

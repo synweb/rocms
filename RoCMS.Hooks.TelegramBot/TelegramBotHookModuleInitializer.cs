@@ -1,8 +1,10 @@
 ﻿using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Routing;
 using RoCMS.Base.Infrastructure;
 using RoCMS.Web.Contract.Services;
 using RoCMS.Hooks.TelegramBot.Services;
+
 using Telegram.Bot;
 
 namespace RoCMS.Hooks.TelegramBot
@@ -14,6 +16,7 @@ namespace RoCMS.Hooks.TelegramBot
         {
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             var telegramBotService = DependencyResolver.Current.GetService<ITelegramBotService>();
             telegramBotService.StartBot();

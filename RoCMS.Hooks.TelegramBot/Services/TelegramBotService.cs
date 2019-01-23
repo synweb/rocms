@@ -21,12 +21,12 @@ namespace RoCMS.Hooks.TelegramBot.Services
 {
     public class TelegramBotService : ITelegramBotService
     {
-        private TelegramBotClient botClient;
+        private TelegramBotClient _botClient;
         private readonly ILogService _logService;
-        private IFormRequestService _formRequestService;
+        private readonly IFormRequestService _formRequestService;
         private ISettingsService _settingsService;
 
-        private List<PhoneChatId> _phoneChatIds;
+        private readonly List<PhoneChatId> _phoneChatIds;
         private List<string> _allowedPhoneNumbers;
 
         private readonly string _phoneChatIdsFile;
@@ -70,7 +70,7 @@ namespace RoCMS.Hooks.TelegramBot.Services
                 int proxyPort = _settingsService.GetSettings<int>("Hooks_TelegramBot_ProxyPort");
                 string proxyLogin = _settingsService.GetSettings<string>("Hooks_TelegramBot_ProxyLogin");
                 string proxyPassword = _settingsService.GetSettings<string>("Hooks_TelegramBot_ProxyPassword");
-                
+
                 string key = _settingsService.GetSettings<string>("Hooks_TelegramBot_ApiKey");
 
 
@@ -80,16 +80,16 @@ namespace RoCMS.Hooks.TelegramBot.Services
 
                 proxy.ResolveHostnamesLocally = false;
 
-                botClient = new TelegramBotClient(key, proxy);
+                _botClient = new TelegramBotClient(key, proxy);
 
-                var me = botClient.GetMeAsync().Result;
+                var me = _botClient.GetMeAsync().Result;
 
                 _logService.TraceMessage(
                     $"Hello, World! I am user {me.Id} and my name is {me.FirstName}."
                 );
 
-                botClient.OnMessage += Bot_OnMessage;
-                botClient.StartReceiving();
+                _botClient.OnMessage += Bot_OnMessage;
+                _botClient.StartReceiving();
             }
             catch (Exception e)
             {
@@ -99,7 +99,14 @@ namespace RoCMS.Hooks.TelegramBot.Services
 
         public void ReceiveMessage(Update update)
         {
-            Receive(update.Message);
+            try
+            {
+                Receive(update.Message);
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
+            }
         }
 
         public void UpdateSettings(TelegramBotSettings settings)
@@ -122,6 +129,7 @@ namespace RoCMS.Hooks.TelegramBot.Services
 
         public TelegramBotSettings GetSettings()
         {
+
             string proxyServer = _settingsService.GetSettings<string>("Hooks_TelegramBot_ProxyServer");
             int proxyPort = _settingsService.GetSettings<int>("Hooks_TelegramBot_ProxyPort");
             string proxyLogin = _settingsService.GetSettings<string>("Hooks_TelegramBot_ProxyLogin");
@@ -147,73 +155,95 @@ namespace RoCMS.Hooks.TelegramBot.Services
 
         private void FormRequestService_RequestCreated(object sender, FormRequest e)
         {
-            if (e != null && botClient != null && _phoneChatIds.Any(x => x.Allowed))
+            try
             {
-                string message = $"Лид {e.CreationDate.ToShortDateString()} {e.CreationDate.ToShortTimeString()}\n\n{e.Text}";
-                foreach (var id in _phoneChatIds.Where(x => x.Allowed))
+                if (e != null && _botClient != null && _phoneChatIds.Any(x => x.Allowed))
                 {
-                    botClient.SendTextMessageAsync(
-                        chatId: id.ChatId,
-                        text: message
-                    );
+                    string message = $"Лид {e.CreationDate.ToShortDateString()} {e.CreationDate.ToShortTimeString()}\n\n{e.Text}";
+                    foreach (var id in _phoneChatIds.Where(x => x.Allowed))
+                    {
+                        _botClient.SendTextMessageAsync(
+                            chatId: id.ChatId,
+                            text: message
+                        );
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _logService.LogError(ex);
             }
         }
 
         async void Bot_OnMessage(object sender, MessageEventArgs e)
         {
-            await Receive(e.Message);
+            try
+            {
+                await Receive(e.Message);
+            }
+            catch (Exception ex)
+            {
+                _logService.LogError(ex);
+            }
         }
 
         private async Task Receive(Message message)
         {
-            var phoneChatId = _phoneChatIds.FirstOrDefault(x => x.ChatId == message.Chat.Id);
-            if (phoneChatId == null && message.Contact == null)
+            try
             {
-                await botClient.SendTextMessageAsync(
-                    chatId: message.Chat,
-                    text: "Пожалуйста, расшарьте Ваш номер телефона",
-                    replyMarkup: new ReplyKeyboardMarkup(
-                        new[] { KeyboardButton.WithRequestContact("Share Contact") }
-                    )
-                );
-                _logService.TraceMessage($"Новый пользователь: {message.Chat.Username}");
-            }
-            else
-            {
-                if (phoneChatId == null)
+                var phoneChatId = _phoneChatIds.FirstOrDefault(x => x.ChatId == message.Chat.Id);
+                if (phoneChatId == null && message.Contact == null)
                 {
-                    lock (this)
-                    {
-                        phoneChatId = new PhoneChatId()
-                        {
-                            ChatId = message.Chat.Id,
-                            Phone = message.Contact.PhoneNumber,
-                            Allowed = _allowedPhoneNumbers.Any(x => x == message.Contact.PhoneNumber)
-                        };
-                        _phoneChatIds.Add(phoneChatId);
-
-                        XmlSerializer xsr = new XmlSerializer(typeof(List<PhoneChatId>));
-                        using (StreamWriter tw = new StreamWriter(_phoneChatIdsFile))
-                        {
-                            xsr.Serialize(tw, _phoneChatIds);
-                        }
-                    }
-                }
-                if (phoneChatId.Allowed)
-                {
-                    await botClient.SendTextMessageAsync(
+                    await _botClient.SendTextMessageAsync(
                         chatId: message.Chat,
-                        text: "Вы подключены. Заявки будут высылаться вам автоматически."
+                        text: "Пожалуйста, расшарьте Ваш номер телефона",
+                        replyMarkup: new ReplyKeyboardMarkup(
+                            new[] { KeyboardButton.WithRequestContact("Share Contact") }, true, true
+                        )
                     );
+                    _logService.TraceMessage($"Новый пользователь: {message.Chat.Username}");
                 }
                 else
                 {
-                    await botClient.SendTextMessageAsync(
-                        chatId: message.Chat,
-                        text: "У вас нет доступа"
-                    );
+                    if (phoneChatId == null)
+                    {
+                        lock (this)
+                        {
+                            string phone = message.Contact.PhoneNumber.Replace("+", "");
+                            phoneChatId = new PhoneChatId()
+                            {
+                                ChatId = message.Chat.Id,
+                                Phone = phone,
+                                Allowed = _allowedPhoneNumbers.Any(x => x == phone)
+                            };
+                            _phoneChatIds.Add(phoneChatId);
+
+                            XmlSerializer xsr = new XmlSerializer(typeof(List<PhoneChatId>));
+                            using (StreamWriter tw = new StreamWriter(_phoneChatIdsFile))
+                            {
+                                xsr.Serialize(tw, _phoneChatIds);
+                            }
+                        }
+                    }
+                    if (phoneChatId.Allowed)
+                    {
+                        await _botClient.SendTextMessageAsync(
+                            chatId: message.Chat,
+                            text: "Вы подключены. Заявки будут высылаться вам автоматически."
+                        );
+                    }
+                    else
+                    {
+                        await _botClient.SendTextMessageAsync(
+                            chatId: message.Chat,
+                            text: "У вас нет доступа"
+                        );
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(e);
             }
         }
 

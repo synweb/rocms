@@ -109,10 +109,6 @@
       <Project>{5BB656E0-BFEB-42A2-B308-52AB78AF8D38}</Project>
       <Name>RoCMS.Web.Contract</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shop\RoCMS.Shop.Web\RoCMS.Shop.Web.csproj">
-      <Project>{A1224728-1DB7-4C23-9526-31FC7BC65BB5}</Project>
-      <Name>RoCMS.Shop.Web</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -11,18 +11,13 @@ namespace RoCMS.Hooks.TelegramBot.ApiControllers
     [AllowAnonymous]
     public class TelegramBotApiController : ApiController
     {
-
-        private readonly ISecurityService _securityService;
         private readonly ITelegramBotService _telegramBotService;
-        private readonly ISettingsService _settingsService;
         private readonly ILogService _logService;
 
-        public TelegramBotApiController(ISecurityService securityService, ISearchService searchService, ILogService logService, ITelegramBotService telegramBotService, ISettingsService settingsService)
+        public TelegramBotApiController(ILogService logService, ITelegramBotService telegramBotService)
         {
-            _securityService = securityService;
             _logService = logService;
             _telegramBotService = telegramBotService;
-            _settingsService = settingsService;
         }
 
         [HttpPost]

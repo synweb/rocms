@@ -20,7 +20,7 @@ namespace RoCMS.Hooks.TelegramBot.Controllers
             _settingsService = settingsService;
         }
 
-        [MvcSiteMapNode(Title = "Телеграм", ParentKey = "AdminHome", Key = "TelegramBot", Clickable = false, VisibilityProvider = "RoCMS.Helpers.RoCMSSiteMapNodesVisibilityProvider, RoCMS", Attributes = @"{ ""visibility"": ""AdminMenu"", ""cmsResourceRequired"": ""AdminPanel"", ""iconClass"" : ""fa-telegram""}")]
+        [MvcSiteMapNode(Title = "Телеграм", ParentKey = "AdminHome", Key = "TelegramBot", Clickable = true, VisibilityProvider = "RoCMS.Helpers.RoCMSSiteMapNodesVisibilityProvider, RoCMS", Attributes = @"{ ""visibility"": ""AdminMenu"", ""cmsResourceRequired"": ""AdminPanel"", ""iconClass"" : ""fa-telegram""}")]
         [AuthorizeResources(RoCmsResources.AdminPanel)]
         public ActionResult Settings()
         {

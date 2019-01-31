@@ -12,7 +12,7 @@
 
     <div class="goods-item">
         <div class="goods-body">
-            <a href="@goodsItem.CanonicalUrl" title="@goodsItem.Name">
+            <a href="@Url.RouteUrl(typeof(GoodsItem).FullName, new { relativeUrl=goodsItem.RelativeUrl})" title="@goodsItem.Name">
                 <p class="title">@goodsItem.BreadcrumbsTitle</p>
                 <img src="@Url.RouteUrl("Thumbnail", new { id = goodsItem.MainImageId })" alt="@goodsItem.Title" class="img-fluid">
                 <div class="description">

@@ -211,6 +211,7 @@ App.Admin.Shop.ManufacturerFunctions = {
                 {
                     text: "Сохранить",
                     click: function () {
+                        var $dialog = $(this);
 
                         var text = getTextFromEditor('manufacturerDescription');
                         if (text) {

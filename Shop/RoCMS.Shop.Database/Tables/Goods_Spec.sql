@@ -1,5 +1,6 @@
 ﻿CREATE TABLE [Shop].[Goods_Spec] (
     [Value]   NVARCHAR (150) NOT NULL,
+	[TranslitedValue]    NVARCHAR (250),
     [HeartId] INT           NOT NULL,
     [SpecId]  INT           NOT NULL,
     [IsPrimary] BIT NOT NULL DEFAULT 0, 

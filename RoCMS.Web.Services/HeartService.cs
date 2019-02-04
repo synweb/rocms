@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,16 @@ namespace RoCMS.Web.Services
 {
     public class HeartService : BaseCoreService, IHeartService
     {
+        /// <summary>
+        /// Grouped by type.
+        /// {type: {relativeUrl: canonicalUrl}}
+        /// </summary>
+        private IDictionary<string, IDictionary<string, string>> _heartUrlPairs;
+        private IDictionary<string, int> _heartUrlIdPairs = new ConcurrentDictionary<string, int>();
+        
+
+        private readonly HeartGateway _heartGateway = new HeartGateway();
+
         protected override int CacheExpirationInMinutes => 320; //8h
 
         public HeartService()
@@ -25,9 +36,15 @@ namespace RoCMS.Web.Services
         private void RenewCanonicalUrlTable()
         {
             var hearts = _heartGateway.Select();
+
+            
+            foreach (var h in hearts)
+            {
+                _heartUrlIdPairs.Add(h.RelativeUrl, h.HeartId);
+            }
+
             Dictionary<int, string> canonicals = new Dictionary<int, string>();
             FillChildrenWithCanonicalUrls(hearts, null, canonicals);
-
 
             var groups = hearts.GroupBy(x => x.Type);
             // grouped by type
@@ -87,13 +104,7 @@ namespace RoCMS.Web.Services
             return String.IsNullOrEmpty(prefix) ? relativeUrl : $"{prefix}/{relativeUrl}";
         }
 
-        /// <summary>
-        /// Grouped by type.
-        /// {type: {relativeUrl: canonicalUrl}}
-        /// </summary>
-        private IDictionary<string, IDictionary<string,string>> _heartUrlPairs;
 
-        private readonly HeartGateway _heartGateway = new HeartGateway();
         public string GetCanonicalUrl(string relativeUrl)
         {
             string cacheKey = GetCanonicalUrlCacheKey(relativeUrl);
@@ -171,6 +182,35 @@ namespace RoCMS.Web.Services
             var res = Mapper.Map<Heart>(dataRes);
             res.CanonicalUrl = GetCanonicalUrl(res.RelativeUrl);
             return res;
+        }
+
+        public IDictionary<string, IDictionary<string, string>> GetHeartUrls()
+        {
+            return _heartUrlPairs;
+        }
+
+        public int? GetHeartId(string relativeUrl)
+        {
+            return _heartUrlIdPairs.ContainsKey(relativeUrl) ? _heartUrlIdPairs[relativeUrl] : (int?)null;
+        }
+
+        public bool IsHeartTypeOf(string relativeUrl, Type type)
+        {
+            if (type == null)
+            {
+                throw new ArgumentException(nameof(type));
+            }
+            string typeName = type.FullName;
+            if (string.IsNullOrEmpty(typeName))
+            {
+                throw new ArgumentException(nameof(type));
+            }
+            if (!_heartUrlPairs.ContainsKey(typeName))
+            {
+                return false;
+            }
+
+            return _heartUrlPairs[typeName].Any(x => x.Key == relativeUrl);
         }
 
         public IDictionary<string, string> GetHeartUrls(Type type)
@@ -279,12 +319,15 @@ namespace RoCMS.Web.Services
                 typeRoutes = _heartUrlPairs[heart.Type];
             }
             typeRoutes.Add(heart.RelativeUrl.ToLower(), GetUncachedCanonicalUrl(heart.RelativeUrl));
+            _heartUrlIdPairs.Add(heart.RelativeUrl, heart.HeartId);
         }
 
         private void DeleteRoute(Data.Models.Heart heart)
         {
             var typeRoutes = _heartUrlPairs[heart.Type];
             typeRoutes.Remove(heart.RelativeUrl);
+
+            _heartUrlIdPairs.Remove(heart.RelativeUrl);
         }
 
         public int CreateHeart(Heart heart)

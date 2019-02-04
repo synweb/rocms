@@ -27,6 +27,7 @@ namespace RoCMS.Shop.Web.Models.Filters
             }
 
 
+
             filterContext.Controller.ViewBag.PackId = pack;
             filterContext.Controller.ViewBag.CountryId = country;
             filterContext.Controller.ViewBag.Sort = sort;
@@ -37,14 +38,14 @@ namespace RoCMS.Shop.Web.Models.Filters
             filterContext.ActionParameters["manufacturerId"] = manufacturer;
             filterContext.ActionParameters["sort"] = sort;
             filterContext.ActionParameters["catFilter"] = ParseCategoryFilter(catFilter);
-            //filterContext.ActionParameters["specs"] = ParseSpecs(specs);
+            filterContext.ActionParameters["specs"] = ParseSpecs(specs);
             filterContext.ActionParameters["minPrice"] = minPrice;
             filterContext.ActionParameters["maxPrice"] = maxPrice;
 
             base.OnActionExecuting(filterContext);
         }
 
-        private IDictionary<int, string> ParseSpecs(string specsString)
+        private Dictionary<int, string> ParseSpecs(string specsString)
         {
             Dictionary<int, string> specs = new Dictionary<int, string>();
             if (!String.IsNullOrEmpty(specsString))
@@ -53,6 +54,8 @@ namespace RoCMS.Shop.Web.Models.Filters
                 var groups = specsString.Split(',');
                 foreach (var group in groups)
                 {
+                    if (string.IsNullOrWhiteSpace(group))
+                        continue;
                     try
                     {
                         var parts = group.Split(':');
@@ -64,7 +67,6 @@ namespace RoCMS.Shop.Web.Models.Filters
                 }
 
             }
-
 
             return specs;
         }

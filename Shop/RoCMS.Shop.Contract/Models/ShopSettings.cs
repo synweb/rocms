@@ -10,5 +10,6 @@
         public string ShopUrl { get; set; }
 
         public int DefaultPageSize { get; set; }
+        public string FilterCategoryOrder { get; set; }
     }
 }

@@ -6,5 +6,6 @@
         public int HeartId { get; set; }
         public int SpecId { get; set; }
         public bool IsPrimary { get; set; }
+        public string TranslitedValue { get; set; }
     }
 }

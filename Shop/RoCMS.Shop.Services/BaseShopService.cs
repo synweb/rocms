@@ -113,6 +113,7 @@ namespace RoCMS.Shop.Services
                 .ForMember(x => x.PackInfo, x => x.Ignore());
 
             Mapper.CreateMap<SpecValue, GoodsSpec>()
+                .ForMember(x => x.TranslitedValue, x => x.MapFrom(y => FormattingHelper.ToTranslitedUrl(y.Value, Int32.MaxValue, false)))
                 .ForMember(x => x.SpecId, x => x.MapFrom(y => y.Spec.SpecId));
             Mapper.CreateMap<GoodsSpec, SpecValue>()
                 .ForMember(x => x.Spec, x => x.Ignore());

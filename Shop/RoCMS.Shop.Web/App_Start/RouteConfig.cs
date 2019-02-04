@@ -4,15 +4,28 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using JetBrains.Annotations;
 using RoCMS.Base.ForWeb.Helpers;
+using RoCMS.Base.ForWeb.Routing;
 using RoCMS.Shop.Contract.Models;
 using RoCMS.Shop.Contract.Services;
+using RoCMS.Shop.Web.Routing;
+using RoCMS.Web.Contract.Services;
 using Action = RoCMS.Shop.Contract.Models.Action;
 
 namespace Shop.Web
 {
     public class RouteConfig
     {
+        static void RegisterGoodsFilterRoute(RouteCollection routes, [AspMvcController] string controller, [AspMvcAction] string action)
+        {
+            var heartService = DependencyResolver.Current.GetService<IHeartService>();
+            IDictionary<string, IDictionary<string, string>> urls = heartService.GetHeartUrls();
+
+
+            var route = new GoodsFilterRoute(urls, controller, action);
+            routes.Add(typeof(GoodsFilter).FullName, route);
+        }
 
         static RouteConfig()
         {
@@ -71,6 +84,12 @@ namespace Shop.Web
             //    constraints: new { relativeUrl = @"\S+" }
             //    );
 
+            //routes.MapRoute(
+            //    name: typeof(GoodsFilter).FullName,
+            //    url: "{*relativeUrl}/f/{filters*}",
+            //    defaults: new { controller = "Shop", action = "GoodsFilterSEF" });
+
+            RegisterGoodsFilterRoute(routes, "Shop", "GoodsFilterSEF");
 
             RoutingHelper.RegisterHeartRoute(routes, typeof(Category), "Shop", "CategorySEF");
             RoutingHelper.RegisterHeartRoute(routes, typeof(GoodsItem), "Shop", "GoodsSEF");

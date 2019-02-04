@@ -13,7 +13,16 @@ namespace RoCMS.Shop.Services
 {
     public class ShopSpecService: BaseShopService, IShopSpecService
     {
+        const string CACHE_KEY_ALL_SPECS = "ALLSPECS";
         private readonly SpecGateway _specGateway = new SpecGateway();
+
+
+        public ShopSpecService()
+        {
+            InitCache("ShopSpecService");
+        }
+
+
         public Spec GetSpec(int specId)
         {
             var dataRes = _specGateway.SelectOne(specId);
@@ -25,6 +34,9 @@ namespace RoCMS.Shop.Services
         {
             var dataRec = Mapper.Map<Data.Models.Spec>(spec);
             int id = _specGateway.Insert(dataRec);
+
+            RemoveObjectFromCache(CACHE_KEY_ALL_SPECS);
+
             return id;
         }
 
@@ -32,18 +44,23 @@ namespace RoCMS.Shop.Services
         {
             var dataRec = Mapper.Map<Data.Models.Spec>(spec);
             _specGateway.Update(dataRec);
+            RemoveObjectFromCache(CACHE_KEY_ALL_SPECS);
         }
 
         public void DeleteSpec(int specId)
         {
             _specGateway.Delete(specId);
+            RemoveObjectFromCache(CACHE_KEY_ALL_SPECS);
         }
 
         public IList<Spec> GetSpecs()
         {
-            var dataRes = _specGateway.Select().OrderBy(x => x.SortOrder);
-            var res = Mapper.Map<IList<Spec>>(dataRes);
-            return res;
+            return GetFromCacheOrLoadAndAddToCache(CACHE_KEY_ALL_SPECS, () =>
+            {
+                var dataRes = _specGateway.Select().OrderBy(x => x.SortOrder);
+                var res = Mapper.Map<IList<Spec>>(dataRes);
+                return res;
+            });
         }
 
         public void UpdateSpecOrder(ICollection<int> specIds)
@@ -58,6 +75,8 @@ namespace RoCMS.Shop.Services
                 }
                 ts.Complete();
             }
+
+            RemoveObjectFromCache(CACHE_KEY_ALL_SPECS);
         }
     }
 }

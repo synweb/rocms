@@ -14,11 +14,14 @@ using RoCMS.Shop.Contract.Models.Exceptions;
 using RoCMS.Shop.Contract.Services;
 using RoCMS.Shop.Data.Gateways;
 using RoCMS.Shop.Data.Models;
+using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
+using Category = RoCMS.Shop.Contract.Models.Category;
 using FilterCollections = RoCMS.Shop.Contract.Models.FilterCollections;
 using GoodsFilter = RoCMS.Shop.Contract.Models.GoodsFilter;
 using GoodsItem = RoCMS.Shop.Contract.Models.GoodsItem;
 using GoodsPack = RoCMS.Shop.Contract.Models.GoodsPack;
+using Manufacturer = RoCMS.Shop.Contract.Models.Manufacturer;
 using Pack = RoCMS.Shop.Contract.Models.Pack;
 using SortCriterion = RoCMS.Shop.Contract.Models.SortCriterion;
 using Spec = RoCMS.Shop.Contract.Models.Spec;
@@ -40,6 +43,7 @@ namespace RoCMS.Shop.Services
         private readonly IHeartService _heartService;
         private readonly IShopGoodsReviewService _goodsReviewService;
         private readonly ISearchService _searchService;
+        private readonly IShopSettingsService _shopSettingsService;
 
         private readonly GoodsItemGateway _goodsItemGateway = new GoodsItemGateway();
         private readonly GoodsSpecGateway _goodsSpecGateway = new GoodsSpecGateway();
@@ -52,7 +56,7 @@ namespace RoCMS.Shop.Services
         private readonly ActionGoodsGateway _actionGoodsGateway = new ActionGoodsGateway();
         private readonly CountryGateway _countryGateway = new CountryGateway();
 
-        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService, IShopGoodsReviewService goodsReviewService, ISearchService searchService)
+        public ShopService(ILogService logService, IShopActionService shopActionService, IShopCategoryService shopCategoryService, IShopSpecService shopSpecService, IShopCompatiblesService shopCompatiblesService, IShopPackService shopPackService, IShopManufacturerService shopManufacturerService, IHeartService heartService, IShopGoodsReviewService goodsReviewService, ISearchService searchService, IShopSettingsService shopSettingsService)
         {
             _logService = logService;
             _shopActionService = shopActionService;
@@ -64,6 +68,7 @@ namespace RoCMS.Shop.Services
             _heartService = heartService;
             _goodsReviewService = goodsReviewService;
             _searchService = searchService;
+            _shopSettingsService = shopSettingsService;
             InitCache("ShopService");
             // Reindex();
             // GenerateRelativeUrls();
@@ -288,7 +293,7 @@ namespace RoCMS.Shop.Services
                 foreach (var goodsCategory in goods.Categories)
                 {
                     _goodsCategoryGateway.Insert(new GoodsCategory()
-                    {CategoryId = goodsCategory.ID, GoodsId = id});
+                    { CategoryId = goodsCategory.ID, GoodsId = id });
                 }
                 int k = 0;
                 foreach (var goodsImageId in goods.Images)
@@ -306,7 +311,7 @@ namespace RoCMS.Shop.Services
                 foreach (var compatibleGoods in goods.CompatibleGoods)
                 {
                     _compatibleSetGoodsGateway.Insert(new CompatibleSetGoods()
-                    {CompatibleSetId = compatibleGoods.CompatibleSetId, HeartId = id});
+                    { CompatibleSetId = compatibleGoods.CompatibleSetId, HeartId = id });
                 }
                 foreach (var specVal in goods.GoodsSpecs)
                 {
@@ -325,7 +330,7 @@ namespace RoCMS.Shop.Services
             int heartId = goods.HeartId;
             var dataGoods = Mapper.Map<Data.Models.GoodsItem>(goods);
             //dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
-            
+
             using (var ts = new TransactionScope())
             {
                 _heartService.UpdateHeart(goods);
@@ -444,7 +449,7 @@ namespace RoCMS.Shop.Services
                 {
                     if (oldActions.All(x => x.ActionId != newAction.ID))
                     {
-                        _actionGoodsGateway.Insert(new ActionGoods() {ActionId = newAction.ID, HeartId = heartId});
+                        _actionGoodsGateway.Insert(new ActionGoods() { ActionId = newAction.ID, HeartId = heartId });
                     }
                 }
 
@@ -548,7 +553,7 @@ namespace RoCMS.Shop.Services
                     {
                         continue;
                     }
-                    collections.SpecValues.Add(filterSpec, new List<string>() {spec.Value});
+                    collections.SpecValues.Add(filterSpec, new List<string>() { spec.Value });
                 }
                 else
                 {
@@ -642,10 +647,10 @@ namespace RoCMS.Shop.Services
             var goods = GetGoodsSet(
                 new GoodsFilter()
                 {
-                    CategoryIds = new[] {categoryids},
+                    CategoryIds = new[] { categoryids },
                     ClientMode = true,
                     SortBy = SortCriterion.Random
-                }, 
+                },
                 startIndex: 1,
                 count: count + 1,  // забираем count+1 товаров, чтобы потом один убрать
                 totalCount: out totalCount,
@@ -685,5 +690,151 @@ namespace RoCMS.Shop.Services
         //    });
 
         //}
+
+        public string GoodsFilterToUrl(GoodsFilter filter)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if (filter.CategoryIds.All(x => x.Count() == 1))
+            {
+                if (filter.CategoryIds.Count() == 1)
+                {
+                    //если категория одна - просто используем ее каноникал
+                    var part = filter.CategoryIds.First();
+                    var heart = _heartService.GetHeart(part.First());
+                    sb.Append(heart.CanonicalUrl);
+                    sb.Append("/f");
+                }
+                else
+                {
+                    var filterCats = filter.CategoryIds.Select(x => x.First()).OrderBy(x => x).ToList();//сортируем для единообразия
+
+                    //храним приоритет категорий в виде 12/22/34, где 12,22,34 - айдишники родительских категорий, для первого берется каноникал
+                    var settings = _shopSettingsService.GetShopSettings();
+                    List<int> catOrder;
+                    try
+                    {
+                        catOrder = String.IsNullOrEmpty(settings.FilterCategoryOrder)
+                            ? settings.FilterCategoryOrder.Split('/').Select(x => Int32.Parse(x)).ToList()
+                            : new List<int>();
+                    }
+                    catch
+                    {
+                        catOrder = new List<int>();
+                    }
+                    if (catOrder.Any())
+                    {
+                        Dictionary<int, int> forSort = new Dictionary<int, int>();
+                        foreach (int catId in filterCats)
+                        {
+                            for (int i = 0; i < catOrder.Count(); i++)
+                            {
+                                var parent = catOrder[i];
+                                if (_shopCategoryService.IsChild(catId, parent))
+                                {
+                                    forSort.Add(catId, i);
+                                    break;
+                                }
+                                if (i == catOrder.Count() - 1)
+                                {
+                                    forSort.Add(catId, catOrder.Count());
+                                }
+                            }
+                        }
+
+                        filterCats = forSort.OrderBy(x => x.Value).ThenBy(x => x.Key).Select(x => x.Key).ToList();
+
+                    }
+
+                    foreach (var catId in filterCats)
+                    {
+                        var heart = _heartService.GetHeart(catId);
+                        sb.Append(catId == filterCats.First() ? $"{heart.CanonicalUrl}/f" : $"/{heart.RelativeUrl}");
+                    }
+
+                }
+            }
+            else
+            {
+                List<List<Heart>> categories = new List<List<Heart>>();
+                foreach (var part in filter.CategoryIds)
+                {
+                    List<Heart> hearts = new List<Heart>();
+                    foreach (int id in part)
+                    {
+                        var heart = _heartService.GetHeart(id);
+                        if (heart != null && heart.Type == typeof(Category).FullName)
+                        {
+                            hearts.Add(heart);
+                        }
+                    }
+                    if (hearts.Any())
+                    {
+                        categories.Add(hearts);
+                    }
+                }
+                sb.Append("f/");
+                foreach (var part in categories)
+                {
+                    foreach (var heart in part.OrderBy(x => x.HeartId))
+                    {
+                        sb.Append(heart.RelativeUrl);
+                        if (heart != part.Last())
+                        {
+                            sb.Append("-or-");
+                        }
+                    }
+                    if (part != categories.Last())
+                    {
+                        sb.Append("/");
+                    }
+                }
+            }
+
+            if (filter.ManufacturerIds.Any())
+            {
+                sb.Append("/");
+            }
+
+            foreach (int id in filter.ManufacturerIds.OrderBy(x => x))
+            {
+                var heart = _heartService.GetHeart(id);
+                if (heart != null && heart.Type == typeof(Manufacturer).FullName)
+                {
+                    sb.Append(heart.RelativeUrl);
+                }
+                if (id != filter.ManufacturerIds.Last())
+                {
+                    sb.Append("-or-");
+                }
+            }
+
+            if (filter.SpecIdValues.Any())
+            {
+                sb.Append("/");
+            }
+
+            foreach (var specIdValue in filter.SpecIdValues.OrderBy(x => x.Key))
+            {
+                var spec = _shopSpecService.GetSpec(specIdValue.Key);
+                if (spec != null)
+                {
+                    string name = FormattingHelper.ToTranslitedUrl(spec.Name, Int32.MaxValue);
+                    string value = FormattingHelper.ToTranslitedUrl(specIdValue.Value, Int32.MaxValue);
+                    sb.Append($"{name}-{value}");
+                }
+                if (specIdValue.Key != filter.SpecIdValues.Last().Key)
+                {
+                    sb.Append("/");
+                }
+            }
+
+
+
+            return sb.ToString().Trim('-').Trim('/');
+
+
+
+        }
     }
 }

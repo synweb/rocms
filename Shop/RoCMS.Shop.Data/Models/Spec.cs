@@ -11,5 +11,6 @@
         public string Prefix { get; set; }
         public string Postfix { get; set; }
         public int SortOrder { get; set; }
+
     }
 }

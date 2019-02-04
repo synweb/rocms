@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,6 +157,7 @@
     </Compile>
     <Compile Include="Helpers\BreadCrumbsHelper.cs" />
     <Compile Include="Helpers\ActionDynamicNodeProvider.cs" />
+    <Compile Include="Helpers\GoodsFilterDynamicNodeProvider.cs" />
     <Compile Include="Helpers\ManufacturerDynamicNodeProvider.cs" />
     <Compile Include="Helpers\GoodsItemDynamicNodeProvider.cs" />
     <Compile Include="Helpers\CategoryDynamicNodeProvider.cs" />
@@ -167,6 +169,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="Routing\GoodsFilterRoute.cs" />
     <Compile Include="ShopModuleInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\OrderedGoodsVM.cs" />
@@ -253,6 +256,10 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\JetBrains.Annotations\JetBrains.Annotations.csproj">
+      <Project>{736C4C91-2DD6-4C38-B44A-85B6F5685C7F}</Project>
+      <Name>JetBrains.Annotations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\RoCMS.Base.ForWeb\RoCMS.Base.ForWeb.csproj">
       <Project>{be5261a8-fc96-4ef0-8df3-2a51431b1936}</Project>
       <Name>RoCMS.Base.ForWeb</Name>

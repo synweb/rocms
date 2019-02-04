@@ -168,7 +168,7 @@ AND
 (@PackIdsExist = 0 OR gc1.GoodsId IN (SELECT HeartId FROM [Goods_Pack] WHERE [PackId] IN (SELECT Val FROM @PackIds) ))
     AND
 (@SpecIdsExist = 0
-OR gc1.GoodsId IN (SELECT HeartId From [Goods_Spec] gs INNER JOIN @SpecIds sis ON gs.SpecId = sis.[Key] AND [Shop].CheckSpecValue(sis.[Val], gs.[Value]) = 1))
+OR gc1.GoodsId IN (SELECT HeartId From [Goods_Spec] gs INNER JOIN @SpecIds sis ON gs.SpecId = sis.[Key] AND ([Shop].CheckSpecValue(sis.[Val], gs.[Value]) = 1 OR [Shop].CheckSpecValue(sis.[Val], gs.[TranslitedValue]) = 1)))
 --OPTION (OPTIMIZE FOR (@CategoryIdsExist=1))
 
 IF (@SearchQuery IS NOT NULL AND @SearchQuery != '' AND @FulltextSearchQuery IS NOT NULL AND @FulltextSearchQuery != '')

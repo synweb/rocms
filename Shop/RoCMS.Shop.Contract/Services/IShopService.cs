@@ -20,6 +20,8 @@ namespace RoCMS.Shop.Contract.Services
         //bool GoodsExists(string relativeUrl);
 
         IList<GoodsItem> GetRecommendedGoods(int count, int[] categoryids, int currentGoodsId);
-        
+
+
+        string GoodsFilterToUrl(GoodsFilter filter);
     }
 }

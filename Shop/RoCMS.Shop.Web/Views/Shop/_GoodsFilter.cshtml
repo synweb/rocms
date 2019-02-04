@@ -19,12 +19,19 @@
         var shopService = DependencyResolver.Current.GetService<IShopService>();
 
         var routeParams = new RouteValueDictionary(ParamExtractor.ExtractParamsForSEF(Request)).RemovePaging();
+
+        if (routeParams.ContainsKey("filters") && routeParams["filters"] != null) //для фильтров
+        {
+            
+            routeParams.Remove("filters");
+        }
+
         var goods = Model;
 
         IEnumerable<IdNamePair<int>> countries = null;
         if (ViewBag.Countries != null)
         {
-            countries = (IEnumerable<IdNamePair<int>>)ViewBag.Countries;
+            countries = (IEnumerable<IdNamePair<int>>) ViewBag.Countries;
         }
 
         IEnumerable<IdNamePair<int>> manufacturers = null;
@@ -37,18 +44,15 @@
 
         var packs = ViewBag.Packs as IList<Pack>;
 
-        const int TEA_TYPE_SPEC_ID = 1;
+
 
         RouteValueDictionary rv = null;
 
-        string pagingRoute = ViewBag.PagingRoute ?? typeof(Category).FullName;
+        string pagingRoute = ViewBag.PagingRoute ?? typeof(GoodsFilter).FullName;
+
 
         Dictionary<Spec, IList<string>> specValues = ViewBag.SpecValues;
-        IEnumerable<string> teaTypes = null;
-        if (specValues != null && specValues.Any())
-        {
-            teaTypes = specValues.Where(x => x.Key.SpecId == TEA_TYPE_SPEC_ID).SelectMany(x => x.Value);
-        }
+
         var requestedSpecs = ViewBag.RequestedSpecIdValues as Dictionary<int, string>;
 
     }
@@ -78,31 +82,8 @@
                 </div>
             </div>
         }
-        @*
-            @if (teaTypes != null)
-            {
-                <div class="col">
-                    <div class="dropdown">
-                        <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-target="#" href="#">
-                            @(requestedSpecs != null && requestedSpecs.Any(x => x.Key == TEA_TYPE_SPEC_ID) ? requestedSpecs[TEA_TYPE_SPEC_ID] : "Вид чая")
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            @{
-                                rv = routeParams.RemoveKeyValueRouteParam("specs", TEA_TYPE_SPEC_ID.ToString());
-                            }
-                            <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, rv)">Любой</a></li>
-                            <li class="dropdown-item" role="presentation" class="divider"></li>
+  
 
-                            @foreach (var teaType in teaTypes)
-                            {
-                                var routeValues = routeParams.AddKeyValueRouteParam("specs", TEA_TYPE_SPEC_ID.ToString(), teaType);
-                                <li class="dropdown-item" role="presentation"><a role="menuitem" tabindex="-1" href="@Url.RouteUrl(pagingRoute, routeValues)">@teaType</a></li>
-
-                            }
-                        </ul>
-                    </div>
-                </div>
-            }*@
 
         @foreach (var specPair in specValues)
         {

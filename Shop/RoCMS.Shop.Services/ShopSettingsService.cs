@@ -26,6 +26,7 @@ namespace RoCMS.Shop.Services
             string shopUrl = _settingsService.GetSettings<string>("ShopUrl");
             int defaultPageSize = _settingsService.GetSettings<int>("DefaultPageSize");
 
+            string filterCategoryOrder = _settingsService.GetSettings<string>("Shop_FilterCategoryOrder");
 
             return new ShopSettings()
             {
@@ -33,8 +34,8 @@ namespace RoCMS.Shop.Services
                 SelfPickupCost = selfPickupCost,
                 ShopUrl = shopUrl,
                 CourierCities = courierCities,
-                DefaultPageSize = defaultPageSize
-
+                DefaultPageSize = defaultPageSize,
+                FilterCategoryOrder = filterCategoryOrder
             };
         }
 
@@ -45,6 +46,7 @@ namespace RoCMS.Shop.Services
             _settingsService.Set("CourierCities", settings.CourierCities);
             _settingsService.Set("ShopUrl", settings.ShopUrl);
             _settingsService.Set("DefaultPageSize", settings.DefaultPageSize);
+            _settingsService.Set("Shop_FilterCategoryOrder", settings.FilterCategoryOrder);
         }
     }
 }

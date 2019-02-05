@@ -150,19 +150,19 @@ function goodsEditorLoaded(onSelected, context) {
                 }));
                 goodsItem.parentHeartId(vm.filters().categoryIds());
             }
-            if (App.Admin.specs().length > 0) {
-                $(App.Admin.specs()).each(function() {
-                    var specValue = {
-                        spec: this,
-                        heartId: ko.observable(),
-                        value: ko.observable().extend({ required: true }),
-                        isPrimary: ko.observable(),
-                        inputValue: ko.observable()
-                    };
-                    goodsItem.goodsSpecs.push(specValue);
-                });
-                
-            }
+
+            //if (App.Admin.specs().length > 0) {
+            //    $(App.Admin.specs()).each(function() {
+            //        var specValue = {
+            //            spec: this,
+            //            heartId: ko.observable(),
+            //            value: ko.observable().extend({ required: true }),
+            //            isPrimary: ko.observable(),
+            //            inputValue: ko.observable()
+            //        };
+            //        goodsItem.goodsSpecs.push(specValue);
+            //    });
+            //}
 
             goodsItem.create(function () {
                 vm.goods.push(goodsItem);
@@ -706,6 +706,10 @@ App.Admin.Shop.GoodsItemFunctions = {
                             self.save(url, function (data) {
                                 if (data) {
                                     self.heartId(data.id);
+                                    $(self.goodsSpecs()).each(function() {
+                                        this.heartId(data.id);
+                                    });
+
                                     if (onSave) {
                                         onSave();
                                     }

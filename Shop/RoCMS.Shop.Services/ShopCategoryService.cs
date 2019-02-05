@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
+using System.Web.Mvc;
 using AutoMapper;
 using RoCMS.Base.Models;
 using RoCMS.Shop.Contract.Services;
@@ -119,35 +120,49 @@ namespace RoCMS.Shop.Services
         {
             using (TransactionScope scope = new TransactionScope())
             {
-                Data.Models.Category dataCategory = _categoryGateway.SelectOne(heartId);
-                var goodsIds = _goodsCategoryGateway.SelectByCategory(heartId).Select(x => x.GoodsId);
-                foreach (var goodsId in goodsIds)
-                {
-                    _goodsItemGateway.Delete(goodsId);
-                }
-                var childCats = _categoryGateway.Select(heartId);
-                foreach (var child in childCats)
-                {
-                    _categoryGateway.Delete(child.HeartId);
-                }
-                _categoryGateway.Delete(heartId);
-                var heart = _heartService.GetHeart(heartId);
-                _heartService.DeleteHeart(heartId);
-
-
-                RemoveObjectFromCache("Categories");
-                RemoveObjectFromCache("AllCategories");
-                RemoveObjectFromCache($"ChildCategoriesFor{dataCategory.ParentCategoryId}");
-
-                RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(heart.RelativeUrl));
-                RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(dataCategory.HeartId));
-
-                int? lastCat = _settingsService.GetSettings<int?>("LastGoodsCategory");
-                if (lastCat.HasValue && lastCat.Value == heartId)
-                {
-                    _settingsService.Set<int?>("LastGoodsCategory", null);
-                }
+                Delete(heartId);
                 scope.Complete();
+            }
+        }
+
+        private void Delete(int heartId)
+        {
+
+            var shopService = DependencyResolver.Current.GetService<IShopService>();
+
+            Data.Models.Category dataCategory = _categoryGateway.SelectOne(heartId);
+            var goodsIds = _goodsCategoryGateway.SelectByCategory(heartId).Select(x => x.GoodsId);
+            foreach (var goodsId in goodsIds)
+            {
+                var goodscats = _goodsCategoryGateway.SelectByGoods(goodsId);
+                if (goodscats.Count() == 1)
+                {
+                    shopService.DeleteGoods(goodsId);
+                }
+            }
+
+            var childCats = _categoryGateway.Select(heartId);
+            foreach (var child in childCats)
+            {
+                Delete(child.HeartId);
+            }
+
+            _categoryGateway.Delete(heartId);
+            var heart = _heartService.GetHeart(heartId);
+            _heartService.DeleteHeart(heartId);
+
+
+            RemoveObjectFromCache("Categories");
+            RemoveObjectFromCache("AllCategories");
+            RemoveObjectFromCache($"ChildCategoriesFor{dataCategory.ParentCategoryId}");
+
+            RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(heart.RelativeUrl));
+            RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(dataCategory.HeartId));
+
+            int? lastCat = _settingsService.GetSettings<int?>("LastGoodsCategory");
+            if (lastCat.HasValue && lastCat.Value == heartId)
+            {
+                _settingsService.Set<int?>("LastGoodsCategory", null);
             }
         }
 
@@ -412,3 +427,4 @@ namespace RoCMS.Shop.Services
         }
     }
 }
+

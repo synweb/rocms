@@ -44,7 +44,7 @@
                     <a data-bind="click: edit, clickBubble: false" class="btn btn-warning btn-xs" title="@ShopStrings.Shop_Category_EditCategory"><i class="fa fa-pencil"></i></a>
                     @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                     {
-                        <a data-bind="click: function (e) {if(!confirmRemoval()) { return false;} remove($data, $parent);}, clickBubble: false" class="remove button-delete btn btn-danger btn-xs" title="@ShopStrings.Shop_Category_DeleteCategory"><i class="fa fa-times"></i></a>
+                        <a data-bind="click: function (e) {if(!confirm('Вы уверены, что хотите удалить категорию? Подкатегории, а также товары, не добавленные в другие категории, будут удалены. ')) { return false;} remove($data, $parent);}, clickBubble: false" class="remove button-delete btn btn-danger btn-xs" title="@ShopStrings.Shop_Category_DeleteCategory"><i class="fa fa-times"></i></a>
                     }
 
                     <div data-bind="style: {display: $root.orderEditingEnabled() === true ? 'inline-block': 'none'}">

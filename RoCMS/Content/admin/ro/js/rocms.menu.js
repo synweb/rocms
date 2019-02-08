@@ -35,6 +35,8 @@ App.Admin.MenuItem = function () {
 
         parent.items.remove(item);
         parent.items.splice(index - 1, 0, item);
+
+        $(".withsearch").selectpicker();
     };
     
     self.moveDown = function (item, parent) {
@@ -43,6 +45,8 @@ App.Admin.MenuItem = function () {
 
         parent.items.remove(item);
         parent.items.splice(index + 1, 0, item);
+
+        $(".withsearch").selectpicker();
     };
 
     self.remove = function (item, parent) {

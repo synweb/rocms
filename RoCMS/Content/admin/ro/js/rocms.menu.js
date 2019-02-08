@@ -25,6 +25,8 @@ App.Admin.MenuItem = function () {
         item.menuId = self.menuId;
         item.parentMenuItemId = self.menuItemId;
         self.items.push(item);
+
+        $(".withsearch").selectpicker();
     };
 
     self.moveUp = function (item, parent) {

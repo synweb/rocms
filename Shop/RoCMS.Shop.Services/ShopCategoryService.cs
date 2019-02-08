@@ -79,6 +79,8 @@ namespace RoCMS.Shop.Services
 
         public void UpdateCategory(Category category)
         {
+            var oldCategory = GetCategory(category.HeartId);
+
             var dataRec = Mapper.Map<Data.Models.Category>(category);
             var oldSpecCats = _specCategoryGateway.SelectByCategory(category.HeartId);
 
@@ -104,15 +106,16 @@ namespace RoCMS.Shop.Services
                 ts.Complete();
             }
 
-            if (dataRec.ParentCategoryId != category.ParentCategoryId)
-            {
-                RemoveObjectFromCache($"ChildCategoriesFor{dataRec.ParentCategoryId}");
-                RemoveObjectFromCache($"ChildCategoriesFor{category.ParentCategoryId}");
-            }
+
+            RemoveObjectFromCache($"ChildCategoriesFor{oldCategory.ParentCategoryId}");
+            RemoveObjectFromCache($"ChildCategoriesFor{category.ParentCategoryId}");
+            
 
             RemoveObjectFromCache("Categories");
             RemoveObjectFromCache("AllCategories");
             RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(category.RelativeUrl));
+            RemoveObjectFromCache(GetCategoryCanonicalUrlCacheKey(oldCategory.RelativeUrl));
+
             RemoveObjectFromCache(GetCategoryIDCanonicalUrlCacheKey(category.HeartId));
         }
 

@@ -78,10 +78,15 @@
             </div>
         }
     }
+    
+<div class="row">
+    <div class="col-md-9">@Html.Partial("_GoodsPage", goods)</div>
+    <div class="col-md-3 order-md-first">@Html.Partial("_GoodsFilter", goods)</div>
+</div>
 
-    @Html.Partial("_GoodsFilter", goods)
 
-    @Html.Partial("_GoodsPage", goods)
+
+    
 
 
     @if (category != null && page == 1 && !String.IsNullOrWhiteSpace(category.Description))

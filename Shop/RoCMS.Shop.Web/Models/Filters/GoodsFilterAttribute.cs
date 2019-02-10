@@ -26,7 +26,6 @@ namespace RoCMS.Shop.Web.Models.Filters
                 sort = ParsingHelper.ParseObject<SortCriterion>(filterContext.HttpContext.Request.QueryString, "sort");
             }
 
-
             filterContext.Controller.ViewBag.PackId = pack;
             filterContext.Controller.ViewBag.CountryId = country;
             filterContext.Controller.ViewBag.Sort = sort;
@@ -37,7 +36,7 @@ namespace RoCMS.Shop.Web.Models.Filters
             filterContext.ActionParameters["manufacturerId"] = manufacturer;
             filterContext.ActionParameters["sort"] = sort;
             filterContext.ActionParameters["catFilter"] = ParseCategoryFilter(catFilter);
-            //filterContext.ActionParameters["specs"] = ParseSpecs(specs);
+            filterContext.ActionParameters["specs"] = ParseSpecs(specs);
             filterContext.ActionParameters["minPrice"] = minPrice;
             filterContext.ActionParameters["maxPrice"] = maxPrice;
 
@@ -56,7 +55,16 @@ namespace RoCMS.Shop.Web.Models.Filters
                     try
                     {
                         var parts = group.Split(':');
-                        specs.Add(Int32.Parse(parts[0]), parts[1]);
+                        int key = Int32.Parse(parts[0]);
+                        if (specs.ContainsKey(key))
+                        {
+                            specs[key] = $"{specs[key]},{parts[1]}";
+                        }
+                        else
+                        {
+                            specs.Add(Int32.Parse(parts[0]), parts[1]);
+                        }
+                        
                     }
                     catch
                     {

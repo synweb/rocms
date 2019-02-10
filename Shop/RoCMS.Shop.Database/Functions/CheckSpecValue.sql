@@ -22,7 +22,7 @@ END
 DECLARE @res BIT
 IF (@equal IS NOT NULL)
 BEGIN
- IF (@value=@equal)
+ IF (@value IN (SELECT * FROM dbo.SplitString(@equal)))
  SET @res = 1
  ELSE
  SET @res = 0

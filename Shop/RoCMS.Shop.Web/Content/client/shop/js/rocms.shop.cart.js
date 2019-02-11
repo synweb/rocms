@@ -72,12 +72,12 @@ var shopCartViewModel = {
 
     withRegister: ko.observable(''),
 
-    authorize: function() {
+    authorize: function () {
 
 
         shopCartViewModel.account.username(shopCartViewModel.client.email());
 
-        postJSON("/Home/Login", { user: ko.toJS(shopCartViewModel.account) }, function(result) {
+        postJSON("/Home/Login", { user: ko.toJS(shopCartViewModel.account) }, function (result) {
             if (result.Succeed === true) {
                 App.Client.User.userId(result.Data.UserId);
                 App.Account.userId(result.Data.UserId);
@@ -88,8 +88,8 @@ var shopCartViewModel = {
         });
     },
 
-    logout: function() {
-        postJSON("/Home/LogoutWithoutRedirect", null, function(result) {
+    logout: function () {
+        postJSON("/Home/LogoutWithoutRedirect", null, function (result) {
             if (result.Succeed === true) {
                 App.Client.User.userId('');
                 App.Account.isAuthorized(false);
@@ -211,6 +211,8 @@ var shopCartViewModel = {
 
     hasGoods: ko.observable(false),
 
+    loadingCart: ko.observable(true),
+
     orderInProcess: ko.observable(false),
 
     processOrder: function () {
@@ -270,6 +272,7 @@ var shopCartViewModel = {
     },
 
     refreshCart: function () {
+        shopCartViewModel.loadingCart(true);
         getJSON("/api/shop/cart/get", "", function (cart) {
 
             var obj = ko.mapping.fromJS(cart);
@@ -328,6 +331,8 @@ var shopCartViewModel = {
 
             shopCartViewModel.cart(obj);
             shopCartViewModel.hasGoods($(obj.cartItems()).length > 0);
+        }).always(function () {
+            shopCartViewModel.loadingCart(false);
         });
     },
 
@@ -406,7 +411,7 @@ shopCartViewModel.order().pickUpCity.subscribe(function (newValue) {
     }
 });
 
-shopCartViewModel.passwordsForRegisterVisible = ko.computed(function() {
+shopCartViewModel.passwordsForRegisterVisible = ko.computed(function () {
     return shopCartViewModel.withRegister() === 'true';
 });
 
@@ -426,7 +431,7 @@ shopCartViewModel.nextButtonVisible = ko.computed(function () {
     return !shopCartViewModel.contacts.isValid();
 });
 
-shopCartViewModel.noGoods = ko.computed(function() {
+shopCartViewModel.noGoods = ko.computed(function () {
     return shopCartViewModel.hasGoods() !== true;
 });
 
@@ -438,7 +443,7 @@ $(function () {
 function onCartLoaded() {
     shopCartViewModel.refreshCart();
     shopCartViewModel.termsAccepted(false);
-    $("input.phone").mask('+7 (000) 000-00-00');
+    //$("input.phone").mask('+7 (000) 000-00-00');
 
     getJSON("/api/shop/pickUpPoints/get", "", function (result) {
         $(result).each(function () {
@@ -471,7 +476,7 @@ function onBuy(event, cartUrl) {
 
     var source = event.target || event.srcElement;
 
-    var $div = $('<div class="goods-in-cart-message"><span>Товар помещен в <a href="'+cartUrl+'">корзину</a> <em class="glyphicon glyphicon-shopping-cart"></em></span></div>');
+    var $div = $('<div class="goods-in-cart-message"><span>Товар помещен в <a href="' + cartUrl + '">корзину</a> <em class="glyphicon glyphicon-shopping-cart"></em></span></div>');
 
     $(source).closest(".buttons").append($div);
 

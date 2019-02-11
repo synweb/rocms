@@ -14,7 +14,7 @@
 
     var pickUpPointsService = DependencyResolver.Current.GetService<IShopPickupPointService>();
 
-    var couriesCities = shopSettings.CourierCities.Split(',');
+    var couriesCities = String.IsNullOrEmpty(shopSettings.CourierCities) ? new List<string>() : shopSettings.CourierCities.Split(',').ToList();
 
     var shopService = DependencyResolver.Current.GetService<IShopService>();
 
@@ -22,13 +22,17 @@
     var pickUpCities = points.Select(x => x.City).Distinct();
 
     var blockService = DependencyResolver.Current.GetService<IBlockService>();
-    var block = blockService.GetBlock(8);
+
 }
 
 
 <div class="cart">
-
-    <div data-bind="style: { display: hasGoods() === false ? 'block' : 'none' }">
+    <div data-bind="style: { display: loadingCart() === true && hasGoods() === false ? 'block' : 'none' }">
+        <div class="text-center p4">
+            <em class="fa fa-spin fa-spinner fa-4x"></em>
+        </div>
+    </div>
+    <div data-bind="style: { display: hasGoods() === false && loadingCart() === false ? 'block' : 'none' }">
         <div class="text-center p4">
             нет товаров
         </div>
@@ -126,33 +130,36 @@
             </div>
             <form autocomplete="nope" class="form-horizontal mt-4" data-bind="validationOptions: {insertMessages: false}">
                 <div data-bind="with: client">
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-2 col-4">Фамилия:</label>
-                        <div class="col-md-6 col-8">
-                            <input type="text" class="form-control" data-bind="value: lastName" autocomplete="nope" />
-                        </div>
-                    </div>
+                    @*<div class="form-group row">
+                            <label class="col-form-label col-md-2 col-4">Фамилия:</label>
+                            <div class="col-md-6 col-8">
+                                <input type="text" class="form-control" data-bind="value: lastName" autocomplete="nope" />
+                            </div>
+                        </div>*@
                     <div class="form-group row">
                         <label class="col-form-label col-md-2 col-4">Имя:</label>
                         <div class="col-md-6 col-8">
+                            <span class="field-validation-error"><span data-bind="validationMessage: name"></span></span>
                             <input type="text" class="form-control" data-bind="value: name" autocomplete="nope" />
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-form-label col-md-2 col-4">Отчество:</label>
-                        <div class="col-md-6 col-8">
-                            <input type="text" class="form-control" data-bind="value: secondName" autocomplete="nope" />
-                        </div>
-                    </div>
+                    @*<div class="form-group row">
+                            <label class="col-form-label col-md-2 col-4">Отчество:</label>
+                            <div class="col-md-6 col-8">
+                                <input type="text" class="form-control" data-bind="value: secondName" autocomplete="nope" />
+                            </div>
+                        </div>*@
                     <div class="form-group row">
                         <label class="col-form-label col-md-2 col-4">Телефон:</label>
                         <div class="col-md-6 col-8">
+                            <span class="field-validation-error"><span data-bind="validationMessage: phone"></span></span>
                             <input type="text" class="form-control phone" placeholder="+7 (903) 555-1212" data-bind="value: phone" autocomplete="nope" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-2 col-4">Email:</label>
                         <div class="col-md-6 col-8">
+                            <span class="field-validation-error"><span data-bind="validationMessage: email"></span></span>
                             <input type="text" class="form-control" data-bind="value: email, disable: clientId()" autocomplete="nope" />
                         </div>
                     </div>
@@ -187,6 +194,7 @@
                             <div class="form-group row mt-2">
                                 <label class="col-form-label col">Город:</label>
                                 <div class="col-6">
+
                                     <select class="form-control" data-bind="value: courierCity">
                                         <option value="">Не выбран</option>
                                         @foreach (var city in couriesCities)
@@ -198,15 +206,15 @@
                                 <div class="col-sm" data-bind="with: $root"><button class="btn btn-light" data-bind="click: anotherCity">Другой город</button></div>
                             </div>
                             <div class="form-group row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-form-label col">Метро:</label>
-                                        <div class="col-8">
-                                            <input type="text" class="form-control" data-bind="value: metro" autocomplete="nope" />
+                                @*<div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col">Метро:</label>
+                                            <div class="col-8">
+                                                <input type="text" class="form-control" data-bind="value: metro" autocomplete="nope" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
+                                    </div>*@
+                                <div class="col-md-12">
                                     <div class="row">
                                         <label class="col-form-label col">Улица:</label>
                                         <div class="col-8">
@@ -215,7 +223,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row align-items-center">
+                            <div class="form-group row">
 
                                 <label class="col-form-label col-md col-6">Дом:</label>
                                 <div class="col-md col-6">
@@ -233,23 +241,23 @@
 
 
                             </div>
-                            <div class="form-group row align-items-center">
+                            @*<div class="form-group row">
 
-                                <label class="col-form-label col-md col-6">Подъезд:</label>
-                                <div class="col-md col-6">
-                                    <input type="text" class="form-control" data-bind="value: frontNumber" autocomplete="nope" />
-                                </div>
-                                <label class="col-form-label col-md col-6">Этаж:</label>
-                                <div class="col-md col-6">
-                                    <input type="text" class="form-control" data-bind="value: floor" autocomplete="nope" />
-                                </div>
-                                <label class="col-form-label col-md col-6">Домофон:</label>
-                                <div class="col-md col-6">
-                                    <input type="text" class="form-control" data-bind="value: intercom" autocomplete="nope" />
-                                </div>
+                                    <label class="col-form-label col-md col-6">Подъезд:</label>
+                                    <div class="col-md col-6">
+                                        <input type="text" class="form-control" data-bind="value: frontNumber" autocomplete="nope" />
+                                    </div>
+                                    <label class="col-form-label col-md col-6">Этаж:</label>
+                                    <div class="col-md col-6">
+                                        <input type="text" class="form-control" data-bind="value: floor" autocomplete="nope" />
+                                    </div>
+                                    <label class="col-form-label col-md col-6">Домофон:</label>
+                                    <div class="col-md col-6">
+                                        <input type="text" class="form-control" data-bind="value: intercom" autocomplete="nope" />
+                                    </div>
 
 
-                            </div>
+                                </div>*@
                             <div class="delivery-price" data-bind="with: $root.cart">
                                 <div data-bind="style: {display : deliveryString() == 'on' ? 'block': 'none'}">
                                     Стоимость доставки: <span data-bind="text: $root.order().deliveryPrice"></span><span>&nbsp;руб.</span>
@@ -298,7 +306,7 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="post" role="tabpanel">
-                            <div class="form-group row align-items-center">
+                            <div class="form-group row">
                                 <label class="col-form-label col-md">Город:</label>
                                 <div class="col-md-4">
                                     <input type="text" class="form-control" data-bind="value: city" autocomplete="nope" />
@@ -316,7 +324,7 @@
                                 </div>
 
                             </div>
-                            <div class="form-group row align-items-center">
+                            <div class="form-group row">
 
                                 <label class="col-form-label col-md col-6">Дом:</label>
                                 <div class="col-md col-6">
@@ -379,11 +387,11 @@
                     </div>
                 </div>
                 <div class="accept">
-                    <label><input data-bind="value: termsAccepted" type="checkbox" class="cb" />&nbsp;я соглашаюсь с <a target="_blank" href="/polzovatelskoe-soglashenie">пользовательским соглашением</a></label>
+                    <label><input data-bind="value: termsAccepted" type="checkbox" class="cb" />&nbsp;я соглашаюсь с <a target="_blank" href="/policy">пользовательским соглашением</a></label>
                 </div>
                 <div class="submit">
                     <img src="@Url.Content("/Content/base/ro/img/ajax-loader.gif")" alt="Оформление заказа" data-bind="style: { display: $root.orderInProcess() ? 'inline' : 'none' }" />
-                    <button type="submit" class="btn btn-green" data-bind="click: processOrder, enable: $root.orderInProcess() === false">Отправить заказ</button>
+                    <button type="submit" class="btn btn-success" data-bind="click: processOrder, enable: $root.orderInProcess() === false">Отправить заказ</button>
 
                 </div>
             </form>
@@ -391,7 +399,7 @@
     </div>
 </div>
 
-@Block(block)
+
 
 @Js("/bin/Content/client/shop")
 

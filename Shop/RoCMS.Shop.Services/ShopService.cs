@@ -195,10 +195,11 @@ namespace RoCMS.Shop.Services
 
         private void FillPacks(GoodsItem goodsItem)
         {
-            var dataVals = _goodsPackGateway.SelectByGoods(goodsItem.HeartId);
-            if (dataVals.Any())
+            try
             {
-                try
+
+                var dataVals = _goodsPackGateway.SelectByGoods(goodsItem.HeartId);
+                if (dataVals.Any())
                 {
                     var vals = Mapper.Map<IList<GoodsPack>>(dataVals);
                     foreach (var goodsPack in vals)
@@ -207,28 +208,26 @@ namespace RoCMS.Shop.Services
                     }
                     goodsItem.Packs = vals;
 
-                    if (goodsItem.BasePackId.HasValue)
-                    {
-                        var basePack = goodsItem.Packs.FirstOrDefault(x => x.PackId == goodsItem.BasePackId);
-                        Pack basePackInfo;
-                        if (basePack != null)
-                        {
-                            basePackInfo = basePack.PackInfo;
-                        }
-                        else
-                        {
-                            basePackInfo = _shopPackService.GetPack(goodsItem.BasePackId.Value);
-                        }
-                        goodsItem.BasePack = basePackInfo;
-                    }
-
                 }
-                catch (Exception e)
+
+                if (goodsItem.BasePackId.HasValue)
                 {
-                    _logService.LogError(new Exception($"Ошибка при заполнении упаковок товара {goodsItem.HeartId}", e));
+                    var basePack = goodsItem.Packs.FirstOrDefault(x => x.PackId == goodsItem.BasePackId);
+                    Pack basePackInfo;
+                    if (basePack != null)
+                    {
+                        basePackInfo = basePack.PackInfo;
+                    }
+                    else
+                    {
+                        basePackInfo = _shopPackService.GetPack(goodsItem.BasePackId.Value);
+                    }
+                    goodsItem.BasePack = basePackInfo;
                 }
-
-
+            }
+            catch (Exception e)
+            {
+                _logService.LogError(new Exception($"Ошибка при заполнении упаковок товара {goodsItem.HeartId}", e));
             }
         }
 
@@ -288,7 +287,7 @@ namespace RoCMS.Shop.Services
                 foreach (var goodsCategory in goods.Categories)
                 {
                     _goodsCategoryGateway.Insert(new GoodsCategory()
-                    {CategoryId = goodsCategory.ID, GoodsId = id});
+                    { CategoryId = goodsCategory.ID, GoodsId = id });
                 }
                 int k = 0;
                 foreach (var goodsImageId in goods.Images)
@@ -306,7 +305,7 @@ namespace RoCMS.Shop.Services
                 foreach (var compatibleGoods in goods.CompatibleGoods)
                 {
                     _compatibleSetGoodsGateway.Insert(new CompatibleSetGoods()
-                    {CompatibleSetId = compatibleGoods.CompatibleSetId, HeartId = id});
+                    { CompatibleSetId = compatibleGoods.CompatibleSetId, HeartId = id });
                 }
                 foreach (var specVal in goods.GoodsSpecs)
                 {
@@ -325,7 +324,7 @@ namespace RoCMS.Shop.Services
             int heartId = goods.HeartId;
             var dataGoods = Mapper.Map<Data.Models.GoodsItem>(goods);
             //dataGoods.SearchDescription = SearchHelper.ToSearchIndexText(dataGoods.HtmlDescription);
-            
+
             using (var ts = new TransactionScope())
             {
                 _heartService.UpdateHeart(goods);
@@ -444,7 +443,7 @@ namespace RoCMS.Shop.Services
                 {
                     if (oldActions.All(x => x.ActionId != newAction.ID))
                     {
-                        _actionGoodsGateway.Insert(new ActionGoods() {ActionId = newAction.ID, HeartId = heartId});
+                        _actionGoodsGateway.Insert(new ActionGoods() { ActionId = newAction.ID, HeartId = heartId });
                     }
                 }
 
@@ -548,7 +547,7 @@ namespace RoCMS.Shop.Services
                     {
                         continue;
                     }
-                    collections.SpecValues.Add(filterSpec, new List<string>() {spec.Value});
+                    collections.SpecValues.Add(filterSpec, new List<string>() { spec.Value });
                 }
                 else
                 {
@@ -642,10 +641,10 @@ namespace RoCMS.Shop.Services
             var goods = GetGoodsSet(
                 new GoodsFilter()
                 {
-                    CategoryIds = new[] {categoryids},
+                    CategoryIds = new[] { categoryids },
                     ClientMode = true,
                     SortBy = SortCriterion.Random
-                }, 
+                },
                 startIndex: 1,
                 count: count + 1,  // забираем count+1 товаров, чтобы потом один убрать
                 totalCount: out totalCount,

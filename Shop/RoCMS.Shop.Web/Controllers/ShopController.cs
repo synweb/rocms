@@ -232,17 +232,7 @@ namespace RoCMS.Shop.Web.Controllers
             filter.SortBy = sort.HasValue ? sort.Value : DEFAULT_SORT;
             ViewBag.Sort = filter.SortBy;
 
-            //var specIdValues = new Dictionary<int, string>();
-            //if (!string.IsNullOrEmpty(specs))
-            //{
-            //    foreach (var specIdValue in specs.Split(','))
-            //    {
-            //        if(string.IsNullOrWhiteSpace(specIdValue))
-            //            continue;
-            //        var idVal = specIdValue.Split(':');
-            //        specIdValues.Add(int.Parse(idVal[0]), idVal[1]);
-            //    }
-            //}
+
             var specIdValues = specs;
             filter.SpecIdValues = (Dictionary<int, string>)specs;
 
@@ -261,9 +251,9 @@ namespace RoCMS.Shop.Web.Controllers
                 filter.ManufacturerIds = new[] { manufacturerId.Value };
             }
 
-            FilterCollections collections;
+
             IList<GoodsItem> goods = _shopService.GetGoodsSet(filter,
-            startIndex, pageSize, out totalCount, out collections);
+            startIndex, pageSize, out totalCount, out var requestCollections);
             ViewBag.TotalCount = totalCount;
             if (filter.CategoryIds.Count() == 1 && filter.CategoryIds.First().Count() == 1)
             {
@@ -273,6 +263,18 @@ namespace RoCMS.Shop.Web.Controllers
             {
                 ViewBag.ActionId = filter.ActionIds.First();
             }
+
+            //TODO: для простоты пока что берем для всех категорий
+            var categoryFilter = new GoodsFilter()
+            {
+                CategoryIds = filter.CategoryIds,
+                ClientMode = filter.ClientMode,
+                SearchPattern = filter.SearchPattern,
+            };
+
+            IList<GoodsItem> catgoods = _shopService.GetGoodsSet(categoryFilter,
+                1, 1, out int totalCount2, out var collections);
+
             ViewBag.Countries = collections.Countries;
             ViewBag.HasPacks = collections.Packs.Any();
             ViewBag.Packs = collections.Packs;
@@ -280,6 +282,9 @@ namespace RoCMS.Shop.Web.Controllers
             ViewBag.ManufacturerId = manufacturerId;
             ViewBag.RequestedSpecIdValues = specIdValues;
             ViewBag.SpecValues = collections.SpecValues;
+
+
+
             return goods;
         }
 

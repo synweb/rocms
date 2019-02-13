@@ -83,6 +83,10 @@ namespace RoCMS.Shop.Services
                 string specsInFilterString = String.Join(",", settings.SpecsInFilter.Select(x => x.ID));
                 _settingsService.Set("Shop_SpecsInFilter", specsInFilterString);
             }
+            else
+            {
+                _settingsService.Set("Shop_SpecsInFilter", "");
+            }
         }
     }
 }

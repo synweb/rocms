@@ -1,4 +1,7 @@
-﻿namespace RoCMS.Shop.Contract.Models
+﻿using System.Collections.Generic;
+using RoCMS.Base.Models;
+
+namespace RoCMS.Shop.Contract.Models
 {
     public class ShopSettings
     {
@@ -10,5 +13,7 @@
         public string ShopUrl { get; set; }
 
         public int DefaultPageSize { get; set; }
+
+        public List<IdNamePair<int>> SpecsInFilter { get; set; }
     }
 }

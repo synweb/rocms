@@ -24,6 +24,7 @@ App.Admin.ShopSettings = function (data) {
     self.shopUrl = ko.observable().extend({ required: true });
     self.defaultPageSize = ko.observable(10).extend({ required: true });
 
+    self.specsInFilter = ko.observableArray();
 
     self.courierCities = ko.observable().extend({ required: true });
 
@@ -43,6 +44,40 @@ App.Admin.ShopSettings = function (data) {
         if (data.defaultPageSize) {
             self.defaultPageSize(data.defaultPageSize);
         }
+
+        if (data.specsInFilter.length > 0) {
+            $(data.specsInFilter).each(function () {
+                self.specsInFilter.push(this);
+            });
+        }
+    }
+
+    self.addSpec = function() {
+        var self = this;
+        showSpecDialog(function (item) {
+            var spec = {
+                id: item.specId(),
+                name: item.name
+            };
+
+            var result = $.grep(self.specsInFilter(), function (e) {
+                return e.id === item.specId();
+            });
+
+            if (result.length === 0) {
+                self.specsInFilter.push(spec);
+            }
+        });
+    }
+
+    self.removeSpec = function (spec) {
+        console.log("spec: ");
+        console.log(spec);
+        self.specsInFilter.remove(function (item) {
+            console.log("item: " + item.id);    
+            console.log(item);
+            return item.id === spec.id;
+        });
     }
 
     self.save = function () {

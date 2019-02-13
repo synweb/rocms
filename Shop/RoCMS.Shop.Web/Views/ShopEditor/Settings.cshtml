@@ -7,6 +7,13 @@
 @Js("/bin/Content/admin/shop")
 
 <div>
+    
+    <script type="text/x-jquery-tmpl" id="spec-item-settings-template">
+        <span class="name-block">
+            <span data-bind="text: name"></span>
+            <a class="btn btn-xs btn-danger" onclick="true" data-bind="click: function() {$parent.removeSpec($data, $parent);}"><em class="fa fa-trash-o"></em></a>
+        </span>
+    </script>
 
     <h1>Настройки магазина</h1>
 
@@ -41,6 +48,18 @@
                 <input type="text" class="form-control" data-bind="value: defaultPageSize">
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4" for="price">Характеристики в фильтре</label>
+            <div class="col-lg-7">
+                <div class="row name-blocks-row" data-bind="template: { name: 'spec-item-settings-template', foreach: specsInFilter }">
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <a class="btn btn-xs btn-success" onclick="true" data-bind="click: addSpec"><em class="fa fa-plus"></em></a>
+            </div>
+        </div>
+        
+
         <div class="form-group text-center">
             <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
         </div>

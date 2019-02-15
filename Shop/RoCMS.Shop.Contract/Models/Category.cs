@@ -2,11 +2,12 @@
 using System.ComponentModel;
 using RoCMS.Base.Models;
 using RoCMS.Web.Contract.Models;
+using RoCMS.Web.Contract.Models.Search;
 
 namespace RoCMS.Shop.Contract.Models
 {
     [DisplayName("Категория")]
-    public class Category: Heart
+    public class Category: Heart, ISearchable
     {
         public Category()
         {
@@ -32,6 +33,13 @@ namespace RoCMS.Shop.Contract.Models
         public bool Hidden { get; set; }
 
         public int SortOrder { get; set; }
-        public ICollection<Spec> OrderFormSpecs { get; set; } 
+        public ICollection<Spec> OrderFormSpecs { get; set; }
+
+
+        public IEnumerable<string> SearchIndexKeys => new[]
+        { SearchKeyName, SearchKeyDescription };
+
+        public string SearchKeyName => nameof(Name);
+        public string SearchKeyDescription => nameof(Description);
     }
 }

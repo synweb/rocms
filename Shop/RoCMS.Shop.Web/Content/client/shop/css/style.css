@@ -1,4 +1,49 @@
-﻿/* Корзина */
+﻿/* Контрол инкремент и декремент */
+
+.item-count {
+    position: relative;
+    max-width: 120px;
+}
+
+    .item-count .form-control:disabled {
+        background: transparent;
+    }
+
+    .item-count .plus, .item-count .minus {
+        position: absolute;
+        top: 0;
+        background: #888;
+        color: #fff;
+        border-radius: 0;
+        width: 26px;
+        line-height: 26px;
+        padding: 0;
+        text-aling: center;
+        vertical-align: top;
+    }
+
+    .item-count .plus {
+        right: 0;
+    }
+
+    .item-count .minus {
+        left: 0;
+    }
+
+    .item-count input {
+        border: 1px solid #cccccc;
+        text-align: center;
+        outline-color: #cccccc;
+        padding: 0 10px;
+        line-height: 24px;
+        border-radius: 0;
+        height: 26px;
+        margin-bottom: 0;
+    }
+
+/* END Контрол инкремент и декремент */
+
+/* Корзина */
 
 .cart .cart-goods-item {
     border-bottom: 1px solid #eee;
@@ -25,46 +70,6 @@
 .cart .cart-goods-item .price {
     font-weight: bold;
 }
-
-.cart .item-count {
-    position: relative;
-    max-width: 120px;
-}
-
-    .cart .item-count .form-control:disabled {
-        background: transparent;
-    }
-
-    .cart .item-count .plus, .item-count .minus {
-        position: absolute;
-        top: 0;
-        background: #888;
-        color: #fff;
-        border-radius: 0;
-        width: 26px;
-        line-height: 26px;
-        padding: 0;
-        text-aling: center;
-        vertical-align: top;
-    }
-
-    .cart .item-count .plus {
-        right: 0;
-    }
-
-    .cart .item-count .minus {
-        left: 0;
-    }
-
-    .cart .item-count input {
-        border: 1px solid #cccccc;
-        text-align: center;
-        outline-color: #cccccc;
-        padding: 0 10px;
-        line-height: 24px;
-        border-radius: 0;
-        height: 26px;
-    }
 
 .cart .total {
     color: #451e11;
@@ -208,3 +213,20 @@
         }
 
 /* END Корзина */
+
+/* Thank You */
+
+table.regular-client-discounts {
+    width: 100%;
+    text-align: center;
+}
+
+    table.regular-client-discounts td {
+        width: 50%;
+    }
+
+    table.regular-client-discounts thead {
+        font-weight: bold;
+    }
+
+/* END Thank You */

@@ -117,6 +117,7 @@ namespace Shop.Web
 
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/clients/page/{startIndex}/{pageSize}/get", "ClientApi", "GetClientsPage");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/client/update", "ClientApi", "Update");
+            WebApiConfigHelper.ApiRoute(config.Routes, "shop/client/updateinfo", "ClientApi", "UpdateInfo");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/client/{clientId}/get", "ClientApi", "Get");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/client/{clientId}/delete", "ClientApi", "DeleteClient");
             WebApiConfigHelper.ApiRoute(config.Routes, "shop/client/user/{userId}/get", "ClientApi", "GetForUser");

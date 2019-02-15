@@ -10,6 +10,7 @@ namespace RoCMS.Shop.Contract.Services
         Client GetClient(int clientId);
         int CreateClient(Client client);
         void UpdateClient(Client client);
+        void UpdateClientInfo(Client client);
         void DeleteClient(int clientId);
         IList<Client> GetClients();
         IEnumerable<Order> GetOrdersByUserId(int userId);

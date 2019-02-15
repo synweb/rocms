@@ -260,6 +260,7 @@
     <Build Include="Stored Procedures\Goods_Category_Select.sql" />
     <Build Include="Stored Procedures\GoodsItem_SelectBestsellerIds.sql" />
     <Build Include="Stored Procedures\Goods_Image_Update.sql" />
+    <Build Include="Stored Procedures\Client_UpdateInfo.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\RoCMS.Database\RoCMS.Database.sqlproj">

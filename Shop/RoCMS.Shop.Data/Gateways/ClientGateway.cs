@@ -10,6 +10,11 @@ namespace RoCMS.Shop.Data.Gateways
             return Exec<Client>(GetProcedureString(), userId);
         }
 
+        public void UpdateInfo(Client client)
+        {
+            Exec(GetProcedureString(), client);
+        }
+
         public ICollection<Client> SelectPage(int startIndex, int count, out int total)
         {
             var param = new SelectPageParam()

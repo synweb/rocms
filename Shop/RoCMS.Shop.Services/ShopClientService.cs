@@ -57,6 +57,12 @@ namespace RoCMS.Shop.Services
             _clientGateway.Update(dataRec);
         }
 
+        public void UpdateClientInfo(Client client)
+        {
+            var dataRec = Mapper.Map<Data.Models.Client>(client);
+            _clientGateway.UpdateInfo(dataRec);
+        }
+
         public void DeleteClient(int clientId)
         {
             _clientGateway.Delete(clientId);

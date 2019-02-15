@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [Shop].[Category_Update]
-@Guid uniqueidentifier,
+
 @Name nvarchar(MAX),
 @ParentCategoryId int,
 @Description nvarchar(MAX),
@@ -11,7 +11,7 @@
 @HeartId int
 AS
 	UPDATE [Shop].[Category] SET
-		[Guid]=@Guid,
+
 		[Name]=@Name,
 		[ParentCategoryId]=@ParentCategoryId,
 		[Description]=@Description,

@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [Shop].[CompatibleSet_Insert]
-@Guid uniqueidentifier,
+
 @Name nvarchar(50)
 AS
-	INSERT INTO [Shop].[CompatibleSet] ([Guid], [Name])
-	VALUES (@Guid, @Name)
+	INSERT INTO [Shop].[CompatibleSet] ([Name])
+	VALUES (@Name)
 	SELECT @@IDENTITY

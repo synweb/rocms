@@ -213,7 +213,24 @@ namespace RoCMS.Shop.Services
             return _actionGateway.Exists(id);
         }
 
+        public IList<ActionShortInfo> GetActionsForGoodsItem(int goodsItemId)
+        {
+
+            var actions = GetAllActionsForGoodsItem(goodsItemId);
+            return actions.Select(x => new ActionShortInfo(x.HeartId, x.Name, x.Discount)).ToList();
+        }
+
         public IList<ActionShortInfo> GetActiveActionsForGoodsItem(int goodsItemId)
+        {
+            var actions = GetAllActionsForGoodsItem(goodsItemId);
+            var res = actions.Where(x => x.Active &&
+                                           (!x.DateOfEnding.HasValue || x.DateOfEnding >= DateTime.UtcNow))
+                                           .Select(x => new ActionShortInfo(x.HeartId, x.Name, x.Discount))
+                                           .ToList();
+            return res;
+        }
+
+        private IEnumerable<Data.Models.Action> GetAllActionsForGoodsItem(int goodsItemId)
         {
             var goodsItem = _goodsGateway.SelectOne(goodsItemId);
             var actionIds = _actionGoodsGateway.SelectByGoods(goodsItemId).Select(x => x.ActionId);
@@ -239,12 +256,8 @@ namespace RoCMS.Shop.Services
                 actionIds = actionIds.Concat(catActionIds);
             }
 
-            var actions = actionIds.Distinct().Select(x => _actionGateway.SelectOne(x));
-            var res = actions.Where(x => x.Active &&
-                                           (!x.DateOfEnding.HasValue || x.DateOfEnding >= DateTime.UtcNow))
-                                           .Select(x => new ActionShortInfo(x.HeartId, x.Name, x.Discount))
-                                           .ToList();
-            return res;
+            IEnumerable<Data.Models.Action> actions = actionIds.Distinct().Select(x => _actionGateway.SelectOne(x));
+            return actions;
         }
 
         /// <summary>

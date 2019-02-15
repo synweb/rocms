@@ -154,7 +154,7 @@ namespace RoCMS.Shop.Services
             FillImages(goodsItem);
             FillCompatibles(goodsItem);
             FillCats(goodsItem);
-            FillActions(goodsItem);
+            FillActions(goodsItem, activeActionsOnly);
             FillPacks(goodsItem);
             FillSpecs(goodsItem);
             FillManufacturers(goodsItem);
@@ -165,8 +165,6 @@ namespace RoCMS.Shop.Services
             {
                 goodsItem.Actions.Clear();
                 goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
-
-
             }
         }
 
@@ -231,9 +229,16 @@ namespace RoCMS.Shop.Services
             }
         }
 
-        private void FillActions(GoodsItem goodsItem)
+        private void FillActions(GoodsItem goodsItem, bool activeActionsOnly)
         {
-            goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
+            if (activeActionsOnly)
+            {
+                goodsItem.Actions = _shopActionService.GetActiveActionsForGoodsItem(goodsItem.HeartId);
+            }
+            else
+            {
+                goodsItem.Actions = _shopActionService.GetActionsForGoodsItem(goodsItem.HeartId);
+            }
         }
 
         private void FillCats(GoodsItem goodsItem)

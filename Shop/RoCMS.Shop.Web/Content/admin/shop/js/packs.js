@@ -2,21 +2,26 @@
 
 function packsEditorLoaded(onSelected, context) {
     blockUI();
-    var blocks = 2;
-    getJSON("/api/shop/dimensions/get", "", function (result) {
-        $(result).each(function () {
-            App.Admin.dimensions.push(ko.mapping.fromJS(this));
-        });
-    })
-        .fail(function () {
-            smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
-        })
-        .always(function () {
-            blocks--;
-            if (blocks == 0) {
-                unblockUI();
-            }
-        });
+    var blocks = 1;
+    if (App.Admin.dimensions.length == 0) {
+        var blocks = 2;
+        getJSON("/api/shop/dimensions/get",
+                "",
+                function(result) {
+                    $(result).each(function() {
+                        App.Admin.dimensions.push(ko.mapping.fromJS(this));
+                    });
+                })
+            .fail(function() {
+                smartAlert("Произошла ошибка. Если она будет повторяться - обратитесь к разработчикам.");
+            })
+            .always(function() {
+                blocks--;
+                if (blocks == 0) {
+                    unblockUI();
+                }
+            });
+    }
     var vm = {
         packs: ko.observableArray(),
         createPack: function () {

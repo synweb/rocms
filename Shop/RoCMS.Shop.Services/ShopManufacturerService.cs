@@ -64,7 +64,6 @@ namespace RoCMS.Shop.Services
             using (TransactionScope ts = new TransactionScope())
             {
                 var dataRec = Mapper.Map<Data.Models.Manufacturer>(manufacturer);
-                dataRec.Guid = Guid.NewGuid();
 
                 int id = manufacturer.HeartId = dataRec.HeartId = _heartService.CreateHeart(manufacturer);
 

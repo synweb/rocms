@@ -13,6 +13,7 @@ namespace RoCMS.Shop.Contract.Services
         IList<Action> GetActions();
         bool ActionExists(int id);
         IList<ActionShortInfo> GetActiveActionsForGoodsItem(int goodsItemId);
+        IList<ActionShortInfo> GetActionsForGoodsItem(int goodsItemId);
         IList<Action> GetActionsForSlider();
         IList<Action> GetActiveActions();
     }

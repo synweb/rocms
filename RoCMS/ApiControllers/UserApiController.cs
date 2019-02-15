@@ -111,6 +111,7 @@ namespace RoCMS.ApiControllers
             public string Password { get; set; }
         }
 
+        [AuthorizeResources(RoCmsResources.Users)]
         [System.Web.Http.HttpPost]
         public ResultModel DeleteUser(string name)
         {

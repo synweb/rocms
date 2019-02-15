@@ -9,7 +9,7 @@
 
     string query = (string)ParamExtractor.ExtractUrlParams(Request)["query"];
 
-    ViewBag.Title = "Результаты поиска по запросу \"" + query + "\"";
+    ViewBag.Title = ViewBag.Header = "Результаты поиска по запросу \"" + query + "\"";
 
 
     if (!Request.IsAjaxRequest())
@@ -17,17 +17,11 @@
         Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
     }
 }
-@if (Model.Any())
+@if (!Model.Any())
 {
-    <div class="row">
-        <div class="col-xs-12">
-            <h1>Результаты поиска по запросу &laquo;@query&raquo;</h1>
-        </div>
-    </div>
-}
-else
-{
+
     <span class="search-not-found">По запросу &laquo;@query&raquo; ничего не найдено</span>
+
 }
 
 @Html.Partial("_Pager")
@@ -35,21 +29,23 @@ else
 
 @foreach (var searchItem in Model)
 {
-    <div class="row search-result">
-        <a href="@searchItem.Url">
-            <div class='@(searchItem.ImageId != null ? "col-xs-9" : "col-xs-12")'>
+    
+    <a class="search-result" href="@searchItem.Url">
+        <div class="row">
+            <div class='col'>
                 <h4>@searchItem.Title</h4>
                 <p>@TextCutHelper.Cut(searchItem.Text, 190)</p>
-                <span class="article-link">Подробнее &raquo;</span>
+                <span class="article-link btn btn-light">Подробнее &raquo;</span>
             </div>
             @if (searchItem.ImageId != null)
             {
-                <div class="col-xs-3">
-                    <img src="@Url.Action("Thumbnail", "Gallery", new { id = searchItem.ImageId })" />
+                <div class="col-3">
+                    <img class="img-fluid" src="@Url.RouteUrl("Thumbnail", new { id = searchItem.ImageId })" />
                 </div>
             }
-        </a>
-    </div>
+        </div>
+    </a>
+   
 }
 
 @Html.Partial("_Pager")

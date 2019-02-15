@@ -4,12 +4,12 @@
 
 
 
-<div class="cart-container" data-bind="with: cartSummary">
+@*<div class="cart-container" data-bind="with: cartSummary">
     <a href="@Url.RouteUrl("Checkout")" title="Корзина">
         <span class="badge" data-bind="text: quantity"></span>
         <em class="glyphicon glyphicon-shopping-cart"></em>Корзина
     </a>
-</div>
+</div>*@
 
 
 @*<div data-bind="with: cartSummary">
@@ -23,3 +23,21 @@
             </div>
         </a>
     </div>*@
+
+
+
+
+
+
+
+    <a data-bind="attr: { href: cartSummary.quantity() != 0  ? '@Url.RouteUrl("Checkout")' : '#', title: cartSummary.cartClass() ? 'Перейти к оформлению заказа' : 'Ваша корзина пуста' }" href="#" title="">
+        
+        @*@<div data-bind="attr: {'class': quantity() == 0 ? 'cart':'cart full'}">
+            <div class="cart-header">ВАША КОРЗИНА</div>
+            <div>
+                Товаров: <span data-bind="text: quantity"></span><br>
+                на сумму: <span data-bind="text: summary"></span>&nbsp;руб.
+            </div>
+        </div>*@
+    </a>
+

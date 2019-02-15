@@ -1,25 +1,28 @@
 ﻿@using RoCMS.Shop.Contract.Services
 @{
-    ViewBag.Title = "Спасибо за покупку!";
+    ViewBag.Title = ViewBag.Header = "Спасибо за покупку!";
     Layout = "~/Views/Shared/PublicLayouts/_clientLayout.cshtml";
     var service = DependencyResolver.Current.GetService<IShopClientService>();
     var discounts = service.GetRegularClientDiscounts();
 }
 
-<p>
-    Информация о заказе отправлена на указанную почту.<br />
-    Оператор свяжется с вами для подтверждения заказа в ближайшее время.<br />
-</p>
+<div class="bg-white text-center">
+    <p>
+        Информация о заказе отправлена на указанную почту.<br />
+        Оператор свяжется с вами для подтверждения заказа в ближайшее время.<br />
+    </p>
+</div>
+
 @if (discounts.Any())
 {
     <p>
         <h3>Скидки для постоянных клиентов:</h3>
-        <table class="regular-client-discounts">
+        <table class="regular-client-discounts table">
             <thead>
-                <tr>
-                    <td>Общая сумма всех заказов</td>
-                    <td>Скидка</td>
-                </tr>
+            <tr>
+                <td>Общая сумма всех заказов</td>
+                <td>Скидка</td>
+            </tr>
             </thead>
             @foreach (var discount in discounts)
             {
@@ -31,22 +34,4 @@
         </table>
     </p>
 
-    <style>
-        table.regular-client-discounts {
-            width: 100%;
-            text-align: center;
-        }
-
-            table.regular-client-discounts td {
-                width: 50%;
-            }
-
-            table.regular-client-discounts, table.regular-client-discounts th, table.regular-client-discounts td {
-                border: 1px solid black;
-            }
-
-                table.regular-client-discounts thead {
-                    font-weight: bold;
-                }
-    </style>
 }

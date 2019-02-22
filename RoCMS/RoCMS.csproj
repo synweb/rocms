@@ -175,7 +175,7 @@
     <Compile Include="Controllers\GalleryController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InstallController.cs" />
-    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\FormRequestController.cs" />
     <Compile Include="Controllers\PageController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
@@ -773,7 +773,9 @@
     <Content Include="Views\Developer\_PickInterfaceString.cshtml" />
     <Content Include="Views\Developer\_CreateInterfaceString.cshtml" />
     <Content Include="Views\Developer\Database.cshtml" />
-    <Content Include="Widgets.config" />
+    <Content Include="Widgets.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\Developer\Widgets.cshtml" />
     <Content Include="Views\Developer\RobotsTxt.cshtml" />
     <Content Include="Views\Shared\_Pager.cshtml" />
@@ -799,6 +801,7 @@
     <Content Include="Views\Developer\MagicButton.cshtml" />
     <Content Include="Views\Shared\_BlockByName.cshtml" />
     <Content Include="Views\Admin\_HeartEditor.cshtml" />
+    <Content Include="Views\Message\_OrderWithPayment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -929,6 +932,10 @@
     <ProjectReference Include="..\RoCMS.WebContract\RoCMS.Web.Contract.csproj">
       <Project>{5bb656e0-bfeb-42a2-b308-52ab78af8d38}</Project>
       <Name>RoCMS.Web.Contract</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sberbank\RoCMS.SberbankPaymentSystem.csproj">
+      <Project>{45acdd94-003a-44f9-9137-db74378bd5ea}</Project>
+      <Name>RoCMS.SberbankPaymentSystem</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shop\RoCMS.Shop.Contract\RoCMS.Shop.Contract.csproj">
       <Project>{1C506F25-014A-4025-8E15-07FD5094F85E}</Project>

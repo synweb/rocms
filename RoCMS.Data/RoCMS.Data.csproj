@@ -83,6 +83,7 @@
     <Compile Include="Models\CMSResource.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\FormRequest.cs" />
+    <Compile Include="Models\FormRequestState.cs" />
     <Compile Include="Models\Heart.cs" />
     <Compile Include="Models\HeartState.cs" />
     <Compile Include="Models\Image.cs" />
@@ -95,6 +96,8 @@
     <Compile Include="Models\OrderFormField.cs" />
     <Compile Include="Models\Page.cs" />
     <Compile Include="Models\PasswordTicket.cs" />
+    <Compile Include="Models\PaymentState.cs" />
+    <Compile Include="Models\PaymentType.cs" />
     <Compile Include="Models\Review.cs" />
     <Compile Include="Models\RoJsonAttribute.cs" />
     <Compile Include="Models\SearchItem.cs" />

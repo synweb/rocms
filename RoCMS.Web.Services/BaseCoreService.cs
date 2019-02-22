@@ -134,6 +134,14 @@ namespace RoCMS.Web.Services
             Mapper.CreateMap<InterfaceString, Data.Models.InterfaceString>();
             Mapper.CreateMap<Data.Models.InterfaceString, InterfaceString>();
 
+            Mapper.CreateMap<Data.Models.FormRequestState, FormRequestState>();
+            Mapper.CreateMap<FormRequestState, Data.Models.FormRequestState>();
+
+            Mapper.CreateMap<Data.Models.PaymentType, PaymentType>();
+            Mapper.CreateMap<PaymentType, Data.Models.PaymentType>();
+
+            Mapper.CreateMap<Data.Models.PaymentState, PaymentState>();
+            Mapper.CreateMap<PaymentState, Data.Models.PaymentState>();
 
             Mapper.CreateMap<Data.Models.FormRequest, FormRequest>();
             Mapper.CreateMap<FormRequest, Data.Models.FormRequest>();
@@ -146,7 +154,10 @@ namespace RoCMS.Web.Services
                .ForMember(x => x.AttachIds, x => x.Ignore());
             Mapper.CreateMap<Message, FormRequest>()
                 .ForMember(x => x.FormRequestId, x => x.Ignore())
+                .ForMember(x => x.State, x => x.Ignore())
+                .ForMember(x => x.PaymentState, x => x.Ignore())
                 .ForMember(x => x.CreationDate, x => x.Ignore());
+
 
 
             Mapper.CreateMap<string, OrderFormFieldType>().ConvertUsing((x) =>

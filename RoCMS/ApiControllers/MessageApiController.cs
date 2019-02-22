@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Web.Http;
+using System.Web.Http.Routing;
 using RoCMS.Base.Models;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Services;
@@ -11,11 +13,15 @@ namespace RoCMS.ApiControllers
     {
         private readonly IFormRequestService _formRequestService;
         private readonly ILogService _logService;
+        private readonly IPaymentSystemService _paymentSystemService;
+        private readonly ISettingsService _settingsService;
 
-        public MessageApiController(IFormRequestService formRequestService, ILogService logService)
+        public MessageApiController(IFormRequestService formRequestService, ILogService logService, IPaymentSystemService paymentSystemService, ISettingsService settingsService)
         {
             _formRequestService = formRequestService;
             _logService = logService;
+            _paymentSystemService = paymentSystemService;
+            _settingsService = settingsService;
         }
 
         [HttpPost]
@@ -24,7 +30,20 @@ namespace RoCMS.ApiControllers
             try
             {
                 message.MessageType = MessageType.Order;
-                _formRequestService.ProcessMessage(message);
+                int id = _formRequestService.ProcessMessage(message);
+
+                if (message.PaymentType == PaymentType.Card && message.Amount.HasValue)
+                {
+
+                    var settings = _settingsService.GetSettings();
+                    string rootUrl = settings.RootUrl;
+
+                    var returnUrl = Path.Combine(rootUrl, $"FormRequest/PaymentAccepted/{id}");
+
+                    string redirectUrl = _paymentSystemService.ProcessPayment(id, typeof(FormRequest).FullName, message.Amount.Value, returnUrl);
+                    return new ResultModel(true, new { RedirectUrl = redirectUrl });
+                }
+
                 return ResultModel.Success;
             }
             catch (Exception e)

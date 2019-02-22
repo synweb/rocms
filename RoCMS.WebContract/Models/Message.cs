@@ -36,6 +36,10 @@ namespace RoCMS.Web.Contract.Models
         public int? OrderFormId { get; set; }
 
         public Dictionary<string, string> Fields { get; set; }
+
+        public decimal? Amount { get; set; }
+        public PaymentState? PaymentState { get; set; }
+        public PaymentType? PaymentType { get; set; }
     }
 
     public enum MessageType 

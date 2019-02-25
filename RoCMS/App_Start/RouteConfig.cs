@@ -98,6 +98,10 @@ namespace RoCMS
                 name: "RestorePassword",
                 url: "restorepassword/{token}",
                 defaults: new { controller = "Home", action = "RestorePassword" });
+            routes.MapRoute(
+                name: "AcceptPayment",
+                url: "acceptpayment/{id}",
+                defaults: new { controller = "FormRequest", action = "PaymentAccepted" });
 
             IEnumerable<string> controllerNames = typeof(MvcApplication).Assembly.GetTypes()
                 .Where(t => t.Name.EndsWith("Controller"))

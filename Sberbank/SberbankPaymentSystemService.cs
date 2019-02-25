@@ -27,9 +27,10 @@ namespace RoCMS.SberbankPaymentSystem
 
         }
 
-        public string ProcessPayment(int orderId, string orderType, decimal amount, string returnUrl)
+        public string ProcessPayment(Guid orderId, decimal amount, string returnUrl)
         {
-            string orderNumber = $"{orderType}{orderId}";
+
+
             RegisterPreAuthRequest req = new RegisterPreAuthRequest();
             req.orderNumber = orderId.ToString();
             req.returnUrl = returnUrl;

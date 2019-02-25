@@ -231,6 +231,7 @@
     <Build Include="dbo\Functions\SplitStringToInts.sql" />
     <Build Include="dbo\Stored Procedures\SearchItem_FindStrict.sql" />
     <Build Include="dbo\Functions\SplitString.sql" />
+    <Build Include="dbo\Stored Procedures\FormRequest_SelectByGuid.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ExportImages.sql" />

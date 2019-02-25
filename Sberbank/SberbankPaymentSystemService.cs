@@ -55,7 +55,13 @@ namespace RoCMS.SberbankPaymentSystem
             RegisterPreAuthResponse res = null;
             try
             {
+                // single-phase payment
                 var url = _sberbankSettings.BaseUrl.Trim('/') + "/register.do";
+
+                // payment with holding
+                //var url = _sberbankSettings.BaseUrl.Trim('/') + "/registerPreAuth.do";
+                
+
                 //registerParams.token = _sberbankSettings.Token;
                 registerParams.userName = "vorotmaster-api";
                 registerParams.password = "vorotmaster";
@@ -65,14 +71,17 @@ namespace RoCMS.SberbankPaymentSystem
                 url += "?" + urlParams;
 
 
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                                                   | SecurityProtocolType.Tls11
+                                                   | SecurityProtocolType.Tls12;
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-
                 request.Method = "POST";
                 request.ContentType = "application/json";
                 request.Proxy = null;
                 request.KeepAlive = false;
                 request.ProtocolVersion = HttpVersion.Version10;
                 request.ServicePoint.ConnectionLimit = 1;
+                request.Headers.Add("UserAgent", "Pentia; MSI");
 
 
                 try

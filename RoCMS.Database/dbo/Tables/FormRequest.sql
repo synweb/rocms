@@ -9,5 +9,6 @@
     [Amount] DECIMAL(18, 2) NULL, 
     [State] VARCHAR(50) NOT NULL DEFAULT 'New', 
     [PaymentState] VARCHAR(50) NULL, 
-    [PaymentType] VARCHAR(50) NULL
+    [PaymentType] VARCHAR(50) NULL,
+	[Guid] UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID() UNIQUE 
 )

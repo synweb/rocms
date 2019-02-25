@@ -24,6 +24,11 @@ namespace RoCMS.ApiControllers
             _settingsService = settingsService;
         }
 
+        /// <summary>
+        /// /api/message/send/order
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         [HttpPost]
         public ResultModel Order(Message message)
         {
@@ -37,9 +42,9 @@ namespace RoCMS.ApiControllers
 
                     var settings = _settingsService.GetSettings();
                     string rootUrl = settings.RootUrl;
-
-                    var returnUrl = Path.Combine(rootUrl, $"FormRequest/PaymentAccepted/{id}");
-
+                    // getting guid
+                    var fromRequest = _formRequestService.GetOneFormRequest(id);
+                    var returnUrl = $"{rootUrl}/FormRequest/PaymentAccepted/{fromRequest.Guid}";
                     string redirectUrl = _paymentSystemService.ProcessPayment(id, typeof(FormRequest).FullName, message.Amount.Value, returnUrl);
                     return new ResultModel(true, new { RedirectUrl = redirectUrl });
                 }

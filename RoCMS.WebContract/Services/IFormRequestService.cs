@@ -12,6 +12,7 @@ namespace RoCMS.Web.Contract.Services
         int CreateFormRequest(FormRequest formRequest);
 
         FormRequest GetOneFormRequest(int formRequestId);
+        FormRequest GetOneFormRequest(Guid guid);
 
         IList<FormRequest> GetFormRequests();
 

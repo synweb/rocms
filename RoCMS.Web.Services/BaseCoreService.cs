@@ -156,7 +156,8 @@ namespace RoCMS.Web.Services
                 .ForMember(x => x.FormRequestId, x => x.Ignore())
                 .ForMember(x => x.State, x => x.Ignore())
                 .ForMember(x => x.PaymentState, x => x.Ignore())
-                .ForMember(x => x.CreationDate, x => x.Ignore());
+                .ForMember(x => x.CreationDate, x => x.Ignore())
+                .ForMember(x => x.Guid, x => x.Ignore());
 
 
 

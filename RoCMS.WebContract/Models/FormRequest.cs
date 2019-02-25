@@ -20,5 +20,6 @@ namespace RoCMS.Web.Contract.Models
         public decimal? Amount { get; set; }
         public PaymentState? PaymentState { get; set; }
         public PaymentType? PaymentType { get; set; }
+        public Guid Guid { get; set; }
     }
 }

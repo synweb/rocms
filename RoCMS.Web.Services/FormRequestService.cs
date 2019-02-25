@@ -199,5 +199,10 @@ namespace RoCMS.Web.Services
                 return res;
             }
         }
+
+        public FormRequest GetOneFormRequest(Guid guid)
+        {
+            return Mapper.Map<FormRequest>(_formRequestGateway.SelectByGuid(guid));
+        }
     }
 }

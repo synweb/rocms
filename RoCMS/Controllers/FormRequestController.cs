@@ -25,7 +25,7 @@ namespace RoCMS.Controllers
                 return new HttpStatusCodeResult(403) {  };
             }
             var formRequestId = _formRequestService.GetOneFormRequest(guid).FormRequestId;
-            _formRequestService.UpdatePaymentState(formRequestId, PaymentState.Paid);
+            _formRequestService.UpdatePaymentState(formRequestId, PaymentState.Paid, true);
             return new RedirectResult("/");
         }
     }

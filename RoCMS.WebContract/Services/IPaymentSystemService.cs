@@ -16,6 +16,6 @@ namespace RoCMS.Web.Contract.Services
         /// <param name="amount"></param>
         /// <param name="returnUrl"></param>
         /// <returns></returns>
-        string ProcessPayment(Guid orderId, decimal amount, string returnUrl);
+        string ProcessPayment(int orderNumber, decimal amount, string returnUrl);
     }
 }

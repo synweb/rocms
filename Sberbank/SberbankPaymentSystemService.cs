@@ -27,12 +27,15 @@ namespace RoCMS.SberbankPaymentSystem
 
         }
 
-        public string ProcessPayment(Guid orderId, decimal amount, string returnUrl)
+        public string ProcessPayment(int orderNumber, decimal amount, string returnUrl)
         {
 
 
             RegisterPreAuthRequest req = new RegisterPreAuthRequest();
-            req.orderNumber = orderId.ToString();
+
+            //TODO: Могут возникать проблемы из-за одинаковых номеров, если одновременно подключена оплата и для заявок в формах, 
+            //и для корзины магазина
+            req.orderNumber = orderNumber.ToString();
             req.returnUrl = returnUrl;
             req.amount = Decimal.ToInt32(Math.Round(amount * 100)); //копейки
             req.currency = 643;

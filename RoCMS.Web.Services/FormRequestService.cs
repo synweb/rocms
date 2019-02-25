@@ -20,7 +20,7 @@ namespace RoCMS.Web.Services
         private readonly IOrderFormService _orderFormService;
         private readonly ILogService _logService;
 
-        public event EventHandler<FormRequest> RequestCreated = (o,e)=> { };
+        public event EventHandler<FormRequest> RequestCreated = (o, e) => { };
 
         public FormRequestService(IMailService mailService, ISettingsService settingsService, IOrderFormService orderFormService, ILogService logService)
         {
@@ -47,11 +47,34 @@ namespace RoCMS.Web.Services
             return res;
         }
 
-        public void UpdatePaymentState(int formRequestId, PaymentState? state)
+        public void UpdatePaymentState(int formRequestId, PaymentState? state, bool notify = false)
         {
             var req = _formRequestGateway.SelectOne(formRequestId);
             req.PaymentState = Mapper.Map<Data.Models.PaymentState>(state);
             _formRequestGateway.Update(req);
+
+            if (notify)
+            {
+
+
+
+                string body = $"Поступила оплата за заказ<br>Guid:{req.Guid}<br>Сумма: {req.Amount}";
+                MailMsg res = new MailMsg
+                {
+                    Subject = $"Заказ оплачен: {req.Guid} {DateTime.UtcNow.ApplySiteTimezone()}",
+                    Receiver = _settingsService.GetSettings<string>("OrderEmailAddress"),
+
+                    Body = body
+                };
+                _mailService.Send(res);
+
+
+
+
+
+
+
+            }
         }
 
         public void UpdateFormRequestState(int formRequestId, FormRequestState state)

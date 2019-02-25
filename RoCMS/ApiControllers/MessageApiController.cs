@@ -49,7 +49,7 @@ namespace RoCMS.ApiControllers
 
                     var returnUrl = $"{rootUrl.Trim('/')}/{relUrl.Trim('/')}";
 
-                    string redirectUrl = _paymentSystemService.ProcessPayment(fromRequest.Guid, message.Amount.Value, returnUrl);
+                    string redirectUrl = _paymentSystemService.ProcessPayment(id, message.Amount.Value, returnUrl);
                     return new ResultModel(true, new { RedirectUrl = redirectUrl });
                 }
 

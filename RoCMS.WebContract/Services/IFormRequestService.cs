@@ -25,6 +25,6 @@ namespace RoCMS.Web.Contract.Services
 
         void UpdateFormRequestState(int formRequestId, FormRequestState state);
 
-        void UpdatePaymentState(int formRequestId, PaymentState? state);
+        void UpdatePaymentState(int formRequestId, PaymentState? state, bool notify = false);
     }
 }

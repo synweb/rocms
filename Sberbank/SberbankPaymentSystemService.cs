@@ -66,9 +66,7 @@ namespace RoCMS.SberbankPaymentSystem
                 //var url = _sberbankSettings.BaseUrl.Trim('/') + "/registerPreAuth.do";
                 
 
-                //registerParams.token = _sberbankSettings.Token;
-                registerParams.userName = "vorotmaster-api";
-                registerParams.password = "vorotmaster";
+                registerParams.token = _sberbankSettings.Token;
 
 
                 var urlParams = ObjectToQueryString(registerParams);

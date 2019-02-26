@@ -105,7 +105,7 @@
                             }
                             clearForm();
 
-                            if (result.data.redirectUrl) {
+                            if (result.data && result.data.redirectUrl) {
                                 location.href = result.data.redirectUrl;
                             }
 

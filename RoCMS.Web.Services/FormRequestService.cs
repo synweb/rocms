@@ -58,7 +58,7 @@ namespace RoCMS.Web.Services
 
 
 
-                string body = $"Поступила оплата за заказ<br>Guid:{req.Guid}<br>Сумма: {req.Amount}";
+                string body = $"Поступила оплата за заказ<br>Guid: {req.Guid}<br>Сумма: {req.Amount}";
                 MailMsg res = new MailMsg
                 {
                     Subject = $"Заказ оплачен: {req.Guid} {DateTime.UtcNow.ApplySiteTimezone()}",

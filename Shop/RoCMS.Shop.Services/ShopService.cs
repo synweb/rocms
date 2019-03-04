@@ -78,13 +78,23 @@ namespace RoCMS.Shop.Services
                     _logService.TraceMessage("Reindex started");
                     int total;
                     FilterCollections filterCollections;
+                    
+                    // goods
                     var goods = GetGoodsSet(new GoodsFilter(), 1, int.MaxValue, out total, out filterCollections, false);
                     _logService.TraceMessage($"Reindexing {goods.Count} goods");
                     foreach (var goodsItem in goods)
                     {
-                        //UpdateGoods(goodsItem);
                         _searchService.UpdateIndex(goodsItem);
                         _logService.TraceMessage($"Reindexed GoodsItem {goodsItem.Guid}");
+                    }
+
+                    // cats
+                    var categories = _shopCategoryService.GetAllCategories();
+                    _logService.TraceMessage($"Reindexing {categories.Count} categories");
+                    foreach(var cat in categories)
+                    {
+                        _searchService.UpdateIndex(cat);
+                        _logService.TraceMessage($"Reindexed Category {cat.Guid}");
                     }
                     _logService.TraceMessage("Reindex OK");
                 }

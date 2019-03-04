@@ -55,10 +55,11 @@ namespace RoCMS.Shop.Web
                         EntityName = x.GetType().FullName,
                         EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Name),
+                        StrictSearch = false,
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 2,
-                        Text = item.Description,
+                        Text = item.MetaDescription,
                         HeartId = item.HeartId
                     };
                 },
@@ -71,10 +72,11 @@ namespace RoCMS.Shop.Web
                         EntityName = x.GetType().FullName,
                         EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.Description),
+                        StrictSearch = false,
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 1,
-                        Text = item.Description,
+                        Text = item.MetaDescription,
                         HeartId = item.HeartId
                     };
                 },
@@ -87,10 +89,11 @@ namespace RoCMS.Shop.Web
                         EntityName = x.GetType().FullName,
                         EntityId = item.HeartId.ToString(),
                         SearchContent = SearchHelper.ToSearchIndexText(item.HtmlDescription),
+                        StrictSearch = false,
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 1,
-                        Text = item.Description,
+                        Text = item.MetaDescription,
                         HeartId = item.HeartId
                     };
                 },
@@ -107,10 +110,47 @@ namespace RoCMS.Shop.Web
                         ImageId = item.MainImageId,
                         Title = item.Name,
                         Weight = 3,
-                        Text = item.Description,
+                        Text = item.MetaDescription,
                         HeartId = item.HeartId
                     };
-                }
+                },
+            });
+            searchService.RegisterRules(typeof(Category), new List<IndexingRule>()
+            {
+                x =>
+                {
+                    var item = (Category) x;
+                    return new SearchItem()
+                    {
+                        SearchItemKey = item.SearchKeyName,
+                        EntityName = x.GetType().FullName,
+                        EntityId = item.HeartId.ToString(),
+                        SearchContent = item.Name,
+                        StrictSearch = false,
+                        ImageId = item.ImageId,
+                        Title = item.Name,
+                        Weight = 2,
+                        Text = item.MetaDescription,
+                        HeartId = item.HeartId
+                    };
+                },
+                x =>
+                {
+                    var item = (Category) x;
+                    return new SearchItem()
+                    {
+                        SearchItemKey = item.SearchKeyDescription,
+                        EntityName = x.GetType().FullName,
+                        EntityId = item.HeartId.ToString(),
+                        SearchContent = SearchHelper.ToSearchIndexText(item.Description),
+                        StrictSearch = false,
+                        ImageId = item.ImageId,
+                        Title = item.Name,
+                        Weight = 1,
+                        Text = item.MetaDescription,
+                        HeartId = item.HeartId
+                    };
+                },
             });
         }
 

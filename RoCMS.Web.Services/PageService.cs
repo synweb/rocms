@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Web.Mvc;
 using AutoMapper;
@@ -32,6 +33,31 @@ namespace RoCMS.Web.Services
             _heartService = heartService;
             InitCache("PageServiceMemoryCache");
             CacheExpirationInMinutes = 30;
+            //Reindex();
+        }
+
+        public void Reindex()
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    _logService.TraceMessage("Reindex started: pages");
+                    // goods
+                    var pages = GetPages();
+                    _logService.TraceMessage($"Reindexing {pages.Count} pages");
+                    foreach (var page in pages)
+                    {
+                        _searchService.UpdateIndex(page);
+                        _logService.TraceMessage($"Reindexed Page {page.HeartId}");
+                    }
+                    _logService.TraceMessage("Reindex OK");
+                }
+                catch (Exception e)
+                {
+                    _logService.LogError(e);
+                }
+            });
         }
 
         public int CreatePage(Page page)

@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [dbo].[SplitStringToInts] ( @stringToSplit VARCHAR(MAX) )
+﻿CREATE FUNCTION [dbo].[SplitStringToInts] ( @stringToSplit NVARCHAR(MAX) )
 RETURNS
  @returnList TABLE ([Val] int)
 AS

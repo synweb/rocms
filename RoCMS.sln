@@ -121,6 +121,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hooks", "Hooks", "{BD708D92
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoCMS.Hooks.Bitrix24", "RoCMS.Hooks.Bitrix24\RoCMS.Hooks.Bitrix24.csproj", "{9A160FC8-9F03-489C-9B23-D99A3C6617D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoCMS.Hooks.TelegramBot", "RoCMS.Hooks.TelegramBot\RoCMS.Hooks.TelegramBot.csproj", "{AD760B57-B621-4143-BC86-47DC9E0BAD3D}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PaymentSystems", "PaymentSystems", "{AF8B398B-90B2-4BC9-A94D-2E4EA6FE33E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoCMS.SberbankPaymentSystem", "Sberbank\RoCMS.SberbankPaymentSystem.csproj", "{45ACDD94-003A-44F9-9137-DB74378BD5EA}"
@@ -351,6 +353,10 @@ Global
 		{9A160FC8-9F03-489C-9B23-D99A3C6617D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A160FC8-9F03-489C-9B23-D99A3C6617D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A160FC8-9F03-489C-9B23-D99A3C6617D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD760B57-B621-4143-BC86-47DC9E0BAD3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD760B57-B621-4143-BC86-47DC9E0BAD3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD760B57-B621-4143-BC86-47DC9E0BAD3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD760B57-B621-4143-BC86-47DC9E0BAD3D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{45ACDD94-003A-44F9-9137-DB74378BD5EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45ACDD94-003A-44F9-9137-DB74378BD5EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45ACDD94-003A-44F9-9137-DB74378BD5EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -398,10 +404,11 @@ Global
 		{B0D3BD61-5388-44C0-9C0A-C22B5204AD66} = {E5A6F1F0-0950-40E5-B45D-C8B6C9332074}
 		{B1BD7616-6507-4297-9BD4-0BD030BED180} = {E5A6F1F0-0950-40E5-B45D-C8B6C9332074}
 		{9A160FC8-9F03-489C-9B23-D99A3C6617D9} = {BD708D92-25E5-48E4-AB1A-8795A2F76243}
+		{AD760B57-B621-4143-BC86-47DC9E0BAD3D} = {BD708D92-25E5-48E4-AB1A-8795A2F76243}
 		{45ACDD94-003A-44F9-9137-DB74378BD5EA} = {AF8B398B-90B2-4BC9-A94D-2E4EA6FE33E7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
 		SolutionGuid = {D6710A94-C385-47FE-9747-0CE9421C7424}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

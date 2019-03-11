@@ -36,6 +36,7 @@ namespace RoCMS.Web.Services
         {
             var res = _formRequestGateway.Insert(Mapper.Map<Data.Models.FormRequest>(formRequest));
             formRequest.FormRequestId = res;
+            formRequest.CreationDate = DateTime.UtcNow.ApplySiteTimezone();
             try
             {
                 RequestCreated(this, formRequest);

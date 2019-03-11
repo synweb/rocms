@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.PageTitle = "Настройки магазина";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+
+@Js("/bin/Content/admin/telegramBot")
+
+<div>
+
+    <h1>Настройки телеграм-бота</h1>
+
+    <form class="form-horizontal" data-bind="with: settings">
+        <div class="form-group">
+            <label class="control-label col-lg-4">Ключ ApiKey</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: apiKey">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">WebHookToken для Url</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: webHookToken">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Разрешенные телефоны через запятую</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: allowedUserPhones">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-lg-4">Адрес прокси-сервера</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: proxyServer">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Порт прокси</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: proxyPort">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Логин прокси</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: proxyLogin">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-4">Пароль прокси</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" data-bind="value: proxyPassword">
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <a class="btn btn-success" title="Сохранить" data-bind="click: save">Сохранить</a>
+        </div>
+        <div class="form-group text-center">
+            <span class="text-info" data-bind="text: webhookurl"></span>
+        </div>
+        
+    </form>
+    
+    @JsInline(@<script>
+                   $(function () {
+                       telegramBotSettingsLoaded();
+                   });
+               </script>)
+</div>

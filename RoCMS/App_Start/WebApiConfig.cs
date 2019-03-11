@@ -130,6 +130,10 @@ namespace RoCMS.App_Start
             WebApiConfigHelper.ApiRoute(config.Routes, "orderform/{formId}/delete", "OrderFormApi", "DeleteForm");
             WebApiConfigHelper.ApiRoute(config.Routes, "orderform/create", "OrderFormApi", "CreateForm");
 
+
+            WebApiConfigHelper.ApiRoute(config.Routes, "formrequest/{id}/{state}/changestate", "FormRequestApi", "UpdateState");
+            WebApiConfigHelper.ApiRoute(config.Routes, "formrequest/{id}/{state}/changepaymentstate", "FormRequestApi", "UpdatePaymentState");
+
         }
     }
 }

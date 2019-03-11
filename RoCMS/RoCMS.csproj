@@ -156,6 +156,7 @@
     <Compile Include="ApiControllers\MenuApiController.cs" />
     <Compile Include="ApiControllers\MessageApiController.cs" />
     <Compile Include="ApiControllers\OrderFormApiController.cs" />
+    <Compile Include="ApiControllers\FormRequestApiController.cs" />
     <Compile Include="ApiControllers\PageApiController.cs" />
     <Compile Include="ApiControllers\RedirectToPageRoutesApiController.cs" />
     <Compile Include="ApiControllers\ReviewApiController.cs" />

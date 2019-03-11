@@ -44,8 +44,12 @@ namespace RoCMS.ApiControllers
                     string rootUrl = settings.RootUrl;
                     // getting guid
                     var fromRequest = _formRequestService.GetOneFormRequest(id);
-                    var returnUrl = $"{rootUrl}/FormRequest/PaymentAccepted/{fromRequest.Guid}";
-                    string redirectUrl = _paymentSystemService.ProcessPayment(id, typeof(FormRequest).FullName, message.Amount.Value, returnUrl);
+
+                    var relUrl = Url.Route("AcceptPayment", new {id = fromRequest.Guid});
+
+                    var returnUrl = $"{rootUrl.Trim('/')}/{relUrl.Trim('/')}";
+
+                    string redirectUrl = _paymentSystemService.ProcessPayment(id, message.Amount.Value, returnUrl);
                     return new ResultModel(true, new { RedirectUrl = redirectUrl });
                 }
 

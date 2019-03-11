@@ -6,40 +6,88 @@
 
 
     <form class="message-container form-horizontal pd-sm">
-        <input class="message-name form-control" id="Name" name="Name" type="text" placeholder="Имя">
 
-        <span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
-        <input class="message-email form-control" data-val="true" placeholder="Email" data-val-optrequired="Укажите телефон или email" data-val-regex="Неправильный формат email-адреса" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$" id="Email" name="Email" type="text" value="">
-
-
-        <span class="field-validation-valid" data-valmsg-for="Phone" data-valmsg-replace="true"></span>
-        <input class="message-phone form-control" placeholder="Телефон" data-val-optrequired="Укажите телефон или email" id="Phone" name="Phone" type="text" value="">
-
-        <textarea class="message-text form-control" placeholder="Сообщение" cols="20" data-val="true" data-val-required="Поле обязательно для заполнения" id="Text" name="Text" resize="none" rows="4"></textarea>
-        
-        <div class="form-check">
-            <input class="form-check-input message-payment-type" type="radio" name="paymentType" id="cash" value="Cash" checked>
-            <label class="form-check-label" for="cash">
-                Наличными
-            </label>
+        <div class="form-group row">
+            <label for="packsCount" class="col-6 col-lg-3  col-form-label"><em class="fa fa-cubes fa-fw"></em> Количество упаковок</label>
+            <div class="col-6  col-lg-3">
+                <input type="number" id="packsCount" min="1" class="message-count form-control" value="1" />
+            </div>
+            <label for="Price" class="col-6 col-lg-3 col-form-label text-lg-center">Цена, руб.</label>
+            <div class="col-6 col-lg-3">
+                <input type="text" data-pack-price="2500" readonly class="form-control form-control-plaintext message-price" id="Price" value="2500">
+            </div>
         </div>
-        <div class="form-check">
-            <input class="form-check-input message-payment-type" type="radio" name="paymentType" id="card" value="Card">
-            <label class="form-check-label" for="card">
-                Банковской картой
-            </label>
+
+        <div class="form-group row">
+            <label for="deliveryCity" class="col-6 col-lg-3  col-form-label"><em class="fa fa-map-marker fa-fw"></em> Город доставки</label>
+            <div class="col-6 col-lg-3">
+                <select class="form-control message-city" id="deliveryCity">
+                    <option value="300">Москва</option>
+                    <option value="">Другой</option>
+                </select>
+            </div>
+            <div class="col-lg-6 col-12 deliveryContainer">
+                <div class="row">
+                    <label for="DeliveryAmount" class="col-6 col-form-label text-lg-center">Стоимость доставки, руб.</label>
+                    <div class="col-6">
+                        <input type="text" data-pack-price="300" readonly class="form-control form-control-plaintext message-delivery-amount" id="DeliveryAmount" value="300">
+                    </div>
+                </div>
+            </div>
+
         </div>
-        
-        <input type="text" class="message-amount form-control" id="Amount"/>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <div class="form-check">
+                    <input data-txt="Наличными" class="form-check-input message-payment-type" type="radio" name="paymentType" id="cash" value="Cash" checked>
+                    <label class="form-check-label" for="cash">
+                        <em class="fa fa-money fa-fw"></em> Наличными
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input data-txt="Банковской картой" class="form-check-input message-payment-type" type="radio" name="paymentType" id="card" value="Card">
+                    <label class="form-check-label" for="card">
+                        <em class="fa fa-credit-card fa-fw"></em> Банковской картой
+                    </label>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <label for="Amount" class="col-6 col-form-label text-lg-center">Итого, руб.</label>
+                    <div class="col-6">
+                        <input type="text" readonly class="form-control form-control-plaintext message-amount" id="Amount" value="2800">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <input class="message-name form-control" id="Name" name="Name" type="text" placeholder="Имя">
+
+            <span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+            <input class="message-email form-control" data-val="true" placeholder="Email" data-val-optrequired="Укажите телефон или email" data-val-regex="Неправильный формат email-адреса" data-val-regex-pattern="^([A-Za-z0-9_\-\.])+\@@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$" id="Email" name="Email" type="text" value="">
+
+
+            <span class="field-validation-valid" data-valmsg-for="Phone" data-valmsg-replace="true"></span>
+            <input class="message-phone form-control" placeholder="Телефон" data-val-optrequired="Укажите телефон или email" id="Phone" name="Phone" type="text" value="">
+
+            <textarea class="message-text form-control" placeholder="Сообщение" cols="20" data-val="true" data-val-required="Поле обязательно для заполнения" id="Text" name="Text" resize="none" rows="4"></textarea>
+
+
+        </div>
+
+
 
         <div class="text-center">
 
-            <button class="send btn btn-lg btn-success" type="button">Отправить</button>
+            <button class="send btn btn-lg btn-success" type="button">Заказать</button>
 
-            <div class="message-state"></div>
+            <div class="message-state mt-4"></div>
 
         </div>
-
+        <p class="agreement">Нажимая на кнопку, вы соглашаетесь на обработку персональных данных в соответствии с <a target="_blank" href="/policy">Условиями</a>.</p>
     </form>
 
 
@@ -50,82 +98,143 @@
 
 @JsInline(
     @<script type="text/javascript">
-        $.validator.unobtrusive.adapters.addBool("optrequired");
-        $.validator.addMethod("optrequired", function (value, element) {
-            var $container = $(".order-container");
-            var $phone = $container.find(".message-phone");
-            var $email = $container.find(".message-email");
-            return $phone.val() || $email.val();
-        });
+         $.validator.unobtrusive.adapters.addBool("optrequired");
+         $.validator.addMethod("optrequired", function (value, element) {
+             var $container = $(".order-container");
+             var $phone = $container.find(".message-phone");
+             var $email = $container.find(".message-email");
+             return $phone.val() || $email.val();
+         });
 
-        $(function () {
-            var $container = $(".order-container");
-            var $div = $container.find(".message-container");
-            $.validator.unobtrusive.parse($div, true);
-
-            var clearForm = function () {
-                $container.find(".message-text").val("");
-                $container.find(".message-phone").val("");
-                $container.find(".message-email").val("");
-                $container.find(".message-name").val("");
-                $container.find(".message-amount").val("");
-            };
+         $(function () {
+             var $container = $(".order-container");
+             var $div = $container.find(".message-container");
+             $.validator.unobtrusive.parse($div, true);
 
 
-            $(".order-container .clear").click(function () {
-                clearForm();
-            });
+             $("#packsCount", $container).change(function () {
+                 if ($("#packsCount").val() < 1) {
+                     $("#packsCount").val(1);
+                 }
 
-            $(".order-container .send").click(function () {
-                var form = $("form.message-container");
-                $.validator.unobtrusive.parse(form, true);
+                 var packPrice = $("#Price").data("packPrice");
+                 $("#Price").val(packPrice * $("#packsCount").val());
+                 $("#Price").change();
+             });
 
-                var that = $(this);
-                $container.find('.message-state').html("");
+             $("#deliveryCity", $container).change(function () {
+                 var val = $("#deliveryCity").val();
 
+                 if (val) {
+                     $("#DeliveryAmount").val(val);
+                     $(".deliveryContainer").show();
 
-                var saveData = function () {
-                    that.attr("disabled", "disabled");
-                    var paymentType = form.find('input[name=paymentType]:checked').val();
-                    var message = {
-                        Text: form.find(".message-text").val(),
-                        Phone: form.find(".message-phone").val(),
-                        Email: form.find(".message-email").val(),
-                        Name: form.find(".message-name").val(),
-                        Amount: form.find(".message-amount").val(),
-                        PaymentType: paymentType
-                    };
-                    //alert(JSON.stringify(message));
-                    sendMessage(message, "order", function (result) {
-                        var msg;
-                        if (result.succeed === true) {
-                            msg = '<div class="alert alert-success">Ваша заявка принята, мы с вами свяжемся в ближайшее время.</div>';
-                            if (window.yaCounter) {
-                                window.yaCounter.reachGoal("METRIKA_ORDER");
-                            }
-                            clearForm();
+                     $("#card").removeAttr("disabled");
 
-                            if (result.data.redirectUrl) {
-                                location.href = result.data.redirectUrl;
-                            }
+                 }
+                 else {
+                     $("#DeliveryAmount").val("");
+                     $(".deliveryContainer").hide();
 
+                     $("#card").attr("disabled", "disabled");
+                     $("#cash").click();
+                 }
+                 $("#DeliveryAmount").change();
+             });
 
-                        } else {
-                            msg = "Произошла ошибка, попробуйте еще раз.";
-                        }
-                        $container.find('.message-state').html(msg);
-                    }, function () { that.removeAttr("disabled"); });
+             $("#Price, #DeliveryAmount").change(function () {
+
+                 var price = parseFloat($("#Price").val());
+                 var delivery = parseFloat($("#DeliveryAmount").val());
+
+                 if (isNaN(delivery)) {
+                     $("#Amount").val(price);
+                 }
+                 else {
+                     $("#Amount").val(price + delivery);
+                 }
 
 
+             });
 
-                }
-                if (form.valid()) {
-                    saveData();
-                } else {
-                    form.validate().focusInvalid();
-                }
-                return false;
-            });
-        });
+             var clearForm = function () {
+                 $container.find(".message-text").val("");
+                 $container.find(".message-phone").val("");
+                 $container.find(".message-email").val("");
+                 $container.find(".message-name").val("");
+                 $container.find(".message-amount").val("");
+             };
+
+
+             $(".order-container .clear").click(function () {
+                 clearForm();
+             });
+
+             $(".order-container .send").click(function () {
+                 var form = $("form.message-container");
+                 $.validator.unobtrusive.parse(form, true);
+
+                 var that = $(this);
+                 $container.find('.message-state').html("");
+
+
+                 var saveData = function () {
+                     that.attr("disabled", "disabled");
+                     var paymentType = form.find('input[name=paymentType]:checked').val();
+
+                     var text = form.find(".message-text").val();
+                     text += "<br>Город доставки: " + form.find("#deliveryCity option:selected").text();
+
+                     text += "<br>Способ оплаты: " + form.find('input[name=paymentType]:checked').data("txt");
+
+                     text += "<br>Количество упаковок: " + form.find('#packsCount').val();
+
+                     var delivery = parseFloat($("#DeliveryAmount").val());
+                     if (!isNaN(delivery)) {
+                         text += "<br>Стоимость доставки: " + delivery + " руб.";
+                     }
+
+                     text += "<br>Сумма заказа: " + form.find('#Amount').val() + " руб.";
+
+                     var message = {
+                         Text: text,
+                         Phone: form.find(".message-phone").val(),
+                         Email: form.find(".message-email").val(),
+                         Name: form.find(".message-name").val(),
+                         Amount: form.find("#Amount").val(),
+                         PaymentType: paymentType
+                     };
+                     //alert(JSON.stringify(message));
+                     sendMessage(message, "order", function (result) {
+                         var msg;
+                         if (result.succeed === true) {
+                             msg = '<div class="alert alert-success">Ваша заявка принята, мы с вами свяжемся в ближайшее время.</div>';
+                             if (window.yaCounter) {
+                                 window.yaCounter.reachGoal("METRIKA_ORDER");
+                             }
+                             clearForm();
+
+                             if (result.data && result.data.redirectUrl) {
+                                 location.href = result.data.redirectUrl;
+                             }
+
+
+                         } else {
+                             msg = "Произошла ошибка, попробуйте еще раз.";
+                         }
+                         $container.find('.message-state').html(msg);
+                     }, function () { that.removeAttr("disabled"); });
+
+
+
+                 }
+                 if (form.valid()) {
+                     saveData();
+                 } else {
+                     form.validate().focusInvalid();
+                 }
+                 return false;
+             });
+         });
     </script>
-)
+        )

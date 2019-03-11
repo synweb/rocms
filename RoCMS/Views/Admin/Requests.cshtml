@@ -2,26 +2,27 @@
 @using RoCMS.Base
 @using RoCMS.Base.ForWeb.Extensions
 @using RoCMS.Web.Contract.Extensions
+@using RoCMS.Web.Contract.Models
 @model IList<RoCMS.Web.Contract.Models.FormRequest>
 
-@{
-    if (!Request.IsAjaxRequest())
-    {
-        Layout = "~/Views/Shared/_adminLayout.cshtml";
+    @{
+        if (!Request.IsAjaxRequest())
+        {
+            Layout = "~/Views/Shared/_adminLayout.cshtml";
+        }
+        ViewBag.PageTitle = Strings.AdminRequests_PageTitle;
     }
-    ViewBag.PageTitle = Strings.AdminRequests_PageTitle;
-}
 
 
-@Js("Content/admin/ro/js/rocms.formRequest.edit.js")
 
-@foreach (var formRequest in Model)
+
+    @foreach (var formRequest in Model)
     {
         <div class="box formRequest-summary" data-block-id="@formRequest.FormRequestId">
-            <header>                
+            <header>
                 <h5>@formRequest.Name</h5>
                 <span class="formRequest-creationDate"> @formRequest.CreationDate.ApplySiteTimezone() </span>
-                <div class="toolbar">                    
+                <div class="toolbar">
                     @if (User.IsAuthorizedForResource(RoCmsResources.DeleteObjects))
                     {
                         <a href="@Url.Action("DeleteFormRequest", "Admin", new {formRequestId = formRequest.FormRequestId})" class="btn btn-danger btn-xs button-delete">
@@ -59,7 +60,67 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="control-label col-lg-4">
+                        Статус
+                    </label>
+                    <div class="col-lg-8">
+                        <select class="form-control form-request-state">
+                            <option value="New" @(formRequest.State == FormRequestState.New ? "selected" : null)>Новый</option>
+                            <option value="InProgress" @(formRequest.State == FormRequestState.InProgress ? "selected" : null)>В процессе</option>
+                            <option value="Reject" @(formRequest.State == FormRequestState.Reject ? "selected" : null)>Отказ</option>
+                            <option value="Done" @(formRequest.State == FormRequestState.Done ? "selected" : null)>Сделка</option>
+                        </select>
+                    </div>
+                </div>
+                @if (formRequest.Amount.HasValue)
+                {
+                    <div class="form-group">
+                        <label class="control-label col-lg-4">
+                            Guid
+                        </label>
+                        <div class="col-lg-8">
+                            <p class="control-label text-left">@formRequest.Guid</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-4">
+                            Сумма платежа
+                        </label>
+                        <div class="col-lg-8">
+                            <p class="control-label text-left">@formRequest.Amount.Value</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-4">
+                            Способ оплаты
+                        </label>
+                        <div class="col-lg-8">
+                            <p class="control-label text-left">@(formRequest.PaymentType == PaymentType.Card ? "Карта" : "Наличные")</p>
+</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-4">
+                            Статус оплаты
+                        </label>
+                        <div class="col-lg-8">
+                            <select class="form-control form-request-payment-state">
+                                <option value="Unpaid" @(formRequest.PaymentState == PaymentState.Unpaid ? "selected" : null)>Не оплачено</option>
+                                <option value="Paid" @(formRequest.PaymentState == PaymentState.Paid ? "selected" : null)>Оплачено</option>
+                            </select>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     }
 
+    @Js("Content/admin/ro/js/rocms.formRequest.edit.js")
+
+    @JsInline(
+        @<script type="text/javascript">
+             $(function () {
+                 formRequestsLoaded();
+             });
+
+        </script>)

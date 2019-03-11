@@ -27,7 +27,7 @@ namespace RoCMS.Data.Gateways
 
         public FormRequest SelectOne(int formRequestId)
         {
-            return Exec<FormRequest>("[dbo].[FormRequest_Select]", formRequestId);
+            return Exec<FormRequest>("[dbo].[FormRequest_SelectOne]", formRequestId);
         }
 
         public FormRequest SelectByGuid(Guid guid)

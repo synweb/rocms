@@ -203,7 +203,7 @@ function goodsEditorLoaded(onSelected, context) {
     if (App.Admin.suppliers().length === 0) {
         getJSON("/api/shop/suppliers/get", "", function (result) {
             var man = new App.Admin.Shop.Manufacturer();
-            man.name("Выберите...");
+            man.name("Выберите поставщика...");
 
             App.Admin.suppliers.push(man);
             $(result).each(function () {
@@ -233,7 +233,7 @@ function goodsEditorLoaded(onSelected, context) {
             "",
             function (result) {
                 var man = new App.Admin.Shop.Manufacturer();
-                man.name("Выберите...");
+                man.name("Выберите производителя...");
                 App.Admin.usedManufacturers.push(man);
                 $(result).each(function () {
                     App.Admin.usedManufacturers.push($.extend(
@@ -264,7 +264,7 @@ function goodsEditorLoaded(onSelected, context) {
             "",
             function (result) {
                 var man = new App.Admin.Shop.Manufacturer();
-                man.name("Выберите...");
+                man.name("Выберите производителя...");
                 App.Admin.manufacturers.push(man);
                 $(result).each(function () {
                     App.Admin.manufacturers.push($.extend(

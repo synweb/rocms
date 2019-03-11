@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION dbo.SplitString ( @stringToSplit VARCHAR(MAX) )
+﻿CREATE FUNCTION dbo.SplitString ( @stringToSplit NVARCHAR(MAX) )
 RETURNS
  @returnList TABLE ([Name] [nvarchar] (500))
 AS

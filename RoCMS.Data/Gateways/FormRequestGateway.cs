@@ -30,6 +30,11 @@ namespace RoCMS.Data.Gateways
             return Exec<FormRequest>("[dbo].[FormRequest_Select]", formRequestId);
         }
 
+        public FormRequest SelectByGuid(Guid guid)
+        {
+            return Exec<FormRequest>("[dbo].[FormRequest_SelectByGuid]", guid);
+        }
+
         public void Update(FormRequest formRequest)
         {
              Exec("[dbo].[FormRequest_Update]", formRequest);

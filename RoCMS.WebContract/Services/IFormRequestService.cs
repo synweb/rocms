@@ -12,6 +12,7 @@ namespace RoCMS.Web.Contract.Services
         int CreateFormRequest(FormRequest formRequest);
 
         FormRequest GetOneFormRequest(int formRequestId);
+        FormRequest GetOneFormRequest(Guid guid);
 
         IList<FormRequest> GetFormRequests();
 
@@ -19,7 +20,11 @@ namespace RoCMS.Web.Contract.Services
 
         void DeleteFormRequest(int formRequestId);
 
-        void ProcessMessage(Message message);
+        int ProcessMessage(Message message);
         event EventHandler<FormRequest> RequestCreated;
+
+        void UpdateFormRequestState(int formRequestId, FormRequestState state);
+
+        void UpdatePaymentState(int formRequestId, PaymentState? state);
     }
 }

@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[FormRequest_Select]
 AS
-	SELECT [FormRequestId], [Name], [Email], [Phone], [Text], [CreationDate]
+	SELECT *
 	FROM [dbo].[FormRequest]
 	ORDER BY [CreationDate] DESC

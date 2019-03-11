@@ -84,6 +84,7 @@
     <Compile Include="Models\CMSResource.cs" />
     <Compile Include="Models\DatabaseSettings.cs" />
     <Compile Include="Models\FormRequest.cs" />
+    <Compile Include="Models\FormRequestState.cs" />
     <Compile Include="Models\Heart.cs" />
     <Compile Include="Models\HeartState.cs" />
     <Compile Include="Models\ImageInfo.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Models\OrderForm.cs" />
     <Compile Include="Models\OrderFormField.cs" />
     <Compile Include="Models\OrderFormFieldType.cs" />
+    <Compile Include="Models\PaymentState.cs" />
     <Compile Include="Models\RedirectToPageRouters.cs" />
     <Compile Include="Models\ReviewSort.cs" />
     <Compile Include="Models\Search\IndexingRule.cs" />
@@ -111,12 +113,14 @@
     <Compile Include="Models\ThumbnailSize.cs" />
     <Compile Include="Models\VideoAlbum.cs" />
     <Compile Include="Models\VideoInfo.cs" />
+    <Compile Include="Models\PaymentType.cs" />
     <Compile Include="Services\IAlbumService.cs" />
     <Compile Include="Services\IAnalyticsService.cs" />
     <Compile Include="Services\IHeartService.cs" />
     <Compile Include="Services\IInstallService.cs" />
     <Compile Include="Services\IDevelopmentService.cs" />
     <Compile Include="Services\IOrderFormService.cs" />
+    <Compile Include="Services\IPaymentSystemService.cs" />
     <Compile Include="Services\ISecurityService.cs" />
     <Compile Include="Services\IBlockService.cs" />
     <Compile Include="Services\IFileService.cs" />

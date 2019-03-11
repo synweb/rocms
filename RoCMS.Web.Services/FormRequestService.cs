@@ -47,6 +47,20 @@ namespace RoCMS.Web.Services
             return res;
         }
 
+        public void UpdatePaymentState(int formRequestId, PaymentState? state)
+        {
+            var req = _formRequestGateway.SelectOne(formRequestId);
+            req.PaymentState = Mapper.Map<Data.Models.PaymentState>(state);
+            _formRequestGateway.Update(req);
+        }
+
+        public void UpdateFormRequestState(int formRequestId, FormRequestState state)
+        {
+            var req = _formRequestGateway.SelectOne(formRequestId);
+            req.State = Mapper.Map<Data.Models.FormRequestState>(state);
+            _formRequestGateway.Update(req);
+        }
+
         public void DeleteFormRequest(int formRequestId)
         {
             _formRequestGateway.Delete(formRequestId);
@@ -68,7 +82,7 @@ namespace RoCMS.Web.Services
             _formRequestGateway.Update(Mapper.Map<Data.Models.FormRequest>(formRequest));
         }
 
-        public void ProcessMessage(Message message)
+        public int ProcessMessage(Message message)
         {
             if (message.OrderFormId.HasValue)
             {
@@ -98,7 +112,7 @@ namespace RoCMS.Web.Services
             }
 
 
-            CreateFormRequest(Mapper.Map<FormRequest>(message));
+            int id = CreateFormRequest(Mapper.Map<FormRequest>(message));
 
             var msg = CreateMessage(message);
             _mailService.Send(msg);
@@ -106,6 +120,8 @@ namespace RoCMS.Web.Services
             {
                 SendAutoReply(message.Email, message.Name, msg.Body);
             }
+
+            return id;
         }
 
         private void SendAutoReply(string email, string name, string message)
@@ -182,6 +198,11 @@ namespace RoCMS.Web.Services
                 }
                 return res;
             }
+        }
+
+        public FormRequest GetOneFormRequest(Guid guid)
+        {
+            return Mapper.Map<FormRequest>(_formRequestGateway.SelectByGuid(guid));
         }
     }
 }

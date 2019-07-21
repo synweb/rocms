@@ -72,7 +72,10 @@
 
             }
             @Ro(Model.Text)
-
+            @if (Model.RecordType == RecordType.File && !String.IsNullOrWhiteSpace(Model.Filename))
+            {
+                <a class="btn btn-dark btn-sm" href="/File/Get/@Model.Filename">@Model.Filename</a>
+            }
         </div>
 
 

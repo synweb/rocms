@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<RoCMS.News.Contract.Models.NewsItem>
 
 @{
-    ViewBag.Title = "Записи с тегом «" + ViewBag.Tag + "»";
+    ViewBag.Title = ViewBag.Header = "Записи с тегом «" + ViewBag.Tag + "»";
 
     ViewBag.CanonicalUrl = Url.RouteUrl("BlogTagSearch", new {tag = ViewBag.Tag});
 

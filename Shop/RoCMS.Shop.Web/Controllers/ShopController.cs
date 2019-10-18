@@ -13,6 +13,7 @@ using RoCMS.Base.ForWeb.Models.Filters;
 using RoCMS.Base.Models;
 using RoCMS.Helpers;
 using RoCMS.Shop.Contract.Models;
+using RoCMS.Shop.Contract.Models.Exceptions;
 using RoCMS.Shop.Contract.Services;
 using RoCMS.Web.Contract.Models;
 using RoCMS.Web.Contract.Models.Security;
@@ -396,29 +397,37 @@ namespace RoCMS.Shop.Web.Controllers
         [MvcSiteMapNode(ParentKey = "Home", Key = "GoodsSEF", DynamicNodeProvider = "RoCMS.Shop.Web.Helpers.GoodsItemDynamicNodeProvider, RoCMS.Shop.Web")]
         public ActionResult GoodsSEF(string relativeUrl)
         {
-            string pageUrl = relativeUrl.Split('/').Last();
-            //bool exists = _shopService.GoodsExists(pageUrl);
-            //if (!exists)
-            //{
-            //    throw new HttpException(404, "Not found");
-            //}
-
-            var goodsItem = _shopService.GetGoods(pageUrl);
-
-            var requestPath = Request.Path.Substring(1);
-            if (!goodsItem.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
+            try
             {
-                var routeValues = Request.RequestContext.RouteData.Values;
-                //routeValues["relativeUrl"] = goodsItem.CanonicalUrl;
 
-                return RedirectPermanent(Url.RouteUrl(typeof(GoodsItem).FullName, routeValues));
+                string pageUrl = relativeUrl.Split('/').Last();
+                //bool exists = _shopService.GoodsExists(pageUrl);
+                //if (!exists)
+                //{
+                //    throw new HttpException(404, "Not found");
+                //}
+
+                var goodsItem = _shopService.GetGoods(pageUrl);
+
+                var requestPath = Request.Path.Substring(1);
+                if (!goodsItem.CanonicalUrl.Equals(requestPath, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var routeValues = Request.RequestContext.RouteData.Values;
+                    //routeValues["relativeUrl"] = goodsItem.CanonicalUrl;
+
+                    return RedirectPermanent(Url.RouteUrl(typeof(GoodsItem).FullName, routeValues));
+                }
+
+                TempData["MetaKeywords"] = goodsItem.MetaKeywords;
+                TempData["MetaDescription"] = goodsItem.MetaDescription;
+                TempData["AdditionalHeaders"] = goodsItem.AdditionalHeaders;
+
+                return PartialView("Goods", (object) pageUrl);
             }
-
-            TempData["MetaKeywords"] = goodsItem.MetaKeywords;
-            TempData["MetaDescription"] = goodsItem.MetaDescription;
-            TempData["AdditionalHeaders"] = goodsItem.AdditionalHeaders;
-
-            return PartialView("Goods", (object)pageUrl);
+            catch (GoodsNotFoundException)
+            {
+                throw new HttpException(404, "Not found");
+            }
         }
 
         public ActionResult Cart()
